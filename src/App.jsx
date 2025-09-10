@@ -6,6 +6,11 @@ import DashboardPage from "./pages/admin/dashboard/dashboardPage"
 import { ThemeContextProvider } from "./context/ThemeContextProvider"
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
 
+import { AuthContextProvider } from "./context/AuthContext"
+import PrivateRoute from "./routes/PrivateRoute"
+import NoAccessModal from "./components/NoAccessModal"
+
+
 
 
 function App() {
@@ -13,27 +18,35 @@ function App() {
     return <>
         <GoogleOAuthProvider clientId="rfdfdfd">
             <Router>
-                <ThemeContextProvider>
+                <AuthContextProvider>
+                    <ThemeContextProvider>
+                        <Routes>
+                            
+                            <Route path="/signIn" element={<AuthLayaout />}>
+                                <Route index element={<LoginPage />} />
+                                 <Route path="noAccess" element={<NoAccessModal />} />
+                            </Route>
 
-                    <Routes>
+                            <Route element={<PrivateRoute  allowedRoles={["ROLE_ADMIN", "ROLE_SUPERADMIN"]}/>}>
+                                <Route path="/system" element={<SystemLayaout />}>
+                                    <Route index element={<DashboardPage />} />
+                                    {/* <Route/> */}
+                                </Route>
+                            </Route>
 
-                        <Route path="/signIn" element={<AuthLayaout />}>
-                            <Route index element={<LoginPage />} />
-                        </Route>
 
-                        <Route path="/system" element={<SystemLayaout />}>
-                            <Route index element={<DashboardPage />} />
-                            {/* <Route/> */}
-                        </Route>
 
-                    </Routes>
-                </ThemeContextProvider>
+
+
+                        </Routes>
+                    </ThemeContextProvider>
+
+                </AuthContextProvider>
             </Router>
         </GoogleOAuthProvider>
     </>
 }
 
 export default App
-
 
 
