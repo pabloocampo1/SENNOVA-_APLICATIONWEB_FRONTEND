@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
-import api, { injectTokenGetter } from "../service/axiosService";
+import api, { injectTokenGetter, injectTokenSetter } from "../service/axiosService";
 import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
@@ -52,6 +52,25 @@ export const AuthContextProvider = ({ children }) => {
         }
     };
 
+    const signInWithGoogle = (objectResponse) => {
+
+        if (objectResponse.status) {
+
+            if (objectResponse.accessToken) {
+                setAuthObject({
+                    username: objectResponse.username,
+                    name: objectResponse.name,
+                    isAuthenticate: objectResponse.status,
+                    role: objectResponse.authorities
+                })
+                setToken(objectResponse.accessToken);
+                console.log(objectResponse);
+
+                navigate("/system");
+            }
+        }
+    }
+
     const logout = async () => {
         const fetchLogout = async () => {
             try {
@@ -70,6 +89,7 @@ export const AuthContextProvider = ({ children }) => {
                         "isAuthenticate": false,
                         "role": ""
                     })
+                    setToken("")
                 }
 
             } catch (error) {
@@ -86,7 +106,6 @@ export const AuthContextProvider = ({ children }) => {
 
         const tryRefresh = async () => {
             try {
-                console.log("hola");
 
                 const res = await api.post("/auth/refresh/token");
                 console.log(res);
@@ -98,23 +117,43 @@ export const AuthContextProvider = ({ children }) => {
                     isAuthenticate: res.data.status,
                     role: res.data.authorities
                 })
+                console.log(res);
+
             } catch (err) {
-                console.log("No se pudo refrescar el token", err);
+                console.log("No se pudo refrescar el token, en el useEffect", err);
             } finally {
                 setLoading(false);
             }
         };
 
         tryRefresh();
-        injectTokenGetter(() => token);
-        console.log(authObject);
 
     }, []);
+
+    useEffect(() => {
+        injectTokenGetter(() => token);
+        injectTokenSetter(setToken)
+        console.log("se actualizo.");
+        
+    }, [token]);
+
+
+    useEffect(() => {
+        if (token === "") {
+            setAuthObject({
+                username: "",
+                name: "",
+                isAuthenticate: false,
+                role: ""
+            });
+            navigate("/signIn");
+        }
+    }, [token]);
 
 
 
     return (
-        <AuthContext.Provider value={{ token, setToken, getToken, signIn, logout, authObject, loading }}>
+        <AuthContext.Provider value={{ token, setToken, getToken, signIn, logout, authObject, loading, signInWithGoogle }}>
             {children}
         </AuthContext.Provider>
     )

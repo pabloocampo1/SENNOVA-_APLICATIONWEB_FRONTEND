@@ -2,10 +2,11 @@ import { Box, Button, Checkbox, FormControlLabel, Stack, TextField, Typography }
 import React, { useState } from 'react';
 import logoSennova from "../../assets/images/sennova_logo_sin_fondo.png"
 import { Link } from 'react-router-dom';
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 import { Google } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 import SimpleBackdrop from '../../components/SimpleBackDrop';
+import api from '../../service/axiosService';
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -13,28 +14,36 @@ const LoginPage = () => {
     const [error, setError] = useState(false);
     const [isLoanding, setIsLoanding] = useState(false);
     const [messageErrorSignIn, setMessageErrorSignIn] = useState(false);
-    const { signIn } = useAuth();
+    const { signIn, signInWithGoogle } = useAuth();
 
-    const login = useGoogleLogin({
-        onSuccess: (tokenResponse) => console.log("✅", tokenResponse),
-        onError: () => console.log("❌ Error"),
-    });
+    const handleSuccess = async (credentialResponse) => {
+        try {
+            const token = credentialResponse.credential;
+            const res = await api.post("/auth/signIn/google", { token });
+            console.log(res);
+
+            signInWithGoogle(res.data)
+
+        } catch (err) {
+            console.error("Error Google login:", err);
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoanding(true)
 
         const fetchAuth = async (username, password) => {
-           
+
             try {
-                const response =  await signIn(username, password);
+                const response = await signIn(username, password);
                 console.log(localStorage.getItem("token"));
                 console.log("respose: " + response);
-                
-                
-                if (!response.status){
-                     setError(true) 
-                     setMessageErrorSignIn(response.message);
+
+
+                if (!response.status) {
+                    setError(true)
+                    setMessageErrorSignIn(response.message);
                 }
 
             } catch (error) {
@@ -51,7 +60,7 @@ const LoginPage = () => {
     return (
         <Box sx={{
             width: { xs: "85%", md: "60%", lg: "35%" },
-            height: { xs: "80%", md: "70%", lg:"65%" },
+            height: { xs: "80%", md: "70%", lg: "65%" },
             bgcolor: "white",
             borderRadius: "15px",
             display: "flex",
@@ -102,29 +111,20 @@ const LoginPage = () => {
                     }} control={<Checkbox defaultChecked />} label="Guardar sesion" />
 
                     <Link to={"/"} style={{ color: "black", opacity: "0.70" }}>Olvide mi contraseña</Link>
-                   
+
                 </Box>
-                 {error && (<Typography sx={{ color: "red" }}>{messageErrorSignIn}</Typography>)}
+                {error && (<Typography sx={{ color: "red" }}>{messageErrorSignIn}</Typography>)}
 
                 <Button type='submit' sx={{ width: "100%", mt: "50px" }} variant='outlined'>Iniciar sesion</Button>
 
                 <Typography sx={{ fontSize: "0.90rem", mt: "20px" }}>O tambien puedes:</Typography>
 
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    startIcon={<Google />}
-                    onClick={() => login()}
-                    sx={{
-                        width: "100%",
-                        backgroundColor: "#39A900",
-                        color: "#eeeeeeff",
-                        mt: "20px",
-
-                    }}
-                >
-                    Iniciar sesión con Google
-                </Button>
+                <Box sx={{ mt:"20px"}}>
+                    <GoogleLogin
+                        onSuccess={handleSuccess}
+                        onError={() => console.log("Error al iniciar con Google")}
+                    />
+                </Box>
 
             </Box>
 

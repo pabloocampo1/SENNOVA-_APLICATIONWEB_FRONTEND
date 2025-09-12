@@ -16,7 +16,7 @@ import NoAccessModal from "./components/NoAccessModal"
 function App() {
 
     return <>
-        <GoogleOAuthProvider clientId="rfdfdfd">
+        <GoogleOAuthProvider clientId="205317144145-dntssvrb84osb754okeetq2349hua44f.apps.googleusercontent.com">
             <Router>
                 <AuthContextProvider>
                     <ThemeContextProvider>
