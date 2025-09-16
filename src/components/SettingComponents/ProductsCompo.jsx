@@ -195,13 +195,12 @@ const ProductsCompo = () => {
     return (
         <Box sx={{
             width: "100%",
-            height: "60vh",
-            mb: "200px"
-
+            height: "auto",
+            mb: "100px",
         }}>
 
-            <Typography component={"h3"} variant='h3' sx={{ pt: "40px", fontSize:"24px" }}>
-                Elementos del sistema
+            <Typography component={"h3"} variant='h3' sx={{ pt: "40px", pb:"20px", fontSize:"24px" }}>
+                Elementos del sistema - <span style={{color:"#39A900"}}>Productos</span>
             </Typography>
 
 

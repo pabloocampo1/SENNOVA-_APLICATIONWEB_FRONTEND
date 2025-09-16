@@ -2,6 +2,7 @@ import { CheckBox, Label } from '@mui/icons-material';
 import { Box, Switch, Typography } from '@mui/material';
 import React from 'react';
 import ProductsCompo from '../../components/SettingComponents/ProductsCompo';
+import UsageCompo from '../../components/SettingComponents/UsageCompo';
 
 const SettingPage = () => {
     return (
@@ -116,8 +117,9 @@ const SettingPage = () => {
             </Box>
 
 
-            <Box>
+            <Box >
                 <ProductsCompo />
+                <UsageCompo />
             </Box>
 
 
