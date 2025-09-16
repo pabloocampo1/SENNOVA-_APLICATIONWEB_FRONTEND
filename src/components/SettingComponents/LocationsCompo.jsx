@@ -1,30 +1,30 @@
-import { Alert, Box, Button,  IconButton, Pagination, Paper, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Alert, Box, Button, IconButton, Pagination, Paper, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import api from '../../service/axiosService';
 import { Add, Delete, Edit } from '@mui/icons-material';
 import GenericModal from '../modals/GenericModal';
 import SearchBar from '../SearchBar';
-import UsageForm from '../forms/Usage/UsageForm';
+import LocationForm from '../forms/Location/LocationForm';
 
-const UsageCompo = () => {
-    const [usageData, setUsageData] = useState([]);
+const LocationsCompo = () => {
+    const [locationData, setLocationData] = useState([]);
     const [errorFetch, setErrorFetch] = useState(false);
     const [errorDelete, setErrorDelete] = useState({
         "status": false,
-        "usage": "",
+        "location": "",
         "message": ""
     });
     const [success, setSuccess] = useState({
         "status": false,
-        "usage": "",
+        "location": "",
         "message": "",
     });
     const [page, setPage] = useState(0);
-    const [createUsagetState, setCreateUsagetState] = useState(false);
+    const [createLocationState, setCreateLocationState] = useState(false);
     const [totalPages, setTotalPages] = useState();
     const [open, setOpen] = useState(false);
     const [errorsCreate, setErrorCreated] = useState([])
-    const [usageToEdit, setUsageToEdit] = useState(null)
+    const [locationToEdit, setLocationToEdit] = useState(null)
     const [search, setSearch] = useState("");
 
 
@@ -34,14 +34,14 @@ const UsageCompo = () => {
 
     const fetchData = async () => {
         try {
-            const response = await api.get(`/usage/equipment/getAllPage?page=${page}`);
+            const response = await api.get(`/location/getAllPage?page=${page}`);
 
             if (response.status !== 200) {
                 setErrorFetch(true)
             } else {
 
                 let totalPagesResponse = response.data.totalPages;
-                setUsageData(response.data.content)
+                setLocationData(response.data.content)
                 setTotalPages(totalPagesResponse)
             }
 
@@ -54,21 +54,21 @@ const UsageCompo = () => {
         }
     }
 
-    const deleteUsage = async (id, usageName) => {
+    const deleteLocation = async (id, locationName) => {
 
         try {
-            const response = await api.delete(`/usage/equipment/delete/${id}`);
+            const response = await api.delete(`/location/delete/${id}`);
             if (response.status == 200) {
                 fetchData()
                 setErrorDelete({
                     ...errorDelete,
                     "status": false,
-                    "usage": ""
+                    "location": ""
                 })
                 setSuccess({
                     ...success,
-                    "message": "Se Elimino el uso existosamente.",
-                    "usage": usageName,
+                    "message": "Se Elimino la ubicacion existosamente.",
+                    "location": locationName,
                     "status": true
                 })
                 setOpen(true)
@@ -77,8 +77,8 @@ const UsageCompo = () => {
                 setErrorDelete({
                     ...errorDelete,
                     "status": true,
-                    "usage": usageName,
-                    "message":" ocurrio un error"
+                    "location": locationName,
+                    "message": " ocurrio un error"
                 })
                 setOpen(true)
             }
@@ -90,7 +90,7 @@ const UsageCompo = () => {
                 setErrorDelete({
                     ...errorDelete,
                     "status": true,
-                    "usage": usageName,
+                    "location": locationName,
                     "message": "No se puede eliminar este elemento porque esta relacionado a otro elemento"
                 })
                 setOpen(true)
@@ -101,17 +101,17 @@ const UsageCompo = () => {
     }
 
 
-    const saveUsage = async (product) => {
+    const saveLocation = async (product) => {
         try {
-            const response = await api.post("/usage/equipment/save", product);
+            const response = await api.post("/location/save", product);
             console.log(response);
             if (response.status == 201) {
                 fetchData()
-                setCreateUsagetState(false)
+                setCreateLocationState(false)
                 setSuccess({
                     ...success,
-                    "message": "Se agreogo el uso exitosamente.",
-                    "usage": response.data.usageName,
+                    "message": "Se agrego la ubicacion exitosamente.",
+                    "location": response.data.locationName,
                     "status": true
                 })
 
@@ -128,20 +128,20 @@ const UsageCompo = () => {
         }
     }
 
-    const editUsage = async (product, id) => {
+    const editLocation = async (product, id) => {
         try {
-            const response = await api.put(`/usage/equipment/update/${id}`, product);
+            const response = await api.put(`/location/update/${id}`, product);
             console.log(response);
             if (response.status == 200) {
                 fetchData()
                 setSuccess({
                     ...success,
-                    "message": "Se edito el uso exitosamente.",
-                    "usage": response.data.usageName,
+                    "message": "Se edito la ubicacion exitosamente.",
+                    "location": response.data.locationName,
                     "status": true
                 })
 
-                setUsageToEdit(null)
+                setLocationToEdit(null)
                 setOpen(true)
 
             }
@@ -156,14 +156,14 @@ const UsageCompo = () => {
     }
 
 
-    const searchUsagesByName = async () => {
+    const searchLocationByName = async () => {
         try {
-            const response = await api.get(`/usage/equipment/getAllByName/${search}`);
+            const response = await api.get(`/location/getByName/${search}`);
 
             if (response.status !== 200) {
                 setErrorFetch(true)
             } else {
-                setUsageData(response.data)
+                setLocationData(response.data)
             }
 
         } catch (error) {
@@ -176,7 +176,7 @@ const UsageCompo = () => {
 
     useEffect(() => {
         if (search) {
-            searchUsagesByName()
+            searchLocationByName()
         } else {
             fetchData()
         }
@@ -188,7 +188,7 @@ const UsageCompo = () => {
             <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
                 <Alert severity="error" sx={{ width: "100%", maxWidth: 600 }}>
                     <Typography variant="body1" sx={{ fontWeight: "600" }}>
-                        Hubo un error al obtener los usos de equipos
+                        Hubo un error al obtener las ubicaciones
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.8 }}>
                         Por favor, inténtalo más tarde o notifica este error al soporte.
@@ -206,17 +206,17 @@ const UsageCompo = () => {
         }}>
 
             <Typography component={"h3"} variant='h3' sx={{ pt: "40px", fontSize: "24px" }}>
-                Elementos del sistema - <span style={{ color: "#39A900" }}>Usos</span>
+                Elementos del sistema - <span style={{ color: "#39A900" }}>Ubicaciones</span>
             </Typography>
 
 
-            {/* modal to create one usage*/}
-            <GenericModal open={createUsagetState} compo={<UsageForm isEdit={false} data={null} errors={errorsCreate} method={(usage) => saveUsage(usage)
-            } />} onClose={() => setCreateUsagetState(false)} />
+            {/* modal to create one location*/}
+            <GenericModal open={createLocationState} compo={<LocationForm isEdit={false} data={null} errors={errorsCreate} method={(location) => saveLocation(location)
+            } />} onClose={() => setCreateLocationState(false)} />
 
-            {/* modal to edit one usage*/}
-            <GenericModal open={usageToEdit} compo={<UsageForm isEdit={true} data={usageToEdit} errors={errorsCreate} method={(usage, id) => editUsage(usage, id)
-            } />} onClose={() => setUsageToEdit(null)} />
+            {/* modal to edit one location*/}
+            <GenericModal open={locationToEdit} compo={<LocationForm isEdit={true} data={locationToEdit} errors={errorsCreate} method={(location, id) => editLocation(location, id)
+            } />} onClose={() => setLocationToEdit(null)} />
 
 
             <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
@@ -224,21 +224,21 @@ const UsageCompo = () => {
                     <SearchBar onSearch={(value) => setSearch(value)} />
                 </Box>
                 <Box>
-                    <Button variant='outlined' onClick={() => setCreateUsagetState(true)}> <Add /> Agregar un nuevo uso</Button>
+                    <Button variant='outlined' onClick={() => setCreateLocationState(true)}> <Add /> Agregar una nueva ubicacion</Button>
                 </Box>
             </Box>
 
             <Box>
 
 
-                {usageData.length < 1 && (<Typography sx={{ textAlign: "center", pt: "100px" }}>No hay usos para mostrar, agrega uno.</Typography>)}
+                {locationData.length < 1 && (<Typography sx={{ textAlign: "center", pt: "100px" }}>No hay ubicaciones para mostrar, agrega uno.</Typography>)}
                 {errorDelete.status && (
                     <Snackbar
                         open={open}
                         autoHideDuration={3000}
                         onClose={() => {
                             setOpen(false);
-                            setErrorDelete({ status: false, usage: null });
+                            setErrorDelete({ status: false, location: null });
                         }}
                         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     >
@@ -247,7 +247,7 @@ const UsageCompo = () => {
                             onClose={() => setOpen(false)}
                             sx={{ width: "100%" }}
                         >
-                            {errorDelete.message}: {errorDelete.usage}
+                            {errorDelete.message}: {errorDelete.location}
                         </Alert>
                     </Snackbar>
                 )}
@@ -262,7 +262,7 @@ const UsageCompo = () => {
                             setSuccess({
                                 ...success,
                                 "message": "",
-                                "usage": "usageName",
+                                "location": "",
                                 "status": false
                             })
                         }}
@@ -273,14 +273,14 @@ const UsageCompo = () => {
                             onClose={() => setOpen(false)}
                             sx={{ width: "100%" }}
                         >
-                            {success.message} : {success.usage}
+                            {success.message} : {success.location}
                         </Alert>
                     </Snackbar>
                 )}
 
                 {/* table of results*/}
                 <Box sx={{ width: "100%", mt: 3 }}>
-                    {usageData.length < 1 ? (
+                    {locationData.length < 1 ? (
                         <Typography
                             sx={{
                                 textAlign: "center",
@@ -292,29 +292,33 @@ const UsageCompo = () => {
                             No hay registros para mostrar, agrega uno.
                         </Typography>
                     ) : (
-                        <Paper sx={{ width: "100%", overflow: "hidden", bgcolor: "background.paper", }}>
+                        <Paper sx={{ width: "100%", overflow: "hidden", bgcolor: "background.paper" }}>
                             <Table>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
-                                        <TableCell>Nombre de Uso</TableCell>
+                                        <TableCell>Nombre de Ubicación</TableCell>
                                         <TableCell>Creado</TableCell>
                                         <TableCell>Actualizado</TableCell>
                                         <TableCell align="right">Acciones</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {usageData.map((usage) => (
-                                        <TableRow key={usage.equipmentUsageId} hover>
-                                            <TableCell>{usage.equipmentUsageId}</TableCell>
-                                            <TableCell>{usage.usageName}</TableCell>
-                                            <TableCell>{usage.createAt}</TableCell>
-                                            <TableCell>{usage.updateAt}</TableCell>
+                                    {locationData.map((location) => (
+                                        <TableRow key={location.equipmentLocationId} hover>
+                                            <TableCell>{location.equipmentLocationId}</TableCell>
+                                            <TableCell>{location.locationName}</TableCell>
+                                            <TableCell>
+                                                {new Date(location.createAt).toLocaleDateString()}
+                                            </TableCell>
+                                            <TableCell>
+                                                {new Date(location.updateAt).toLocaleDateString()}
+                                            </TableCell>
                                             <TableCell align="right">
                                                 <IconButton
                                                     size="small"
                                                     color="primary"
-                                                    onClick={() => setUsageToEdit(usage)}
+                                                    onClick={() => setLocationToEdit(location)}
                                                 >
                                                     <Edit fontSize="small" />
                                                 </IconButton>
@@ -322,7 +326,7 @@ const UsageCompo = () => {
                                                     size="small"
                                                     color="primary"
                                                     onClick={() =>
-                                                        deleteUsage(usage.equipmentUsageId, usage.usageName)
+                                                        deleteLocation(location.equipmentLocationId, location.locationName)
                                                     }
                                                 >
                                                     <Delete fontSize="small" />
@@ -333,6 +337,7 @@ const UsageCompo = () => {
                                 </TableBody>
                             </Table>
                         </Paper>
+
                     )}
                 </Box>
 
@@ -350,4 +355,4 @@ const UsageCompo = () => {
     );
 };
 
-export default UsageCompo;
+export default LocationsCompo;

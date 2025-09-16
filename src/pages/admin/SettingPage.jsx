@@ -3,6 +3,7 @@ import { Box, Switch, Typography } from '@mui/material';
 import React from 'react';
 import ProductsCompo from '../../components/SettingComponents/ProductsCompo';
 import UsageCompo from '../../components/SettingComponents/UsageCompo';
+import LocationsCompo from '../../components/SettingComponents/LocationsCompo';
 
 const SettingPage = () => {
     return (
@@ -120,6 +121,7 @@ const SettingPage = () => {
             <Box >
                 <ProductsCompo />
                 <UsageCompo />
+                <LocationsCompo />
             </Box>
 
 
