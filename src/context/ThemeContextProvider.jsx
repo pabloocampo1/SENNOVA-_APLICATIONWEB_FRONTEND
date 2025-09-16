@@ -20,60 +20,56 @@ export function ThemeContextProvider({ children }) {
     const theme = useMemo(
         () =>
             createTheme({
-                typography: {
-                    fontFamily: "Inter, sans-serif",
-                    fontWeightRegular: 400,
-                    fontWeightMedium: 500,
-                    fontWeightSemiBold: 600,
-                    fontWeightBold: 700,
-                    h1: {
-                    fontSize: "2.5rem",
-                    fontWeight: 700,
-                    lineHeight: 1.2,
-                },
-                h2: {
-                    fontSize: "2rem",
-                    fontWeight: 600,
-                    lineHeight: 1.3,
-                },
-                h3: {
-                    fontSize: "1.75rem",
-                    fontWeight: 600,
-                },
-                body1: {
-                    fontSize: "1rem",
-                    fontWeight: 400,
-                    lineHeight: 1.5,
-                    color:"black"
-                },
-                body2: {
-                    fontSize: "0.875rem",
-                    fontWeight: 400,
-                    color: "#555",
-                },
-                },
                 palette: {
-                    primary: {
-                        main: "#39A900",
-                        dark: "#2A8A7A",
-                        light: "#6FCFBC",
-                        contrastText: "#FFFFFF",
-                    },
-                    secondary: {
-                        main: "#A9E6DB",
-                        dark: "#1E6B5E",
-                        light: "#D1F3ED",
-                    },
+                    mode: darkMode ? "dark" : "light",
+                    primary: { main: "#39A900" },
                     background: {
-                        default: "#F9F9F9",
-                        paper: "#FFFFFF",
+                        default: darkMode ? "#121212" : "#F9F9F9",
+                        paper: darkMode ? "#1e1e1e" : "#FFFFFF",
                     },
                     text: {
-                        primary: "#1E6B5E",
-                        secondary: "#2A8A7A",
+                        primary: darkMode ? "#FFFFFF" : "#000000",
+                        secondary: darkMode ? "#d2e4d2ff" : "#426640",
                     },
                 },
-                
+                components: {
+                    
+                    MuiOutlinedInput: {
+                        styleOverrides: {
+                            root: {
+                                backgroundColor: "transparent", 
+                                color: "text.primary",
+                                "& input:-webkit-autofill": {
+                                    WebkitBoxShadow: "0 0 0 1000px transparent inset",
+                                    WebkitTextFillColor: "#000",
+                                    caretColor: "#000",
+                                    transition: "background-color 5000s ease-in-out 0s",
+                                },
+                            },
+                        },
+                    },
+                    MuiTypography: {
+                        variants: [
+                            {
+                                props: { variant: "description" },
+                                style: {
+                                    fontSize: "16px",
+                                    color: darkMode ? "#ffffffff" : "#000000ff",
+                                    opacity: 0.50,
+                                    lineHeight: 1.6,
+                                },
+                            },
+                            {
+                                props: { variant: "h3" },
+                                style: {
+                                    fontSize: "20px",
+                                    color: darkMode ? "#ffffff" : "#000000",
+                                    lineHeight: 1.6,
+                                },
+                            },
+                        ],
+                    },
+                },
             }),
         [darkMode]
     );

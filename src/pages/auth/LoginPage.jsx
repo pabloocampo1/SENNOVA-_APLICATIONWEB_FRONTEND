@@ -59,7 +59,7 @@ const LoginPage = () => {
 
     return (
         <Box sx={{
-            width: { xs: "85%", md: "60%", lg: "35%" },
+            width: { xs: "85%", md: "60%", lg: "30%" },
             height: { xs: "80%", md: "70%", lg: "65%" },
             bgcolor: "white",
             borderRadius: "15px",
@@ -75,8 +75,8 @@ const LoginPage = () => {
             </Box>
 
             <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", alignItems: 'center' }}>
-                <Typography variant="h2" sx={{ fontWeight: "700", textAlign: "center", pt: "20px" }}>Bienvenido</Typography>
-                <Typography variant='body1' sx={{ textAlign: "center", opacity: "0.70", pt: "2px" }}>Ingresa tu usuario y contraseña para ingresar al sistema</Typography>
+                <Typography variant="h2" sx={{ fontWeight: "700", textAlign: "center", pt: "20px", color: "black" }}>Bienvenido</Typography>
+                <Typography variant='body1' sx={{ textAlign: "center", opacity: "0.70", pt: "2px", color: "black" }}>Ingresa tu usuario y contraseña para ingresar al sistema</Typography>
 
 
                 <Stack spacing={2} sx={{ width: "100%", mt: { xs: 6, md: 8 } }}>
@@ -89,6 +89,27 @@ const LoginPage = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#f5f5f5",
+                                color: "#000",
+                                "& fieldset": {
+                                    borderColor: "#ccc",
+                                },
+                                "&:hover fieldset": {
+                                    borderColor: "#39A900",
+                                },
+                                "&.Mui-focused fieldset": {
+                                    borderColor: "#39A900",
+                                },
+                            },
+                            "& .MuiInputLabel-root": {
+                                color: "#666",
+                            },
+                            "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#39A900",
+                            },
+                        }}
                     />
 
                     <TextField
@@ -101,6 +122,27 @@ const LoginPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#f5f5f5",
+                                color: "#000",
+                                "& fieldset": {
+                                    borderColor: "#ccc",
+                                },
+                                "&:hover fieldset": {
+                                    borderColor: "#39A900",
+                                },
+                                "&.Mui-focused fieldset": {
+                                    borderColor: "#39A900",
+                                },
+                            },
+                            "& .MuiInputLabel-root": {
+                                color: "#666",
+                            },
+                            "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#39A900",
+                            },
+                        }}
                     />
                 </Stack>
                 <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }} >
@@ -115,11 +157,11 @@ const LoginPage = () => {
                 </Box>
                 {error && (<Typography sx={{ color: "red" }}>{messageErrorSignIn}</Typography>)}
 
-                <Button type='submit' sx={{ width: "100%", mt: "50px" }} variant='outlined'>Iniciar sesion</Button>
+                <Button type='submit' sx={{ width: "100%", mt: "40px" }} variant='outlined'>Iniciar sesion</Button>
 
-                <Typography sx={{ fontSize: "0.90rem", mt: "20px" }}>O tambien puedes:</Typography>
+                <Typography sx={{ fontSize: "0.90rem", mt: "20px", color:"black" }}>O tambien puedes:</Typography>
 
-                <Box sx={{ mt:"20px"}}>
+                <Box sx={{ mt: "10px" }}>
                     <GoogleLogin
                         onSuccess={handleSuccess}
                         onError={() => console.log("Error al iniciar con Google")}

@@ -1,20 +1,44 @@
-import { Box } from '@mui/material';
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import TopBar from '../components/TopBar';
+// SystemLayout.jsx
+import { Box } from "@mui/material";
+import Sidebar from "../components/Sidebar";
+import TopBar from "../components/TopBar";
+import { Outlet } from "react-router-dom";
 
-const SystemLayaout = () => {
-
+const SystemLayout = () => {
     return (
-        <Box sx={{
-            width:"100vw",
-            height:"100vh",
-    
-        }}>
-            <TopBar />
-            <Outlet />
+        <Box
+            sx={{
+                display: "flex",
+                width: "100vw",
+                height: "100vh",
+                bgcolor: "background.paper",
+            }}
+        >
+
+            <Sidebar />
+            <Box
+                sx={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+
+                }}
+            >
+                <TopBar />
+                <Box
+                    sx={{
+                        flex: 1,
+                        p: 2,
+                        overflowY: "auto", 
+                        overflowX: "hidden", 
+                       
+                    }}
+                >
+                <Outlet />
+            </Box>
         </Box>
+        </Box >
     );
 };
 
-export default SystemLayaout;
+export default SystemLayout;

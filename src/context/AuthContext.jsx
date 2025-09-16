@@ -14,15 +14,20 @@ export const AuthContextProvider = ({ children }) => {
         "username": "",
         "name": "",
         "isAuthenticate": false,
+        "position": "",
+        "imageProfile": "",
         "role": ""
     })
     const [loading, setLoading] = useState(true);
+
 
     const getToken = () => {
         return token;
     }
 
     const signIn = async (username, password) => {
+        localStorage.removeItem("SectionName");
+        localStorage.removeItem("PathName");
 
         try {
             const authRequest = { "username": username, "password": password };
@@ -40,6 +45,8 @@ export const AuthContextProvider = ({ children }) => {
                 username: data.username,
                 name: data.name,
                 isAuthenticate: data.status,
+                position: data.position,
+                imageProfile: data.imageProfile,
                 role: data.authorities
             })
 
@@ -61,6 +68,8 @@ export const AuthContextProvider = ({ children }) => {
                     username: objectResponse.username,
                     name: objectResponse.name,
                     isAuthenticate: objectResponse.status,
+                    position: objectResponse.position,
+                    imageProfile: objectResponse.imageProfile,
                     role: objectResponse.authorities
                 })
                 setToken(objectResponse.accessToken);
@@ -87,9 +96,13 @@ export const AuthContextProvider = ({ children }) => {
                         "username": "",
                         "name": "",
                         "isAuthenticate": false,
+                        "imageProfile": "",
+                        "position": "",
                         "role": ""
                     })
                     setToken("")
+                    localStorage.removeItem("SectionName");
+                    localStorage.removeItem("PathName");
                 }
 
             } catch (error) {
@@ -101,54 +114,41 @@ export const AuthContextProvider = ({ children }) => {
         fetchLogout()
     }
 
+    const tryRefresh = async () => {
+        try {
+            const res = await api.post("/auth/refresh/token");
+            setToken(res.data.accessToken);
+            setAuthObject({
+                username: res.data.username,
+                name: res.data.name,
+                isAuthenticate: res.data.status,
+                position: res.data.position,
+                imageProfile: res.data.imageProfile,
+                role: res.data.authorities
+            });
+        } catch (err) {
+            console.log("No se pudo refrescar el token", err);
+            setToken("");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-
-        const tryRefresh = async () => {
-            try {
-
-                const res = await api.post("/auth/refresh/token");
-                console.log(res);
-
-                setToken(res.data.accessToken);
-                setAuthObject({
-                    username: res.data.username,
-                    name: res.data.name,
-                    isAuthenticate: res.data.status,
-                    role: res.data.authorities
-                })
-                console.log(res);
-
-            } catch (err) {
-                console.log("No se pudo refrescar el token, en el useEffect", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         tryRefresh();
-
     }, []);
 
     useEffect(() => {
         injectTokenGetter(() => token);
-        injectTokenSetter(setToken)
-        console.log("se actualizo.");
-        
+        injectTokenSetter(setToken);
     }, [token]);
 
 
     useEffect(() => {
-        if (token === "") {
-            setAuthObject({
-                username: "",
-                name: "",
-                isAuthenticate: false,
-                role: ""
-            });
+        if (!loading && token === "") {
             navigate("/signIn");
         }
-    }, [token]);
+    }, [token, loading, navigate]);
 
 
 

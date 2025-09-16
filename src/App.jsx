@@ -9,6 +9,10 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
 import { AuthContextProvider } from "./context/AuthContext"
 import PrivateRoute from "./routes/PrivateRoute"
 import NoAccessModal from "./components/NoAccessModal"
+import EquipmentPage from "./pages/admin/EquipmentPage"
+import ReagmentPage from "./pages/admin/ReagmentPage"
+import SettingPage from "./pages/admin/SettingPage"
+import ProfilePage from "./pages/admin/ProfilePage"
 
 
 
@@ -21,15 +25,20 @@ function App() {
                 <AuthContextProvider>
                     <ThemeContextProvider>
                         <Routes>
-                            
+
                             <Route path="/signIn" element={<AuthLayaout />}>
                                 <Route index element={<LoginPage />} />
-                                 <Route path="noAccess" element={<NoAccessModal />} />
+                                <Route path="noAccess" element={<NoAccessModal />} />
                             </Route>
 
-                            <Route element={<PrivateRoute  allowedRoles={["ROLE_ADMIN", "ROLE_SUPERADMIN"]}/>}>
+                            <Route element={<PrivateRoute allowedRoles={["ROLE_ADMIN", "ROLE_SUPERADMIN"]} />}>
                                 <Route path="/system" element={<SystemLayaout />}>
                                     <Route index element={<DashboardPage />} />
+                                    <Route path="settings" element={<SettingPage />} />
+                                    <Route path="profile" element={<ProfilePage />} />
+                                    <Route path="inventory/equipments" element={<EquipmentPage />} />
+                                    <Route path="inventory/reagents" element={<ReagmentPage />} />
+
                                     {/* <Route/> */}
                                 </Route>
                             </Route>
