@@ -16,7 +16,8 @@ export const AuthContextProvider = ({ children }) => {
         "isAuthenticate": false,
         "position": "",
         "imageProfile": "",
-        "role": ""
+        "role": "",
+        "preferencesNotification": null
     })
     const [loading, setLoading] = useState(true);
 
@@ -36,10 +37,8 @@ export const AuthContextProvider = ({ children }) => {
 
             const data = response.data;
 
-            if (data.accessToken) {
-                setToken(data.accessToken);
-                navigate("/system");
-            }
+
+            console.log(data);
 
             setAuthObject({
                 username: data.username,
@@ -47,8 +46,14 @@ export const AuthContextProvider = ({ children }) => {
                 isAuthenticate: data.status,
                 position: data.position,
                 imageProfile: data.imageProfile,
-                role: data.authorities
+                role: data.authorities,
+                preferencesNotification: data.userPreferenceResponse
             })
+
+            if (data.accessToken) {
+                setToken(data.accessToken);
+                navigate("/system");
+            }
 
         } catch (error) {
 
@@ -70,7 +75,8 @@ export const AuthContextProvider = ({ children }) => {
                     isAuthenticate: objectResponse.status,
                     position: objectResponse.position,
                     imageProfile: objectResponse.imageProfile,
-                    role: objectResponse.authorities
+                    role: objectResponse.authorities,
+                    preferencesNotification: objectResponse.userPreferenceResponse
                 })
                 setToken(objectResponse.accessToken);
                 console.log(objectResponse);
@@ -98,7 +104,8 @@ export const AuthContextProvider = ({ children }) => {
                         "isAuthenticate": false,
                         "imageProfile": "",
                         "position": "",
-                        "role": ""
+                        "role": "",
+                        "preferencesNotification": null
                     })
                     setToken("")
                     localStorage.removeItem("SectionName");
@@ -124,7 +131,8 @@ export const AuthContextProvider = ({ children }) => {
                 isAuthenticate: res.data.status,
                 position: res.data.position,
                 imageProfile: res.data.imageProfile,
-                role: res.data.authorities
+                role: res.data.authorities,
+                preferencesNotification: res.data.userPreferenceResponse
             });
         } catch (err) {
             console.log("No se pudo refrescar el token", err);

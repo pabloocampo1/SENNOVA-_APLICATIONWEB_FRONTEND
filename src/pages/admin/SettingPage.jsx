@@ -1,11 +1,53 @@
 import { CheckBox, Label } from '@mui/icons-material';
-import { Box, Switch, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Button, Switch, Typography } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import ProductsCompo from '../../components/SettingComponents/ProductsCompo';
 import UsageCompo from '../../components/SettingComponents/UsageCompo';
 import LocationsCompo from '../../components/SettingComponents/LocationsCompo';
+import { AuthContext } from '../../context/AuthContext';
+import api from '../../service/axiosService';
 
 const SettingPage = () => {
+    const { authObject } = useContext(AuthContext);
+    const [preferences, setPreferences] = useState({
+        inventoryEquipment: false,
+        inventoryReagents: false,
+        quotations: false,
+        results: false,
+    });
+
+    const handleSubmitPreferences = (e) => {
+        e.preventDefault();
+        const changePreferences = async () => {
+            try {
+                const response = await api.post(`/users/changePreferences/${authObject.username}`, preferences);
+                console.log(response);
+                
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        changePreferences()
+
+    }
+
+    const handlePreferences = (e) => {
+        const { name, checked } = e.target;
+        setPreferences((prev) => ({
+            ...prev,
+            [name]: checked,
+        }));
+    };
+
+
+    useEffect(() => {
+        console.log("preferences:" + authObject.preferencesNotification);
+
+        setPreferences(authObject.preferencesNotification)
+    }, [])
+
+
     return (
         <Box>
             <Typography component={"h2"} sx={{
@@ -20,101 +62,176 @@ const SettingPage = () => {
                 Preferencias de notificación (via email).
             </Typography>
 
-            <Box sx={{
-                width: "100%",
-                height: "auto",
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                gap: "10px",
-                mt: "20px",
-                mb: "20px"
-            }}>
-
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "end", mb: "20px" }} component={"form"} onSubmit={handleSubmitPreferences}>
                 <Box sx={{
-                    height: "100px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Inventario - Equipos</Typography>
-                        <Typography variant='description'>Recibir alertas de mantenimiento programado.</Typography>
-                    </Box>
-                    <Switch defaultChecked />
-                </Box>
+                    width: "100%",
+                    height: "auto",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                    gap: "10px",
+                    mt: "20px",
+                    mb: "20px"
+                }}>
 
-                <Box sx={{
-                    height: "100px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Inventario - Reactivos</Typography>
-                        <Typography variant='description'>Notificar bajo stock o vencimiento cercano.</Typography>
+                    <Box sx={{
+                        height: "100px",
+                        borderRadius: "10px",
+                        border: `1px solid #acacacff`,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        p: "20px"
+                    }} >
+                        <Box>
+                            <Typography sx={{ fontWeight: "600" }}>Inventario - Equipos</Typography>
+                            <Typography variant='description'>Recibir alertas de mantenimiento programado.</Typography>
+                        </Box>
+                        <Switch
+                            name="inventoryEquipment"
+                            checked={preferences.inventoryEquipment}
+                            onChange={handlePreferences}
+                        />
                     </Box>
-                    <Switch defaultChecked />
-                </Box>
 
-                <Box sx={{
-                    height: "100px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Cotizaciones</Typography>
-                        <Typography variant='description'>Avisar sobre nuevas solicitudes de cotización.</Typography>
+                    <Box sx={{
+                        height: "100px",
+                        borderRadius: "10px",
+                        border: `1px solid #acacacff`,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        p: "20px"
+                    }} >
+                        <Box>
+                            <Typography sx={{ fontWeight: "600" }}>Inventario - Reactivos</Typography>
+                            <Typography variant='description'>Notificar bajo stock o vencimiento cercano.</Typography>
+                        </Box>
+                        <Switch
+                            name="inventoryReagents"
+                            checked={preferences.inventoryReagents}
+                            onChange={handlePreferences}
+                        />
                     </Box>
-                    <Switch defaultChecked />
-                </Box>
 
-                <Box sx={{
-                    height: "100px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Resultados</Typography>
-                        <Typography variant='description'>Notificación al concluir análisis de muestras.</Typography>
+                    <Box sx={{
+                        height: "100px",
+                        borderRadius: "10px",
+                        border: `1px solid #acacacff`,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        p: "20px"
+                    }} >
+                        <Box>
+                            <Typography sx={{ fontWeight: "600" }}>Cotizaciones</Typography>
+                            <Typography variant='description'>Avisar sobre nuevas solicitudes de cotización.</Typography>
+                        </Box>
+                        <Switch
+                            name="quotations"
+                            checked={preferences.quotations}
+                            onChange={handlePreferences}
+                        />
                     </Box>
-                    <Switch defaultChecked />
-                </Box>
 
+                    <Box sx={{
+                        height: "100px",
+                        borderRadius: "10px",
+                        border: `1px solid #acacacff`,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        p: "20px"
+                    }} >
+                        <Box>
+                            <Typography sx={{ fontWeight: "600" }}>Resultados</Typography>
+                            <Typography variant='description'>Notificación al concluir análisis de muestras.</Typography>
+                        </Box>
+                        <Switch
+                            name="results"
+                            checked={preferences.results}
+                            onChange={handlePreferences}
+                        />
+                    </Box>
+
+                </Box>
+                <Button variant='contained' type='submit'>Cambiar preferencias</Button>
             </Box>
 
 
-            <Box>
+            <Box sx={{ mb: "50px" }}>
 
-                <Typography variant='description' sx={{ pt: "40px" }}>
-                    Personalizacion
-                </Typography>
-
-                 {/** agregar datos aca */}
-            </Box>
-
-
-            <Box>
-
-                <Typography variant='description' sx={{ pt: "40px" }}>
+                <Typography component={"h3"} variant='h3' sx={{ pt: "40px", pb: "20px", fontSize: "24px" }}>
                     Seguridad
                 </Typography>
                 {/** agregar datos aca */}
+                <Box sx={{
+                    height: "80px",
+                    borderRadius: "10px",
+                    border: `1px solid #acacacff`,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    p: "20px"
+                }} >
+                    <Box>
+                        <Typography sx={{ fontWeight: "600" }}>Email</Typography>
+                        <Typography variant='description'>email del usuario.comewew.</Typography>
+                    </Box>
+                    <Button variant='contained'>Cambiar</Button>
+                </Box>
 
-                
+                <Box sx={{
+                    height: "80px",
+                    borderRadius: "10px",
+                    border: `1px solid #acacacff`,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    p: "20px",
+                    mt: "20px"
+                }} >
+                    <Box>
+                        <Typography sx={{ fontWeight: "600" }}>Cambiar contraseña</Typography>
+                        <Typography variant='description'>Cambiar tu contraseña para mayor securidad.</Typography>
+                    </Box>
+                    <Button variant='contained'>Cambiar</Button>
+                </Box>
+
+                <Box sx={{
+                    height: "80px",
+                    borderRadius: "10px",
+                    border: `1px solid #acacacff`,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    p: "20px",
+                    mt: "20px"
+                }} >
+                    <Box>
+                        <Typography sx={{ fontWeight: "600" }}>Desactivar cuenta</Typography>
+                        <Typography variant='description'>Podras desactivar tu cuenta temporalmente.</Typography>
+                    </Box>
+                    <Button variant='contained'>Desactivar</Button>
+                </Box>
+
+
+                <Box sx={{
+                    height: "80px",
+                    borderRadius: "10px",
+                    border: `1px solid #acacacff`,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    p: "20px",
+                    mt: "20px"
+                }} >
+                    <Box>
+                        <Typography sx={{ fontWeight: "600" }}>Ultima sesion</Typography>
+                        <Typography variant='description'>Ultima vez que iniciaste sesion dentro del sistema</Typography>
+                    </Box>
+
+                </Box>
+
             </Box>
 
 
