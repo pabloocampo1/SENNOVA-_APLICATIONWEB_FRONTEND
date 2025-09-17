@@ -8,6 +8,7 @@ import { AuthContext } from '../../context/AuthContext';
 import api from '../../service/axiosService';
 import GenericModal from '../../components/modals/GenericModal';
 import ChangeEmailCompo from '../../components/forms/Auth/changeEmailCompo';
+import ChangePasswordCompo from '../../components/forms/Auth/ChangePasswordCompo';
 
 const SettingPage = () => {
     const { authObject, setAuthObject } = useContext(AuthContext);
@@ -18,6 +19,7 @@ const SettingPage = () => {
         results: false,
     });
     const [openChangeEmail, setOpenChangeEmail] = useState(false);
+    const [openChangePassword, setOpenChangePassword] = useState(false);
 
 
 
@@ -168,6 +170,7 @@ const SettingPage = () => {
             <Box sx={{ mb: "50px" }}>
 
                 <GenericModal open={openChangeEmail} compo={<ChangeEmailCompo authObject={authObject} setAuthObject={setAuthObject} onClose={() => setOpenChangeEmail(false)} />} onClose={() => setOpenChangeEmail(false)} />
+                <GenericModal open={openChangePassword} compo={<ChangePasswordCompo authObject={authObject} onClose={() => setOpenChangePassword(false)} />} onClose={() => setOpenChangePassword(false)} />
 
                 <Typography component={"h3"} variant='h3' sx={{ pt: "40px", pb: "20px", fontSize: "24px" }}>
                     Seguridad
@@ -203,7 +206,7 @@ const SettingPage = () => {
                         <Typography sx={{ fontWeight: "600" }}>Cambiar contraseña</Typography>
                         <Typography variant='description'>Cambiar tu contraseña para mayor securidad.</Typography>
                     </Box>
-                    <Button variant='contained'>Cambiar</Button>
+                    <Button onClick={() => setOpenChangePassword(true)} variant='contained'>Cambiar</Button>
                 </Box>
 
                 <Box sx={{

@@ -38,7 +38,7 @@ const ChangeEmailCompo = ({ authObject = {}, setAuthObject, onClose }) => {
                     setMessageError(msg)
                 }
             } finally {
-                setIsLoanding(false); 
+                setIsLoanding(false);
             }
         }
 
@@ -110,11 +110,11 @@ const ChangeEmailCompo = ({ authObject = {}, setAuthObject, onClose }) => {
 
     return (
         <Box sx={{ width: "400px", height: "200px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Typography variant='h3' sx={{ pb: "20px", textAlign: "center" }}>Cambiar email</Typography>
             <SimpleBackdrop open={isLoanding} />
             {requestSucess ? (
 
                 <Box component={"form"} onSubmit={handleSumitCode} sx={{ display: "flex", flexDirection: "column" }}>
+                    <Typography variant='h3' sx={{ pb: "20px", textAlign: "center" }}>Cambiar email</Typography>
                     <TextField
                         label="Codigo"
                         type='number'
@@ -122,10 +122,11 @@ const ChangeEmailCompo = ({ authObject = {}, setAuthObject, onClose }) => {
                         value={code}
                         onChange={(e) => setCode(e.target.value)} />
 
-                    <Button sx={{ mt: "40px" }} variant='contained' type='submit'>Cambiar email</Button>
+                    <Button sx={{ mt: "40px" }} variant='contained' type='submit'>Enviar</Button>
                 </Box>
             ) : (
                 <Box component={"form"} onSubmit={handleSumit} sx={{ display: "flex", flexDirection: "column" }}>
+                     <Typography variant='h3' sx={{ pb: "20px", textAlign: "center" }}>Verificar email</Typography>
                     <TextField
                         label="Nuevo correo electronico"
                         type='email'
