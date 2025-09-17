@@ -6,15 +6,22 @@ import UsageCompo from '../../components/SettingComponents/UsageCompo';
 import LocationsCompo from '../../components/SettingComponents/LocationsCompo';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../service/axiosService';
+import GenericModal from '../../components/modals/GenericModal';
+import ChangeEmailCompo from '../../components/forms/Auth/changeEmailCompo';
 
 const SettingPage = () => {
-    const { authObject } = useContext(AuthContext);
+    const { authObject, setAuthObject } = useContext(AuthContext);
     const [preferences, setPreferences] = useState({
         inventoryEquipment: false,
         inventoryReagents: false,
         quotations: false,
         results: false,
     });
+    const [openChangeEmail, setOpenChangeEmail] = useState(false);
+
+
+
+
 
     const handleSubmitPreferences = (e) => {
         e.preventDefault();
@@ -22,7 +29,7 @@ const SettingPage = () => {
             try {
                 const response = await api.post(`/users/changePreferences/${authObject.username}`, preferences);
                 console.log(response);
-                
+
             } catch (error) {
                 console.error(error);
             }
@@ -160,10 +167,12 @@ const SettingPage = () => {
 
             <Box sx={{ mb: "50px" }}>
 
+                <GenericModal open={openChangeEmail} compo={<ChangeEmailCompo authObject={authObject} setAuthObject={setAuthObject} onClose={() => setOpenChangeEmail(false)} />} onClose={() => setOpenChangeEmail(false)} />
+
                 <Typography component={"h3"} variant='h3' sx={{ pt: "40px", pb: "20px", fontSize: "24px" }}>
                     Seguridad
                 </Typography>
-                {/** agregar datos aca */}
+
                 <Box sx={{
                     height: "80px",
                     borderRadius: "10px",
@@ -175,9 +184,9 @@ const SettingPage = () => {
                 }} >
                     <Box>
                         <Typography sx={{ fontWeight: "600" }}>Email</Typography>
-                        <Typography variant='description'>email del usuario.comewew.</Typography>
+                        <Typography variant='description'>{authObject.email}</Typography>
                     </Box>
-                    <Button variant='contained'>Cambiar</Button>
+                    <Button variant='contained' onClick={() => setOpenChangeEmail(true)}>Cambiar</Button>
                 </Box>
 
                 <Box sx={{

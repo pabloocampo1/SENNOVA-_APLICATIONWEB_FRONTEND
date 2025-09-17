@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import api, { injectTokenGetter, injectTokenSetter } from "../service/axiosService";
 import { useNavigate } from "react-router-dom";
 
+
 export const AuthContext = createContext();
 
 
@@ -17,7 +18,8 @@ export const AuthContextProvider = ({ children }) => {
         "position": "",
         "imageProfile": "",
         "role": "",
-        "preferencesNotification": null
+        "preferencesNotification": null,
+        "email": ""
     })
     const [loading, setLoading] = useState(true);
 
@@ -47,7 +49,8 @@ export const AuthContextProvider = ({ children }) => {
                 position: data.position,
                 imageProfile: data.imageProfile,
                 role: data.authorities,
-                preferencesNotification: data.userPreferenceResponse
+                preferencesNotification: data.userPreferenceResponse,
+                email: data.email
             })
 
             if (data.accessToken) {
@@ -76,7 +79,8 @@ export const AuthContextProvider = ({ children }) => {
                     position: objectResponse.position,
                     imageProfile: objectResponse.imageProfile,
                     role: objectResponse.authorities,
-                    preferencesNotification: objectResponse.userPreferenceResponse
+                    preferencesNotification: objectResponse.userPreferenceResponse,
+                    email: objectResponse.email
                 })
                 setToken(objectResponse.accessToken);
                 console.log(objectResponse);
@@ -105,7 +109,8 @@ export const AuthContextProvider = ({ children }) => {
                         "imageProfile": "",
                         "position": "",
                         "role": "",
-                        "preferencesNotification": null
+                        "preferencesNotification": null,
+                        "email": null
                     })
                     setToken("")
                     localStorage.removeItem("SectionName");
@@ -132,7 +137,8 @@ export const AuthContextProvider = ({ children }) => {
                 position: res.data.position,
                 imageProfile: res.data.imageProfile,
                 role: res.data.authorities,
-                preferencesNotification: res.data.userPreferenceResponse
+                preferencesNotification: res.data.userPreferenceResponse,
+                email: res.data.email
             });
         } catch (err) {
             console.log("No se pudo refrescar el token", err);
@@ -161,7 +167,7 @@ export const AuthContextProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ token, setToken, getToken, signIn, logout, authObject, loading, signInWithGoogle }}>
+        <AuthContext.Provider value={{ token, setToken, getToken, signIn, logout, authObject, loading, signInWithGoogle, setAuthObject }}>
             {children}
         </AuthContext.Provider>
     )
