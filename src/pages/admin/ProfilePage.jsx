@@ -4,7 +4,7 @@ import React from 'react';
 const ProfilePage = () => {
     return (
         <Box>
-            soy perfil
+            En construccion
         </Box>
     );
 };

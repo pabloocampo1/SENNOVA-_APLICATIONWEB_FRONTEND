@@ -1,5 +1,5 @@
-import { CheckBox, Label } from '@mui/icons-material';
-import { Box, Button, Switch, Typography } from '@mui/material';
+import { AccessTimeOutlined, CheckBox, EmailOutlined, Label, LockClockOutlined, PersonOffOutlined } from '@mui/icons-material';
+import { Box, Button, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, Switch, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import ProductsCompo from '../../components/SettingComponents/ProductsCompo';
 import UsageCompo from '../../components/SettingComponents/UsageCompo';
@@ -48,6 +48,18 @@ const SettingPage = () => {
             [name]: checked,
         }));
     };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleString("es-CO", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
 
 
     useEffect(() => {
@@ -176,73 +188,67 @@ const SettingPage = () => {
                     Seguridad
                 </Typography>
 
-                <Box sx={{
-                    height: "80px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Email</Typography>
-                        <Typography variant='description'>{authObject.email}</Typography>
-                    </Box>
-                    <Button variant='contained' onClick={() => setOpenChangeEmail(true)}>Cambiar</Button>
-                </Box>
 
-                <Box sx={{
-                    height: "80px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px",
-                    mt: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Cambiar contraseña</Typography>
-                        <Typography variant='description'>Cambiar tu contraseña para mayor securidad.</Typography>
-                    </Box>
-                    <Button onClick={() => setOpenChangePassword(true)} variant='contained'>Cambiar</Button>
-                </Box>
+                <List sx={{ border: "1px solid #ddd", borderRadius: 2 }}>
+                    <ListItem
+                        secondaryAction={
+                            <Button variant="contained" onClick={() => setOpenChangeEmail(true)}>
+                                Cambiar
+                            </Button>
+                        }
+                    >
+                        <ListItemIcon>
+                            <EmailOutlined color="primary" />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="Email"
+                            secondary={authObject.email}
+                        />
+                    </ListItem>
 
-                <Box sx={{
-                    height: "80px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px",
-                    mt: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Desactivar cuenta</Typography>
-                        <Typography variant='description'>Podras desactivar tu cuenta temporalmente.</Typography>
-                    </Box>
-                    <Button variant='contained'>Desactivar</Button>
-                </Box>
+                    <ListItem
+                        secondaryAction={
+                            <Button variant="contained" onClick={() => setOpenChangePassword(true)}>
+                                Cambiar
+                            </Button>
+                        }
+                    >
+                        <ListItemIcon>
+                            <LockClockOutlined color="primary" />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="Cambiar contraseña"
+                            secondary="Actualiza tu contraseña para mayor seguridad."
+                        />
+                    </ListItem>
 
+                    <ListItem
+                        secondaryAction={
+                            <Button variant="contained" color="error">
+                                Desactivar
+                            </Button>
+                        }
+                    >
+                        <ListItemIcon>
+                            <PersonOffOutlined color="primary" />
+                        </ListItemIcon>
+                        <ListItemText
 
-                <Box sx={{
-                    height: "80px",
-                    borderRadius: "10px",
-                    border: `1px solid #acacacff`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: "20px",
-                    mt: "20px"
-                }} >
-                    <Box>
-                        <Typography sx={{ fontWeight: "600" }}>Ultima sesion</Typography>
-                        <Typography variant='description'>Ultima vez que iniciaste sesion dentro del sistema</Typography>
-                    </Box>
+                            primary="Desactivar cuenta"
+                            secondary="Podrás desactivar tu cuenta temporalmente."
+                        />
+                    </ListItem>
 
-                </Box>
+                    <ListItem>
+                          <ListItemIcon>
+                            <AccessTimeOutlined color="primary" />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="Última sesión"
+                            secondary={formatDate(authObject.lastSession)}
+                        />
+                    </ListItem>
+                </List>
 
             </Box>
 

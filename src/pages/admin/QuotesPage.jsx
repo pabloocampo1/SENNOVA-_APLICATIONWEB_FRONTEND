@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EquipmentPage = () => {
+const QuotesPage = () => {
     return (
         <div>
             en construccion
@@ -8,4 +8,4 @@ const EquipmentPage = () => {
     );
 };
 
-export default EquipmentPage;
+export default QuotesPage;

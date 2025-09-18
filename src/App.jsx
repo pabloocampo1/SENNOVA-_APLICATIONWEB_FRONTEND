@@ -13,6 +13,9 @@ import EquipmentPage from "./pages/admin/EquipmentPage"
 import ReagmentPage from "./pages/admin/ReagmentPage"
 import SettingPage from "./pages/admin/SettingPage"
 import ProfilePage from "./pages/admin/ProfilePage"
+import QuotesPage from "./pages/admin/QuotesPage"
+import ResultsRelease from "./pages/admin/ResultsRelease"
+import CustomersAndUsersPage from "./pages/admin/CustomersAndUsersPage"
 
 
 
@@ -38,6 +41,9 @@ function App() {
                                     <Route path="profile" element={<ProfilePage />} />
                                     <Route path="inventory/equipments" element={<EquipmentPage />} />
                                     <Route path="inventory/reagents" element={<ReagmentPage />} />
+                                    <Route path="quotes" element={<QuotesPage />} />
+                                    <Route path="results" element={<ResultsRelease />} />
+                                    <Route path="users" element={<CustomersAndUsersPage />} />
 
                                     {/* <Route/> */}
                                 </Route>
