@@ -20,7 +20,8 @@ export const AuthContextProvider = ({ children }) => {
         "role": "",
         "preferencesNotification": null,
         "email": "",
-        "lastSession": ""
+        "lastSession": "",
+        "available": false
     })
     const [loading, setLoading] = useState(true);
 
@@ -52,7 +53,8 @@ export const AuthContextProvider = ({ children }) => {
                 role: data.authorities,
                 preferencesNotification: data.userPreferenceResponse,
                 email: data.email,
-                lastSession: data.lastSession
+                lastSession: data.lastSession,
+                available:data.available,
             })
 
             if (data.accessToken) {
@@ -83,7 +85,8 @@ export const AuthContextProvider = ({ children }) => {
                     role: objectResponse.authorities,
                     preferencesNotification: objectResponse.userPreferenceResponse,
                     email: objectResponse.email,
-                    lastSession: objectResponse.lastSession
+                    lastSession: objectResponse.lastSession,
+                    available: objectResponse.available
                 })
                 setToken(objectResponse.accessToken);
                 console.log(objectResponse);
@@ -114,7 +117,8 @@ export const AuthContextProvider = ({ children }) => {
                         "role": "",
                         "preferencesNotification": null,
                         "email": null,
-                        "lastSession":""
+                        "lastSession":"",
+                        "available": false
                     })
                     setToken("")
                     localStorage.removeItem("SectionName");
@@ -143,7 +147,8 @@ export const AuthContextProvider = ({ children }) => {
                 role: res.data.authorities,
                 preferencesNotification: res.data.userPreferenceResponse,
                 email: res.data.email,
-                lastSession: res.data.lastSession
+                lastSession: res.data.lastSession,
+                available: res.data.available
             });
         } catch (err) {
             console.log("No se pudo refrescar el token", err);

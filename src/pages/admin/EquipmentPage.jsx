@@ -1,10 +1,11 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
 const EquipmentPage = () => {
     return (
-        <div>
+        <Box>
             en construccion
-        </div>
+        </Box>
     );
 };
 

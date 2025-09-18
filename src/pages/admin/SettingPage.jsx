@@ -9,6 +9,7 @@ import api from '../../service/axiosService';
 import GenericModal from '../../components/modals/GenericModal';
 import ChangeEmailCompo from '../../components/forms/Auth/changeEmailCompo';
 import ChangePasswordCompo from '../../components/forms/Auth/ChangePasswordCompo';
+import DeactivateAccountConfirmation from '../../components/SettingComponents/DeactivateAccountConfirmation';
 
 const SettingPage = () => {
     const { authObject, setAuthObject } = useContext(AuthContext);
@@ -20,6 +21,7 @@ const SettingPage = () => {
     });
     const [openChangeEmail, setOpenChangeEmail] = useState(false);
     const [openChangePassword, setOpenChangePassword] = useState(false);
+    const [openDeactivateAccount, setOpenDeactivateAccount] = useState(false);
 
 
 
@@ -183,6 +185,7 @@ const SettingPage = () => {
 
                 <GenericModal open={openChangeEmail} compo={<ChangeEmailCompo authObject={authObject} setAuthObject={setAuthObject} onClose={() => setOpenChangeEmail(false)} />} onClose={() => setOpenChangeEmail(false)} />
                 <GenericModal open={openChangePassword} compo={<ChangePasswordCompo authObject={authObject} onClose={() => setOpenChangePassword(false)} />} onClose={() => setOpenChangePassword(false)} />
+                <GenericModal open={openDeactivateAccount} compo={<DeactivateAccountConfirmation authObject={authObject} setAuthObject={setAuthObject} onClose={() => setOpenDeactivateAccount(false)} />} onClose={() => setOpenDeactivateAccount(false)} />
 
                 <Typography component={"h3"} variant='h3' sx={{ pt: "40px", pb: "20px", fontSize: "24px" }}>
                     Seguridad
@@ -192,7 +195,7 @@ const SettingPage = () => {
                 <List sx={{ border: "1px solid #ddd", borderRadius: 2 }}>
                     <ListItem
                         secondaryAction={
-                            <Button variant="contained" onClick={() => setOpenChangeEmail(true)}>
+                            <Button variant="outlined" onClick={() => setOpenChangeEmail(true)}>
                                 Cambiar
                             </Button>
                         }
@@ -208,7 +211,7 @@ const SettingPage = () => {
 
                     <ListItem
                         secondaryAction={
-                            <Button variant="contained" onClick={() => setOpenChangePassword(true)}>
+                            <Button variant="outlined" onClick={() => setOpenChangePassword(true)}>
                                 Cambiar
                             </Button>
                         }
@@ -224,23 +227,29 @@ const SettingPage = () => {
 
                     <ListItem
                         secondaryAction={
-                            <Button variant="contained" color="error">
-                                Desactivar
-                            </Button>
+                            authObject.available ? (
+                                <Button variant='outlined' sx={{borderColor:"red", color:"red"}} onClick={() => setOpenDeactivateAccount(true)}>
+                                    Desactivar
+                                </Button>
+                            ) : (
+                                <Button variant='outlined' onClick={() => setOpenDeactivateAccount(true)}>
+                                    Activar
+                                </Button>
+                            )
                         }
                     >
                         <ListItemIcon>
                             <PersonOffOutlined color="primary" />
                         </ListItemIcon>
                         <ListItemText
-
-                            primary="Desactivar cuenta"
-                            secondary="Podrás desactivar tu cuenta temporalmente."
+                            primary="Estado de la cuenta"
+                            secondary="Podrás activar o desactivar tu cuenta temporalmente. Si lo haces ya no podrán asignarte a ensayos."
                         />
                     </ListItem>
 
+
                     <ListItem>
-                          <ListItemIcon>
+                        <ListItemIcon>
                             <AccessTimeOutlined color="primary" />
                         </ListItemIcon>
                         <ListItemText
