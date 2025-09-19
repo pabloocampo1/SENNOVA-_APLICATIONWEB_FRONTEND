@@ -10,9 +10,9 @@ const UsageForm = ({ method, errors = {}, data = null, isEdit }) => {
     const handleForm = (e) => {
         e.preventDefault();
         if (!data) {
-            method(formData); // crear
+            method(formData); 
         } else {
-            method(formData, data.equipmentUsageId); // editar
+            method(formData, data.equipmentUsageId); 
         }
     };
 

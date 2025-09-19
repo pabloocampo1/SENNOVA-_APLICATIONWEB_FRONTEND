@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Paper, TextField, IconButton } from "@mui/material";
+import { Paper, TextField, IconButton, Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
 const SearchBar = ({ onSearch }) => {
@@ -11,8 +11,8 @@ const SearchBar = ({ onSearch }) => {
     };
 
     return (
-        <Paper
-            sx={{ display: "flex", alignItems: "center", width: "400px", p: "4px 12px", borderRadius:"15px" }}
+        <Box
+            sx={{ display: "flex", alignItems: "center", width: "400px", p: "4px 12px", borderRadius:"15px", border:"1px solid #39A90060" }}
         >
             <TextField
                 variant="standard"
@@ -25,7 +25,7 @@ const SearchBar = ({ onSearch }) => {
             <IconButton>
                 <Search />
             </IconButton>
-        </Paper>
+        </Box>
     );
 };
 

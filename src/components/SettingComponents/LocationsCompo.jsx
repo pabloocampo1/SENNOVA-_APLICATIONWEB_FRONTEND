@@ -83,7 +83,6 @@ const LocationsCompo = () => {
                 setOpen(true)
             }
         } catch (error) {
-            console.error(error);
             if (error.response && error.response.data) {
                 const backendError = error.response.data;
                 setErrorCreated(backendError.errors)

@@ -1,0 +1,451 @@
+import { Add, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, TableChart } from '@mui/icons-material';
+import { Alert, Box, Button, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import CardsSummaryEquipment from './CardsSummaryEquipment';
+import api from '../../../service/axiosService';
+import SearchBar from '../../../components/SearchBar';
+import GenericModal from '../../../components/modals/GenericModal';
+import EquipmentForm from '../../../components/forms/Equipment/EquipmentForm';
+import EquipmentConfirmationDelete from '../../../components/forms/Equipment/EquipmentConfirmationDelete';
+
+const EquipmentPage = () => {
+    const [dataEquipments, setDataEquipments] = useState([]);
+    const [equipmentToEdit, setEquipmentToEdit] = useState({});
+    const [page, setPage] = useState(0);
+    const [openCreatedEquipment, setOpenCreatedEquipment] = useState(false);
+    const [openEditEquipment, setOpenEditEquipment] = useState(false);
+    const [search, setSearch] = useState("");
+    const [searchBy, setSearchBy] = useState('name');
+    const [totalPages, setTotalPages] = useState();
+    const [responseAlert, setResponseAlert] = useState({
+        "status": false,
+        "message": ""
+    })
+    const [errorMessageCreate, setErrorMessageCreate] = useState({})
+    const [openModalDelete, setOpenModalDelete] = useState(false);
+    const [equipmentToDeleteId, setEquipmentToDeleteId] = useState(false);
+
+
+
+
+    const handleChangeSelect = (event) => {
+        setSearchBy(event.target.value);
+    };
+
+    const handleChange = (event, value) => {
+        setPage(value - 1);
+    };
+
+
+    function deleteEquipment() {
+       const fetchDelete = async () => {
+            try {
+                const res = await api.delete(`/equipment/delete/${equipmentToDeleteId}`);
+                if(res.status == 200){
+                    setOpenModalDelete(false)
+                    fetchData()
+                }
+            } catch (error) {
+                console.log(error);
+                
+            }
+       }
+
+       fetchDelete();
+
+    }
+
+
+    function editEquipment(equipment) {
+        const edit = async () => {
+            try {
+                const res = await api.put(`/equipment/update/${equipment.equipmentId}`, equipment);
+                if (res.status == 200) {
+                    setOpenEditEquipment(false)
+                    fetchData()
+                    setResponseAlert({
+                        status: true,
+                        message: "El equipo se actualizo correctamente."
+                    })
+                }
+            } catch (error) {
+
+                if (error.response) {
+                    const backendError = error.response.data;
+
+
+                    if (backendError.errors) {
+                        setErrorMessageCreate(prev => ({
+                            ...prev,
+                            ...backendError.errors
+                        }));
+                    }
+
+                }
+
+            }
+
+        }
+
+        edit()
+
+    }
+
+
+
+    function getByParam() {
+        const fetchDataByName = async () => {
+            try {
+                const res = await api.get(`/equipment/get-all-by-name/${search}`)
+                if (res.status == 200) {
+                    setDataEquipments(res.data);
+                }
+            } catch (error) {
+
+                if (error.response) {
+                    const backendError = error.response.data;
+
+
+                    if (backendError.errors.general) {
+                        setErrorMessageCreate(backendError.errors.general);
+                    }
+
+                }
+
+            }
+        }
+
+        const fetchDataByInternalCode = async () => {
+            try {
+                const res = await api.get(`/equipment/get-all-by-name/${search}`)
+                if (res.status == 200) {
+                    setDataEquipments(res.data);
+                }
+            } catch (error) {
+
+                if (error.response) {
+                    const backendError = error.response.data;
+
+
+                    if (backendError.errors.general) {
+                        setErrorMessageCreate(backendError.errors.general);
+                    }
+
+                }
+
+            }
+        }
+
+        const fetchDataBySerialNumber = async () => {
+            try {
+                const res = await api.get(`/equipment/get-all-by-name/${search}`)
+                if (res.status == 200) {
+                    setDataEquipments(res.data);
+                }
+            } catch (error) {
+
+                if (error.response) {
+                    const backendError = error.response.data;
+
+
+                    if (backendError.errors.general) {
+                        setErrorMessageCreate(backendError.errors.general);
+                    }
+
+                }
+
+            }
+        }
+
+        switch (searchBy) {
+            case "name":
+                fetchDataByName()
+                break;
+            case "serialNumber":
+                fetchDataBySerialNumber()
+                break;
+            case "internalCode":
+                fetchDataByInternalCode()
+                break;
+
+            default:
+                break;
+        }
+
+
+
+
+    }
+
+
+    function saveEquipment(dto) {
+        const save = async () => {
+            try {
+                const res = await api.post("/equipment/save", dto)
+                if (res.status == 201) {
+                    fetchData()
+                    setOpenCreatedEquipment(false)
+                    setResponseAlert({
+                        "status": true,
+                        "message": "Equipo agregado exitosamente."
+                    })
+                }
+            } catch (error) {
+                console.log(error);
+
+
+                if (error.response) {
+                    const backendError = error.response.data;
+
+
+                    if (backendError.errors) {
+                        setErrorMessageCreate(({
+                            ...backendError.errors
+                        }));
+                    }
+
+                }
+
+            }
+        }
+
+        save()
+
+    }
+
+
+    const fetchData = async () => {
+        try {
+            const res = await api.get(`/equipment/page?page=${page}`)
+            if (res.status == 200) {
+                setDataEquipments(res.data.content)
+                setTotalPages(res.data.totalPages)
+            }
+
+            console.log(res);
+
+        } catch (error) {
+            console.error(error);
+
+        }
+
+    }
+
+    useEffect(() => {
+        if (search) {
+            getByParam()
+        } else {
+            fetchData()
+        }
+
+
+    }, [page, search])
+
+
+
+
+    return (
+        <Box sx={{
+            width: "100%",
+            height: "auto"
+        }}>
+
+            {/** Modals */}
+            <GenericModal open={openCreatedEquipment} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} method={(dto) => saveEquipment(dto)} isEdit={false} />} />
+            <GenericModal open={openEditEquipment} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} data={equipmentToEdit} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} method={(dto) => editEquipment(dto)} isEdit={true} />} />
+            <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<EquipmentConfirmationDelete equipmentToDeleteId={equipmentToDeleteId} onClose={() => setOpenModalDelete(false)} method={() => deleteEquipment()} />} />
+
+
+            {/** Messages */}
+            {responseAlert.status && (
+                <Snackbar
+                    open={responseAlert.status}
+                    autoHideDuration={5000}
+                    onClose={() => {
+                        setResponseAlert({
+                            ...responseAlert,
+                            "status": false
+                        });
+                        setResponseAlert({
+                            "status": false,
+                            "message": ""
+                        })
+                    }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                >
+                    <Alert
+                        severity="success"
+                        onClose={() => setResponseAlert({
+                            "status": false,
+                            "message": ""
+                        })}
+                        sx={{ width: "100%" }}
+                    >
+                        {responseAlert.message}
+                    </Alert>
+                </Snackbar>
+            )}
+
+            {/* header of the section*/}
+            <Box
+                sx={{
+                    width: "100%",
+                    minHeight: "10vh",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 2,
+                    mb: 2,
+                }}
+            >
+                <Typography component="h2" sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+                    Inventario / Equipos
+                </Typography>
+
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                    <Button
+                        variant="contained"
+                        startIcon={<FileDownloadOutlined />}
+                    >
+                        Descargar Excel
+                    </Button>
+
+                    <Button variant="outlined" endIcon={<ChecklistOutlined />}>
+                        Chequeo de inventario
+                    </Button>
+                </Box>
+            </Box>
+
+
+
+            {/** cards summary inventory */}
+            <CardsSummaryEquipment />
+
+
+            <Box>
+                {/** table content header */}
+                <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", mt: "40px" }}>
+                    <Box sx={{ display: "flex" }}>
+                        <SearchBar onSearch={(value) => setSearch(value)} />
+                        <FormControl sx={{ width: "120px", borderRadius: "20px", ml: "20px" }}>
+                            <InputLabel id="demo-simple-select-label">Buscar por:</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={searchBy}
+                                label="Buscar por:"
+                                onChange={handleChangeSelect}
+                            >
+                                <MenuItem value={"name"}>Nombre</MenuItem>
+                                <MenuItem value={"serialNumber"}>Numero serial</MenuItem>
+                                <MenuItem value={"internalCode"}>Codigo interno</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box>
+                        <Button variant='contained' onClick={() => setOpenCreatedEquipment(true)}> <Add /> Agregar un nuevo equipo</Button>
+                    </Box>
+                </Box>
+
+
+                {/** equipment table */}
+                {dataEquipments.length < 1 ? (
+                    <Typography sx={{ textAlign: "center" }}>No hay equipos</Typography>
+                ) : (
+                    <Paper
+                        sx={{
+                            width: "100%",
+                            overflow: "hidden",
+                            bgcolor: "background.paper",
+                            mt: "20px"
+                        }}
+                    >
+                        <Table>
+                            <TableHead>
+                                <TableRow sx={{ bgcolor: "background.default", border: "1px solid #00000040", borderRadius: "15px" }}>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Código interno</TableCell>
+                                    <TableCell>Nombre</TableCell>
+                                    <TableCell>Marca</TableCell>
+                                    <TableCell>Modelo</TableCell>
+                                    <TableCell>Ubicación</TableCell>
+                                    <TableCell>Estado</TableCell>
+                                    <TableCell>Creado</TableCell>
+                                    <TableCell>Actualizado</TableCell>
+                                    <TableCell align="right">Acciones</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {dataEquipments.map((equipment) => (
+                                    <TableRow key={equipment.equipmentId} hover>
+                                        <TableCell>{equipment.equipmentId}</TableCell>
+                                        <TableCell>{equipment.internalCode}</TableCell>
+                                        <TableCell>{equipment.equipmentName}</TableCell>
+                                        <TableCell>{equipment.brand}</TableCell>
+                                        <TableCell>{equipment.model}</TableCell>
+                                        <TableCell>{equipment.locationName}</TableCell>
+                                        <TableCell>
+                                            {equipment.available ? (<Box sx={{ width: "100px", height: "100%", bgcolor: "#07f60f30", border: "2px solid green", borderRadius: "15px", textAlign: "center", p: "10px" }}>Disponible</Box>) : (<Box sx={{ width: "100px", height: "100%", bgcolor: "#f6070730", border: "2px solid red", borderRadius: "15px", textAlign: "center", p: "10px" }}> No Disponible</Box>)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {equipment.createAt ? new Date(equipment.createAt).toLocaleDateString("es-CO") : "null"}
+                                        </TableCell>
+                                        <TableCell>
+                                            {equipment.updateAt ? new Date(equipment.updateAt).toLocaleDateString("es-CO") : "null"}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <IconButton
+                                                size="small"
+                                                color="primary"
+                                                onClick={() => {
+                                                    setEquipmentToEdit(equipment);
+                                                    setOpenEditEquipment(true)
+                                                }}
+                                            >
+                                                <Edit fontSize="small" />
+                                            </IconButton>
+                                            <IconButton
+                                                size="small"
+                                                color="primary"
+                                                onClick={() => {
+                                                    setEquipmentToDeleteId(equipment.equipmentId)
+                                                    setOpenModalDelete(true)
+                                                }
+                                                }
+                                            >
+                                                <Delete fontSize="small" />
+                                            </IconButton>
+                                            <IconButton
+                                                size="small"
+                                                color="primary"
+                                                onClick={() =>
+                                                    null
+                                                }
+                                            >
+                                                <Info fontSize="small" />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Paper>
+                )}
+                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mb: "20px", mt: "20px" }}>
+
+                    <Stack spacing={2}>
+                        <Pagination count={totalPages} page={page + 1} onChange={handleChange} />
+                    </Stack>
+                </Box>
+
+            </Box>
+
+
+
+
+        </Box>
+    );
+};
+
+export default EquipmentPage;
