@@ -18,14 +18,20 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
         state: "",
         responsibleId: "",
         locationId: "",
-        usageId: ""
+        usageId: "",
+        imageUrl:""
     });
+
 
     const [users, setUsers] = useState([]);
     const [locations, setLocations] = useState([]);
     const [usages, setUsages] = useState([]);
 
-    console.log(errors);
+    const [imageFile, setImageFile] = useState(null);
+
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
+    };
 
 
     const handleForm = (e) => {
@@ -33,7 +39,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
 
         if (!data) {
 
-            method(formData);
+            method(formData, imageFile);
         } else {
 
 
@@ -52,10 +58,12 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 state: formData.state,
                 responsibleId: Number(formData.responsibleId),
                 locationId: Number(formData.locationId),
-                usageId: Number(formData.usageId)
+                usageId: Number(formData.usageId),
+                imageUrl:formData.imageUrl
             };
+           
 
-            method(equipmentRequestDto);
+            method(equipmentRequestDto, imageFile);
         }
     };
 
@@ -322,6 +330,20 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                         return <MenuItem key={usages.equipmentUsageId} value={usages.equipmentUsageId}>{usages.usageName}</MenuItem>
                     })}
                 </TextField>
+                <Box>
+                    {formData.imageUrl && (
+                        <Box>
+                            <img src={formData.imageUrl} alt="image of equipment" width={"100px"} />
+                        </Box>
+                    )}
+                </Box>
+                <TextField
+                    type="file"
+                    name="image"
+                    onChange={handleImageChange}
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: "1 1 100%" }}
+                />
             </Box>
 
             <Button

@@ -58,10 +58,22 @@ const EquipmentPage = () => {
     }
 
 
-    function editEquipment(equipment) {
+    function editEquipment(equipment, image) {
+        console.log(equipment);
+        console.log(image);
+        
+        
         const edit = async () => {
             try {
-                const res = await api.put(`/equipment/update/${equipment.equipmentId}`, equipment);
+                const formData = new FormData();
+                formData.append("dto", new Blob([JSON.stringify(equipment)], { type: "application/json" }));
+                formData.append("image", image);
+
+                const res = await api.put(`/equipment/update/${equipment.equipmentId}`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
                 if (res.status == 200) {
                     setOpenEditEquipment(false)
                     fetchData()
@@ -163,39 +175,47 @@ const EquipmentPage = () => {
     }
 
 
-    function saveEquipment(dto) {
+    function saveEquipment(dto, imageFile) {
+
+        console.log(dto);
+        console.log(imageFile);
+        
+        
         const save = async () => {
             try {
-                const res = await api.post("/equipment/save", dto)
-                if (res.status == 201) {
-                    fetchData()
-                    setOpenCreatedEquipment(false)
+                const formData = new FormData();
+                formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+                formData.append("image", imageFile);
+
+                const res = await api.post("/equipment/save", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+
+                if (res.status === 201) {
+                    fetchData();
+                    setOpenCreatedEquipment(false);
                     setResponseAlert({
-                        "status": true,
-                        "message": "Equipo agregado exitosamente."
-                    })
+                        status: true,
+                        message: "Equipo agregado exitosamente."
+                    });
                 }
             } catch (error) {
                 console.log(error);
 
-
                 if (error.response) {
                     const backendError = error.response.data;
-
-
                     if (backendError.errors) {
-                        setErrorMessageCreate(({
+                        setErrorMessageCreate({
                             ...backendError.errors
-                        }));
+                        });
                     }
-
                 }
-
             }
-        }
+        };
 
-        save()
-
+        save();
     }
 
 
@@ -236,8 +256,8 @@ const EquipmentPage = () => {
         }}>
 
             {/** Modals */}
-            <GenericModal open={openCreatedEquipment} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} method={(dto) => saveEquipment(dto)} isEdit={false} />} />
-            <GenericModal open={openEditEquipment} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} data={equipmentToEdit} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} method={(dto) => editEquipment(dto)} isEdit={true} />} />
+            <GenericModal open={openCreatedEquipment} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} method={(dto, image) => saveEquipment(dto, image)} isEdit={false} />} />
+            <GenericModal open={openEditEquipment} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} data={equipmentToEdit} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} method={(dto, image) => editEquipment(dto, image)} isEdit={true} />} />
             <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<EquipmentConfirmationDelete equipmentToDeleteId={equipmentToDeleteId} onClose={() => setOpenModalDelete(false)} method={() => deleteEquipment()} />} />
 
 
@@ -406,7 +426,7 @@ const EquipmentPage = () => {
                                                 size="small"
                                                 color="primary"
                                                 onClick={() =>
-                                                    navigate(`/system/inventory/equipments/info/${equipment.internalCode}`)
+                                                    navigate(`/system/inventory/equipments/info/${equipment.equipmentId}`)
                                                 }
                                             >
                                                 <Info fontSize="small" />

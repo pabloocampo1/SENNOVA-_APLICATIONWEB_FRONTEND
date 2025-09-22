@@ -41,7 +41,7 @@ function App() {
                                     <Route path="settings" element={<SettingPage />} />
                                     <Route path="profile" element={<ProfilePage />} />
                                     <Route path="inventory/equipments" element={<EquipmentPage />} />
-                                    <Route path="inventory/equipments/info/:internalCode" element={<EquipmentInfo />} />
+                                    <Route path="inventory/equipments/info/:idEquipment" element={<EquipmentInfo />} />
                                     <Route path="inventory/reagents" element={<ReagmentPage />} />
                                     <Route path="quotes" element={<QuotesPage />} />
                                     <Route path="results" element={<ResultsRelease />} />
