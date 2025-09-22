@@ -1,5 +1,5 @@
 import { Add, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, TableChart } from '@mui/icons-material';
-import { Alert, Box, Button, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CardsSummaryEquipment from './CardsSummaryEquipment';
 import api from '../../../service/axiosService';
@@ -7,6 +7,7 @@ import SearchBar from '../../../components/SearchBar';
 import GenericModal from '../../../components/modals/GenericModal';
 import EquipmentForm from '../../../components/forms/Equipment/EquipmentForm';
 import EquipmentConfirmationDelete from '../../../components/forms/Equipment/EquipmentConfirmationDelete';
+import { useNavigate } from 'react-router-dom';
 
 const EquipmentPage = () => {
     const [dataEquipments, setDataEquipments] = useState([]);
@@ -24,6 +25,7 @@ const EquipmentPage = () => {
     const [errorMessageCreate, setErrorMessageCreate] = useState({})
     const [openModalDelete, setOpenModalDelete] = useState(false);
     const [equipmentToDeleteId, setEquipmentToDeleteId] = useState(false);
+    const navigate = useNavigate();
 
 
 
@@ -38,20 +40,20 @@ const EquipmentPage = () => {
 
 
     function deleteEquipment() {
-       const fetchDelete = async () => {
+        const fetchDelete = async () => {
             try {
                 const res = await api.delete(`/equipment/delete/${equipmentToDeleteId}`);
-                if(res.status == 200){
+                if (res.status == 200) {
                     setOpenModalDelete(false)
                     fetchData()
                 }
             } catch (error) {
                 console.log(error);
-                
-            }
-       }
 
-       fetchDelete();
+            }
+        }
+
+        fetchDelete();
 
     }
 
@@ -117,7 +119,7 @@ const EquipmentPage = () => {
 
         const fetchDataByInternalCode = async () => {
             try {
-                const res = await api.get(`/equipment/get-all-by-name/${search}`)
+                const res = await api.get(`/equipment/get-all-by-internal-code/${search}`)
                 if (res.status == 200) {
                     setDataEquipments(res.data);
                 }
@@ -137,24 +139,7 @@ const EquipmentPage = () => {
         }
 
         const fetchDataBySerialNumber = async () => {
-            try {
-                const res = await api.get(`/equipment/get-all-by-name/${search}`)
-                if (res.status == 200) {
-                    setDataEquipments(res.data);
-                }
-            } catch (error) {
-
-                if (error.response) {
-                    const backendError = error.response.data;
-
-
-                    if (backendError.errors.general) {
-                        setErrorMessageCreate(backendError.errors.general);
-                    }
-
-                }
-
-            }
+            alert("La funcion de buscar un equipo por su numero serial no esta disponible.")
         }
 
         switch (searchBy) {
@@ -316,6 +301,7 @@ const EquipmentPage = () => {
                     </Button>
                 </Box>
             </Box>
+            <Divider />
 
 
 
@@ -420,7 +406,7 @@ const EquipmentPage = () => {
                                                 size="small"
                                                 color="primary"
                                                 onClick={() =>
-                                                    null
+                                                    navigate(`/system/inventory/equipments/info/${equipment.internalCode}`)
                                                 }
                                             >
                                                 <Info fontSize="small" />

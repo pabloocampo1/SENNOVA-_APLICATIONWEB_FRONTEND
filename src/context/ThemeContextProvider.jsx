@@ -67,6 +67,14 @@ export function ThemeContextProvider({ children }) {
                                     lineHeight: 1.6,
                                 },
                             },
+                            {
+                                props: { variant: "h2" },
+                                style: {
+                                    fontSize: "2rem",
+                                    color: darkMode ? "#39A900" : "#39A900",
+                                    lineHeight: 1.6,
+                                },
+                            },
                         ],
                     },
                 },
