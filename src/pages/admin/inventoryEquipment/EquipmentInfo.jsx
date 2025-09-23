@@ -7,6 +7,7 @@ import CardLoadEquipmentInfo from './CardLoadEquipmentInfo';
 import ListMaintanence from './ListMaintanence';
 import notImage from "../../../assets/images/no-image-icon-6.png";
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
+import FileCard from '../../../components/FileCard';
 
 const InfoRow = ({ label, value }) => (
     <Box sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
@@ -22,7 +23,13 @@ const EquipmentInfo = () => {
     const [imageFile, setImageFile] = useState()
     const fileInputRef = useRef(null);
     const [isLoanding, setIsLoanding] = useState(false);
+    const [files, setFiles] = useState([]);
+    const [uploadedFiles, setUploadedFiles] = useState([]);
 
+
+    const handleFilesChange = (event) => {
+        setFiles(event.target.files);
+    };
 
 
     const fetchData = async () => {
@@ -63,6 +70,35 @@ const EquipmentInfo = () => {
             setIsLoanding(false)
         }
     };
+    const uploadFiles = async () => {
+        if (!files || files.length === 0) return;
+
+        setIsLoanding(true);
+        try {
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append("files", files[i]);
+            }
+
+            const res = await api.post(
+                `/equipment/uploadFile/${idEquipment}`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+
+            if (res.status === 200) {
+                setUploadedFiles((prev) => [
+                    ...prev,
+                    ...res.data
+                ]);
+                setFiles([]);
+            }
+        } catch (error) {
+            console.error("Error subiendo archivos", error);
+        } finally {
+            setIsLoanding(false);
+        }
+    };
 
 
     const handleFileChange = (event) => {
@@ -71,8 +107,40 @@ const EquipmentInfo = () => {
             changeImageOption(file);
         }
     };
+
+    const deleteFile = async (id) => {
+        try {
+            const res = await api.delete(`/equipment/deleteFile/${id}`);
+            if (res.data) {
+               getFiles()
+
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+
+    const getFiles = () => {
+        const fetch = async () => {
+            setIsLoanding(true)
+            try {
+                const res = await api.get(`/equipment/getFiles/${idEquipment}`);
+                setUploadedFiles(res.data);
+            } catch (error) {
+                console.error(error);
+
+            } finally {
+                setIsLoanding(false)
+            }
+        }
+
+        fetch()
+    }
     useEffect(() => {
         fetchData()
+        getFiles()
     }, [])
 
     return (
@@ -108,7 +176,7 @@ const EquipmentInfo = () => {
                     <Button sx={{ color: "primary.main" }} variant='outlined'><Assignment /> Registrar prestamo</Button>
                 </Box>
             </Box>
-            <Divider sx={{ mb: "20px" }}>Informacion</Divider>
+            <Divider sx={{ mb: "20px", mt: "50px" }}>Informacion</Divider>
 
 
             {/** cards info */}
@@ -206,7 +274,7 @@ const EquipmentInfo = () => {
                     />
 
                     <Button
-                        onClick={() => fileInputRef.current.click()} // 👈 dispara el input
+                        onClick={() => fileInputRef.current.click()}
                         sx={{ position: "absolute", bottom: "0%", right: "0", mb: "10px", mr: "10px" }}
                         variant="contained"
                     >
@@ -215,20 +283,52 @@ const EquipmentInfo = () => {
                 </Box>
             </Box>
 
-            <Box sx={{ mt: "20px", mb: "20px" }}>
-                <Typography variant="h2" component={"h2"}>Archivos relacionados</Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", width: "100px", height: "70px", alignItems: "center" }}>
-                    <FileOpen />
-                    <Typography>name.docs</Typography>
+            <Divider sx={{ mb: "20px", mt: "50px" }}>Archivos de este equipo.</Divider>
+            <Typography sx={{ fontWeight: "bold" }}>total de archivos: {uploadedFiles.length}</Typography>
+            <Box sx={{ mb: "20px" }}>
+                <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                    {uploadedFiles.map((file) => (
+                        <FileCard
+                            key={file.equipmentMediaId}
+                            file={file}
+                            onDelete={deleteFile}
+                        />
+                    ))}
                 </Box>
 
-                <Button variant='contained'>Subir un nuevo archivo.</Button>
+                {/* input oculto */}
+                <input
+                    type="file"
+                    multiple
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleFilesChange}
+                />
+
+
+                <Box sx={{ mt: 2 }}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => fileInputRef.current.click()}
+                    >
+                        Seleccionar archivos
+                    </Button>
+
+                    <Button
+                        sx={{ ml: 2 }}
+                        variant="contained"
+                        onClick={uploadFiles}
+                        disabled={files.length === 0}
+                    >
+                        Subir archivos
+                    </Button>
+                </Box>
             </Box>
 
-            <Divider sx={{ mb: "20px" }}>Informacion de interes</Divider>
+            <Divider sx={{ mb: "20px", mt: "50px" }}>Historial de prestamos y mantenimientos</Divider>
 
 
-            <Typography variant="h2" component={"h2"}>Historial de prestamos y mantenimientos</Typography>
+
             <Box
                 sx={{
                     mt: 2,

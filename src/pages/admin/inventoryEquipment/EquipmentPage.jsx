@@ -8,6 +8,7 @@ import GenericModal from '../../../components/modals/GenericModal';
 import EquipmentForm from '../../../components/forms/Equipment/EquipmentForm';
 import EquipmentConfirmationDelete from '../../../components/forms/Equipment/EquipmentConfirmationDelete';
 import { useNavigate } from 'react-router-dom';
+import SimpleBackdrop from '../../../components/SimpleBackDrop';
 
 const EquipmentPage = () => {
     const [dataEquipments, setDataEquipments] = useState([]);
@@ -26,6 +27,7 @@ const EquipmentPage = () => {
     const [openModalDelete, setOpenModalDelete] = useState(false);
     const [equipmentToDeleteId, setEquipmentToDeleteId] = useState(false);
     const navigate = useNavigate();
+    const [isLoanding, setIsLoanding] = useState(false);
 
 
 
@@ -40,6 +42,7 @@ const EquipmentPage = () => {
 
 
     function deleteEquipment() {
+        setIsLoanding(true)
         const fetchDelete = async () => {
             try {
                 const res = await api.delete(`/equipment/delete/${equipmentToDeleteId}`);
@@ -50,6 +53,8 @@ const EquipmentPage = () => {
             } catch (error) {
                 console.log(error);
 
+            } finally {
+                setIsLoanding(false)
             }
         }
 
@@ -59,10 +64,9 @@ const EquipmentPage = () => {
 
 
     function editEquipment(equipment, image) {
-        console.log(equipment);
-        console.log(image);
-        
-        
+        setIsLoanding(true)
+
+
         const edit = async () => {
             try {
                 const formData = new FormData();
@@ -97,6 +101,8 @@ const EquipmentPage = () => {
 
                 }
 
+            } finally {
+                setIsLoanding(false)
             }
 
         }
@@ -177,10 +183,8 @@ const EquipmentPage = () => {
 
     function saveEquipment(dto, imageFile) {
 
-        console.log(dto);
-        console.log(imageFile);
-        
-        
+        setIsLoanding(true)
+
         const save = async () => {
             try {
                 const formData = new FormData();
@@ -212,6 +216,8 @@ const EquipmentPage = () => {
                         });
                     }
                 }
+            } finally {
+                setIsLoanding(false)
             }
         };
 
@@ -220,6 +226,8 @@ const EquipmentPage = () => {
 
 
     const fetchData = async () => {
+        setIsLoanding(true)
+
         try {
             const res = await api.get(`/equipment/page?page=${page}`)
             if (res.status == 200) {
@@ -232,6 +240,8 @@ const EquipmentPage = () => {
         } catch (error) {
             console.error(error);
 
+        } finally {
+            setIsLoanding(false)
         }
 
     }
@@ -260,6 +270,8 @@ const EquipmentPage = () => {
             <GenericModal open={openEditEquipment} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} data={equipmentToEdit} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} method={(dto, image) => editEquipment(dto, image)} isEdit={true} />} />
             <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<EquipmentConfirmationDelete equipmentToDeleteId={equipmentToDeleteId} onClose={() => setOpenModalDelete(false)} method={() => deleteEquipment()} />} />
 
+
+            <SimpleBackdrop open={isLoanding} />
 
             {/** Messages */}
             {responseAlert.status && (
