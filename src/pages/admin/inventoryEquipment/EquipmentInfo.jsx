@@ -8,6 +8,10 @@ import ListMaintanence from './ListMaintanence';
 import notImage from "../../../assets/images/no-image-icon-6.png";
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
 import FileCard from '../../../components/FileCard';
+import GenericModal from '../../../components/modals/GenericModal';
+import EquipmentLoadForm from '../../../components/forms/Equipment/EquipmentLoadForm';
+import EquipmentMaintanence from '../../../components/forms/Equipment/EquipmentMaintanence';
+import LoanEquipmentCompo from './LoanEquipmentCompo';
 
 const InfoRow = ({ label, value }) => (
     <Box sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
@@ -17,14 +21,20 @@ const InfoRow = ({ label, value }) => (
 );
 
 const EquipmentInfo = () => {
+
     const { idEquipment } = useParams();
     const navigate = useNavigate()
     const [data, setData] = useState({});
+    const [dataLoan, setDataLoan] = useState([]);
     const [imageFile, setImageFile] = useState()
-    const fileInputRef = useRef(null);
+    const imageInputRef = useRef(null);
+    const filesInputRef = useRef(null);
     const [isLoanding, setIsLoanding] = useState(false);
     const [files, setFiles] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState([]);
+    // modals
+    const [openLoadForm, setOpenLoadForm] = useState(false);
+    const [openMaintanence, setOpenMaintanence] = useState(false);
 
 
     const handleFilesChange = (event) => {
@@ -50,6 +60,8 @@ const EquipmentInfo = () => {
     }
 
     const changeImageOption = async (file) => {
+        console.log("se envio");
+
         setIsLoanding(true)
         try {
             const formData = new FormData();
@@ -112,13 +124,32 @@ const EquipmentInfo = () => {
         try {
             const res = await api.delete(`/equipment/deleteFile/${id}`);
             if (res.data) {
-               getFiles()
+                getFiles()
 
             }
         } catch (error) {
             console.error(error);
         }
     };
+
+    const getLoad = async () => {
+        setIsLoanding(true)
+
+        try {
+            const res = await api.get(`/loan/equipment/getByEquipmentId/${idEquipment}`)
+            console.log(res);
+            if (res.status == 200) {
+                setDataLoan(res.data)
+            }
+
+        } catch (error) {
+            console.error(error);
+
+        } finally {
+            setIsLoanding(false)
+        }
+    }
+
 
 
 
@@ -138,15 +169,26 @@ const EquipmentInfo = () => {
 
         fetch()
     }
+
+
     useEffect(() => {
         fetchData()
         getFiles()
+        getLoad()
+
     }, [])
 
     return (
         <Box>
 
             <SimpleBackdrop open={isLoanding} />
+
+            {/*Modals */}
+
+
+            <GenericModal open={openLoadForm} onClose={() => setOpenLoadForm(false)} compo={<EquipmentLoadForm equipmentId={data.equipmentId} nameOfTheEquipment={data.equipmentName} send={() => { getLoad(), setOpenLoadForm(false) }} onClose={() => setOpenLoadForm(false)} />} />
+            <GenericModal open={openMaintanence} onClose={() => setOpenMaintanence(false)} compo={<EquipmentMaintanence send={() => { setOpenMaintanence(false) }} onClose={() => setOpenMaintanence(false)} />} />
+
 
             {/** Header of the info page */}
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -172,8 +214,8 @@ const EquipmentInfo = () => {
 
                 </Box>
                 <Box>
-                    <Button sx={{ color: "primary.main", mr: "15px" }} variant='outlined'> <Construction /> Registrar mantenimiento</Button>
-                    <Button sx={{ color: "primary.main" }} variant='outlined'><Assignment /> Registrar prestamo</Button>
+                    <Button sx={{ color: "primary.main", mr: "15px" }} variant='outlined' onClick={() => setOpenMaintanence(true)}> <Construction /> Registrar mantenimiento</Button>
+                    <Button sx={{ color: "primary.main" }} variant='outlined' onClick={() => setOpenLoadForm(true)}><Assignment /> Registrar prestamo</Button>
                 </Box>
             </Box>
             <Divider sx={{ mb: "20px", mt: "50px" }}>Informacion</Divider>
@@ -269,12 +311,12 @@ const EquipmentInfo = () => {
                         type="file"
                         accept="image/*"
                         style={{ display: "none" }}
-                        ref={fileInputRef}
+                        ref={imageInputRef}
                         onChange={handleFileChange}
                     />
 
                     <Button
-                        onClick={() => fileInputRef.current.click()}
+                        onClick={() => imageInputRef.current.click()}
                         sx={{ position: "absolute", bottom: "0%", right: "0", mb: "10px", mr: "10px" }}
                         variant="contained"
                     >
@@ -300,16 +342,17 @@ const EquipmentInfo = () => {
                 <input
                     type="file"
                     multiple
-                    ref={fileInputRef}
+                    ref={filesInputRef}
                     style={{ display: "none" }}
                     onChange={handleFilesChange}
                 />
 
 
                 <Box sx={{ mt: 2 }}>
+
                     <Button
                         variant="outlined"
-                        onClick={() => fileInputRef.current.click()}
+                        onClick={() => filesInputRef.current.click()}
                     >
                         Seleccionar archivos
                     </Button>
@@ -322,6 +365,11 @@ const EquipmentInfo = () => {
                     >
                         Subir archivos
                     </Button>
+                    {files.length > 0 && (
+                        <Typography sx={{ fontWeight: "bold" }}>
+                            {files.length} archivo(s) seleccionado(s)
+                        </Typography>
+                    )}
                 </Box>
             </Box>
 
@@ -349,10 +397,11 @@ const EquipmentInfo = () => {
                         minHeight: "200px"
                     }}
                 >
-                    <CardLoadEquipmentInfo />
-                    <CardLoadEquipmentInfo />
-                    <CardLoadEquipmentInfo />
-                    <CardLoadEquipmentInfo />
+                    {dataLoan.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
+                    {dataLoan.map((data) => {
+                        return <CardLoadEquipmentInfo key={data.equipmentLoanId} data={data} />
+                    })}
+
 
                 </Box>
 

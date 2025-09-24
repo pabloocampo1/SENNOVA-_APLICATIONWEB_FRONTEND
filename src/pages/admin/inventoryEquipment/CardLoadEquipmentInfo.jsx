@@ -1,7 +1,9 @@
 
 import { Box, Typography, Divider } from "@mui/material";
 
-const CardLoadEquipmentInfo = () => {
+const CardLoadEquipmentInfo = ({data = {}}) => {
+
+    // delete the card
     return (
         <Box
             sx={{
@@ -22,10 +24,10 @@ const CardLoadEquipmentInfo = () => {
             {/* Header */}
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                 <Typography sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
-                    Karen Perez
+                  {data.nameLoan}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    ID: 23
+                  {data.equipmentLoanId}
                 </Typography>
             </Box>
 
@@ -33,8 +35,23 @@ const CardLoadEquipmentInfo = () => {
 
            
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-                <Typography variant="body2">📅 Fecha: 20/02/2023</Typography>
-                <Box
+                <Typography variant="body2">📅 Fecha: {data.loanDate}</Typography>
+               {data.type == "Uso" ? (
+                 <Box
+                    sx={{
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: "12px",
+                        bgcolor: "#4040deff",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "0.9rem",
+                    }}
+                >
+                    {data.type}
+                </Box>
+               ) : (
+                 <Box
                     sx={{
                         px: 2,
                         py: 0.5,
@@ -45,8 +62,9 @@ const CardLoadEquipmentInfo = () => {
                         fontSize: "0.9rem",
                     }}
                 >
-                    Uso
+                    {data.type}
                 </Box>
+               )}
             </Box>
 
             {/* Descripción */}
@@ -55,7 +73,7 @@ const CardLoadEquipmentInfo = () => {
                     Descripción:
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Tengo plata tengo
+                   {data.notes}
                 </Typography>
             </Box>
         </Box>
