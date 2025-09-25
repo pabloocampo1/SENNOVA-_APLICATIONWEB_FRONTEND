@@ -1,5 +1,5 @@
 import { ArrowBackOutlined, Assignment, BackHand, Construction, Download, FileCopy, FileOpen, HandymanOutlined, RepartitionOutlined } from '@mui/icons-material';
-import { Backdrop, Box, Button, Card, CardContent, Divider, Typography } from '@mui/material';
+import { Alert, Backdrop, Box, Button, Card, CardContent, Divider, Snackbar, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../../service/axiosService';
@@ -26,7 +26,7 @@ const EquipmentInfo = () => {
     const navigate = useNavigate()
     const [data, setData] = useState({});
     const [dataLoan, setDataLoan] = useState([]);
-    const [dataMaintenance,setDataMaintenance] = useState([]);
+    const [dataMaintenance, setDataMaintenance] = useState([]);
     const [imageFile, setImageFile] = useState()
     const imageInputRef = useRef(null);
     const filesInputRef = useRef(null);
@@ -36,6 +36,10 @@ const EquipmentInfo = () => {
     // modals
     const [openLoadForm, setOpenLoadForm] = useState(false);
     const [openMaintanence, setOpenMaintanence] = useState(false);
+    const [responseAlert, setResponseAlert] = useState({
+        "status": false,
+        "message": ""
+    })
 
 
     const handleFilesChange = (event) => {
@@ -76,6 +80,10 @@ const EquipmentInfo = () => {
 
             if (res.status === 200) {
                 setImageFile(res.data);
+                setResponseAlert({
+                    status: true,
+                    message: "Se cambio la imagen exitosamente."
+                })
             }
         } catch (error) {
             console.error(error);
@@ -105,6 +113,10 @@ const EquipmentInfo = () => {
                     ...res.data
                 ]);
                 setFiles([]);
+                setResponseAlert({
+                    status: true,
+                    message: "Se guardo los archivos exitosamente."
+                })
             }
         } catch (error) {
             console.error("Error subiendo archivos", error);
@@ -126,6 +138,10 @@ const EquipmentInfo = () => {
             const res = await api.delete(`/equipment/deleteFile/${id}`);
             if (res.data) {
                 getFiles()
+                setResponseAlert({
+                    status: true,
+                    message: "El archivo fue eliminado exitosamente"
+                })
 
             }
         } catch (error) {
@@ -155,6 +171,10 @@ const EquipmentInfo = () => {
 
         const dataUpdated = dataLoan.filter(loan => loan.equipmentLoanId !== id)
         setDataLoan(dataUpdated)
+        setResponseAlert({
+            status: true,
+            message: "El registro se elimino exitosamente."
+        })
     }
 
 
@@ -190,6 +210,24 @@ const EquipmentInfo = () => {
         }
     }
 
+    const handleLoadSend = () => {
+        getLoad();
+        setOpenLoadForm(false);
+        setResponseAlert({
+            status: true,
+            message: "El registro se guardó correctamente."
+        });
+    };
+
+    const handleMaintanenceSend = () => {
+        getMaintenance();
+        setOpenMaintanence(false);
+        setResponseAlert({
+            status: true,
+            message: "El mantenimiento se registró exitosamente."
+        });
+    };
+
 
 
     useEffect(() => {
@@ -204,15 +242,69 @@ const EquipmentInfo = () => {
     }, [])
 
     return (
-        <Box>
+        <Box sx={{pt:"50px"}}>
 
             <SimpleBackdrop open={isLoanding} />
 
             {/*Modals */}
 
 
-            <GenericModal open={openLoadForm} onClose={() => setOpenLoadForm(false)} compo={<EquipmentLoadForm equipmentId={data.equipmentId} nameOfTheEquipment={data.equipmentName} send={() => { getLoad(), setOpenLoadForm(false) }} onClose={() => setOpenLoadForm(false)} />} />
-            <GenericModal open={openMaintanence} onClose={() => setOpenMaintanence(false)} compo={<EquipmentMaintanence  equipmentId={idEquipment} nameOfTheEquipment={data.equipmentName} send={() => { setOpenMaintanence(false), getMaintenance() }} onClose={() => setOpenMaintanence(false)} />} />
+            <GenericModal
+                open={openLoadForm}
+                onClose={() => setOpenLoadForm(false)}
+                compo={
+                    <EquipmentLoadForm
+                        equipmentId={data.equipmentId}
+                        nameOfTheEquipment={data.equipmentName}
+                        send={handleLoadSend}
+                        onClose={() => setOpenLoadForm(false)}
+                    />
+                }
+            />
+
+            <GenericModal
+                open={openMaintanence}
+                onClose={() => setOpenMaintanence(false)}
+                compo={
+                    <EquipmentMaintanence
+                        equipmentId={idEquipment}
+                        nameOfTheEquipment={data.equipmentName}
+                        send={handleMaintanenceSend}
+                        onClose={() => setOpenMaintanence(false)}
+                    />
+                }
+            />
+
+
+            {/** Messages */}
+            {responseAlert.status && (
+                <Snackbar
+                    open={responseAlert.status}
+                    autoHideDuration={5000}
+                    onClose={() => {
+                        setResponseAlert({
+                            ...responseAlert,
+                            "status": false
+                        });
+                        setResponseAlert({
+                            "status": false,
+                            "message": ""
+                        })
+                    }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                >
+                    <Alert
+                        severity="success"
+                        onClose={() => setResponseAlert({
+                            "status": false,
+                            "message": ""
+                        })}
+                        sx={{ width: "100%" }}
+                    >
+                        {responseAlert.message}
+                    </Alert>
+                </Snackbar>
+            )}
 
 
             {/** Header of the info page */}
@@ -224,10 +316,10 @@ const EquipmentInfo = () => {
 
 
                 <Box>
-                    <Box sx={{ width: "auto", p: "20px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "15px", bgcolor: "primary.main" }}
+                    <Button variant='outlined' sx={{ width: "auto", p: "20px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center"}}
                         onClick={() => alert("esta funcion esta en desarrollo")}>
-                        <Download sx={{ color: "white" }} />  <Typography sx={{ color: "white", pl: "10px" }}>Descargar informacion de este equipo</Typography>
-                    </Box>
+                        <Download />  <Typography sx={{  pl: "10px" }}>Descargar informacion de este equipo</Typography>
+                    </Button>
                 </Box>
             </Box>
 
@@ -239,7 +331,7 @@ const EquipmentInfo = () => {
 
                 </Box>
                 <Box>
-                    <Button sx={{ color: "primary.main", mr: "15px" }} variant='outlined' onClick={() => setOpenMaintanence(true)}> <Construction /> Registrar mantenimiento</Button>
+                    <Button sx={{  mr: "15px" }} variant='contained' onClick={() => setOpenMaintanence(true)}> <Construction /> Registrar mantenimiento</Button>
                     <Button sx={{ color: "primary.main" }} variant='outlined' onClick={() => setOpenLoadForm(true)}><Assignment /> Registrar prestamo</Button>
                 </Box>
             </Box>
@@ -424,7 +516,7 @@ const EquipmentInfo = () => {
                 >
                     {dataLoan.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
                     {dataLoan.map((data) => {
-                        return <CardLoadEquipmentInfo  deletedItem={(id) => deletedLoan(id)} key={data.equipmentLoanId} data={data} />
+                        return <CardLoadEquipmentInfo deletedItem={(id) => deletedLoan(id)} key={data.equipmentLoanId} data={data} />
                     })}
 
 
@@ -440,9 +532,9 @@ const EquipmentInfo = () => {
                     }}
                 >
                     {dataMaintenance.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
-                
+
                     <ListMaintanence data={dataMaintenance} />
-                   
+
                 </Box>
             </Box>
 
