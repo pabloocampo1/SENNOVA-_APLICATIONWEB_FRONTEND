@@ -26,6 +26,7 @@ const EquipmentInfo = () => {
     const navigate = useNavigate()
     const [data, setData] = useState({});
     const [dataLoan, setDataLoan] = useState([]);
+    const [dataMaintenance,setDataMaintenance] = useState([]);
     const [imageFile, setImageFile] = useState()
     const imageInputRef = useRef(null);
     const filesInputRef = useRef(null);
@@ -151,6 +152,7 @@ const EquipmentInfo = () => {
     }
 
     const deletedLoan = (id) => {
+
         const dataUpdated = dataLoan.filter(loan => loan.equipmentLoanId !== id)
         setDataLoan(dataUpdated)
     }
@@ -175,11 +177,29 @@ const EquipmentInfo = () => {
         fetch()
     }
 
+    const getMaintenance = async () => {
+        setIsLoanding(true)
+        try {
+            const res = await api.get(`/maintenance/equipment/getAllByEquipmentId/${idEquipment}`);
+            setDataMaintenance(res.data);
+        } catch (error) {
+            console.error(error);
+
+        } finally {
+            setIsLoanding(false)
+        }
+    }
+
+
 
     useEffect(() => {
-        fetchData()
-        getFiles()
-        getLoad()
+        const init = async () => {
+            await fetchData();
+            await getFiles();
+            await getLoad();
+            await getMaintenance();
+        }
+        init();
 
     }, [])
 
@@ -192,7 +212,7 @@ const EquipmentInfo = () => {
 
 
             <GenericModal open={openLoadForm} onClose={() => setOpenLoadForm(false)} compo={<EquipmentLoadForm equipmentId={data.equipmentId} nameOfTheEquipment={data.equipmentName} send={() => { getLoad(), setOpenLoadForm(false) }} onClose={() => setOpenLoadForm(false)} />} />
-            <GenericModal open={openMaintanence} onClose={() => setOpenMaintanence(false)} compo={<EquipmentMaintanence send={() => { setOpenMaintanence(false) }} onClose={() => setOpenMaintanence(false)} />} />
+            <GenericModal open={openMaintanence} onClose={() => setOpenMaintanence(false)} compo={<EquipmentMaintanence  equipmentId={idEquipment} nameOfTheEquipment={data.equipmentName} send={() => { setOpenMaintanence(false), getMaintenance() }} onClose={() => setOpenMaintanence(false)} />} />
 
 
             {/** Header of the info page */}
@@ -404,7 +424,7 @@ const EquipmentInfo = () => {
                 >
                     {dataLoan.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
                     {dataLoan.map((data) => {
-                        return <CardLoadEquipmentInfo deletedItem={(id) => deletedLoan(id)} key={data.equipmentLoanId} data={data} />
+                        return <CardLoadEquipmentInfo  deletedItem={(id) => deletedLoan(id)} key={data.equipmentLoanId} data={data} />
                     })}
 
 
@@ -419,7 +439,10 @@ const EquipmentInfo = () => {
                         minHeight: "200px"
                     }}
                 >
-                    <ListMaintanence />
+                    {dataMaintenance.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
+                
+                    <ListMaintanence data={dataMaintenance} />
+                   
                 </Box>
             </Box>
 

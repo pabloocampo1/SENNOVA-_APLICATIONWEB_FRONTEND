@@ -122,7 +122,7 @@ const EquipmentLoadForm = ({ send, onClose, nameOfTheEquipment, equipmentId }) =
 
 
 
-                <Button sx={{ width: "100%", mt:"20px" }} variant='contained' type='submit'>aceptar</Button>
+                <Button sx={{ width: "100%", mt:"20px" }} variant='contained' type='submit'>Guardar registro</Button>
 
             </Box>
         </Box>
