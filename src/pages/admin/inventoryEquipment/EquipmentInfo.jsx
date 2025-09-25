@@ -150,6 +150,11 @@ const EquipmentInfo = () => {
         }
     }
 
+    const deletedLoan = (id) => {
+        const dataUpdated = dataLoan.filter(loan => loan.equipmentLoanId !== id)
+        setDataLoan(dataUpdated)
+    }
+
 
 
 
@@ -399,7 +404,7 @@ const EquipmentInfo = () => {
                 >
                     {dataLoan.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
                     {dataLoan.map((data) => {
-                        return <CardLoadEquipmentInfo key={data.equipmentLoanId} data={data} />
+                        return <CardLoadEquipmentInfo deletedItem={(id) => deletedLoan(id)} key={data.equipmentLoanId} data={data} />
                     })}
 
 

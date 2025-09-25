@@ -1,9 +1,31 @@
 
 import { Box, Typography, Divider } from "@mui/material";
+import api from "../../../service/axiosService";
+import { Delete } from "@mui/icons-material";
 
-const CardLoadEquipmentInfo = ({data = {}}) => {
+const CardLoadEquipmentInfo = ({ data = {}, deletedItem }) => {
 
-    // delete the card
+
+    const deleteLoan = () => {
+        const deleteById = async (id) => {
+            try {
+                const res = await api.delete(`/loan/equipment/delete/${id}`);
+                console.log(res);
+
+                if (res.data) {
+                    console.log(res);
+                    deletedItem(id)
+                }
+            } catch (error) {
+                console.error(error);
+
+            }
+        }
+
+        deleteById(data.equipmentLoanId)
+    }
+
+
     return (
         <Box
             sx={{
@@ -24,47 +46,47 @@ const CardLoadEquipmentInfo = ({data = {}}) => {
             {/* Header */}
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                 <Typography sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
-                  {data.nameLoan}
+                    {data.nameLoan}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {data.equipmentLoanId}
+                    <Delete sx={{ color: "red" }} onClick={() => deleteLoan()} />
                 </Typography>
             </Box>
 
             <Divider sx={{ mb: 2 }} />
 
-           
+
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
                 <Typography variant="body2">📅 Fecha: {data.loanDate}</Typography>
-               {data.type == "Uso" ? (
-                 <Box
-                    sx={{
-                        px: 2,
-                        py: 0.5,
-                        borderRadius: "12px",
-                        bgcolor: "#4040deff",
-                        color: "white",
-                        fontWeight: "bold",
-                        fontSize: "0.9rem",
-                    }}
-                >
-                    {data.type}
-                </Box>
-               ) : (
-                 <Box
-                    sx={{
-                        px: 2,
-                        py: 0.5,
-                        borderRadius: "12px",
-                        bgcolor: "#39A900",
-                        color: "white",
-                        fontWeight: "bold",
-                        fontSize: "0.9rem",
-                    }}
-                >
-                    {data.type}
-                </Box>
-               )}
+                {data.type == "Uso" ? (
+                    <Box
+                        sx={{
+                            px: 2,
+                            py: 0.5,
+                            borderRadius: "12px",
+                            bgcolor: "#4040deff",
+                            color: "white",
+                            fontWeight: "bold",
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        {data.type}
+                    </Box>
+                ) : (
+                    <Box
+                        sx={{
+                            px: 2,
+                            py: 0.5,
+                            borderRadius: "12px",
+                            bgcolor: "#39A900",
+                            color: "white",
+                            fontWeight: "bold",
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        {data.type}
+                    </Box>
+                )}
             </Box>
 
             {/* Descripción */}
@@ -73,7 +95,7 @@ const CardLoadEquipmentInfo = ({data = {}}) => {
                     Descripción:
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                   {data.notes}
+                    {data.notes}
                 </Typography>
             </Box>
         </Box>
