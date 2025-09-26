@@ -18,8 +18,9 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
         state: "",
         responsibleId: "",
         locationId: "",
+        description: "",
         usageId: "",
-        imageUrl:""
+        imageUrl: ""
     });
 
 
@@ -36,7 +37,8 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
 
     const handleForm = (e) => {
         e.preventDefault();
-
+       
+    
         if (!data) {
 
             method(formData, imageFile);
@@ -57,12 +59,11 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 equipmentCost: Number(formData.equipmentCost),
                 state: formData.state,
                 responsibleId: Number(formData.responsibleId),
+                description: formData.description,
                 locationId: Number(formData.locationId),
                 usageId: Number(formData.usageId),
-                imageUrl:formData.imageUrl
+                imageUrl: formData.imageUrl
             };
-           
-
             method(equipmentRequestDto, imageFile);
         }
     };
@@ -114,6 +115,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 locationId: data.locationId || "",
                 usageName: data.usageName || "",
                 usageId: data.usageId || "",
+                description: data.description || "",
                 responsibleId: data.responsibleId || "",
                 responsibleName: data.responsibleName || ""
             });
@@ -337,6 +339,17 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                         </Box>
                     )}
                 </Box>
+                <TextField
+                    label="Descripción"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    error={!!errors?.description}
+                    helperText={errors?.description}
+                    multiline
+                   
+                    sx={{ flex: "1 1 calc(50% - 8px)" }}
+                />
                 <TextField
                     type="file"
                     name="image"

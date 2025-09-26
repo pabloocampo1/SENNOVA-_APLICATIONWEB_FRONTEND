@@ -1,4 +1,4 @@
-import { Add, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, TableChart } from '@mui/icons-material';
+import { Add, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, TableChart } from '@mui/icons-material';
 import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CardsSummaryEquipment from './CardsSummaryEquipment';
@@ -28,6 +28,7 @@ const EquipmentPage = () => {
     const [equipmentToDeleteId, setEquipmentToDeleteId] = useState(false);
     const navigate = useNavigate();
     const [isLoanding, setIsLoanding] = useState(false);
+    const [refreshSummary, setRefreshSummary] = useState(0);
 
 
 
@@ -49,6 +50,7 @@ const EquipmentPage = () => {
                 if (res.status == 200) {
                     setOpenModalDelete(false)
                     fetchData()
+                    setRefreshSummary(prev => prev + 1);
                 }
             } catch (error) {
                 console.log(error);
@@ -189,7 +191,9 @@ const EquipmentPage = () => {
             try {
                 const formData = new FormData();
                 formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
-                formData.append("image", imageFile);
+                if (imageFile != null) {
+                    formData.append("image", imageFile);
+                }
 
                 const res = await api.post("/equipment/save", formData, {
                     headers: {
@@ -204,10 +208,11 @@ const EquipmentPage = () => {
                         status: true,
                         message: "Equipo agregado exitosamente."
                     });
+                    setRefreshSummary(prev => prev + 1);
+
                 }
             } catch (error) {
-                console.log(error);
-
+              
                 if (error.response) {
                     const backendError = error.response.data;
                     if (backendError.errors) {
@@ -234,9 +239,6 @@ const EquipmentPage = () => {
                 setDataEquipments(res.data.content)
                 setTotalPages(res.data.totalPages)
             }
-
-            console.log(res);
-
         } catch (error) {
             console.error(error);
 
@@ -255,6 +257,11 @@ const EquipmentPage = () => {
 
 
     }, [page, search])
+
+
+    useEffect(() => {
+        fetchData();
+    }, [refreshSummary]);
 
 
 
@@ -338,7 +345,7 @@ const EquipmentPage = () => {
 
 
             {/** cards summary inventory */}
-            <CardsSummaryEquipment />
+            <CardsSummaryEquipment refresh={refreshSummary} />
 
 
             <Box>
@@ -360,6 +367,17 @@ const EquipmentPage = () => {
                                 <MenuItem value={"internalCode"}>Codigo interno</MenuItem>
                             </Select>
                         </FormControl>
+                        <Button
+                            variant="contained"
+                            startIcon={<QrCodeScanner />}
+                            onClick={() => alert("esta funcion esta en desarrollo")}
+                            sx={{
+                                ml:"20px"
+                            }}
+                        >
+                            Escanear
+                        </Button>
+
                     </Box>
                     <Box>
                         <Button variant='contained' onClick={() => setOpenCreatedEquipment(true)}> <Add /> Agregar un nuevo equipo</Button>

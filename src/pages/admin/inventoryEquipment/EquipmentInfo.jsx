@@ -241,6 +241,8 @@ const EquipmentInfo = () => {
 
     }, [])
 
+    
+
     return (
         <Box sx={{pt:"50px"}}>
 
@@ -420,8 +422,13 @@ const EquipmentInfo = () => {
                         position: "relative"
                     }}
                 >
-                    <img src={imageFile ? imageFile : notImage} width={"100%"} alt="imagen del equipo." />
-                    <InfoRow label="Numero de serie" value={data.serialNumber} />
+                    {imageFile ? (
+                        <img src={imageFile} width={"100%"}  alt="imagen del equipo" />
+                    ) : (
+                          <img src={notImage} width={"50%"} height={"200px"}  alt="imagen del equipo" />
+                    )}
+                    
+                    <InfoRow label="Descripción" value={data.description === "" ? "No hay descripcion para este equipo" : data.description} />
 
                     {/* input oculto */}
                     <input
