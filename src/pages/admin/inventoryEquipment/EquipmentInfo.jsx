@@ -12,6 +12,7 @@ import GenericModal from '../../../components/modals/GenericModal';
 import EquipmentLoadForm from '../../../components/forms/Equipment/EquipmentLoadForm';
 import EquipmentMaintanence from '../../../components/forms/Equipment/EquipmentMaintanence';
 import LoanEquipmentCompo from './LoanEquipmentCompo';
+import MaintenanceStatusBox from './MaintenanceStatusBox';
 
 const InfoRow = ({ label, value }) => (
     <Box sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
@@ -338,6 +339,9 @@ const EquipmentInfo = () => {
                 </Box>
             </Box>
             <Divider sx={{ mb: "20px", mt: "50px" }}>Informacion</Divider>
+            
+            {/* maintenance days info */}
+            <MaintenanceStatusBox maintenanceDate={data.maintenanceDate} />
 
 
             {/** cards info */}
@@ -539,7 +543,7 @@ const EquipmentInfo = () => {
                     }}
                 >
                     {dataMaintenance.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
-
+                    
                     <ListMaintanence data={dataMaintenance} />
 
                 </Box>

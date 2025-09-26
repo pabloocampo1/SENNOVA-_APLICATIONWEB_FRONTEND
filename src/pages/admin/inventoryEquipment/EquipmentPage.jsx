@@ -212,7 +212,8 @@ const EquipmentPage = () => {
 
                 }
             } catch (error) {
-              
+                console.log(error);
+
                 if (error.response) {
                     const backendError = error.response.data;
                     if (backendError.errors) {
@@ -247,6 +248,52 @@ const EquipmentPage = () => {
         }
 
     }
+
+    const getMaintenanceStatus = (maintenanceDate) => {
+        if (!maintenanceDate) {
+            return {
+                label: "Sin registro",
+                color: "#99999930",
+                border: "2px solid #777",
+            };
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const [year, month, day] = maintenanceDate.split("-").map(Number);
+        const maintenance = new Date(year, month - 1, day);
+        maintenance.setHours(0, 0, 0, 0);
+
+        const diffTime = maintenance.getTime() - today.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 0) {
+            return {
+                label: `⚠️ Vencido hace ${Math.abs(diffDays)} día(s)`,
+                color: "#f6070730",
+                border: "2px solid red",
+            };
+        } else if (diffDays === 0) {
+            return {
+                label: "📅 hoy!",
+                color: "#39A90040",
+                border: "2px solid #39A900",
+            };
+        } else if (diffDays <= 30) {
+            return {
+                label: `⏳ en ${diffDays} día(s)`,
+                color: "#fff40730",
+                border: "2px solid orange",
+            };
+        }
+
+        return {
+            label: `✅ Al día (faltan ${diffDays} día(s))`,
+            color: "#07f60f30",
+            border: "2px solid green",
+        };
+    };
 
     useEffect(() => {
         if (search) {
@@ -372,7 +419,7 @@ const EquipmentPage = () => {
                             startIcon={<QrCodeScanner />}
                             onClick={() => alert("esta funcion esta en desarrollo")}
                             sx={{
-                                ml:"20px"
+                                ml: "20px"
                             }}
                         >
                             Escanear
@@ -403,7 +450,7 @@ const EquipmentPage = () => {
                                     <TableCell>ID</TableCell>
                                     <TableCell>Código interno</TableCell>
                                     <TableCell>Nombre</TableCell>
-                                    <TableCell>Marca</TableCell>
+                                    <TableCell>Mantenimiento</TableCell>
                                     <TableCell>Modelo</TableCell>
                                     <TableCell>Ubicación</TableCell>
                                     <TableCell>Estado</TableCell>
@@ -418,7 +465,26 @@ const EquipmentPage = () => {
                                         <TableCell>{equipment.equipmentId}</TableCell>
                                         <TableCell>{equipment.internalCode}</TableCell>
                                         <TableCell>{equipment.equipmentName}</TableCell>
-                                        <TableCell>{equipment.brand}</TableCell>
+                                        <TableCell>
+                                            {(() => {
+                                                const status = getMaintenanceStatus(equipment.maintenanceDate);
+                                                return (
+                                                    <Box
+                                                        sx={{
+                                                            width: "120px",
+                                                            height: "100%",
+                                                            bgcolor: status.color,
+                                                            border: status.border,
+                                                            borderRadius: "15px",
+                                                            textAlign: "center",
+                                                            p: "10px"
+                                                        }}
+                                                    >
+                                                        {status.label}
+                                                    </Box>
+                                                );
+                                            })()}
+                                        </TableCell>
                                         <TableCell>{equipment.model}</TableCell>
                                         <TableCell>{equipment.locationName}</TableCell>
                                         <TableCell>
