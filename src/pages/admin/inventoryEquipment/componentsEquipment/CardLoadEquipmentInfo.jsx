@@ -1,6 +1,6 @@
 
 import { Box, Typography, Divider } from "@mui/material";
-import api from "../../../service/axiosService";
+import api from "../../../../service/axiosService";
 import { Delete } from "@mui/icons-material";
 
 const CardLoadEquipmentInfo = ({ data = {}, deletedItem }) => {

@@ -18,7 +18,7 @@ const TopBar = () => {
     return (
         <Box
             sx={{
-                height: "100px",
+                height: "10vh",
                 bgcolor: "background.paper",
                 display: "flex",
                 alignItems: "center",

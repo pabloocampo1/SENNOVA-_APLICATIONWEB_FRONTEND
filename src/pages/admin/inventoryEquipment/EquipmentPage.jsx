@@ -1,7 +1,7 @@
 import { Add, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, TableChart } from '@mui/icons-material';
 import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import CardsSummaryEquipment from './CardsSummaryEquipment';
+import CardsSummaryEquipment from './componentsEquipment/CardsSummaryEquipment';
 import api from '../../../service/axiosService';
 import SearchBar from '../../../components/SearchBar';
 import GenericModal from '../../../components/modals/GenericModal';
@@ -382,7 +382,7 @@ const EquipmentPage = () => {
                         Descargar Excel
                     </Button>
 
-                    <Button variant="outlined" endIcon={<ChecklistOutlined />}>
+                    <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => navigate("/system/inventory/equipments/check")}>
                         Chequeo de inventario
                     </Button>
                 </Box>

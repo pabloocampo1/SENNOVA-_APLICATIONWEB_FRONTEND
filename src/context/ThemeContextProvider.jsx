@@ -20,6 +20,9 @@ export function ThemeContextProvider({ children }) {
     const theme = useMemo(
         () =>
             createTheme({
+                typography: {
+                 fontFamily: `"Space Grotesk", "Helvetica", "Arial", sans-serif`,
+                },
                 palette: {
                     mode: darkMode ? "dark" : "light",
                     primary: { main: "#39A900" },
@@ -31,13 +34,16 @@ export function ThemeContextProvider({ children }) {
                         primary: darkMode ? "#FFFFFF" : "#000000",
                         secondary: darkMode ? "#d2e4d2ff" : "#426640",
                     },
+                    border: {
+                        primary: darkMode ? "#c3c3c330" : "#00000010"
+                    }
                 },
                 components: {
-                    
+
                     MuiOutlinedInput: {
                         styleOverrides: {
                             root: {
-                                backgroundColor: "transparent", 
+                                backgroundColor: "transparent",
                                 color: "text.primary",
                                 "& input:-webkit-autofill": {
                                     WebkitBoxShadow: "0 0 0 1000px transparent inset",

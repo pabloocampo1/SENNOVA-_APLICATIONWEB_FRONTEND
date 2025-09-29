@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CardLoadEquipmentInfo from './CardLoadEquipmentInfo';
-import api from '../../../service/axiosService';
-import SimpleBackdrop from '../../../components/SimpleBackDrop';
+import api from '../../../../service/axiosService';
+import SimpleBackdrop from '../../../../components/SimpleBackDrop';
 
 const LoanEquipmentCompo = ({ idEquipment }) => {
     const [dataLoan, setDataLoan] = useState([]);

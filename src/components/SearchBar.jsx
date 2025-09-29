@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Paper, TextField, IconButton, Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({ onSearch, placeholder = "Buscar..." }) => {
     const [query, setQuery] = useState("");
 
     const handleSubmit = (value) => {
@@ -16,7 +16,7 @@ const SearchBar = ({ onSearch }) => {
         >
             <TextField
                 variant="standard"
-                placeholder="Buscar..."
+                placeholder={placeholder}
                 value={query}
                 onChange={(e) => handleSubmit(e.target.value)}
                 fullWidth

@@ -3,16 +3,16 @@ import { Alert, Backdrop, Box, Button, Card, CardContent, Divider, Snackbar, Typ
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../../service/axiosService';
-import CardLoadEquipmentInfo from './CardLoadEquipmentInfo';
-import ListMaintanence from './ListMaintanence';
+import CardLoadEquipmentInfo from './componentsEquipment/CardLoadEquipmentInfo';
+import ListMaintanence from './componentsEquipment/ListMaintanence';
 import notImage from "../../../assets/images/no-image-icon-6.png";
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
 import FileCard from '../../../components/FileCard';
 import GenericModal from '../../../components/modals/GenericModal';
 import EquipmentLoadForm from '../../../components/forms/Equipment/EquipmentLoadForm';
 import EquipmentMaintanence from '../../../components/forms/Equipment/EquipmentMaintanence';
-import LoanEquipmentCompo from './LoanEquipmentCompo';
-import MaintenanceStatusBox from './MaintenanceStatusBox';
+import LoanEquipmentCompo from './componentsEquipment/LoanEquipmentCompo';
+import MaintenanceStatusBox from './componentsEquipment/MaintenanceStatusBox';
 
 const InfoRow = ({ label, value }) => (
     <Box sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
@@ -73,7 +73,7 @@ const EquipmentInfo = () => {
             const formData = new FormData();
             formData.append("image", file);
 
-            const res = await api.put(`/equipment/change-image/${data.equipmentId}`, formData, {
+            const res = await api.put(`/equipment/change-image/${idEquipment}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
@@ -240,7 +240,7 @@ const EquipmentInfo = () => {
         }
         init();
 
-    }, [])
+    }, [idEquipment])
 
     
 
@@ -313,7 +313,7 @@ const EquipmentInfo = () => {
             {/** Header of the info page */}
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <Box sx={{ width: "100px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "15px", border: "1px solid green" }}
-                    onClick={() => navigate("/system/inventory/equipments")}>
+                    onClick={() => navigate(- 1)}>
                     <ArrowBackOutlined sx={{ color: "primary.main" }} /> <Typography sx={{ color: "primary.main" }}> Volver</Typography>
                 </Box>
 

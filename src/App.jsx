@@ -17,6 +17,9 @@ import QuotesPage from "./pages/admin/QuotesPage"
 import ResultsRelease from "./pages/admin/ResultsRelease"
 import CustomersAndUsersPage from "./pages/admin/CustomersAndUsersPage"
 import EquipmentInfo from "./pages/admin/inventoryEquipment/EquipmentInfo"
+import SelectOptionToCheckInventoryPage from "./pages/admin/inventoryEquipment/SelectOptionToCheckInventoryPage"
+import SearchOptionCheckInv from "./pages/admin/inventoryEquipment/SearchOptionCheckInv"
+import LocationOptionCheckInv from "./pages/admin/inventoryEquipment/LocationOptionCheckInv"
 
 
 
@@ -40,8 +43,15 @@ function App() {
                                     <Route index element={<DashboardPage />} />
                                     <Route path="settings" element={<SettingPage />} />
                                     <Route path="profile" element={<ProfilePage />} />
+
+
                                     <Route path="inventory/equipments" element={<EquipmentPage />} />
                                     <Route path="inventory/equipments/info/:idEquipment" element={<EquipmentInfo />} />
+                                    <Route path="inventory/equipments/check" element={<SelectOptionToCheckInventoryPage />}/>
+                                    <Route path="inventory/equipments/check/search" element={<SearchOptionCheckInv />}/>
+                                    <Route path="inventory/equipments/check/location" element={<LocationOptionCheckInv />}/>
+
+
                                     <Route path="inventory/reagents" element={<ReagmentPage />} />
                                     <Route path="quotes" element={<QuotesPage />} />
                                     <Route path="results" element={<ResultsRelease />} />

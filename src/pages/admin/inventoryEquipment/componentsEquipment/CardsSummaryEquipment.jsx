@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { formatMonthYear } from '../../../Utils/DateUtils';
-import api from '../../../service/axiosService';
+import { formatMonthYear } from '../../../../Utils/DateUtils';
+import api from '../../../../service/axiosService';
 
 
 const CardsSummaryEquipment = ({refresh}) => {
