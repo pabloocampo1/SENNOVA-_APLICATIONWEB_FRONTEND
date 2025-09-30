@@ -16,6 +16,7 @@ const LocationOptionCheckInv = () => {
     const [showEquipmentByLocation, setShowEquipmentByLocation] = useState(false);
     const [equipmentsByLocationData, setEquipmentsByLocationData] = useState([]);
     const [isLoanding, setIsLoanding] = useState(false);
+    const [locationName, setLocationName] = useState("");
 
     const handleSearch = (value) => {
         setShowEquipmentByLocation(false)
@@ -36,7 +37,7 @@ const LocationOptionCheckInv = () => {
         }
     };
 
-    const fetchDataByLocationId = async (locationId) => {
+    const fetchDataByLocationId = async (locationId, name) => {
         setIsLoanding(true)
         try {
             const res = await api.get(`/equipment/get-all-by-location/${locationId}`);
@@ -49,7 +50,9 @@ const LocationOptionCheckInv = () => {
 
         } finally {
             setIsLoanding(false)
+           
         }
+         setLocationName(name)
 
     }
 
@@ -171,7 +174,7 @@ const LocationOptionCheckInv = () => {
                                 <Card
                                     key={location.equipmentLocationId}
                                     elevation={3}
-                                    onClick={() => fetchDataByLocationId(location.equipmentLocationId)}
+                                    onClick={() => fetchDataByLocationId(location.equipmentLocationId, location.locationName)}
                                     sx={{
                                         borderRadius: "16px",
                                         border: `1px solid ${theme.palette.divider}`,
@@ -211,7 +214,7 @@ const LocationOptionCheckInv = () => {
                     :
 
                     (
-                        <EquipmentsByLocationCompo equipmentsByLocationData={equipmentsByLocationData} back={() => setShowEquipmentByLocation(false)} />
+                        <EquipmentsByLocationCompo equipmentsByLocationData={equipmentsByLocationData} back={() => setShowEquipmentByLocation(false)} locationName={locationName} />
                     )
 
                 }
