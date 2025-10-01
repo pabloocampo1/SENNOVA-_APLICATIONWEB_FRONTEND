@@ -253,8 +253,8 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
                                         <Typography>{equipment.maintenanceDate}</Typography>
                                     </Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Numero serial:</Typography>
-                                        <Typography>{equipment.serialNumber}</Typography>
+                                        <Typography sx={{ fontWeight: "500" }}>Placa sena:</Typography>
+                                        <Typography>{equipment.senaInventoryTag}</Typography>
                                     </Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
                                         <Typography sx={{ fontWeight: "500" }}>Cuentadante:</Typography>

@@ -20,7 +20,8 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
         locationId: "",
         description: "",
         usageId: "",
-        imageUrl: ""
+        imageUrl: "",
+        senaInventoryTag:""
     });
 
 
@@ -62,7 +63,8 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 description: formData.description,
                 locationId: Number(formData.locationId),
                 usageId: Number(formData.usageId),
-                imageUrl: formData.imageUrl
+                imageUrl: formData.imageUrl,
+                senaInventoryTag: formData.senaInventoryTag
             };
             method(equipmentRequestDto, imageFile);
         }
@@ -169,6 +171,16 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                     required
                     error={!!errors?.internalCode}
                     helperText={errors?.internalCode}
+                    sx={{ flex: "1 1 calc(50% - 8px)" }}
+                />
+
+                <TextField
+                    label="Placa sena"
+                    name="senaInventoryTag"
+                    value={formData.SenaInventoryTag}
+                    onChange={handleChange}
+                    error={!!errors?.SenaInventoryTag}
+                    helperText={errors?.SenaInventoryTag}
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 />
 

@@ -6,6 +6,8 @@ import SearchBar from '../../../components/SearchBar';
 import api from '../../../service/axiosService';
 import EquipmentsByLocationCompo from './componentsEquipment/EquipmentsByLocationCompo';
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
+import GenericModal from '../../../components/modals/GenericModal';
+import ScamCompo from '../../../components/scam/ScamCompo';
 
 const LocationOptionCheckInv = () => {
     const [locationsData, setLocationData] = useState([]);
@@ -18,6 +20,7 @@ const LocationOptionCheckInv = () => {
     const [isLoanding, setIsLoanding] = useState(false);
     const [locationName, setLocationName] = useState("");
     const [locationSelectedId,setLocationSelectedId] = useState(null);
+    const [openScanner,setOpenScanner] = useState(false);
 
     const handleSearch = (value) => {
         setShowEquipmentByLocation(false)
@@ -38,6 +41,13 @@ const LocationOptionCheckInv = () => {
         }
     };
 
+
+    const handleScamCode = (code) => {
+        getByISenaInventoryTag(code);
+        setOpenScanner(false)
+        
+    }
+
     const fetchDataByLocationId = async (locationId, name) => {
         setLocationSelectedId(locationId)
         
@@ -57,6 +67,18 @@ const LocationOptionCheckInv = () => {
         }
          setLocationName(name)
 
+    }
+
+    const getByISenaInventoryTag = async (code) => {
+        try {
+            const res = await api.get(`/equipment/get-all-by-sena-inventory-tag/${code}`);
+           setEquipmentsByLocationData(res.data)
+           setShowEquipmentByLocation(true)
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
 
@@ -88,6 +110,11 @@ const LocationOptionCheckInv = () => {
 
     }, [search]);
 
+    useEffect(() => {
+
+    }, [equipmentsByLocationData])
+
+
     return (
         <Box
             sx={{
@@ -102,6 +129,8 @@ const LocationOptionCheckInv = () => {
         >
 
             <SimpleBackdrop open={isLoanding} />
+
+            <GenericModal open={openScanner} compo={<ScamCompo  handleScamCode={(code) => handleScamCode(code)}/>} onClose={() => setOpenScanner(false)} />
 
             {/* Botón back */}
             <Box
@@ -143,7 +172,7 @@ const LocationOptionCheckInv = () => {
                     <Button
                         variant="contained"
                         startIcon={<QrCodeScanner />}
-                        onClick={() => alert("esta funcion esta en desarrollo")}
+                        onClick={() => setOpenScanner(true)}
                         sx={{
                             ml: "20px"
                         }}

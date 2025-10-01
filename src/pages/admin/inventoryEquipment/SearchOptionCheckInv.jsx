@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import GenericModal from '../../../components/modals/GenericModal';
 import EquipmentMaintanence from '../../../components/forms/Equipment/EquipmentMaintanence';
 import MaintenanceStatusBox from './componentsEquipment/MaintenanceStatusBox';
+import ScamCompo from '../../../components/scam/ScamCompo';
 
 const SearchOptionCheckInv = () => {
 
@@ -30,6 +31,7 @@ const SearchOptionCheckInv = () => {
         "message": ""
     })
     const navigate = useNavigate();
+    const [openScanner, setOpenScanner] = useState(false);
 
 
 
@@ -41,6 +43,23 @@ const SearchOptionCheckInv = () => {
     const handleCloseMenu = () => {
         setAnchorEl(null);
     };
+
+    const handleScamCode = (code) => {
+        getByISenaInventoryTag(code);
+        setOpenScanner(false)
+
+    }
+
+    const getByISenaInventoryTag = async (code) => {
+        try {
+            const res = await api.get(`/equipment/get-all-by-sena-inventory-tag/${code}`);
+            setData(res.data)
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
 
 
     const handleSubmit = async (e) => {
@@ -160,7 +179,7 @@ const SearchOptionCheckInv = () => {
 
 
     return (
-        <Box sx={{ width: "100%", height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", position:"relative" }}>
+        <Box sx={{ width: "100%", height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
 
 
             <GenericModal
@@ -175,6 +194,8 @@ const SearchOptionCheckInv = () => {
                     />
                 }
             />
+
+            <GenericModal open={openScanner} compo={<ScamCompo handleScamCode={(code) => handleScamCode(code)} />} onClose={() => setOpenScanner(false)} />
 
             {/** Messages */}
             {responseAlert.status && (
@@ -230,13 +251,14 @@ const SearchOptionCheckInv = () => {
                         <Button
                             variant="contained"
                             startIcon={<QrCodeScanner />}
-                            onClick={() => alert("esta funcion esta en desarrollo")}
+                            onClick={() => setOpenScanner(true)}
                             sx={{
                                 ml: "20px"
                             }}
                         >
                             Escanear
                         </Button>
+
 
                     </Box>
                 </Box>
@@ -337,8 +359,8 @@ const SearchOptionCheckInv = () => {
                                         <Typography>{equipment.maintenanceDate}</Typography>
                                     </Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Numero serial:</Typography>
-                                        <Typography>{equipment.serialNumber}</Typography>
+                                        <Typography sx={{ fontWeight: "500" }}>Placa sena:</Typography>
+                                        <Typography>{equipment.senaInventoryTag}</Typography>
                                     </Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
                                         <Typography sx={{ fontWeight: "500" }}>Cuentadante:</Typography>
