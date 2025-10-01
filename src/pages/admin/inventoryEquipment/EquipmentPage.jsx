@@ -322,7 +322,7 @@ const EquipmentPage = () => {
             {/** Modals */}
             <GenericModal open={openCreatedEquipment} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} method={(dto, image) => saveEquipment(dto, image)} isEdit={false} />} />
             <GenericModal open={openEditEquipment} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} data={equipmentToEdit} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} method={(dto, image) => editEquipment(dto, image)} isEdit={true} />} />
-            <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<EquipmentConfirmationDelete equipmentToDeleteId={equipmentToDeleteId} onClose={() => setOpenModalDelete(false)} method={() => deleteEquipment()} />} />
+            <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<EquipmentConfirmationDelete openLoanging={isLoanding} equipmentToDeleteId={equipmentToDeleteId} onClose={() => setOpenModalDelete(false)} method={() => deleteEquipment()} />} />
 
 
             <SimpleBackdrop open={isLoanding} />
@@ -414,16 +414,6 @@ const EquipmentPage = () => {
                                 <MenuItem value={"internalCode"}>Codigo interno</MenuItem>
                             </Select>
                         </FormControl>
-                        <Button
-                            variant="contained"
-                            startIcon={<QrCodeScanner />}
-                            onClick={() => alert("esta funcion esta en desarrollo")}
-                            sx={{
-                                ml: "20px"
-                            }}
-                        >
-                            Escanear
-                        </Button>
 
                     </Box>
                     <Box>

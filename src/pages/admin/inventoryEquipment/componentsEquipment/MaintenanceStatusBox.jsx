@@ -25,7 +25,7 @@ const MaintenanceStatusBox = ({ maintenanceDate }) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // ✅ Forzar interpretación local
+   
     const [year, month, day] = maintenanceDate.split("-").map(Number);
     const maintenance = new Date(year, month - 1, day);
     maintenance.setHours(0, 0, 0, 0);

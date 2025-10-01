@@ -1,13 +1,13 @@
 import { ArrowBackOutlined, MenuOpenOutlined, MenuRounded, MoreVertOutlined, Update } from '@mui/icons-material';
 import { Alert, Box, Button, IconButton, Menu, MenuItem, Snackbar, TextField, Typography, useTheme } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MaintenanceStatusBox from './MaintenanceStatusBox';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../service/axiosService';
 import GenericModal from '../../../../components/modals/GenericModal';
 import EquipmentMaintanence from '../../../../components/forms/Equipment/EquipmentMaintanence';
 
-const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locationName }) => {
+const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locationName, refresh, locationId }) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -74,13 +74,18 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
         handleCloseMenu()
     }
 
-    const handleMaintanenceSend = () => {
+    const handleMaintanenceSend = async () => {
         setResponseAlert({
             "status": true,
-            "message": "Se agrego el registro exitosamente"
-        })
-        setOpenMaintanence(false)
-    }
+            "message": "Se agregó el registro exitosamente"
+        });
+
+        if (typeof refresh === "function") {
+            await refresh(locationId, locationName);
+        }
+
+        setOpenMaintanence(false);
+    };
 
     const addMaintenance = (id, name) => {
         setEquipmentIdToMaintenance(id)
@@ -89,11 +94,15 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
         setOpenMaintanence(true)
     }
 
+    useEffect(() => {
+        setData(equipmentsByLocationData);
+    }, [equipmentsByLocationData]);
+
 
 
     return (
         <Box sx={{ position: "relative", width: "100%", height: "auto" }}>
-           
+
             <GenericModal
                 open={openMaintanence}
                 onClose={() => setOpenMaintanence(false)}
@@ -101,7 +110,7 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
                     <EquipmentMaintanence
                         equipmentId={equipmentIdToMaintenance}
                         nameOfTheEquipment={equipmentNameToMaintenance}
-                        send={handleMaintanenceSend}
+                        send={() => handleMaintanenceSend()}
                         onClose={() => setOpenMaintanence(false)}
                     />
                 }
@@ -167,8 +176,8 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
             {equipmentsByLocationData.length < 1 && (<Box sx={{ width: "100%", textAlign: "center", mt: "100px" }}>
                 <Typography>No hay equipos con esta ubicacion asignada.</Typography>
             </Box>)}
-            
-             <Box sx={{ width: "100%", textAlign: "center", mt: "70px" }}>
+
+            <Box sx={{ width: "100%", textAlign: "center", mt: "70px" }}>
                 <Typography>Todos los equipos asigandos a la ubicacion: {locationName}</Typography>
             </Box>
 
@@ -185,9 +194,9 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
 
 
                 {data.map(equipment => {
-                    return <>
+                    return <Box key={equipment.equipmentId}>
 
-                        <Box key={equipment.equipmentId}
+                        <Box
                             sx={{
                                 p: "15px",
                                 minHeight: "400px",
@@ -323,7 +332,7 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
 
                         </Box>
 
-                    </>
+                    </Box>
                 })}
             </Box>
 

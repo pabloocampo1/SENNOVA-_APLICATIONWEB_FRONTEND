@@ -222,6 +222,7 @@ const EquipmentInfo = () => {
 
     const handleMaintanenceSend = () => {
         getMaintenance();
+        fetchData()
         setOpenMaintanence(false);
         setResponseAlert({
             status: true,
@@ -274,6 +275,7 @@ const EquipmentInfo = () => {
                         nameOfTheEquipment={data.equipmentName}
                         send={handleMaintanenceSend}
                         onClose={() => setOpenMaintanence(false)}
+
                     />
                 }
             />

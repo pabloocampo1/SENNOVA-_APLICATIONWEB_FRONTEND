@@ -86,6 +86,7 @@ const SearchOptionCheckInv = () => {
             "message": "Se agrego el registro exitosamente"
         })
         setOpenMaintanence(false)
+        getByParam()
     }
 
     const addMaintenance = (id, name) => {
@@ -142,6 +143,7 @@ const SearchOptionCheckInv = () => {
                 break;
 
             default:
+
                 break;
         }
 

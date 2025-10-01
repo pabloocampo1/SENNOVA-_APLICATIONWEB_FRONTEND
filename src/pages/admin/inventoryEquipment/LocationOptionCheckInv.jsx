@@ -17,6 +17,7 @@ const LocationOptionCheckInv = () => {
     const [equipmentsByLocationData, setEquipmentsByLocationData] = useState([]);
     const [isLoanding, setIsLoanding] = useState(false);
     const [locationName, setLocationName] = useState("");
+    const [locationSelectedId,setLocationSelectedId] = useState(null);
 
     const handleSearch = (value) => {
         setShowEquipmentByLocation(false)
@@ -38,6 +39,8 @@ const LocationOptionCheckInv = () => {
     };
 
     const fetchDataByLocationId = async (locationId, name) => {
+        setLocationSelectedId(locationId)
+        
         setIsLoanding(true)
         try {
             const res = await api.get(`/equipment/get-all-by-location/${locationId}`);
@@ -214,7 +217,7 @@ const LocationOptionCheckInv = () => {
                     :
 
                     (
-                        <EquipmentsByLocationCompo equipmentsByLocationData={equipmentsByLocationData} back={() => setShowEquipmentByLocation(false)} locationName={locationName} />
+                        <EquipmentsByLocationCompo equipmentsByLocationData={equipmentsByLocationData} back={() => setShowEquipmentByLocation(false)} locationName={locationName} refresh={(locationSelectedId, locationName) => fetchDataByLocationId(locationSelectedId, locationName)} locationId={locationSelectedId} />
                     )
 
                 }
