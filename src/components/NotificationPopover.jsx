@@ -30,10 +30,7 @@ const NotificationPopover = () => {
             onConnect: () => {
                 console.log("✅ Conectado a WS");
                 client.subscribe("/topic/notifications", (message) => {
-                    console.log("🔔 Nueva notificación:", message);
-
                     setHasNew(true);
-
                     audio.play().catch(err =>
                         console.warn("⚠️ Navegador bloqueó el sonido (necesita interacción):", err)
                     );

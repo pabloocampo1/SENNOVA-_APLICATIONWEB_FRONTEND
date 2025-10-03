@@ -384,8 +384,8 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
             {errors && (
                 <Typography sx={{ color: "red", textAlign: "center" }}>
                     {typeof errors === "string"
-                        ? errors // caso mensaje general
-                        : Object.values(errors)[0]} {/* caso objeto: muestra el primer error */}
+                        ? errors 
+                        : Object.values(errors)[0]} 
                 </Typography>
             )}
         </Box>
