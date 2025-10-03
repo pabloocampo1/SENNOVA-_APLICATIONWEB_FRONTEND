@@ -21,7 +21,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
         description: "",
         usageId: "",
         imageUrl: "",
-        senaInventoryTag:""
+        senaInventoryTag: ""
     });
 
 
@@ -38,8 +38,8 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
 
     const handleForm = (e) => {
         e.preventDefault();
-       
-    
+
+
         if (!data) {
 
             method(formData, imageFile);
@@ -106,9 +106,9 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
     }
 
     useEffect(() => {
+      
         if (data) {
             console.log(data);
-
             setFormData({
                 ...data,
                 acquisitionDate: data.acquisitionDate?.split("T")[0] || "",
@@ -359,7 +359,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                     error={!!errors?.description}
                     helperText={errors?.description}
                     multiline
-                   
+
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 />
                 <TextField
