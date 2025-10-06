@@ -84,7 +84,6 @@ const CustomersAndUsersPage = () => {
     }, [])
 
     useEffect(() => {
-        console.log("jaja se renderizo");
     }, [usersData])
 
     return (

@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import api from '../../../service/axiosService';
 import SimpleBackdrop from '../../SimpleBackDrop';
 
-const UserForm = ({ data = {}, onClose, update }) => {
+const UserForm = ({ data = null, onClose, update, success }) => {
     const [formData, setFormData] = useState({
+        userId: null,
         name: "",
         dni: null,
         phoneNumber: null,
@@ -13,6 +14,7 @@ const UserForm = ({ data = {}, onClose, update }) => {
         roleName: "",
     })
     const [isLoanding, setIsLoanding] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
     const [roleList, setRoleList] = useState([]);
     const [errorsList, setErrorList] = useState({})
@@ -28,13 +30,21 @@ const UserForm = ({ data = {}, onClose, update }) => {
         e.preventDefault();
 
         console.log(formData);
-        saveUser(formData)
+
+        if (formData.userId == null) {
+           
+         
+            saveUser(formData)
+        } else {
+             console.log("pa actualizar");
+            updateUser(formData)
+        }
 
 
     }
 
     const saveUser = async (dto) => {
-      
+
         setIsLoanding(true)
         try {
             const formData = new FormData();
@@ -65,10 +75,61 @@ const UserForm = ({ data = {}, onClose, update }) => {
                     });
                 }
             }
-           
+
 
             if (error.response) {
-                 const backendError = error.response.data;
+                const backendError = error.response.data;
+                setErrorMessage(backendError.message)
+            }
+
+        } finally {
+            setIsLoanding(false)
+        }
+    }
+
+
+    const updateUser = async (dto) => {
+
+        setIsLoanding(true)
+        try {
+            const formData = new FormData();
+            formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+            if (imageFile != null) {
+                formData.append("image", imageFile);
+            }
+
+            const res = await api.put(`/users/update/${dto.userId}`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+
+            console.log(res);
+            
+
+            if (res.status == 200) {
+                 onClose()
+                success()
+               
+            }
+
+
+
+        } catch (error) {
+            console.error(error);
+
+            if (error.response) {
+                const backendError = error.response.data;
+                if (backendError.errors) {
+                    setErrorList({
+                        ...backendError.errors
+                    });
+                }
+            }
+
+
+            if (error.response) {
+                const backendError = error.response.data;
                 setErrorMessage(backendError.message)
             }
 
@@ -100,17 +161,22 @@ const UserForm = ({ data = {}, onClose, update }) => {
     }
 
     useEffect(() => {
+
         getRole()
 
-        if (data) {
-            setFormData(data)
+        if (data && Object.keys(data).length > 0) {
+            setIsEdit(true);
+            setFormData({ ...data });
+        } else {
+            setIsEdit(false);
         }
 
     }, [])
+
     return (
         <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
             <SimpleBackdrop open={isLoanding} />
-            <Typography variant='h3' sx={{ minWidth: "300px", pb: "20px" }}>Agregar un nuevo usuario.</Typography>
+            <Typography variant='h3' sx={{ minWidth: "300px", pb: "20px", textAlign: "center" }}>{isEdit ? "Editar usuario" : "Agregar un nuevo usuario."}</Typography>
             <Box sx={{ display: "grid", gridTemplateColumns: "200px 200px", gap: "20px", mb: "40px" }}>
 
 
@@ -127,7 +193,7 @@ const UserForm = ({ data = {}, onClose, update }) => {
                     type="number"
                     label="Numero de cedula"
                     name="dni"
-                    value={formData.dni}
+                    value={formData.dni || ""}
                     onChange={handleChange}
                     required
 
@@ -138,7 +204,7 @@ const UserForm = ({ data = {}, onClose, update }) => {
                     type="number"
                     label="Numero de telefono"
                     name="phoneNumber"
-                    value={formData.phoneNumber}
+                    value={formData.phoneNumber || ""}
                     onChange={handleChange}
                     required
                     error={!!errorsList?.phoneNumber}
@@ -150,7 +216,7 @@ const UserForm = ({ data = {}, onClose, update }) => {
                     type="email"
                     label="Email"
                     name="email"
-                    value={formData.email}
+                    value={formData.email || ""}
                     onChange={handleChange}
                     required
                     fullWidth
@@ -159,7 +225,7 @@ const UserForm = ({ data = {}, onClose, update }) => {
                 <TextField
                     label="posicion"
                     name="position"
-                    value={formData.position}
+                    value={formData.position || ""}
                     onChange={handleChange}
                     required
                     fullWidth
@@ -196,11 +262,11 @@ const UserForm = ({ data = {}, onClose, update }) => {
             </Box>
 
 
-            {errorMessage && (<Typography sx={{color:"red"}}>{errorMessage}</Typography>)}
-            <Button variant='outlined' type='submit'>Agregar usuario</Button>
+            {errorMessage && (<Typography sx={{ color: "red" }}>{errorMessage}</Typography>)}
+            <Button variant='outlined' type='submit'>{isEdit ? "Editar usuario" : "Registrar usuario."}</Button>
 
 
-            <Typography sx={{textAlign:"center", fontSize:"0.90rem", opacity:"0.50", p:"30px"}}>** Una vez creado el usuario, podra ingresar al sistema mediante nombre de usuario y contraseña <br /> o el email que registre. <br /> El nombre de usuario y contraeña por defecto una vez creado sera su numero de identificacion <br /> el usuario podra cambiar estos datos dentro del sistema***</Typography>
+           {!isEdit && ( <Typography sx={{ textAlign: "center", fontSize: "0.90rem", opacity: "0.50", p: "30px" }}>** Una vez creado el usuario, podra ingresar al sistema mediante nombre de usuario y contraseña <br /> o el email que registre. <br /> El nombre de usuario y contraeña por defecto una vez creado sera su numero de identificacion <br /> el usuario podra cambiar estos datos dentro del sistema***</Typography>)}
         </Box>
     );
 };

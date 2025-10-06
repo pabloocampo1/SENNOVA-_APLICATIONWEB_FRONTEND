@@ -11,28 +11,43 @@ const Users = ({ users = [], updateList, refresh }) => {
     const [openModalForm, setOpenModalForm] = useState(false);
     const [openModalDelete, setOpenModalDelete] = useState(false);
     const [userIdToDelete, setUserIdToDelete] = useState(null)
+    const [userToEdit, setUserToEdit] = useState({});
 
-    const updateListUser = (object) => {  
+    const updateListUser = (object) => {
         updateList(object)
+    }
+
+    const handleDelete = (user) => {
+        setUserIdToDelete(user.userId);
+        setOpenModalDelete(true);
+    }
+
+    const handleCloseModalCreate = () => {
+       setOpenModalForm(false)
+       setUserToEdit({})
+    }
+
+    const handleUpdate = (user) => { 
+       setUserToEdit(user)
+       setOpenModalForm(true)
     }
 
 
     const deleteUser = async () => {
         try {
             const res = await api.delete(`/users/delete/${userIdToDelete}`);
-            console.log(res);
-
-            if(res.status == 200){
+          
+            if (res.status == 200) {
                 setOpenModalDelete(false)
                 refresh()
             }
-            
-            
+
+
         } catch (error) {
             console.error(error);
-        }finally{
+        } finally {
             setUserIdToDelete(null)
-            
+
         }
     }
 
@@ -40,10 +55,10 @@ const Users = ({ users = [], updateList, refresh }) => {
     return (
         <Box>
 
-            <GenericModal open={openModalForm} onClose={() => setOpenModalForm(false)} compo={<UserForm  onClose={() => setOpenModalForm(false)}  update={(object) => updateListUser(object)}/> } />
-            <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={ <ModalDeleteUser  onClose={() => setOpenModalDelete(false)}  update={(object) => updateListUser(object)}  deleteUser={() => deleteUser()} /> } />
+            <GenericModal open={openModalForm} onClose={() => handleCloseModalCreate()} compo={<UserForm data={userToEdit ?? null} onClose={() => handleCloseModalCreate()} update={(object) => updateListUser(object)} success={() => refresh()} />} />
+            <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<ModalDeleteUser onClose={() => setOpenModalDelete(false)} update={(object) => updateListUser(object)} deleteUser={() => deleteUser()} />} />
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%",  mb:"40px"}}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%", mb: "40px" }}>
                 <Typography>Todos los usuarios del sistema:</Typography>
                 <Button variant='contained' onClick={() => setOpenModalForm(true)}>Registrar un nuevo usuario</Button>
             </Box>
@@ -66,8 +81,8 @@ const Users = ({ users = [], updateList, refresh }) => {
                                     <Typography sx={{ opacity: "0.60" }}>{user.email}</Typography>
                                 </Box>
                                 <Box sx={{ display: "flex", justifyContent: "center", position: "absolute", right: "0", gap: "10px" }}>
-                                    <Delete onClick= { () => { setUserIdToDelete(user.userId) , setOpenModalDelete(true)}} sx={{ color: "primary.main" }} />
-                                    <Edit sx={{ color: "primary.main" }} />
+                                    <Delete onClick={() => handleDelete(user)} sx={{ color: "primary.main" }} />
+                                    <Edit onClick={() => handleUpdate(user)} sx={{ color: "primary.main" }} />
                                 </Box>
                             </Box>
                             <Box sx={{ pt: "50px" }}>
@@ -82,7 +97,7 @@ const Users = ({ users = [], updateList, refresh }) => {
                                 </Box>
                             </Box>
 
-                            <Box sx={{display:"flex", justifyContent:"center", mt:"40px"}}>
+                            <Box sx={{ display: "flex", justifyContent: "center", mt: "40px" }}>
                                 <Button variant='outlined'>Consultar mas informacion</Button>
                             </Box>
                         </Box>
