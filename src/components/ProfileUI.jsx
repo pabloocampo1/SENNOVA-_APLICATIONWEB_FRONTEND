@@ -66,7 +66,7 @@ const ProfileUI = () => {
                         height: "50px",
                         ml: "5px"
                     }} >
-                        <img src="https://sb.kaleidousercontent.com/67418/1920x1545/c5f15ac173/samuel-raita-ridxdghg7pw-unsplash.jpg" style={{ width: "100%", borderRadius: "100%", height: "100%" }} alt="notImage" />
+                        <img src={authObject.imageProfile} style={{ width: "100%", borderRadius: "100%", height: "100%" }} alt="notImage" />
                     </Box>
 
 

@@ -307,7 +307,7 @@ const SearchOptionCheckInv = () => {
                                 p: "15px",
                                 minHeight: "400px",
                                 borderRadius: "15px",
-                                bgcolor: "background.paper",
+                                bgcolor: "background.default",
                                 border: `1px solid ${theme.palette.border.primary}`
 
                             }}>

@@ -76,7 +76,7 @@ export function ThemeContextProvider({ children }) {
                             {
                                 props: { variant: "h2" },
                                 style: {
-                                    fontSize: "2rem",
+                                    fontSize: "1.7rem",
                                     color: darkMode ? "#39A900" : "#39A900",
                                     lineHeight: 1.6,
                                 },

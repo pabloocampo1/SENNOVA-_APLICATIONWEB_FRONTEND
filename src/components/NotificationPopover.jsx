@@ -5,7 +5,8 @@ import SockJS from "sockjs-client";
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../service/axiosService';
-import { formatDateTime, isSameDate, timeAgo } from "../Utils/DateUtils"
+import { isSameDate, timeAgo } from "../Utils/DateUtils"
+// import noImage from "../assets/images/logo-sena-verde-png-sin-fondo.png"
 
 
 const NotificationPopover = () => {
@@ -121,9 +122,9 @@ const NotificationPopover = () => {
                                 p: 1
                             }}
                         >
-                            <Box sx={{ width: "60px", height: "60px", borderRadius: "100%", overflow: "hidden" }}>
+                            <Box sx={{ width: "50px", height: "50px", borderRadius: "100%", overflow: "hidden" }}>
                                 <img
-                                    src={n.imageUser}
+                                    src={n.imageUser ? n.imageUser : "https://w7.pngwing.com/pngs/693/741/png-transparent-logo-computer-software-industry-design.png"}
                                     alt="userImage"
                                     width="100%"
                                     height="100%"

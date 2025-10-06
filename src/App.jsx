@@ -15,11 +15,12 @@ import SettingPage from "./pages/admin/SettingPage"
 import ProfilePage from "./pages/admin/ProfilePage"
 import QuotesPage from "./pages/admin/QuotesPage"
 import ResultsRelease from "./pages/admin/ResultsRelease"
-import CustomersAndUsersPage from "./pages/admin/CustomersAndUsersPage"
+
 import EquipmentInfo from "./pages/admin/inventoryEquipment/EquipmentInfo"
 import SelectOptionToCheckInventoryPage from "./pages/admin/inventoryEquipment/SelectOptionToCheckInventoryPage"
 import SearchOptionCheckInv from "./pages/admin/inventoryEquipment/SearchOptionCheckInv"
 import LocationOptionCheckInv from "./pages/admin/inventoryEquipment/LocationOptionCheckInv"
+import CustomersAndUsersPage from "./pages/admin/CustomerAndUsers/CustomersAndUsersPage"
 
 
 
