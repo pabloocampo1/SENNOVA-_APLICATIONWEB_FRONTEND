@@ -29,14 +29,12 @@ const UserForm = ({ data = null, onClose, update, success }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log(formData);
 
         if (formData.userId == null) {
-           
-         
+
             saveUser(formData)
         } else {
-             console.log("pa actualizar");
+
             updateUser(formData)
         }
 
@@ -105,19 +103,18 @@ const UserForm = ({ data = null, onClose, update, success }) => {
             });
 
             console.log(res);
-            
+
 
             if (res.status == 200) {
-                 onClose()
+                onClose()
                 success()
-               
+
             }
 
 
 
         } catch (error) {
-            console.error(error);
-
+        
             if (error.response) {
                 const backendError = error.response.data;
                 if (backendError.errors) {
@@ -266,7 +263,7 @@ const UserForm = ({ data = null, onClose, update, success }) => {
             <Button variant='outlined' type='submit'>{isEdit ? "Editar usuario" : "Registrar usuario."}</Button>
 
 
-           {!isEdit && ( <Typography sx={{ textAlign: "center", fontSize: "0.90rem", opacity: "0.50", p: "30px" }}>** Una vez creado el usuario, podra ingresar al sistema mediante nombre de usuario y contraseña <br /> o el email que registre. <br /> El nombre de usuario y contraeña por defecto una vez creado sera su numero de identificacion <br /> el usuario podra cambiar estos datos dentro del sistema***</Typography>)}
+            {!isEdit && (<Typography sx={{ textAlign: "center", fontSize: "0.90rem", opacity: "0.50", p: "30px" }}>** Una vez creado el usuario, podra ingresar al sistema mediante nombre de usuario y contraseña <br /> o el email que registre. <br /> El nombre de usuario y contraeña por defecto una vez creado sera su numero de identificacion <br /> el usuario podra cambiar estos datos dentro del sistema***</Typography>)}
         </Box>
     );
 };
