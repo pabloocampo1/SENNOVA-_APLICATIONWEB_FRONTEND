@@ -5,6 +5,7 @@ import GenericModal from '../../../components/modals/GenericModal';
 import UserForm from '../../../components/forms/UsersAndCustomer/UserForm';
 import api from '../../../service/axiosService';
 import ModalDeleteUser from '../../../components/forms/UsersAndCustomer/ModalDeleteUser';
+import ModalMessage from '../../../components/modals/ModalMessage';
 
 const Users = ({ users = [], updateList, refresh }) => {
     const theme = useTheme();
@@ -12,6 +13,7 @@ const Users = ({ users = [], updateList, refresh }) => {
     const [openModalDelete, setOpenModalDelete] = useState(false);
     const [userIdToDelete, setUserIdToDelete] = useState(null)
     const [userToEdit, setUserToEdit] = useState({});
+    const [openMessageModal, setOpenModalMessage] = useState(false);
 
     const updateListUser = (object) => {
         updateList(object)
@@ -42,9 +44,17 @@ const Users = ({ users = [], updateList, refresh }) => {
                 refresh()
             }
 
+            if(res.status == 409){
+                setOpenModalMessage(true)
+                setOpenModalDelete(false)
+            }
+
 
         } catch (error) {
-            console.error(error);
+            if(error.status == 409){
+                setOpenModalMessage(true)
+                setOpenModalDelete(false)
+            }
         } finally {
             setUserIdToDelete(null)
 
@@ -57,6 +67,8 @@ const Users = ({ users = [], updateList, refresh }) => {
 
             <GenericModal open={openModalForm} onClose={() => handleCloseModalCreate()} compo={<UserForm data={userToEdit ?? null} onClose={() => handleCloseModalCreate()} update={(object) => updateListUser(object)} success={() => refresh()} />} />
             <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<ModalDeleteUser onClose={() => setOpenModalDelete(false)} update={(object) => updateListUser(object)} deleteUser={() => deleteUser()} />} />
+
+            <GenericModal open={openMessageModal} onClose={() => setOpenModalMessage(false)} compo={<ModalMessage message={"No se puede eliminar el usuario ya que contiene equipos asigandos, desactiva su cuenta o cambia de cuentadante los equipos que tiene asigandos."} onClose={() => setOpenModalMessage(false)} />} />
 
             <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%", mb: "40px" }}>
                 <Typography>Todos los usuarios del sistema:</Typography>
@@ -98,7 +110,7 @@ const Users = ({ users = [], updateList, refresh }) => {
                             </Box>
 
                             <Box sx={{ display: "flex", justifyContent: "center", mt: "40px" }}>
-                                <Button variant='outlined'>Consultar mas informacion</Button>
+                                <Button onClick={() => alert("En construccion.")} variant='outlined'>Consultar mas informacion</Button>
                             </Box>
                         </Box>
                     </>

@@ -1,7 +1,9 @@
-import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Button, MenuItem, Switch, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import api from '../../../service/axiosService';
 import SimpleBackdrop from '../../SimpleBackDrop';
+
+
 
 const UserForm = ({ data = null, onClose, update, success }) => {
     const [formData, setFormData] = useState({
@@ -11,6 +13,7 @@ const UserForm = ({ data = null, onClose, update, success }) => {
         phoneNumber: null,
         email: "",
         position: "",
+        available: true,
         roleName: "",
     })
     const [isLoanding, setIsLoanding] = useState(false);
@@ -24,6 +27,7 @@ const UserForm = ({ data = null, onClose, update, success }) => {
     const handleImageChange = (e) => {
         setImageFile(e.target.files[0]);
     };
+
 
 
     const handleSubmit = (e) => {
@@ -114,7 +118,7 @@ const UserForm = ({ data = null, onClose, update, success }) => {
 
 
         } catch (error) {
-        
+
             if (error.response) {
                 const backendError = error.response.data;
                 if (backendError.errors) {
@@ -252,6 +256,18 @@ const UserForm = ({ data = null, onClose, update, success }) => {
                         return <MenuItem key={role.roleId} value={role.nameRole}>{role.nameRole}</MenuItem>
                     })}
                 </TextField>
+
+                <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+                    <Typography sx={{ textAlign: "center" }}>Activar o desactivar cuenta</Typography>
+                    <Switch
+                        name="available"
+                        checked={formData.available}
+                        onChange={(e) => setFormData({
+                            ...formData,
+                            available: e.target.checked
+                        })}
+                    />
+                </Box>
 
 
 

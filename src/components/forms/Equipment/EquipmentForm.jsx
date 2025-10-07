@@ -88,7 +88,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
     }
     const fetchUsers = async () => {
         try {
-            const res = await api.get("/users/getAll");
+            const res = await api.get("/users/getAllAvailable");
             setUsers(res.data)
         } catch (error) {
             console.log(error);

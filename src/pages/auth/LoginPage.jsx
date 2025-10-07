@@ -37,10 +37,7 @@ const LoginPage = () => {
 
             try {
                 const response = await signIn(username, password);
-                console.log(localStorage.getItem("token"));
-                console.log("respose: " + response);
-
-
+              
                 if (!response.status) {
                     setError(true)
                     setMessageErrorSignIn(response.message);
@@ -48,6 +45,7 @@ const LoginPage = () => {
 
             } catch (error) {
                 console.error(error);
+            
                 setError(true)
             }
         }
@@ -159,7 +157,7 @@ const LoginPage = () => {
 
                 <Button type='submit' sx={{ width: "100%", mt: "40px" }} variant='outlined'>Iniciar sesion</Button>
 
-                <Typography sx={{ fontSize: "0.90rem", mt: "20px", color:"black" }}>O tambien puedes:</Typography>
+                <Typography sx={{ fontSize: "0.90rem", mt: "20px", color: "black" }}>O tambien puedes:</Typography>
 
                 <Box sx={{ mt: "10px" }}>
                     <GoogleLogin
