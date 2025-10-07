@@ -5,7 +5,7 @@ import SimpleBackdrop from '../../SimpleBackDrop';
 
 
 
-const UserForm = ({ data = null, onClose, update, success }) => {
+const UserForm = ({ data = null, onClose, update, success, emailCurrentUser }) => {
     const [formData, setFormData] = useState({
         userId: null,
         name: "",
@@ -196,6 +196,8 @@ const UserForm = ({ data = null, onClose, update, success }) => {
                     name="dni"
                     value={formData.dni || ""}
                     onChange={handleChange}
+                    error={!!errorsList?.dni}
+                    helperText={errorsList?.dni}
                     required
 
                     fullWidth
@@ -257,7 +259,9 @@ const UserForm = ({ data = null, onClose, update, success }) => {
                     })}
                 </TextField>
 
-                <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+
+
+                {emailCurrentUser == formData.email ? "" : (<Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
                     <Typography sx={{ textAlign: "center" }}>Activar o desactivar cuenta</Typography>
                     <Switch
                         name="available"
@@ -267,9 +271,7 @@ const UserForm = ({ data = null, onClose, update, success }) => {
                             available: e.target.checked
                         })}
                     />
-                </Box>
-
-
+                </Box>)}
 
 
             </Box>

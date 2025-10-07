@@ -99,12 +99,6 @@ const ProfileUI = () => {
                             <Typography sx={{ pl: "10px", color: "text.secondary" }}>Configuración</Typography>
                         </Box>
 
-                        <Box onClick={() => { handleClose(); navigate("/system/profile"); }} sx={{ display: "flex", alignItems: "center", mt: "20px", ":hover": { cursor: "pointer" } }}>
-                            <AccountBoxOutlined sx={{ color: 'text.secondary' }} />
-                            <Typography sx={{ pl: "10px", color: "text.secondary" }}>Ver perfil</Typography>
-                        </Box>
-
-
                         <Box onClick={() => logout()} sx={{ display: "flex", alignItems: "center", mt: "20px" }}>
                             <Logout sx={{ color: 'text.secondary' }} />  <Typography sx={{ pl: "10px", color: "text.secondary", ":hover": { cursor: "pointer" } }}>Cerrar sesion</Typography>
                         </Box>

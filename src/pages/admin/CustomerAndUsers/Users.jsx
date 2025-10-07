@@ -6,9 +6,11 @@ import UserForm from '../../../components/forms/UsersAndCustomer/UserForm';
 import api from '../../../service/axiosService';
 import ModalDeleteUser from '../../../components/forms/UsersAndCustomer/ModalDeleteUser';
 import ModalMessage from '../../../components/modals/ModalMessage';
+import { useAuth } from '../../../context/AuthContext';
 
 const Users = ({ users = [], updateList, refresh }) => {
     const theme = useTheme();
+    const {authObject} = useAuth();
     const [openModalForm, setOpenModalForm] = useState(false);
     const [openModalDelete, setOpenModalDelete] = useState(false);
     const [userIdToDelete, setUserIdToDelete] = useState(null)
@@ -65,7 +67,7 @@ const Users = ({ users = [], updateList, refresh }) => {
     return (
         <Box>
 
-            <GenericModal open={openModalForm} onClose={() => handleCloseModalCreate()} compo={<UserForm data={userToEdit ?? null} onClose={() => handleCloseModalCreate()} update={(object) => updateListUser(object)} success={() => refresh()} />} />
+            <GenericModal open={openModalForm} onClose={() => handleCloseModalCreate()} compo={<UserForm data={userToEdit ?? null} emailCurrentUser={authObject.email} onClose={() => handleCloseModalCreate()} update={(object) => updateListUser(object)} success={() => refresh()} />} />
             <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<ModalDeleteUser onClose={() => setOpenModalDelete(false)} update={(object) => updateListUser(object)} deleteUser={() => deleteUser()} />} />
 
             <GenericModal open={openMessageModal} onClose={() => setOpenModalMessage(false)} compo={<ModalMessage message={"No se puede eliminar el usuario ya que contiene equipos asigandos, desactiva su cuenta o cambia de cuentadante los equipos que tiene asigandos."} onClose={() => setOpenModalMessage(false)} />} />
@@ -91,9 +93,10 @@ const Users = ({ users = [], updateList, refresh }) => {
                                 <Box>
                                     <Typography sx={{ opacity: "0.90" }}>{user.name}</Typography>
                                     <Typography sx={{ opacity: "0.60" }}>{user.email}</Typography>
+                                    {authObject.username == user.username ? "Tu" :  ""}
                                 </Box>
                                 <Box sx={{ display: "flex", justifyContent: "center", position: "absolute", right: "0", gap: "10px" }}>
-                                    <Delete onClick={() => handleDelete(user)} sx={{ color: "primary.main" }} />
+                                     {authObject.username == user.username ? "" :  ( <Delete onClick={() => handleDelete(user)} sx={{ color: "primary.main" }} />)}
                                     <Edit onClick={() => handleUpdate(user)} sx={{ color: "primary.main" }} />
                                 </Box>
                             </Box>
