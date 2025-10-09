@@ -1,0 +1,294 @@
+import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import api from '../../../service/axiosService';
+import { useAuth } from '../../../context/AuthContext';
+
+const unitOfMeasure = [
+    "ML", "L", "UL",
+    "MG", "G", "KG", "UG",
+    "MM", "CM", "M",
+    "MOL", "MMOL_L", "UMOL_L",
+    "UNIT", "PPM", "PPB",
+    "S", "MIN", "H",
+    "C", "K"
+];
+
+
+const ReagentForm = ({refreshData, onClose}) => {
+    const { authObject } = useAuth();
+    const [usages, setUsages] = useState([]);
+    const [location, setLocations] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [dataForm, setDataForm] = useState(
+        {
+            reagentId: null,
+            reagentName: "",
+            brand: "",
+            purity: null,
+            units: null,
+            quantity: null,
+            unitOfMeasure: "",
+            batch: "",
+            expirationDate: null,
+            resposibleId: null,
+            locationId: null,
+            usageId: null,
+            description: ""
+        }
+    )
+    const [imageFile, setImageFile] = useState(null);
+    const [errorFetchMessage, setErrorFetchMessage] = useState("");
+    const [errorFetch, setErrorFetch] = useState(false);
+
+
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
+    };
+
+    const handleInput = (e) => {
+        setDataForm({
+            ...dataForm,
+            [e.target.name]: e.target.value
+        })
+    }
+
+   
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const formData = new FormData();
+
+            const jsonBlob = new Blob([JSON.stringify(dataForm)], {
+                type: "application/json",
+            });
+            formData.append("dto", jsonBlob);
+
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+
+            const res = await api.post(
+                `/reagent/save/${authObject.username}`,
+                formData
+            );
+
+            if (res.status == 201) {
+                setDataForm({})
+                refreshData()
+                onClose()
+            }
+
+            console.log(res);
+
+        } catch (error) {
+            setErrorFetchMessage("Ocurrio un error al guardar el reactivo: " + error.data.message)
+            setErrorFetch(true)
+
+        }
+    }
+
+    const fetchUsages = async () => {
+        try {
+            const res = await api.get("/usage/getAll");
+            setUsages(res.data)
+        } catch (error) {
+            setErrorFetchMessage("Ocurrio un error al traer la informacion de los usos: " + error.data.message)
+            setErrorFetch(true)
+
+        }
+    }
+    const fetchUsers = async () => {
+        try {
+            const res = await api.get("/users/getAllAvailable");
+            setUsers(res.data)
+        } catch (error) {
+            setErrorFetchMessage("Ocurrio un error al traer los usuarios disponibles: " + error.data.message)
+            setErrorFetch(true)
+
+        }
+    }
+    const fetchLocations = async () => {
+        try {
+            const res = await api.get("/location/getAll");
+            setLocations(res.data)
+        } catch (error) {
+            setErrorFetchMessage("Ocurrio un error al traer la informacion de las ubicaciones: " + error.data.message)
+            setErrorFetch(true)
+
+        }
+    }
+
+    useEffect(() => {
+
+        setErrorFetch(false);
+        setErrorFetchMessage("")
+
+        const init = async () => {
+            await fetchLocations()
+            await fetchUsages();
+            await fetchUsers();
+        }
+
+        init()
+
+    }, [])
+
+
+
+    return (
+        <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", p:"40px" }}>
+            <Typography sx={{pb:"30px"}}>Agregar reactivo.</Typography>
+            <Box sx={{ display: "grid", gridTemplateColumns: "250px 250px", gap: "20px" }}>
+                <TextField
+                    name='reagentName'
+                    placeholder='Escribe el nombre del reactivo'
+                    onChange={handleInput}
+                    value={dataForm.reagentName || ""}
+                    required
+
+                />
+
+                <TextField
+                    name='brand'
+                    placeholder='Escribe la marca'
+                    onChange={handleInput}
+                    value={dataForm.brand || ""}
+                />
+
+                <TextField
+                    name='purity'
+                    placeholder='Escribe la pureza (No mayor a 100%)'
+                    onChange={handleInput}
+                    value={dataForm.purity || ""}
+                    type='number'
+                    inputProps={{ min: 0, max: 100 }}
+                />
+
+                <TextField
+                    name='units'
+                    placeholder='Escribe las unidades'
+                    onChange={handleInput}
+                    value={dataForm.units || ""}
+                    type='number'
+                />
+
+
+                <TextField
+                    name='quantity'
+                    placeholder='Escribe la cantidad del reactivo'
+                    onChange={handleInput}
+                    value={dataForm.quantity || ""}
+                    required
+                    type='number'
+                />
+
+                <TextField
+                    label="Fecha de expiración"
+                    name="expirationDate"
+                    type="date"
+                    value={dataForm.expirationDate || ""}
+                    onChange={handleInput}
+                    required
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: "1 1 calc(50% - 8px)" }}
+                />
+
+
+                <TextField
+                    select
+                    label="Unidad de medida del reactivo"
+                    name="unitOfMeasure"
+                    value={dataForm.unitOfMeasure || ""}
+                    onChange={handleInput}
+                    required
+                    sx={{ minWidth: "20px" }}
+                >
+                    {unitOfMeasure.map((unit) => (
+                        <MenuItem key={unit} value={unit}>
+                            {unit}
+                        </MenuItem>
+                    ))}
+                </TextField>
+
+                <TextField
+                    select
+                    name="locationId"
+                    label="Ubicacion del reactivo"
+                    value={dataForm.locationId}
+                    onChange={handleInput}
+                    required
+                >
+                    {location.length < 1 && (<Typography>No hay ubicaciones agregadas, agrega una.</Typography>)}
+                    {location.map((location) => {
+                        return <MenuItem key={location.equipmentLocationId} value={location.equipmentLocationId}>{location.locationName}</MenuItem>
+
+                    })}
+                </TextField>
+
+                <TextField
+                    select
+                    name="usageId"
+                    label="Uso del reactivo"
+                    value={dataForm.usageId}
+                    onChange={handleInput}
+                    required
+                >
+                    {usages.length < 1 && (<Typography>No hay ubicaciones agregadas, agrega una.</Typography>)}
+                    {usages.map((usage) => {
+                        return <MenuItem key={usage.equipmentUsageId} value={usage.equipmentUsageId}>{usage.usageName}</MenuItem>
+                    })}
+
+                </TextField>
+
+                <TextField
+                    select
+                    name="resposibleId"
+                    label="Cuentadante del reactivo"
+                    value={dataForm.resposibleId}
+                    onChange={handleInput}
+                    required
+                >
+                    {users.length < 1 && (<Typography>No hay ubicaciones agregadas, agrega una.</Typography>)}
+                    {users.map((user) => {
+                        return <MenuItem key={user.userId} value={user.userId}>{user.name}</MenuItem>
+
+                    })}
+                </TextField>
+
+
+                <TextField
+                    name='batch'
+                    placeholder='Escribe el lote '
+                    onChange={handleInput}
+                    value={dataForm.batch || ""}
+                    type='number'
+                />
+
+
+
+                <TextField
+                    label="Descripción"
+                    name="description"
+                    value={dataForm.description}
+                    onChange={handleInput}
+                    multiline
+                />
+
+                <TextField
+                    type="file"
+                    name="image"
+                    onChange={handleImageChange}
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flex: "1 1 100%" }}
+                />
+
+            </Box>
+            {errorFetch && (<Typography>{errorFetchMessage}</Typography>)}
+            <Button sx={{mt:"20px"}} variant='outlined' type='submit'>Enviar data</Button>
+        </Box>
+    );
+};
+
+export default ReagentForm;

@@ -34,7 +34,7 @@ const UsageCompo = () => {
 
     const fetchData = async () => {
         try {
-            const response = await api.get(`/usage/equipment/getAllPage?page=${page}`);
+            const response = await api.get(`/usage/getAllPage?page=${page}`);
 
             if (response.status !== 200) {
                 setErrorFetch(true)
@@ -57,7 +57,7 @@ const UsageCompo = () => {
     const deleteUsage = async (id, usageName) => {
 
         try {
-            const response = await api.delete(`/usage/equipment/delete/${id}`);
+            const response = await api.delete(`/usage/delete/${id}`);
             if (response.status == 200) {
                 fetchData()
                 setErrorDelete({
@@ -103,7 +103,7 @@ const UsageCompo = () => {
 
     const saveUsage = async (product) => {
         try {
-            const response = await api.post("/usage/equipment/save", product);
+            const response = await api.post("/usage/save", product);
             console.log(response);
             if (response.status == 201) {
                 fetchData()
@@ -130,7 +130,7 @@ const UsageCompo = () => {
 
     const editUsage = async (product, id) => {
         try {
-            const response = await api.put(`/usage/equipment/update/${id}`, product);
+            const response = await api.put(`/usage/update/${id}`, product);
             console.log(response);
             if (response.status == 200) {
                 fetchData()
@@ -158,7 +158,7 @@ const UsageCompo = () => {
 
     const searchUsagesByName = async () => {
         try {
-            const response = await api.get(`/usage/equipment/getAllByName/${search}`);
+            const response = await api.get(`/usage/getAllByName/${search}`);
 
             if (response.status !== 200) {
                 setErrorFetch(true)

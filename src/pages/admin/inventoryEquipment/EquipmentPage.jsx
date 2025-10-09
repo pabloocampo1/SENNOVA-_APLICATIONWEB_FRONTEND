@@ -1,5 +1,5 @@
-import { Add, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, TableChart } from '@mui/icons-material';
-import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Add, BuildCircle, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, TableChart } from '@mui/icons-material';
+import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CardsSummaryEquipment from './componentsEquipment/CardsSummaryEquipment';
 import api from '../../../service/axiosService';
@@ -361,18 +361,19 @@ const EquipmentPage = () => {
             <Box
                 sx={{
                     width: "100%",
-                    minHeight: "10vh",
+
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
                     flexWrap: "wrap",
                     gap: 2,
-                    mb: 2,
+                    mb: "40px"
                 }}
             >
-                <Typography component="h2" sx={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-                    Inventario / Equipos
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Typography variant="h2" component={"h2"}>Inventorio de reactivos</Typography>
+                    <BuildCircle sx={{ ml: "10px", color: "primary.main" }} />
+                </Box>
 
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
                     <Button
@@ -426,36 +427,29 @@ const EquipmentPage = () => {
                 {dataEquipments.length < 1 ? (
                     <Typography sx={{ textAlign: "center" }}>No hay equipos</Typography>
                 ) : (
-                    <Paper
-                        sx={{
-                            width: "100%",
-                            overflow: "hidden",
-                            bgcolor: "background.paper",
-                            mt: "20px"
-                        }}
-                    >
+                    <TableContainer sx={{ mt: "20px" }} component={Paper}>
                         <Table>
                             <TableHead>
-                                <TableRow sx={{ bgcolor: "background.default", border: "1px solid #00000040", borderRadius: "15px" }}>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>Código interno</TableCell>
-                                    <TableCell>Nombre</TableCell>
-                                    <TableCell>Mantenimiento</TableCell>
-                                    <TableCell>Modelo</TableCell>
-                                    <TableCell>Ubicación</TableCell>
-                                    <TableCell>Estado</TableCell>
-                                    <TableCell>Creado</TableCell>
-                                    <TableCell>Actualizado</TableCell>
-                                    <TableCell align="right">Acciones</TableCell>
+                                <TableRow >
+                                    <TableCell sx={{ fontWeight: "700" }}>ID</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Código interno</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Nombre</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Mantenimiento</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Modelo</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Ubicación</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Estado</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Creado</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Actualizado</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {dataEquipments.map((equipment) => (
                                     <TableRow key={equipment.equipmentId} hover>
-                                        <TableCell>{equipment.equipmentId}</TableCell>
-                                        <TableCell>{equipment.internalCode}</TableCell>
-                                        <TableCell>{equipment.equipmentName}</TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.equipmentId}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.internalCode}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.equipmentName}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
                                             {(() => {
                                                 const status = getMaintenanceStatus(equipment.maintenanceDate);
                                                 return (
@@ -475,15 +469,15 @@ const EquipmentPage = () => {
                                                 );
                                             })()}
                                         </TableCell>
-                                        <TableCell>{equipment.model}</TableCell>
-                                        <TableCell>{equipment.locationName}</TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.model}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.locationName}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
                                             {equipment.available ? (<Box sx={{ width: "100px", height: "100%", bgcolor: "#07f60f30", border: "2px solid green", borderRadius: "15px", textAlign: "center", p: "10px" }}>Disponible</Box>) : (<Box sx={{ width: "100px", height: "100%", bgcolor: "#f6070730", border: "2px solid red", borderRadius: "15px", textAlign: "center", p: "10px" }}> No Disponible</Box>)}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
                                             {equipment.createAt ? new Date(equipment.createAt).toLocaleDateString("es-CO") : "null"}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
                                             {equipment.updateAt ? new Date(equipment.updateAt).toLocaleDateString("es-CO") : "null"}
                                         </TableCell>
                                         <TableCell align="right">
@@ -522,7 +516,7 @@ const EquipmentPage = () => {
                                 ))}
                             </TableBody>
                         </Table>
-                    </Paper>
+                    </TableContainer>
                 )}
                 <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mb: "20px", mt: "20px" }}>
 
