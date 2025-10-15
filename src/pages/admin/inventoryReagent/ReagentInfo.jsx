@@ -12,6 +12,9 @@ import GenericModal from '../../../components/modals/GenericModal';
 import ModalUsageReagent from './reagentCompo/ModalUsageReagent';
 
 const ReagentInfo = () => {
+
+    // crear variable y mostrar los usos.
+    const [usagesReagent, setUsagesReagent] = useState([]);
     const { reagentId } = useParams();
     const [dataReagent, setDataReagent] = useState({});
     const [errorFetch, setErrorFetch] = useState({
@@ -93,12 +96,17 @@ const ReagentInfo = () => {
         }
     };
 
-    // to do
+   
     const getUsages = async () => {
-        // try {
-        // } catch (error) {
-        //     console.error(error);
-        // }
+        try {
+            const res = await api.get(`/reagent/get-usages/${reagentId}`);
+            if(res.status == 200){
+                setUsagesReagent(res.data)
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
     };
 
 
@@ -128,9 +136,10 @@ const ReagentInfo = () => {
     }
 
     const handleUsageSaved = async () => {
-    await fetchDataById(); // actualiza cantidad y estado del reactivo
-    await getUsages(); // si luego muestras historial de usos
-};
+        await fetchDataById();
+        await getFiles();
+        await getUsages()
+    };
 
     useEffect(() => {
 
@@ -160,8 +169,8 @@ const ReagentInfo = () => {
                         reagentId={reagentId}
                         success={() => {
                             setResponseAlert({
-                                message:"Se guardo correctamente, cantidad actualizada.",
-                                status:true
+                                message: "Se guardo correctamente, cantidad actualizada.",
+                                status: true
                             })
                             handleUsageSaved()
                         }}
@@ -436,7 +445,25 @@ const ReagentInfo = () => {
 
             </Box>
 
-            <Typography>{dataReagent.reagentName}</Typography>
+
+            {usagesReagent.length <= 0 && (
+                <>
+                    <Box sx={{
+                        width:"100%",
+                        textAlign:"center"
+                    }}>
+                        No hay usos registrados para este reactivo
+                    </Box>
+                </>
+            )}
+
+           {usagesReagent.map(usage => {
+            return <>
+                <Box key={usage.reagentUsageRecordsId}>
+                    {usage.quantity_used}
+                </Box>
+            </>
+           })}
 
         </Box>
     );
