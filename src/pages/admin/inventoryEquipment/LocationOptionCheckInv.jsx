@@ -1,29 +1,33 @@
 import { ArrowBackOutlined, QrCodeScanner } from '@mui/icons-material';
 import { Box, Button, Card, CardActionArea, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SearchBar from '../../../components/SearchBar';
 import api from '../../../service/axiosService';
 import EquipmentsByLocationCompo from './componentsEquipment/EquipmentsByLocationCompo';
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
 import GenericModal from '../../../components/modals/GenericModal';
 import ScamCompo from '../../../components/scam/ScamCompo';
+import ReagentByLocationCompo from '../inventoryReagent/ReagentByLocationCompo';
 
 const LocationOptionCheckInv = () => {
+
+    const { typeInventory } = useParams();
+
     const [locationsData, setLocationData] = useState([]);
     const navigate = useNavigate();
     const theme = useTheme();
     const [search, setSearch] = useState("");
     const [errorFetch, setErrorFetch] = useState(false);
-    const [showEquipmentByLocation, setShowEquipmentByLocation] = useState(false);
-    const [equipmentsByLocationData, setEquipmentsByLocationData] = useState([]);
+    const [showElementByLocation, setShowElementByLocation] = useState(false);
+    const [elementsByLocationData, setElementsByLocationData] = useState([]);
     const [isLoanding, setIsLoanding] = useState(false);
     const [locationName, setLocationName] = useState("");
-    const [locationSelectedId,setLocationSelectedId] = useState(null);
-    const [openScanner,setOpenScanner] = useState(false);
+    const [locationSelectedId, setLocationSelectedId] = useState(null);
+    const [openScanner, setOpenScanner] = useState(false);
 
     const handleSearch = (value) => {
-        setShowEquipmentByLocation(false)
+        setShowElementByLocation(false)
         setSearch(value);
     };
 
@@ -45,39 +49,53 @@ const LocationOptionCheckInv = () => {
     const handleScamCode = (code) => {
         getByISenaInventoryTag(code);
         setOpenScanner(false)
-        
+
     }
 
     const fetchDataByLocationId = async (locationId, name) => {
         setLocationSelectedId(locationId)
-        
+
         setIsLoanding(true)
         try {
-            const res = await api.get(`/equipment/get-all-by-location/${locationId}`);
-            if (res.status == 200) {
-                setEquipmentsByLocationData(res.data);
-                setShowEquipmentByLocation(true);
+            if (typeInventory == "equipment") {
+                const res = await api.get(`/equipment/get-all-by-location/${locationId}`);
+                if (res.status == 200) {
+                    setElementsByLocationData(res.data);
+                    setShowElementByLocation(true);
+                }
+            }
+
+            if (typeInventory == "reagent") {
+                const res = await api.get(`/reagent/getAllByLocation/${locationId}`);
+                console.log("response: ");
+                console.log(res);
+                
+                
+                if (res.status == 200) {
+                    setElementsByLocationData(res.data);
+                    setShowElementByLocation(true);
+                }
             }
         } catch (error) {
             console.error(error);
 
         } finally {
             setIsLoanding(false)
-           
+
         }
-         setLocationName(name)
+        setLocationName(name)
 
     }
 
     const getByISenaInventoryTag = async (code) => {
         try {
             const res = await api.get(`/equipment/get-all-by-sena-inventory-tag/${code}`);
-           setEquipmentsByLocationData(res.data)
-           setShowEquipmentByLocation(true)
-            
+            setElementsByLocationData(res.data)
+            setShowElementByLocation(true)
+
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
@@ -112,8 +130,7 @@ const LocationOptionCheckInv = () => {
 
     useEffect(() => {
 
-    }, [equipmentsByLocationData])
-
+    }, [elementsByLocationData])
 
     return (
         <Box
@@ -130,7 +147,7 @@ const LocationOptionCheckInv = () => {
 
             <SimpleBackdrop open={isLoanding} />
 
-            <GenericModal open={openScanner} compo={<ScamCompo  handleScamCode={(code) => handleScamCode(code)}/>} onClose={() => setOpenScanner(false)} />
+            <GenericModal open={openScanner} compo={<ScamCompo handleScamCode={(code) => handleScamCode(code)} />} onClose={() => setOpenScanner(false)} />
 
             {/* Botón back */}
             <Box
@@ -151,7 +168,7 @@ const LocationOptionCheckInv = () => {
                         bgcolor: theme.palette.action.hover,
                     },
                 }}
-                onClick={() => navigate("/system/inventory/equipments/check")}
+                onClick={() => navigate(`/system/inventory/check/${typeInventory}`)}
             >
                 <ArrowBackOutlined sx={{ color: "primary.main", mr: 1 }} />
                 <Typography sx={{ color: "primary.main", fontWeight: 600 }}>Volver</Typography>
@@ -187,7 +204,7 @@ const LocationOptionCheckInv = () => {
                 {errorFetch && (<Typography sx={{ bgcolor: "red" }}>Ocurrio un error intentado traer la informacion.</Typography>)}
 
 
-                {!showEquipmentByLocation ?
+                {!showElementByLocation ?
 
                     (
                         <Box
@@ -246,11 +263,22 @@ const LocationOptionCheckInv = () => {
                     :
 
                     (
-                        <EquipmentsByLocationCompo equipmentsByLocationData={equipmentsByLocationData} back={() => setShowEquipmentByLocation(false)} locationName={locationName} refresh={(locationSelectedId, locationName) => fetchDataByLocationId(locationSelectedId, locationName)} locationId={locationSelectedId} />
+                        <>
+                            {typeInventory == "equipment" && (<EquipmentsByLocationCompo equipmentsByLocationData={elementsByLocationData} back={() => setShowElementByLocation(false)} locationName={locationName} refresh={(locationSelectedId, locationName) => fetchDataByLocationId(locationSelectedId, locationName)} locationId={locationSelectedId} />)}
+                            {typeInventory == "reagent" && (
+                                <ReagentByLocationCompo
+                                    data={elementsByLocationData}
+                                    back={() => setShowElementByLocation(false)}
+                                    locationName={locationName}
+                                    refresh={(locationSelectedId, locationName) => fetchDataByLocationId(locationSelectedId, locationName)}
+                                    locationId={locationSelectedId}
+                                    
+                                    
+                                     />)}
+                        </>
+
                     )
-
                 }
-
             </Box>
         </Box>
     );

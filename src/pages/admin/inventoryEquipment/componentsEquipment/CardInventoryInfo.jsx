@@ -1,186 +1,38 @@
-import { ArrowBackOutlined, MenuOpenOutlined, MenuRounded, MoreVertOutlined, Update } from '@mui/icons-material';
-import { Alert, Box, Button, IconButton, Menu, MenuItem, Snackbar, TextField, Typography, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import MaintenanceStatusBox from './MaintenanceStatusBox';
-import { useNavigate } from 'react-router-dom';
-import api from '../../../../service/axiosService';
-import GenericModal from '../../../../components/modals/GenericModal';
-import EquipmentMaintanence from '../../../../components/forms/Equipment/EquipmentMaintanence';
+import React from "react";
+import {
+    Box,
+    Button,
+    IconButton,
+    Menu,
+    MenuItem,
+    TextField,
+    Typography,
+} from "@mui/material";
+import { MoreVertOutlined } from "@mui/icons-material";
+import { useTheme } from "@mui/material/styles";
+import MaintenanceStatusBox from "./MaintenanceStatusBox";
+import PropTypes from 'prop-types';
 
-const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locationName, refresh, locationId }) => {
+const CardInventoryInfo = ({
+    data = [],
+    handleClick,
+    open,
+    anchorEl,
+    handleCloseMenu,
+    openChangeState,
+    addMaintenance,
+    navigate,
+    selectedEquipment,
+    handleSubmit,
+    changeStateEquipment,
+    stateToChange,
+    setStateToChange,
+    setChangeStateEquipment,
+}) => {
     const theme = useTheme();
-    const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const [selectedEquipment, setSelectedEquipment] = React.useState(null);
-    const [changeStateEquipment, setChangeStateEquipment] = useState({
-        state: false,
-        equipmentId: null
-    });
-    const [stateToChange, setStateToChange] = useState("Cambiar estado.");
-    const [data, setData] = useState(equipmentsByLocationData);
-    const [openMaintanence, setOpenMaintanence] = useState(false);
-    const [equipmentIdToMaintenance, setEquipmentIdToMaintenance] = useState(0)
-    const [equipmentNameToMaintenance, setEquipmentNameToMaintenance] = useState("")
-    const [responseAlert, setResponseAlert] = useState({
-        "status": false,
-        "message": ""
-    })
-
-    const handleClick = (event, equipment) => {
-        setAnchorEl(event.currentTarget);
-        setSelectedEquipment(equipment);
-    };
-
-    const handleCloseMenu = () => {
-        setAnchorEl(null);
-    };
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await api.put(`/equipment/change-status/${selectedEquipment.equipmentId}/${stateToChange}`);
-            if (res.status == 200) {
-                const equipmentUpdate = res.data;
-                const updatedList = data.map(equipment =>
-                    equipment.equipmentId === equipmentUpdate.equipmentId
-                        ? equipmentUpdate
-                        : equipment
-                );
-
-                setData(updatedList)
-
-                setChangeStateEquipment({
-                    ...changeStateEquipment,
-                    state: false,
-                    equipmentId: null
-                })
-
-            }
-
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const openChangeState = () => {
-        setChangeStateEquipment({
-            ...changeStateEquipment,
-            state: true,
-            equipmentId: selectedEquipment.equipmentId
-        })
-
-        handleCloseMenu()
-    }
-
-    const handleMaintanenceSend = async () => {
-        setResponseAlert({
-            "status": true,
-            "message": "Se agregó el registro exitosamente"
-        });
-
-        if (typeof refresh === "function") {
-            await refresh(locationId, locationName);
-        }
-
-        setOpenMaintanence(false);
-    };
-
-    const addMaintenance = (id, name) => {
-        setEquipmentIdToMaintenance(id)
-        setEquipmentNameToMaintenance(name)
-        handleCloseMenu()
-        setOpenMaintanence(true)
-    }
-
-    useEffect(() => {
-        setData(equipmentsByLocationData);
-    }, [equipmentsByLocationData]);
-
-
 
     return (
-        <Box sx={{ position: "relative", width: "100%", height: "auto" }}>
-
-            <GenericModal
-                open={openMaintanence}
-                onClose={() => setOpenMaintanence(false)}
-                compo={
-                    <EquipmentMaintanence
-                        equipmentId={equipmentIdToMaintenance}
-                        nameOfTheEquipment={equipmentNameToMaintenance}
-                        send={() => handleMaintanenceSend()}
-                        onClose={() => setOpenMaintanence(false)}
-                    />
-                }
-            />
-
-            {/** Messages */}
-            {responseAlert.status && (
-                <Snackbar
-                    open={responseAlert.status}
-                    autoHideDuration={5000}
-                    onClose={() => {
-                        setResponseAlert({
-                            ...responseAlert,
-                            "status": false
-                        });
-                        setResponseAlert({
-                            "status": false,
-                            "message": ""
-                        })
-                    }}
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                >
-                    <Alert
-                        severity="success"
-                        onClose={() => setResponseAlert({
-                            "status": false,
-                            "message": ""
-                        })}
-                        sx={{ width: "100%" }}
-                    >
-                        {responseAlert.message}
-                    </Alert>
-                </Snackbar>
-            )}
-
-
-            <Box sx={{ position: "relative", width: "100%", height: "auto" }}>
-                <Box
-                    sx={{
-                        px: 2,
-                        py: 1,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: "15px",
-                        border: `1px solid ${theme.palette.primary.main}`,
-                        position: "absolute",
-                        top: 20,
-                        left: 20,
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                        "&:hover": {
-                            bgcolor: theme.palette.action.hover,
-                        },
-                    }}
-                    onClick={() => back()}
-                >
-                    <ArrowBackOutlined sx={{ color: "primary.main", mr: 1 }} />
-                    <Typography sx={{ color: "primary.main", fontWeight: 600 }}>Volver a seleccionar una ubicacion</Typography>
-                </Box>
-            </Box>
-
-            {equipmentsByLocationData.length < 1 && (<Box sx={{ width: "100%", textAlign: "center", mt: "100px" }}>
-                <Typography>No hay equipos con esta ubicacion asignada.</Typography>
-            </Box>)}
-
-            <Box sx={{ width: "100%", textAlign: "center", mt: "70px" }}>
-                <Typography>Todos los equipos asigandos a la ubicacion: {locationName}</Typography>
-            </Box>
-
+        <>
             <Box sx={{
                 width: "100%",
                 height: "auto",
@@ -190,8 +42,8 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
                 gap: "20px",
 
             }}>
-                {data.map(equipment => {
-                    return <Box key={equipment.equipmentId}>
+                {data.map((equipment) => (
+                    <Box key={equipment.equipmentId}>
 
                         <Box
                             sx={{
@@ -318,8 +170,6 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
                                 </Box>
                             </Box>
 
-
-
                             <Box sx={{
                                 width: "100%",
                                 mt: "40px"
@@ -330,14 +180,24 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
                         </Box>
 
                     </Box>
-                })}
+                ))}
             </Box>
-
-
-
-
-        </Box>
+        </>
     );
 };
 
-export default EquipmentsByLocationCompo;
+CardInventoryInfo.propTypes = {
+    data: PropTypes.array.isRequired,
+    handleClick: PropTypes.func.isRequired,
+    openChangeState: PropTypes.func.isRequired,
+    addMaintenance: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+    selectedEquipment: PropTypes.object,
+    handleSubmit: PropTypes.func.isRequired,
+    changeStateEquipment: PropTypes.object.isRequired,
+    stateToChange: PropTypes.string.isRequired,
+    setStateToChange: PropTypes.func.isRequired,
+    setChangeStateEquipment: PropTypes.func.isRequired,
+};
+
+export default CardInventoryInfo;

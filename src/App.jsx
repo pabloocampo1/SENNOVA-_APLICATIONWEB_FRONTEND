@@ -10,9 +10,9 @@ import { AuthContextProvider } from "./context/AuthContext"
 import PrivateRoute from "./routes/PrivateRoute"
 import NoAccessModal from "./components/NoAccessModal"
 import EquipmentPage from "./pages/admin/inventoryEquipment/EquipmentPage"
-import ReagmentPage from "./pages/admin/ReagmentPage"
+import ReagmentPage from "./pages/admin/inventoryReagent/ReagmentPage"
 import SettingPage from "./pages/admin/SettingPage"
-import ProfilePage from "./pages/admin/ProfilePage"
+import ProfilePage from "./pages/admin/ProfilePage" 
 import QuotesPage from "./pages/admin/QuotesPage"
 import ResultsRelease from "./pages/admin/ResultsRelease"
 
@@ -21,6 +21,7 @@ import SelectOptionToCheckInventoryPage from "./pages/admin/inventoryEquipment/S
 import SearchOptionCheckInv from "./pages/admin/inventoryEquipment/SearchOptionCheckInv"
 import LocationOptionCheckInv from "./pages/admin/inventoryEquipment/LocationOptionCheckInv"
 import CustomersAndUsersPage from "./pages/admin/CustomerAndUsers/CustomersAndUsersPage"
+import ReagentInfo from "./pages/admin/inventoryReagent/ReagentInfo"
 
 
 
@@ -45,12 +46,12 @@ function App() {
                                     <Route path="settings" element={<SettingPage />} />
                                     <Route path="profile" element={<ProfilePage />} />
 
-
                                     <Route path="inventory/equipments" element={<EquipmentPage />} />
                                     <Route path="inventory/equipments/info/:idEquipment" element={<EquipmentInfo />} />
-                                    <Route path="inventory/equipments/check" element={<SelectOptionToCheckInventoryPage />}/>
-                                    <Route path="inventory/equipments/check/search" element={<SearchOptionCheckInv />}/>
-                                    <Route path="inventory/equipments/check/location" element={<LocationOptionCheckInv />}/>
+                                    <Route path="inventory/check/:typeInventory" element={<SelectOptionToCheckInventoryPage />}/>
+                                    <Route path="inventory/check/search/:typeInventory" element={<SearchOptionCheckInv />}/>
+                                    <Route path="inventory/check/location/:typeInventory" element={<LocationOptionCheckInv />}/>
+                                    <Route path="inventory/reagents/info/:reagentId" element={<ReagentInfo />}/>
 
 
                                     <Route path="inventory/reagents" element={<ReagmentPage />} />

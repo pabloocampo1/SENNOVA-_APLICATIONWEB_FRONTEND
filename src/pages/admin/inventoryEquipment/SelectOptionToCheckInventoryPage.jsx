@@ -1,28 +1,61 @@
 import { ArrowBackOutlined } from '@mui/icons-material';
 import { Box, Tooltip, Typography, useTheme } from '@mui/material';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import { useNavigate, useParams } from 'react-router-dom';
 import imageSearch from "../../../assets/images/undraw_file-search_cbur (1).svg";
 import imageLocation from "../../../assets/images/undraw_delivery-location_um5t.svg";
+
 
 const SelectOptionToCheckInventoryPage = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const { typeInventory } = useParams();
+    
 
     const options = [
         {
             id: 1,
             label: "De manera individual",
             image: imageSearch,
-            onClick: () => navigate("/system/inventory/equipments/check/search"),
+            description: (
+                <>
+                    Podrás buscar un elemento de{" "}
+                    <span style={{ fontWeight: 700, color:"#6A5ACD" }}>
+                        {typeInventory === "reagent" ? "Reactivos" : "Equipos"}
+                    </span>{" "}
+                    mediante su nombre, código interno o placa SENA.
+                </>
+            ),
+            onClick: () => {
+                if (typeInventory === "reagent") {
+                    navigate("/system/inventory/check/search/reagent");
+                } else if (typeInventory === "equipment") {
+                    navigate("/system/inventory/check/search/equipment");
+                }
+            },
         },
         {
             id: 2,
             label: "Por ubicación",
             image: imageLocation,
-            onClick: () => navigate("/system/inventory/equipments/check/location"),
+            description: (
+                <>
+                    Podrás buscar todos los elementos de {" "}
+                    <span style={{ fontWeight: 700, color:"#6A5ACD"  }}>
+                        {typeInventory === "reagent" ? "Reactivos " : "Equipos "}
+                    </span> agrupados por ubicaciones
+                </>
+            ),
+            onClick: () => {
+                if (typeInventory === "reagent") {
+                    navigate("/system/inventory/check/location/reagent");
+                } else if (typeInventory === "equipment") {
+                    navigate("/system/inventory/check/location/equipment");
+                }
+            },
         },
     ];
+
 
     return (
         <Box
@@ -59,7 +92,19 @@ const SelectOptionToCheckInventoryPage = () => {
                         bgcolor: theme.palette.action.hover,
                     },
                 }}
-                onClick={() => navigate("/system/inventory/equipments")}
+                onClick={() => {
+                    switch (typeInventory) {
+                        case "reagent":
+                            navigate("/system/inventory/reagents")
+                            break;
+                        case "equipment":
+                            navigate("/system/inventory/equipments")
+                            break;
+
+                        default:
+                            break;
+                    }
+                }}
             >
                 <ArrowBackOutlined sx={{ color: "primary.main", mr: 1 }} />
                 <Typography sx={{ color: "primary.main", fontWeight: 600 }}>Volver</Typography>
@@ -100,7 +145,7 @@ const SelectOptionToCheckInventoryPage = () => {
                                 alignItems: "center",
                                 flexDirection: "column",
                                 cursor: "pointer",
-                                 border: `1px solid ${theme.palette.primary.main}`,
+                                border: `1px solid ${theme.palette.primary.main}`,
                                 boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
                                 transition: "transform 0.2s ease, box-shadow 0.2s ease",
                                 "&:hover": {
@@ -118,6 +163,15 @@ const SelectOptionToCheckInventoryPage = () => {
                                     objectFit: "contain",
                                 }}
                             />
+                            <Typography sx={{
+                                textAlign:"center",
+                                fontSize:"0.90rem",
+                                pt:"15px",
+                                pb:"15px",
+                                opacity: "0.90"
+                            }}>
+                                {opt.description}
+                            </Typography>
                             <Typography
                                 sx={{
                                     fontWeight: "600",

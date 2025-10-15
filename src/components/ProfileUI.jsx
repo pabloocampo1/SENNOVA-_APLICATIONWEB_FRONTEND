@@ -57,7 +57,7 @@ const ProfileUI = () => {
                         pr: "10px",
                         pl: "10px"
                     }}>
-                        <Typography sx={{ fontSize: "16px", fontWeight: "600", opacity: "0.99" }}>{authObject.name}</Typography>
+                        <Typography sx={{ fontSize: "16px", fontWeight: "600", opacity: "0.99", }}>{authObject.name}</Typography>
                         <Typography sx={{ fontSize: "14px", opacity: "0.50" }}>{authObject.position}</Typography>
                     </Box>
 

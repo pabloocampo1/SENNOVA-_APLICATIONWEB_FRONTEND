@@ -5,9 +5,9 @@ const FileCard = ({ file, onDelete }) => {
     return (
         <Card
             sx={{
-                width: 220,
+                width: 200,
                 borderRadius: 3,
-                boxShadow: 3,
+                boxShadow: 2,
                 p: 2,
                 display: "flex",
                 flexDirection: "column",

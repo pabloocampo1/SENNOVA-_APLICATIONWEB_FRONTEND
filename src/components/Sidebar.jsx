@@ -1,6 +1,6 @@
 
 import { Box, Typography } from "@mui/material";
-import imageLogoSennova from '../assets/images/sennova_logo_sin_fondo.png'
+// import imageLogoSennova from '../assets/images/sennova_logo_sin_fondo.png'
 import NavBarOptions from "./navBarOptions";
 import { DarkMode, Help, InfoOutline, Logout, Sunny } from "@mui/icons-material";
 
@@ -28,13 +28,10 @@ const Sidebar = () => {
         >
 
 
-            <Box sx={{ mt: "15%" }}>
-                <img src={imageLogoSennova} width={250} alt="logo sennova" />
-            </Box>
-
-
+        
             <Box sx={{
-                width: "80%"
+                width: "80%",
+                mt:"100px"
             }}>
                 <NavBarOptions />
             </Box>

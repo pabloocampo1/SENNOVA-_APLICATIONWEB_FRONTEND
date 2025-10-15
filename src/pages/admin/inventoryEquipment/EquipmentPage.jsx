@@ -271,27 +271,19 @@ const EquipmentPage = () => {
         if (diffDays < 0) {
             return {
                 label: `⚠️ Vencido hace ${Math.abs(diffDays)} día(s)`,
-                color: "#f6070730",
-                border: "2px solid red",
             };
         } else if (diffDays === 0) {
             return {
                 label: "📅 hoy!",
-                color: "#39A90040",
-                border: "2px solid #39A900",
             };
         } else if (diffDays <= 30) {
             return {
                 label: `⏳ en ${diffDays} día(s)`,
-                color: "#fff40730",
-                border: "2px solid orange",
             };
         }
 
         return {
-            label: `✅ Al día (faltan ${diffDays} día(s))`,
-            color: "#07f60f30",
-            border: "2px solid green",
+            label: `✅ Al día (faltan ${diffDays} día(s))`,   
         };
     };
 
@@ -383,18 +375,14 @@ const EquipmentPage = () => {
                         Descargar Excel
                     </Button>
 
-                    <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => navigate("/system/inventory/equipments/check")}>
+                    <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => navigate("/system/inventory/check/equipment")}>
                         Chequeo de inventario
                     </Button>
                 </Box>
             </Box>
-            <Divider />
-
-
-
-            {/** cards summary inventory */}
             <CardsSummaryEquipment refresh={refreshSummary} />
 
+            <Divider sx={{mt:"20px"}} />
 
             <Box>
                 {/** table content header */}
@@ -439,7 +427,6 @@ const EquipmentPage = () => {
                                     <TableCell sx={{ fontWeight: "700" }}>Ubicación</TableCell>
                                     <TableCell sx={{ fontWeight: "700" }}>Estado</TableCell>
                                     <TableCell sx={{ fontWeight: "700" }}>Creado</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Actualizado</TableCell>
                                     <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -477,9 +464,7 @@ const EquipmentPage = () => {
                                         <TableCell sx={{ opacity: "0.70" }}>
                                             {equipment.createAt ? new Date(equipment.createAt).toLocaleDateString("es-CO") : "null"}
                                         </TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>
-                                            {equipment.updateAt ? new Date(equipment.updateAt).toLocaleDateString("es-CO") : "null"}
-                                        </TableCell>
+                                       
                                         <TableCell align="right">
                                             <IconButton
                                                 size="small"
@@ -489,7 +474,7 @@ const EquipmentPage = () => {
                                                     setOpenEditEquipment(true)
                                                 }}
                                             >
-                                                <Edit fontSize="small" />
+                                                <Edit sx={{color:"primary.main"}} fontSize="small" />
                                             </IconButton>
                                             <IconButton
                                                 size="small"
@@ -500,7 +485,7 @@ const EquipmentPage = () => {
                                                 }
                                                 }
                                             >
-                                                <Delete fontSize="small" />
+                                                <Delete sx={{color:"primary.main"}} fontSize="small" />
                                             </IconButton>
                                             <IconButton
                                                 size="small"
@@ -509,7 +494,7 @@ const EquipmentPage = () => {
                                                     navigate(`/system/inventory/equipments/info/${equipment.equipmentId}`)
                                                 }
                                             >
-                                                <Info fontSize="small" />
+                                                <Info sx={{color:"primary.main"}} fontSize="small" />
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>

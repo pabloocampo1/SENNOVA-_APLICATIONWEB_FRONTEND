@@ -17,14 +17,14 @@ import {
     Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import api from "../../service/axiosService";
+import api from "../../../service/axiosService";
 import { Add, Biotech, ChecklistOutlined, Delete, Edit, FileDownloadOutlined, Info, Science } from "@mui/icons-material";
-import SearchBar from "../../components/SearchBar";
-import GenericModal from "../../components/modals/GenericModal";
-import ReagentForm from "../../components/forms/Reagent/ReagentForm";
-import CardsSummaryEquipment from "./inventoryEquipment/componentsEquipment/CardsSummaryEquipment";
+import SearchBar from "../../../components/SearchBar";
+import GenericModal from "../../../components/modals/GenericModal";
+import ReagentForm from "../../../components/forms/Reagent/ReagentForm";
+import CardsSummaryEquipment from "../inventoryEquipment/componentsEquipment/CardsSummaryEquipment";
 import { useNavigate } from "react-router-dom";
-import SimpleBackdrop from "../../components/SimpleBackDrop";
+import SimpleBackdrop from "../../../components/SimpleBackDrop";
 
 const ReagentPage = () => {
     const [reagents, setReagents] = useState([]);
@@ -153,13 +153,15 @@ const ReagentPage = () => {
                         Descargar Excel
                     </Button>
 
-                    <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => {/* navigate("/system/inventory/reagent/check") */ }}>
+                    <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => { navigate("/system/inventory/check/reagent") }}>
                         Chequeo de inventario
                     </Button>
                 </Box>
             </Box>
 
-            <Divider />
+            <CardsSummaryEquipment />
+
+            <Divider sx={{ mt: "20px" }} />
 
 
 
@@ -225,16 +227,16 @@ const ReagentPage = () => {
                     </TableHead>
 
                     <TableBody>
-                        {reagents.map((row) => (
-                            <TableRow key={row.reagentsId}>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.reagentsId}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.reagentName}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.brand}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.purity}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.units}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.quantity}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.measurementUnit}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{row.expirationDate}</TableCell>
+                        {reagents.map((reagent) => (
+                            <TableRow key={reagent.reagentsId}>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentsId}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentName}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.brand}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.purity}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.units}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.quantity}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.measurementUnit}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.expirationDate}</TableCell>
                                 <TableCell align="right">
                                     <IconButton
                                         size="small"
@@ -244,7 +246,7 @@ const ReagentPage = () => {
                                             // setOpenEditEquipment(true)
                                         }}
                                     >
-                                        <Edit fontSize="small" />
+                                        <Edit sx={{ color: "primary.main" }} fontSize="small" />
                                     </IconButton>
                                     <IconButton
                                         size="small"
@@ -255,16 +257,16 @@ const ReagentPage = () => {
                                         }
                                         }
                                     >
-                                        <Delete fontSize="small" />
+                                        <Delete sx={{ color: "primary.main " }} fontSize="small" />
                                     </IconButton>
                                     <IconButton
                                         size="small"
-                                        color="primary"
-                                        onClick={() =>
-                                            navigate()
+
+                                        onClick={() => 
+                                            navigate(`/system/inventory/reagents/info/${reagent.reagentsId}`)
                                         }
                                     >
-                                        <Info fontSize="small" />
+                                        <Info sx={{ color: "primary.main" }} fontSize="small" />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>

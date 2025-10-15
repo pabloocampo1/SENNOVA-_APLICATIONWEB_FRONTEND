@@ -7,6 +7,7 @@ import ProfileInfo from "./NotificationPopover";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import NotificationPopover from "./NotificationPopover";
+import imageLogoSennova from '../assets/images/sennova_logo_sin_fondo.png'
 
 
 const TopBar = () => {
@@ -32,8 +33,12 @@ const TopBar = () => {
                 alignItems: "center",
                 justifyContent: "center"
             }}>
-                <Typography sx={{ fontSize: "24px" }}>Bienvenido, </Typography>
-                <Typography sx={{ color: "primary.main", fontWeight: "bold", fontSize: "26px", pl: "7px" }}> {authObject.name}</Typography>
+                {/* <Typography sx={{ fontSize: "24px" }}>Bienvenido, </Typography>
+                <Typography sx={{ color: "primary.main", fontWeight: "bold", fontSize: "26px", pl: "7px" }}> {authObject.name}</Typography> */}
+                <Box sx={{ mt: "15%" }}>
+                <img src={imageLogoSennova} width={250} alt="logo sennova" />
+            </Box>
+
             </Box>
             <Box sx={{
                 display: "flex",

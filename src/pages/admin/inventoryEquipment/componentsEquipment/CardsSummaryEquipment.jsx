@@ -4,29 +4,28 @@ import { formatMonthYear } from '../../../../Utils/DateUtils';
 import api from '../../../../service/axiosService';
 
 
-const CardsSummaryEquipment = ({refresh}) => {
+const CardsSummaryEquipment = ({ refresh }) => {
     const [data, setData] = useState({});
 
     const fetchData = async () => {
         try {
             const res = await api.get("/equipment/summaryStatics/card");
-            if(res.status == 200){
+            if (res.status == 200) {
                 setData(res.data)
                 refresh()
             }
         } catch (error) {
             console.error(error);
-            
+
         }
     }
 
 
-
-   useEffect(() => {
+    useEffect(() => {
         fetchData();
-    }, [refresh]); 
+    }, [refresh]);
 
-    if(data == null){
+    if (data == null) {
         return (
             <Box>Cargando informacion....</Box>
         )
@@ -39,24 +38,24 @@ const CardsSummaryEquipment = ({refresh}) => {
                 display: "grid",
                 gap: 2,
                 gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                mt:"20px"
+                mt: "20px"
             }}
         >
-            <Box sx={{  border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex",gap:"10px" , justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor:"background.default" }}>
-                <Typography sx={{fontWeight:"bold", textAlign:"center"}}>Total de quipos registrados</Typography>
-                <Typography sx={{color:"text.secondary"}}>{data.countAll}</Typography>
+            <Box sx={{ border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex", gap: "10px", justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor: "background.default" }}>
+                <Typography sx={{ fontWeight: "300", textAlign: "center" }}>Total de quipos registrados</Typography>
+                <Typography sx={{ color: "text.secondary", fontSize: "1.20rem", fontWeight: "bold" }}>{data.countAll}</Typography>
             </Box>
-            <Box sx={{  border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex",gap:"10px" , justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor:"background.default" }}>
-                <Typography sx={{fontWeight:"bold", textAlign:"center"}}>Equipos para mantenimiento - {formatMonthYear(new Date())}</Typography>
-                <Typography sx={{color:"text.secondary"}}>{data.countMaintenanceMonth}</Typography>
+            <Box sx={{ border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex", gap: "10px", justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor: "background.default" }}>
+                <Typography sx={{ fontWeight: "300", textAlign: "center" }}>Equipos para mantenimiento - <span style={{ color: "#7E57C2" }}>{formatMonthYear(new Date())}</span></Typography>
+                <Typography sx={{ color: "text.secondary", fontSize: "1.20rem", fontWeight: "bold" }}>{data.countMaintenanceMonth}</Typography>
             </Box>
-            <Box sx={{  border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex",gap:"10px" , justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor:"background.default" }}>
-                <Typography sx={{fontWeight:"bold", textAlign:"center"}}>Total de equipos activos</Typography>
-                <Typography sx={{color:"text.secondary"}}>{data.countAvailableTrue}</Typography>
+            <Box sx={{ border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex", gap: "10px", justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor: "background.default" }}>
+                <Typography sx={{ fontWeight: "300", textAlign: "center" }}>Total de equipos - <span style={{ color: "#7E57C2" }}>Activos</span></Typography>
+                <Typography sx={{ color: "text.secondary", fontSize: "1.20rem", fontWeight: "bold" }}>{data.countAvailableTrue}</Typography>
             </Box>
-            <Box sx={{  border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex",gap:"10px" , justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor:"background.default" }}>
-                <Typography sx={{fontWeight:"bold", textAlign:"center"}}>Total de equipos inactivos</Typography>
-                <Typography sx={{color:"text.secondary"}}>{data.countAvailableFalse}</Typography>
+            <Box sx={{ border: "1px solid #39A90060", p: 2, height: "110px", borderRadius: "10px", display: "flex", gap: "10px", justifyContent: "center", alignItems: "center", flexDirection: "column", bgcolor: "background.default" }}>
+                <Typography sx={{ fontWeight: "300", textAlign: "center" }}>Total de equipos - <span style={{ color: "#7E57C2" }}>inactivos</span> </Typography>
+                <Typography sx={{ color: "text.secondary", fontSize: "1.20rem", fontWeight: "bold" }}>{data.countAvailableFalse}</Typography>
             </Box>
         </Box>
     );

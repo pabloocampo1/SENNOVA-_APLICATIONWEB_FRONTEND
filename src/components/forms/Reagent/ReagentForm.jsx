@@ -14,28 +14,27 @@ const unitOfMeasure = [
 ];
 
 
-const ReagentForm = ({refreshData, onClose}) => {
+const ReagentForm = ({ refreshData, onClose }) => {
     const { authObject } = useAuth();
     const [usages, setUsages] = useState([]);
     const [location, setLocations] = useState([]);
     const [users, setUsers] = useState([]);
-    const [dataForm, setDataForm] = useState(
-        {
-            reagentId: null,
-            reagentName: "",
-            brand: "",
-            purity: null,
-            units: null,
-            quantity: null,
-            unitOfMeasure: "",
-            batch: "",
-            expirationDate: null,
-            resposibleId: null,
-            locationId: null,
-            usageId: null,
-            description: ""
-        }
-    )
+    const [dataForm, setDataForm] = useState({
+        reagentId: null,
+        reagentName: "",
+        brand: "",
+        purity: "",
+        units: "",
+        quantity: "",
+        unitOfMeasure: "",
+        batch: "",
+        expirationDate: "",
+        senaInventoryTag: "",
+        responsibleId: "",
+        locationId: "",
+        usageId: "",
+        description: ""
+    });
     const [imageFile, setImageFile] = useState(null);
     const [errorFetchMessage, setErrorFetchMessage] = useState("");
     const [errorFetch, setErrorFetch] = useState(false);
@@ -52,7 +51,7 @@ const ReagentForm = ({refreshData, onClose}) => {
         })
     }
 
-   
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -73,6 +72,8 @@ const ReagentForm = ({refreshData, onClose}) => {
                 `/reagent/save/${authObject.username}`,
                 formData
             );
+            console.log(dataForm);
+
 
             if (res.status == 201) {
                 setDataForm({})
@@ -138,28 +139,37 @@ const ReagentForm = ({refreshData, onClose}) => {
 
 
     return (
-        <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", p:"40px" }}>
-            <Typography sx={{pb:"30px"}}>Agregar reactivo.</Typography>
+        <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", p: "40px" }}>
+            <Typography sx={{ pb: "30px" }}>Agregar reactivo.</Typography>
             <Box sx={{ display: "grid", gridTemplateColumns: "250px 250px", gap: "20px" }}>
                 <TextField
                     name='reagentName'
-                    placeholder='Escribe el nombre del reactivo'
+                    placeholder='Nombre del reactivo'
                     onChange={handleInput}
                     value={dataForm.reagentName || ""}
+                    required
+
+                />
+                <TextField
+                    type='number'
+                    name='senaInventoryTag'
+                    placeholder='Placa sena'
+                    onChange={handleInput}
+                    value={dataForm.senaInventoryTag || ""}
                     required
 
                 />
 
                 <TextField
                     name='brand'
-                    placeholder='Escribe la marca'
+                    placeholder='Marca'
                     onChange={handleInput}
                     value={dataForm.brand || ""}
                 />
 
                 <TextField
                     name='purity'
-                    placeholder='Escribe la pureza (No mayor a 100%)'
+                    placeholder='Pureza (No mayor a 100%)'
                     onChange={handleInput}
                     value={dataForm.purity || ""}
                     type='number'
@@ -177,7 +187,7 @@ const ReagentForm = ({refreshData, onClose}) => {
 
                 <TextField
                     name='quantity'
-                    placeholder='Escribe la cantidad del reactivo'
+                    placeholder='Cantidad del reactivo'
                     onChange={handleInput}
                     value={dataForm.quantity || ""}
                     required
@@ -244,13 +254,13 @@ const ReagentForm = ({refreshData, onClose}) => {
 
                 <TextField
                     select
-                    name="resposibleId"
+                    name="responsibleId"
                     label="Cuentadante del reactivo"
-                    value={dataForm.resposibleId}
+                    value={dataForm.responsibleId}
                     onChange={handleInput}
                     required
                 >
-                    {users.length < 1 && (<Typography>No hay ubicaciones agregadas, agrega una.</Typography>)}
+                    {users.length < 1 && (<Typography>No hay usuarios agregadas, agrega un0.</Typography>)}
                     {users.map((user) => {
                         return <MenuItem key={user.userId} value={user.userId}>{user.name}</MenuItem>
 
@@ -260,7 +270,7 @@ const ReagentForm = ({refreshData, onClose}) => {
 
                 <TextField
                     name='batch'
-                    placeholder='Escribe el lote '
+                    placeholder='Lote '
                     onChange={handleInput}
                     value={dataForm.batch || ""}
                     type='number'
@@ -286,7 +296,7 @@ const ReagentForm = ({refreshData, onClose}) => {
 
             </Box>
             {errorFetch && (<Typography>{errorFetchMessage}</Typography>)}
-            <Button sx={{mt:"20px"}} variant='outlined' type='submit'>Enviar data</Button>
+            <Button sx={{ mt: "20px" }} variant='outlined' type='submit'>Enviar data</Button>
         </Box>
     );
 };

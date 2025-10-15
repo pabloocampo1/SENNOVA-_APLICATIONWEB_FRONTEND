@@ -25,7 +25,7 @@ export function ThemeContextProvider({ children }) {
                 },
                 palette: {
                     mode: darkMode ? "dark" : "light",
-                    primary: { main: "#39A900" },
+                    primary: { main: "#39A900", third: "#7E57C2" },
                     background: {
                         default: darkMode ? "#121212" : "#F9F9F9",
                         paper: darkMode ? "#1e1e1e" : "#FFFFFF",
