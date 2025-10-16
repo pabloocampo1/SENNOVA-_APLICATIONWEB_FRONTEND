@@ -1,23 +1,26 @@
-import { ArrowBackOutlined, Assignment, BackHand, Construction, Download, FileCopy, FileOpen, HandymanOutlined, RepartitionOutlined } from '@mui/icons-material';
-import { Alert, Backdrop, Box, Button, Card, CardContent, Divider, Snackbar, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import { ArrowBackOutlined, Assignment, Construction, Download } from '@mui/icons-material';
+import { Alert, Box, Button, Divider, Paper, Snackbar, Typography } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../../service/axiosService';
 import CardLoadEquipmentInfo from './componentsEquipment/CardLoadEquipmentInfo';
 import ListMaintanence from './componentsEquipment/ListMaintanence';
-import notImage from "../../../assets/images/no-image-icon-6.png";
+import notImage from "../../../assets/images/notImageAvailable.jpg";
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
 import FileCard from '../../../components/FileCard';
 import GenericModal from '../../../components/modals/GenericModal';
 import EquipmentLoadForm from '../../../components/forms/Equipment/EquipmentLoadForm';
 import EquipmentMaintanence from '../../../components/forms/Equipment/EquipmentMaintanence';
-import LoanEquipmentCompo from './componentsEquipment/LoanEquipmentCompo';
 import MaintenanceStatusBox from './componentsEquipment/MaintenanceStatusBox';
 
 const InfoRow = ({ label, value }) => (
-    <Box sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
-        <Typography sx={{ fontWeight: "bold" }}>{label}</Typography>
-        <Typography sx={{ color: "text.secondary" }}>{value || "—"}</Typography>
+    <Box sx={{ display: "flex", mb: "5px" }}>
+        <Typography variant="caption" sx={{
+            fontWeight: "500", opacity: "0.90", backgroundColor: "action.hover", px: 1.2,
+            py: 0.3,
+            borderRadius: 1,
+        }}>{label} : </Typography>
+        <Typography sx={{ color: "text.secondary", pl: "10px" }}>{value || "—"}</Typography>
     </Box>
 );
 
@@ -243,10 +246,10 @@ const EquipmentInfo = () => {
 
     }, [idEquipment])
 
-    
+
 
     return (
-        <Box sx={{pt:"50px"}}>
+        <Box sx={{ pt: "50px" }}>
 
             <SimpleBackdrop open={isLoanding} />
 
@@ -321,9 +324,9 @@ const EquipmentInfo = () => {
 
 
                 <Box>
-                    <Button variant='outlined' sx={{ width: "auto", p: "20px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center"}}
+                    <Button variant='outlined' sx={{ width: "auto", p: "20px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}
                         onClick={() => alert("esta funcion esta en desarrollo")}>
-                        <Download />  <Typography sx={{  pl: "10px" }}>Descargar informacion de este equipo</Typography>
+                        <Download />  <Typography sx={{ pl: "10px" }}>Descargar informacion de este equipo</Typography>
                     </Button>
                 </Box>
             </Box>
@@ -336,14 +339,14 @@ const EquipmentInfo = () => {
 
                 </Box>
                 <Box>
-                    <Button sx={{  mr: "15px" }} variant='contained' onClick={() => setOpenMaintanence(true)}> <Construction /> Registrar mantenimiento</Button>
+                    <Button sx={{ mr: "15px" }} variant='contained' onClick={() => setOpenMaintanence(true)}> <Construction /> Registrar mantenimiento</Button>
                     <Button sx={{ color: "primary.main" }} variant='outlined' onClick={() => setOpenLoadForm(true)}><Assignment /> Registrar prestamo</Button>
                 </Box>
             </Box>
             <Divider sx={{ mb: "20px", mt: "50px" }}>Informacion</Divider>
-            
+
             {/* maintenance days info */}
-            <MaintenanceStatusBox maintenanceDate={data.maintenanceDate} />
+            {/* <MaintenanceStatusBox maintenanceDate={data.maintenanceDate} /> */}
 
 
             {/** cards info */}
@@ -352,88 +355,66 @@ const EquipmentInfo = () => {
                 gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
                 gap: "40px"
             }}>
-                <Box
+                <Paper elevation={3}
                     sx={{
                         bgcolor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
                         borderRadius: 3,
                         p: 3,
-                        boxShadow: 2,
-                        minHeight: 300,
+                        minHeight: "300px",
                         display: "flex",
                         flexDirection: "column",
                         gap: 1,
                     }}
                 >
                     <InfoRow label="Encargado" value={data.responsibleName} />
-                    <Divider />
                     <InfoRow label="Ubicación" value={data.locationName} />
-                    <Divider />
                     <InfoRow label="Placa" value={data.serialNumber} />
-                    <Divider />
                     <InfoRow label="Estado" value={data.state} />
-                    <Divider />
                     <InfoRow label="Costo" value={`$ ${data.equipmentCost}`} />
-                    <Divider />
-                    <Divider />
                     <InfoRow label="Fecha de adquisición" value={data.acquisitionDate} />
-                    <Divider />
                     <InfoRow label="Fecha de mantenimiento" value={data.maintenanceDate} />
-                </Box>
+                </Paper >
 
                 {/**tecnical info */}
-                <Box
+                <Paper elevation={3}
                     sx={{
                         bgcolor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
                         borderRadius: 3,
                         p: 3,
-                        boxShadow: 2,
-                        minHeight: 300,
+                        minHeight: "300px",
                         display: "flex",
                         flexDirection: "column",
                         gap: 1,
                     }}
                 >
                     <InfoRow label="Nombre" value={data.equipmentName} />
-                    <Divider />
                     <InfoRow label="Numero de serie" value={data.serialNumber} />
-                    <Divider />
                     <InfoRow label="Marca" value={data.brand} />
-                    <Divider />
                     <InfoRow label="Modelo" value={data.model} />
-                    <Divider />
                     <InfoRow label="Voltaje" value={`${data.voltage}`} />
-                    <Divider />
                     <InfoRow label="Amperaje" value={`${data.amperage}`} />
-                    <Divider />
                     <InfoRow label="Uso" value={data.usageName} />
 
+                </Paper>
 
-                </Box>
-                <Box
+                <Paper elevation={3}
                     sx={{
                         bgcolor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
                         borderRadius: 3,
                         p: 3,
-                        boxShadow: 2,
-                        minHeight: 300,
+                        minHeight: "300px",
                         display: "flex",
                         flexDirection: "column",
+                        position: "relative",
                         gap: 1,
-                        position: "relative"
                     }}
                 >
                     {imageFile ? (
-                        <img src={imageFile} width={"100%"}  alt="imagen del equipo" />
+                        <img src={imageFile} width={"100%"} alt="imagen del equipo" />
                     ) : (
-                          <img src={notImage} width={"50%"} height={"200px"}  alt="imagen del equipo" />
+                        <img src={notImage} width={"50%"} height={"200px"} alt="imagen del equipo" />
                     )}
-                    
+
                     <InfoRow label="Descripción" value={data.description === "" ? "No hay descripcion para este equipo" : data.description} />
 
                     {/* input oculto */}
@@ -452,7 +433,12 @@ const EquipmentInfo = () => {
                     >
                         Cambiar imagen
                     </Button>
-                </Box>
+                </Paper>
+            </Box>
+            
+            {/* maintenance days info */}
+            <Box sx={{display:"flex", justifyContent:"center", mt:"50px"}}>
+                <MaintenanceStatusBox maintenanceDate={data.maintenanceDate} />
             </Box>
 
             <Divider sx={{ mb: "20px", mt: "50px" }}>Archivos de este equipo.</Divider>
@@ -510,10 +496,10 @@ const EquipmentInfo = () => {
             <Box
                 sx={{
                     mt: 2,
-                    mb: 2,
                     display: "grid",
                     gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
                     gap: 2,
+                    mb: "100px",
                 }}
             >
                 <Box
@@ -539,13 +525,12 @@ const EquipmentInfo = () => {
                     sx={{
                         borderRadius: 2,
                         p: "20px",
-
                         bgcolor: "background.default",
                         minHeight: "200px"
                     }}
                 >
                     {dataMaintenance.length <= 0 && (<Typography>Este equipo no tiene prestamos ni usos registrados</Typography>)}
-                    
+
                     <ListMaintanence data={dataMaintenance} />
 
                 </Box>

@@ -228,7 +228,7 @@ const ReagentPage = () => {
 
                     <TableBody>
                         {reagents.map((reagent) => (
-                            <TableRow key={reagent.reagentsId}>
+                            <TableRow key={reagent.reagentsId} hover>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentsId}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentName}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.brand}</TableCell>

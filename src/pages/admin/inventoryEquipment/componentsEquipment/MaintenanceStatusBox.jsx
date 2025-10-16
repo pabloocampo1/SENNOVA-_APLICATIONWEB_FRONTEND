@@ -34,25 +34,24 @@ const MaintenanceStatusBox = ({ maintenanceDate }) => {
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
     let label = "";
-    let bgColor = "";
     let borderColor = "";
 
     if (diffDays < 0) {
         label = `⚠️ Mantenimiento vencido hace ${Math.abs(diffDays)} día(s)`;
-        bgColor = "#f6070730";
+       
         borderColor = "#f60707";
     } else if (diffDays === 0) {
         label = "📅 ¡Este equipo tiene mantenimiento hoy!";
-        bgColor = "#fff40730";
+       
         borderColor = "#ffcc00";
     } else if (diffDays <= 30) {
         label = `⏳ Próximo mantenimiento en ${diffDays} día(s)`;
-        bgColor = "#fff40730";
+       
         borderColor = "#ffcc00";
     } else {
         label = `✅ Al día (faltan ${diffDays} día(s) para su próximo mantenimiento)`;
-        bgColor = "#07f60f30";
-        borderColor = "#07f60f";
+       
+        borderColor = "#18b41dff";
     }
 
     return (
@@ -60,7 +59,7 @@ const MaintenanceStatusBox = ({ maintenanceDate }) => {
             sx={{
                 width: "100%",
                 height: "60px",
-                bgcolor: bgColor,
+               
                 border: `1px solid ${borderColor}`,
                 borderRadius: "10px",
                 mb: "20px",
@@ -68,6 +67,7 @@ const MaintenanceStatusBox = ({ maintenanceDate }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 fontWeight: "bold",
+                color:borderColor
             }}
         >
             {label}

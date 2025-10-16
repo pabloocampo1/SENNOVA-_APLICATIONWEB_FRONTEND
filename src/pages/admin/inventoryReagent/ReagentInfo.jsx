@@ -1,19 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../../service/axiosService';
-import { Alert, Box, Button, Divider, Paper, Snackbar, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, Divider, Paper, Snackbar, Typography } from '@mui/material';
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
 import ButtonBack from '../../../components/ButtonBack';
 import { Download, HandymanOutlined } from '@mui/icons-material';
-import notImage from "../../../assets/images/undraw_image-upload_7b3b.svg"
+import notImage from "../../../assets/images/notImageAvailable.jpg";
 import notFiles from "../../../assets/images/undraw_files-uploading_qf8u.svg"
 import FileCard from '../../../components/FileCard';
 import GenericModal from '../../../components/modals/GenericModal';
 import ModalUsageReagent from './reagentCompo/ModalUsageReagent';
+import CardUsageReagent from './reagentCompo/CardUsageReagent';
+import StatusBoxExpirationDate from './reagentCompo/StatusBoxExpirationDate';
+
+
+
+const styleSubtitleInfo = {
+    fontWeight: "500", opacity: "0.90", backgroundColor: "action.hover", px: 1.2,
+    py: 0.3,
+    borderRadius: 1,
+}
+
+
+
 
 const ReagentInfo = () => {
-
-    // crear variable y mostrar los usos.
     const [usagesReagent, setUsagesReagent] = useState([]);
     const { reagentId } = useParams();
     const [dataReagent, setDataReagent] = useState({});
@@ -67,12 +78,13 @@ const ReagentInfo = () => {
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
 
-            if (res.status === 200) {
+            if (res.status === 201) {
                 setUploadedFiles((prev) => [
                     ...prev,
                     ...res.data
                 ]);
                 setFiles([]);
+                getFiles()
 
             }
         } catch (error) {
@@ -96,11 +108,11 @@ const ReagentInfo = () => {
         }
     };
 
-   
+
     const getUsages = async () => {
         try {
             const res = await api.get(`/reagent/get-usages/${reagentId}`);
-            if(res.status == 200){
+            if (res.status == 200) {
                 setUsagesReagent(res.data)
             }
 
@@ -271,39 +283,39 @@ const ReagentInfo = () => {
                 {/* main information */}
                 <Paper elevation={3} sx={{ minHeight: "400px", minWidth: "300px", p: "20px" }}>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Nombre : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Nombre : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.reagentName}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Id (sistema): </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Id (sistema): </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.reagentsId}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Placa sena : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Placa sena : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.senaInventoryTag}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Lote : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Lote : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.batch}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Unidades : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Unidades : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.units}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Cantidad disponible : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Cantidad disponible : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.quantity} {dataReagent.unitOfMeasure}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Estado de cantidad: </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Estado de cantidad: </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.state}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Estado del reactivo : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Estado del reactivo : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.stateExpiration}</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Fecha de vencimiento : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Fecha de vencimiento : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.expirationDate}</Typography>
                     </Box>
                 </Paper>
@@ -324,22 +336,22 @@ const ReagentInfo = () => {
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Cuentadante : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Cuentadante : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.responsibleName}</Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Ubicación : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Ubicación : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.locationName}</Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Uso : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Uso : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.usageName}</Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Registrado el : </Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Registrado el : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.createAt}</Typography>
                     </Box>
 
@@ -445,25 +457,46 @@ const ReagentInfo = () => {
 
             </Box>
 
+            
+            <Box sx={{
+                width: "100%",
+                mt: "40px"
+            }}>
+                <StatusBoxExpirationDate date={dataReagent.expirationDate} />
+            </Box>
+
 
             {usagesReagent.length <= 0 && (
                 <>
                     <Box sx={{
-                        width:"100%",
-                        textAlign:"center"
+                        width: "100%",
+                        textAlign: "center",
+                        mt: "100px"
                     }}>
                         No hay usos registrados para este reactivo
                     </Box>
                 </>
             )}
 
-           {usagesReagent.map(usage => {
-            return <>
-                <Box key={usage.reagentUsageRecordsId}>
-                    {usage.quantity_used}
-                </Box>
-            </>
-           })}
+
+
+            <Divider sx={{ pt: "50px" }}>Informacion de usos de este reactivo</Divider>
+
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+                    gap: 3,
+                    mt: 6,
+                    mb: 10,
+                }}
+            >
+                {usagesReagent.map((usage) => (
+                    <CardUsageReagent usage={usage} dataReagent={dataReagent} />
+                ))}
+            </Box>
+
 
         </Box>
     );
