@@ -1,5 +1,5 @@
 import { ArrowBackOutlined, MenuOpenOutlined, MenuRounded, MoreVertOutlined, Update } from '@mui/icons-material';
-import { Alert, Box, Button, IconButton, Menu, MenuItem, Snackbar, TextField, Typography, useTheme } from '@mui/material';
+import { Alert, Box, Button, Chip, IconButton, Menu, MenuItem, Snackbar, TextField, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import MaintenanceStatusBox from './MaintenanceStatusBox';
 import { useNavigate } from 'react-router-dom';
@@ -241,25 +241,37 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
 
 
                             <Box sx={{ height: "auto", width: "100%" }}>
-                                <Typography sx={{ fontWeight: "bold" }}>{equipment.equipmentName}</Typography>
-                                <Typography sx={{ fontWeight: "400" }}>{equipment.internalCode}</Typography>
+                                <Typography variant='body2' sx={{ fontWeight: "bold" }}>{equipment.equipmentName}</Typography>
+                                <Typography variant='body2' sx={{ fontWeight: "400" }}>{equipment.internalCode}</Typography>
 
                                 <Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Fecha Manteniminto:</Typography>
-                                        <Typography>{equipment.maintenanceDate}</Typography>
+                                        <Typography variant='body2' sx={{ fontWeight: "500" }}>Fecha Manteniminto:</Typography>
+                                        <Typography variant='body2' >{equipment.maintenanceDate}</Typography>
                                     </Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Placa sena:</Typography>
-                                        <Typography>{equipment.senaInventoryTag}</Typography>
+                                        <Typography variant='body2' sx={{ fontWeight: "500" }}>Placa sena:</Typography>
+                                        <Typography variant='body2'>{equipment.senaInventoryTag}</Typography>
                                     </Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Cuentadante:</Typography>
-                                        <Typography>{equipment.responsibleName}</Typography>
+                                        <Typography variant='body2' sx={{ fontWeight: "500" }}>Cuentadante:</Typography>
+                                        <Typography variant='body2'>{equipment.responsibleName}</Typography>
                                     </Box>
                                     <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Estado:</Typography>
-                                        <Box sx={{
+                                        <Typography variant='body2' sx={{ fontWeight: "500" }}>Estado:</Typography>
+                                        <Chip
+                                            label={equipment.state}
+                                            sx={{
+                                                width: "70%",
+                                                height: "40px",
+                                                bgcolor: equipment.available ? "#4CAF5030" : "#F4433630",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                fontWeight: "600"
+                                            }}
+                                        />
+                                        {/* <Box sx={{
                                             width: "70%",
                                             height: "40px",
                                             bgcolor: equipment.available ? "#4CAF5030" : "#F4433630",
@@ -269,7 +281,7 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
                                             fontWeight: "600"
                                         }}>
                                             {equipment.state}
-                                        </Box>
+                                        </Box> */}
                                     </Box>
 
                                     {changeStateEquipment.state && (
@@ -286,7 +298,7 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
                                                     mb: "10px"
                                                 }} component={"form"} onSubmit={handleSubmit}>
 
-                                                    <Typography sx={{ pb: "15px", pt: "15px" }}>Cambia el estado de este equipo.</Typography>
+                                                    <Typography variant='body2' sx={{ pb: "15px", pt: "15px" }}>Cambia el estado de este equipo.</Typography>
                                                     <TextField
                                                         select
                                                         label="Estado"

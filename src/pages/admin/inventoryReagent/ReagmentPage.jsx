@@ -26,6 +26,7 @@ import CardsSummaryEquipment from "../inventoryEquipment/componentsEquipment/Car
 import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import ModalToDelete from "./reagentCompo/ModalToDelete";
+import CardsSummaryReagent from "./reagentCompo/CardsSummaryReagent";
 
 const ReagentPage = () => {
     const [reagents, setReagents] = useState([]);
@@ -216,7 +217,7 @@ const ReagentPage = () => {
                 </Box>
             </Box>
 
-            <CardsSummaryEquipment />
+            <CardsSummaryReagent />
 
             <Divider sx={{ mt: "20px" }} />
 

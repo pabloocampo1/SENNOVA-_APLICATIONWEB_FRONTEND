@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../../service/axiosService';
-import { Alert, Box, Button, Card, Divider, Paper, Snackbar, Typography } from '@mui/material';
+import { Alert, Box, Button, Divider, Card, Snackbar, Typography } from '@mui/material';
 import SimpleBackdrop from '../../../components/SimpleBackDrop';
 import ButtonBack from '../../../components/ButtonBack';
 import { Download, HandymanOutlined } from '@mui/icons-material';
@@ -284,7 +284,7 @@ const ReagentInfo = () => {
             }}>
 
                 {/* main information */}
-                <Paper elevation={3} sx={{ minHeight: "400px", minWidth: "300px", p: "20px" }}>
+                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "300px", p: "20px" }}>
                     <Box sx={{ display: "flex", mb: "10px" }}>
                         <Typography variant="caption" sx={styleSubtitleInfo}>Nombre : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.reagentName}</Typography>
@@ -325,10 +325,10 @@ const ReagentInfo = () => {
                         <Typography variant="caption" sx={styleSubtitleInfo}>Fecha de vencimiento : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.expirationDate}</Typography>
                     </Box>
-                </Paper>
+                </Card>
 
                 {/* image and description */}
-                <Paper elevation={3} sx={{ minHeight: "400px", minWidth: "300px", p: "20px" }}>
+                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "300px", p: "20px" }}>
 
                     <Box sx={{ display: "flex", mb: "30px", justifyContent: "center", width: "100%", }}>
                         <Box sx={{ width: "50%" }}>
@@ -362,11 +362,11 @@ const ReagentInfo = () => {
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.createAt}</Typography>
                     </Box>
 
-                </Paper>
+                </Card>
 
 
 
-                <Paper
+                <Card
                     elevation={3}
                     sx={{
                         minHeight: "400px",
@@ -458,7 +458,7 @@ const ReagentInfo = () => {
                             </Typography>
                         )}
                     </Box>
-                </Paper>
+                </Card>
 
 
 

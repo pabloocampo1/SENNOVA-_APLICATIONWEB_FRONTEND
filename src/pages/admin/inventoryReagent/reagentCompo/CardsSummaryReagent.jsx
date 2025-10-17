@@ -1,10 +1,10 @@
+
 import { Box, Typography, Skeleton, alpha, Chip, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { Inventory, Build, CheckCircle, Cancel } from '@mui/icons-material';
-import { formatMonthYear } from '../../../../Utils/DateUtils';
+import  { useEffect, useState } from 'react';
+import { Inventory, Build, CheckCircle, Cancel, LowPriority, ProductionQuantityLimits, TrendingDown, AccessAlarm, AccessTimeFilled } from '@mui/icons-material';
 import api from '../../../../service/axiosService';
 
-const CardsSummaryEquipment = ({ refresh }) => {
+const CardsSummaryReagent = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const theme = useTheme();
@@ -13,10 +13,10 @@ const CardsSummaryEquipment = ({ refresh }) => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const res = await api.get("/equipment/summaryStatics/card");
+            const res = await api.get("");
             if (res.status === 200) {
                 setData(res.data);
-                refresh();
+              
             }
         } catch (error) {
             console.error(error);
@@ -27,7 +27,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
 
     useEffect(() => {
         fetchData();
-    }, [refresh]);
+    }, []);
 
     if (loading) {
         return (
@@ -55,7 +55,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
 
     const cards = [
         {
-            title: "Total de Equipos",
+            title: "Total de Reactivos",
             subtitle: "Registrados",
             value: data?.countAll || 0,
             icon: Inventory,
@@ -65,30 +65,20 @@ const CardsSummaryEquipment = ({ refresh }) => {
                 : "linear-gradient(135deg, #a5d6a7 0%, #81c784 100%)"
         },
         {
-            title: "Total de Equipos reportados",
-            subtitle: "Reportados",
-            value: data?.countAll || 0,
-            icon: Inventory,
-            color: "#39A900",
-            bgGradient: isDark
-                ? "linear-gradient(135deg, #2a3e2a 0%, #3a5a3a 100%)"
-                : "linear-gradient(135deg, #a5d6a7 0%, #81c784 100%)"
-        },
-        {
-            title: "Mantenimiento",
-            subtitle: formatMonthYear(new Date()),
-            value: data?.countMaintenanceMonth || 0,
-            icon: Build,
+            title: "Bajo Stock",
+            subtitle: "Sin contenido disponible",
+            value: 12,
+            icon: TrendingDown ,
             color: "#7E57C2",
             bgGradient: isDark
                 ? "linear-gradient(135deg, #3e3a52 0%, #5a5072 100%)"
                 : "linear-gradient(135deg, #b39ddb 0%, #9575cd 100%)"
         },
         {
-            title: "Equipos Activos",
-            subtitle: "Disponibles/En uso",
+            title: "Total de reactivos vencidos",
+            subtitle: "Caducados",
             value: data?.countAvailableTrue || 0,
-            icon: CheckCircle,
+            icon: AccessTimeFilled,
             color: "#39A900",
             bgGradient: isDark
                 ? "linear-gradient(135deg, #354a35 0%, #4a6a4a 100%)"
@@ -155,7 +145,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
                                         color: 'white',
                                         fontSize: '0.875rem',
                                         fontWeight: 600,
-                                        mb: 0.5,
+                                        mb: 1,
 
                                     }}
                                 >
@@ -173,6 +163,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
                                             : alpha('#fff', 0.3),
                                         color: 'text.primary',
                                         backdropFilter: 'blur(10px)',
+                                          mb: 1,
 
                                     }}
                                 />
@@ -202,7 +193,8 @@ const CardsSummaryEquipment = ({ refresh }) => {
                             alignItems: 'flex-end',
                             justifyContent: 'space-between',
                             position: 'relative',
-                            zIndex: 1
+                            zIndex: 1,
+                              mb: 1,
                         }}>
                             <Typography
                                 sx={{
@@ -222,4 +214,4 @@ const CardsSummaryEquipment = ({ refresh }) => {
     );
 };
 
-export default CardsSummaryEquipment;
+export default CardsSummaryReagent;

@@ -2,9 +2,11 @@
 import {
     Box,
     Button,
+    Chip,
     IconButton,
     Menu,
     MenuItem,
+    Paper,
     Snackbar,
     TextField,
     Typography,
@@ -77,7 +79,7 @@ const ReagentByLocationCompo = ({
             setChangeStateQuality({
                 ...changeStateQuality,
                 state: true,
-                reagentsId: selectedEquipment.reagentsId 
+                reagentsId: selectedEquipment.reagentsId
             });
         }
     };
@@ -275,22 +277,23 @@ const ReagentByLocationCompo = ({
                 height: "auto",
                 mt: "100px",
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
                 gap: "20px",
 
             }}>
 
                 {
                     reagentsData.map((reagent) => (
-                        <Box key={reagent.reagentsId}>
 
+                        <Paper
+                            elevation={0} key={reagent.reagentsId}>
                             <Box
                                 sx={{
                                     p: "15px",
                                     minHeight: "400px",
                                     borderRadius: "15px",
                                     bgcolor: "background.default",
-                                    border: `1px solid ${theme.palette.border.primary}`
+
 
                                 }}>
 
@@ -332,75 +335,48 @@ const ReagentByLocationCompo = ({
 
 
                                 <Box sx={{ height: "auto", width: "100%" }}>
-                                    <Typography sx={{ fontWeight: "bold", fontSize: "1.20rem", opacity: "0.90", color: "primary.main" }}>{reagent.reagentName}</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: "1.20rem", opacity: "0.90", color: "primary.main" }}>{reagent.reagentName}</Typography>
 
                                     <Box>
                                         <Box sx={{ mb: "10px", mt: "10px" }}>
-                                            <Typography sx={{ fontWeight: "500" }}>Cantidad</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: "500" }}>Cantidad</Typography>
                                             <Box sx={{ display: "flex" }}>
-                                                <Typography sx={{ fontWeight: "400", opacity: "0.70", pr: "5px" }}>{reagent.quantity} </Typography>
+                                                <Typography variant="body2" sx={{ fontWeight: "400", opacity: "0.70", pr: "5px" }}>{reagent.quantity} </Typography>
                                                 <span style={{ color: theme.palette.primary.third, opacity: "100" }}>/ {reagent.unitOfMeasure}</span>
                                             </Box>
                                         </Box>
                                         <Box sx={{ mb: "10px", mt: "10px" }}>
-                                            <Typography sx={{ fontWeight: "500" }}>Fecha caducida:</Typography>
-                                            <Typography sx={{ opacity: "0.70" }}>{reagent.expirationDate}</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: "500" }}>Fecha caducida:</Typography>
+                                            <Typography variant="body2" sx={{ opacity: "0.70" }}>{reagent.expirationDate}</Typography>
                                         </Box>
                                         <Box sx={{ mb: "10px", mt: "10px" }}>
-                                            <Typography sx={{ fontWeight: "500" }}>Estado del reactivo</Typography>
-                                            <Typography sx={{ opacity: "0.70" }}>{reagent.state}</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: "500" }}>Estado del reactivo</Typography>
+                                            <Typography variant="body2" sx={{ opacity: "0.70" }}>{reagent.state}</Typography>
                                         </Box>
                                         <Box sx={{ mb: "10px", mt: "10px" }}>
-                                            <Typography sx={{ fontWeight: "500" }}>Cuentadante:</Typography>
-                                            <Typography sx={{ opacity: "0.70" }}>{reagent.responsibleName}</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: "500" }}>Cuentadante:</Typography>
+                                            <Typography variant="body2" sx={{ opacity: "0.70" }}>{reagent.responsibleName}</Typography>
                                         </Box>
                                         <Box sx={{ mb: 2, mt: 2 }}>
-                                            <Typography sx={{ fontWeight: 500, mb: 1 }}>Estado del reactivo</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>Estado del reactivo</Typography>
 
-                                            <Box
+                                            <Chip
+                                                label={reagent.state}
                                                 sx={{
-                                                    width: "fit-content",
-                                                    px: 3,
-                                                    py: 1.5,
-                                                    borderRadius: "12px",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
+                                                    mt: 2,
+                                                    px: 2,
+                                                    py: 0.5,
                                                     fontWeight: 600,
-                                                    fontSize: "0.95rem",
-                                                    color:
-                                                        reagent.quantity >= 1
-                                                            ? theme.palette.mode === "dark"
-                                                                ? "#b6fbb6"
-                                                                : "#1b5e20"
-                                                            : theme.palette.mode === "dark"
-                                                                ? "#ffb6b6"
-                                                                : "#b71c1c",
                                                     bgcolor:
-                                                        reagent.quantity >= 1
-                                                            ? theme.palette.mode === "dark"
-                                                                ? "#2e7d32"
-                                                                : "#a5d6a7"
-                                                            : theme.palette.mode === "dark"
-                                                                ? "#8e2424"
-                                                                : "#ffcdd2",
-                                                    border: `1px solid ${reagent.quantity >= 1
-                                                        ? theme.palette.mode === "dark"
-                                                            ? "#66bb6a"
-                                                            : "#81c784"
-                                                        : theme.palette.mode === "dark"
-                                                            ? "#ef9a9a"
-                                                            : "#e57373"
-                                                        }`,
-                                                    transition: "all 0.3s ease",
-                                                    boxShadow:
-                                                        reagent.quantity >= 1
-                                                            ? "0 2px 6px rgba(67, 160, 71, 0.2)"
-                                                            : "0 2px 6px rgba(244, 67, 54, 0.2)",
+                                                        reagent.quantity > 0
+                                                            ? theme.palette.success.light + "40"
+                                                            : theme.palette.error.light + "40",
+                                                    color:
+                                                        reagent.quantity > 0
+                                                            ? theme.palette.success.main
+                                                            : theme.palette.error.main,
                                                 }}
-                                            >
-                                                {reagent.state}
-                                            </Box>
+                                            />
                                         </Box>
 
                                         {/* change state  */}
@@ -501,12 +477,12 @@ const ReagentByLocationCompo = ({
                                     width: "100%",
                                     mt: "40px"
                                 }}>
-                                   <StatusBoxExpirationDate  date={reagent.expirationDate}/>
+                                    <StatusBoxExpirationDate date={reagent.expirationDate} />
                                 </Box>
 
                             </Box>
 
-                        </Box>
+                        </Paper>
                     ))
                 }
 

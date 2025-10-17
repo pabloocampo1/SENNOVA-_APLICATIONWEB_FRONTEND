@@ -7,11 +7,14 @@ import {
     MenuItem,
     TextField,
     Typography,
+    Paper,
+    Chip,
+    Fade,
 } from "@mui/material";
 import { MoreVertOutlined } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import MaintenanceStatusBox from "./MaintenanceStatusBox";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const CardInventoryInfo = ({
     data = [],
@@ -32,159 +35,193 @@ const CardInventoryInfo = ({
     const theme = useTheme();
 
     return (
-        <>
-            <Box sx={{
+        <Box
+            sx={{
                 width: "100%",
-                height: "auto",
-                mt: "100px",
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                gap: "20px",
+                gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))",
+                gap: 3,
+                mt: "90px",
+                p: 2,
+            }}
+        >
+            {data.map((equipment) => (
+                <Fade in key={equipment.equipmentId}>
+                    <Paper
+                        elevation={4}
+                        sx={{
+                            p: 3,
+                            borderRadius: "20px",
+                            transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                            "&:hover": {
+                                transform: "translateY(-4px)",
+                                boxShadow: theme.shadows[6],
+                            },
+                            position: "relative",
+                            overflow: "hidden",
+                        }}
+                    >
+                        {/* Menu */}
+                        <IconButton
+                            sx={{ position: "absolute", top: 10, right: 10 }}
+                            onClick={(event) => handleClick(event, equipment)}
+                        >
+                            <MoreVertOutlined />
+                        </IconButton>
 
-            }}>
-                {data.map((equipment) => (
-                    <Box key={equipment.equipmentId}>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleCloseMenu}
+                            anchorOrigin={{
+                                vertical: "top",
+                                horizontal: "left",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                        >
+                            <MenuItem onClick={handleCloseMenu}>Cerrar</MenuItem>
+                            <MenuItem onClick={() => openChangeState()}>
+                                Cambiar estado
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() =>
+                                    addMaintenance(
+                                        selectedEquipment.equipmentId,
+                                        selectedEquipment.equipmentName
+                                    )
+                                }
+                            >
+                                Registrar mantenimiento
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() =>
+                                    navigate(
+                                        `/system/inventory/equipments/info/${selectedEquipment.equipmentId}`
+                                    )
+                                }
+                            >
+                                Ver más detalles
+                            </MenuItem>
+                        </Menu>
 
-                        <Box
-                            sx={{
-                                p: "15px",
-                                minHeight: "400px",
-                                borderRadius: "15px",
-                                bgcolor: "background.default",
-                                border: `1px solid ${theme.palette.border.primary}`
-
-                            }}>
-
-                            <Box sx={{ width: "100%", height: "20px", position: "relative" }}>
-                                <Box sx={{ position: "absolute", right: "0", top: "0" }}>
-
-                                    <IconButton
-                                        id="demo-positioned-button"
-                                        aria-controls={open ? 'demo-positioned-menu' : undefined}
-                                        aria-haspopup="true"
-                                        aria-expanded={open ? 'true' : undefined}
-                                        onClick={(event) => handleClick(event, equipment)}
-                                    >
-                                        <MoreVertOutlined />
-                                    </IconButton>
-
-                                    <Menu
-                                        id="demo-positioned-menu"
-                                        aria-labelledby="demo-positioned-button"
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        onClose={handleCloseMenu}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'left',
-                                        }}
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'left',
-                                        }}
-                                    >
-                                        <MenuItem onClick={handleCloseMenu}>Cerrar</MenuItem>
-                                        <MenuItem onClick={() => openChangeState()}>Cambiar estado</MenuItem>
-                                        <MenuItem onClick={() => addMaintenance(selectedEquipment.equipmentId, selectedEquipment.equipmentName)}>Registrar mantenimiento</MenuItem>
-                                        <MenuItem onClick={() => navigate(`/system/inventory/equipments/info/${selectedEquipment.equipmentId}`)}>Ver mas detalles</MenuItem>
-                                    </Menu>
-                                </Box>
-                            </Box>
-
-
-                            <Box sx={{ height: "auto", width: "100%" }}>
-                                <Typography sx={{ fontWeight: "bold" }}>{equipment.equipmentName}</Typography>
-                                <Typography sx={{ fontWeight: "400" }}>{equipment.internalCode}</Typography>
-
-                                <Box>
-                                    <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Fecha Manteniminto:</Typography>
-                                        <Typography>{equipment.maintenanceDate}</Typography>
-                                    </Box>
-                                    <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Placa sena:</Typography>
-                                        <Typography>{equipment.senaInventoryTag}</Typography>
-                                    </Box>
-                                    <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Cuentadante:</Typography>
-                                        <Typography>{equipment.responsibleName}</Typography>
-                                    </Box>
-                                    <Box sx={{ mb: "10px", mt: "10px" }}>
-                                        <Typography sx={{ fontWeight: "500" }}>Estado:</Typography>
-                                        <Box sx={{
-                                            width: "70%",
-                                            height: "40px",
-                                            bgcolor: equipment.available ? "#4CAF5030" : "#F4433630",
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            fontWeight: "600"
-                                        }}>
-                                            {equipment.state}
-                                        </Box>
-                                    </Box>
-
-                                    {changeStateEquipment.state && (
-                                        <>
-                                            {changeStateEquipment.equipmentId == equipment.equipmentId && (
-                                                <Box sx={{
-                                                    width: "100%",
-                                                    height: "auto",
-                                                    display: "flex",
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    flexDirection: "column",
-                                                    mt: "10px",
-                                                    mb: "10px"
-                                                }} component={"form"} onSubmit={handleSubmit}>
-
-                                                    <Typography sx={{ pb: "15px", pt: "15px" }}>Cambia el estado de este equipo.</Typography>
-                                                    <TextField
-                                                        select
-                                                        label="Estado"
-                                                        name="state"
-                                                        placeholder={stateToChange}
-                                                        onChange={(e) => setStateToChange(e.target.value)}
-                                                        required
-                                                        sx={{ flex: "1 1 calc(50% - 8px)", width: "100%" }}
-                                                    >
-                                                        <MenuItem value="Activo">Activo</MenuItem>
-                                                        <MenuItem value="Dado de baja">Dado de baja</MenuItem>
-                                                        <MenuItem value="Fuera de servicio">Fuera de servicio</MenuItem>
-                                                    </TextField>
-
-                                                    <Box sx={{ display: "flex" }}>
-                                                        <Button sx={{ m: "20px" }} variant='outlined' type='submit'>Cambiar</Button>
-
-                                                        <Button sx={{ bgcolor: "red", m: "20px" }} variant='contained' onClick={() => setChangeStateEquipment({
-                                                            ...changeStateEquipment,
-                                                            state: false,
-                                                            equipmentId: null
-                                                        })}>Cancelar</Button>
-                                                    </Box>
-                                                </Box>
-                                            )}
-                                        </>
-                                    )}
-
-                                </Box>
-                            </Box>
-
-                            <Box sx={{
-                                width: "100%",
-                                mt: "40px"
-                            }}>
-                                <MaintenanceStatusBox maintenanceDate={equipment.maintenanceDate} />
-                            </Box>
-
+                        {/* Header */}
+                        <Box sx={{ mb: 2 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                {equipment.equipmentName}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ color: "text.secondary", mb: 1 }}
+                            >
+                                Código interno: {equipment.internalCode}
+                            </Typography>
                         </Box>
 
-                    </Box>
-                ))}
-            </Box>
-        </>
+                        {/* Info */}
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                            <InfoRow label="Fecha mantenimiento" value={equipment.maintenanceDate} />
+                            <InfoRow label="Placa SENA" value={equipment.senaInventoryTag} />
+                            <InfoRow label="Cuentadante" value={equipment.responsibleName} />
+
+                            <Box>
+                                <Typography sx={{ fontWeight: 500, mb: 0.5 }}>Estado:</Typography>
+                                <Chip
+                                    label={equipment.state}
+                                    sx={{
+                                        fontWeight: 600,
+                                        bgcolor: equipment.available
+                                            ? theme.palette.success.light + "40"
+                                            : theme.palette.error.light + "40",
+                                        color: equipment.available
+                                            ? theme.palette.success.main
+                                            : theme.palette.error.main,
+                                        px: 1.5,
+                                        py: 0.5,
+                                        fontSize: "0.9rem",
+                                    }}
+                                />
+                            </Box>
+                        </Box>
+
+                        {/* Change state form */}
+                        {changeStateEquipment.state &&
+                            changeStateEquipment.equipmentId === equipment.equipmentId && (
+                                <Box
+                                    component="form"
+                                    onSubmit={handleSubmit}
+                                    sx={{
+                                        mt: 3,
+                                        p: 2,
+                                        borderRadius: 2,
+                                        bgcolor: theme.palette.action.hover,
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        gap: 2,
+                                    }}
+                                >
+                                    <Typography sx={{ fontWeight: 600 }}>
+                                        Cambia el estado del equipo
+                                    </Typography>
+                                    <TextField
+                                        select
+                                        label="Estado"
+                                        name="state"
+                                        value={stateToChange}
+                                        onChange={(e) => setStateToChange(e.target.value)}
+                                        required
+                                        fullWidth
+                                    >
+                                        <MenuItem value="Activo">Activo</MenuItem>
+                                        <MenuItem value="Dado de baja">Dado de baja</MenuItem>
+                                        <MenuItem value="Fuera de servicio">Fuera de servicio</MenuItem>
+                                    </TextField>
+
+                                    <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
+                                        <Button variant="contained" color="primary" type="submit">
+                                            Cambiar
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() =>
+                                                setChangeStateEquipment({
+                                                    ...changeStateEquipment,
+                                                    state: false,
+                                                    equipmentId: null,
+                                                })
+                                            }
+                                        >
+                                            Cancelar
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            )}
+
+                        {/* Maintenance Status */}
+                        <Box sx={{ mt: 3 }}>
+                            <MaintenanceStatusBox maintenanceDate={equipment.maintenanceDate} />
+                        </Box>
+                    </Paper>
+                </Fade>
+            ))}
+        </Box>
     );
 };
+
+const InfoRow = ({ label, value }) => (
+    <Box>
+        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+            {label}:
+        </Typography>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {value || "—"}
+        </Typography>
+    </Box>
+);
 
 CardInventoryInfo.propTypes = {
     data: PropTypes.array.isRequired,
