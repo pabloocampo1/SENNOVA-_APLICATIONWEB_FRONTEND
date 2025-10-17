@@ -18,13 +18,14 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import api from "../../../service/axiosService";
-import { Add, Biotech, ChecklistOutlined, Delete, Edit, FileDownloadOutlined, Info, Science } from "@mui/icons-material";
+import { Add, ChecklistOutlined, Delete, Edit, FileDownloadOutlined, Info, Science, Search } from "@mui/icons-material";
 import SearchBar from "../../../components/SearchBar";
 import GenericModal from "../../../components/modals/GenericModal";
 import ReagentForm from "../../../components/forms/Reagent/ReagentForm";
 import CardsSummaryEquipment from "../inventoryEquipment/componentsEquipment/CardsSummaryEquipment";
 import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
+import ModalToDelete from "./reagentCompo/ModalToDelete";
 
 const ReagentPage = () => {
     const [reagents, setReagents] = useState([]);
@@ -34,6 +35,10 @@ const ReagentPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const navigate = useNavigate()
     const [isLoanding, setIsLoanding] = useState(false);
+    const [openModalEdit, setOpenModalEdit] = useState(false);
+    const [dataToEdit, setDataToEdit] = useState({});
+    const [reagentIdToDelete, setReagentIdToDelete] = useState(null);
+    const [openModalToDelete, setOpenModalToDelete] = useState(false);
 
 
     const [openModalReagentForm, setOpenModalReagentForm] = useState(false);
@@ -68,13 +73,39 @@ const ReagentPage = () => {
         }
     };
 
+    const deleteReagent = async () => {
+        setIsLoanding(true);
+        try {
+            const res = await api.delete(`/reagent/delete/${reagentIdToDelete}`);
+            if (res.status == 200) {
+                const currentData = reagents;
+                const newData = currentData.filter(data => data.reagentsId !== reagentIdToDelete )
+                setReagents(newData);
+                setOpenModalToDelete(false)
+                
+            }
+
+
+        } catch (error) {
+            console.log(error);
+
+        }finally{
+            setIsLoanding(false)
+        }
+    }
+
     const getDataByParam = async () => {
         switch (searchBy) {
             case "name":
                 setIsLoanding(true)
+                console.log("entro a busvar por nombre: " + search);
+
                 try {
                     const res = await api.get(`/reagent/getAllByName/${search}`);
                     setReagents(res.data);
+
+                    console.log("data que trajo: " + res.data);
+
 
                 } catch (error) {
                     console.error(error);
@@ -124,12 +155,38 @@ const ReagentPage = () => {
         }}>
 
             <GenericModal
+                open={openModalToDelete}
+                onClose={() => setOpenModalToDelete(false)}
+                compo={
+                    <ModalToDelete
+                        handleDelete={() => deleteReagent()}
+                        onClose={() => setOpenModalToDelete(false)}
+                    />
+                }
+            />
+
+
+            <GenericModal
                 open={openModalReagentForm}
                 onClose={() => setOpenModalReagentForm(false)}
                 compo={
                     <ReagentForm
                         refreshData={refreshData}
                         onClose={() => setOpenModalReagentForm(false)}
+                    />
+                }
+            />
+
+            <GenericModal
+                open={openModalEdit}
+
+                onClose={() => setOpenModalEdit(false)}
+                compo={
+                    <ReagentForm
+                        data={dataToEdit}
+                        isEdit={true}
+                        refreshData={refreshData}
+                        onClose={() => setOpenModalEdit(false)}
                     />
                 }
             />
@@ -242,8 +299,8 @@ const ReagentPage = () => {
                                         size="small"
                                         color="primary"
                                         onClick={() => {
-                                            // setEquipmentToEdit(equipment);
-                                            // setOpenEditEquipment(true)
+                                            setOpenModalEdit(true);
+                                            setDataToEdit(reagent)
                                         }}
                                     >
                                         <Edit sx={{ color: "primary.main" }} fontSize="small" />
@@ -252,8 +309,8 @@ const ReagentPage = () => {
                                         size="small"
                                         color="primary"
                                         onClick={() => {
-                                            // setEquipmentToDeleteId(equipment.equipmentId)
-                                            // setOpenModalDelete(true)
+                                            setReagentIdToDelete(reagent.reagentsId)
+                                            setOpenModalToDelete(true)
                                         }
                                         }
                                     >
@@ -262,7 +319,7 @@ const ReagentPage = () => {
                                     <IconButton
                                         size="small"
 
-                                        onClick={() => 
+                                        onClick={() =>
                                             navigate(`/system/inventory/reagents/info/${reagent.reagentsId}`)
                                         }
                                     >

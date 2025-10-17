@@ -96,15 +96,18 @@ const ReagentInfo = () => {
 
 
 
-    const deleteFile = async (id) => {
+    const deleteFile = async (publicId) => {
+       setIsLoanding(true)
         try {
-            const res = await api.delete(`/reagent/deleteFile/${id}`);
-            if (res.data) {
+            const res = await api.delete(`/reagent/delete-file/${publicId}`);
+            
+            if (res.status == 200) {
                 getFiles()
-
             }
         } catch (error) {
             console.error(error);
+        }finally{
+            setIsLoanding(false)
         }
     };
 
@@ -301,6 +304,10 @@ const ReagentInfo = () => {
                     <Box sx={{ display: "flex", mb: "10px" }}>
                         <Typography variant="caption" sx={styleSubtitleInfo}>Unidades : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.units}</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", mb: "10px" }}>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>Pureza : </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.purity}%</Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
                         <Typography variant="caption" sx={styleSubtitleInfo}>Cantidad disponible : </Typography>

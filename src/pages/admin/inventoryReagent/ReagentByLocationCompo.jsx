@@ -325,7 +325,7 @@ const ReagentByLocationCompo = ({
                                             <MenuItem onClick={handleCloseMenu}>Cerrar</MenuItem>
                                             <MenuItem onClick={() => openChangeState()}>Cambiar estado</MenuItem>
                                             <MenuItem onClick={() => openChangeStateQuality()}>Cambiar cantidad disponible</MenuItem>
-                                            <MenuItem onClick={() => navigate(`/system/inventory/equipments/info/${selectedEquipment.reagentsId}`)}>Ver mas detalles</MenuItem>
+                                            <MenuItem onClick={() => navigate(`/system/inventory/reagents/info/${selectedEquipment.reagentsId}`)}>Ver mas detalles</MenuItem>
                                         </Menu>
                                     </Box>
                                 </Box>

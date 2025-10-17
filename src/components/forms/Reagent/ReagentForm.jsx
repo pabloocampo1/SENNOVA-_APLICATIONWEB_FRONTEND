@@ -2,6 +2,7 @@ import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import api from '../../../service/axiosService';
 import { useAuth } from '../../../context/AuthContext';
+import SimpleBackdrop from '../../SimpleBackDrop';
 
 const unitOfMeasure = [
     "ML", "L", "UL",
@@ -14,13 +15,13 @@ const unitOfMeasure = [
 ];
 
 
-const ReagentForm = ({ refreshData, onClose }) => {
+const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
     const { authObject } = useAuth();
     const [usages, setUsages] = useState([]);
     const [location, setLocations] = useState([]);
     const [users, setUsers] = useState([]);
     const [dataForm, setDataForm] = useState({
-        reagentId: null,
+        reagentsId: null,
         reagentName: "",
         brand: "",
         purity: "",
@@ -33,11 +34,13 @@ const ReagentForm = ({ refreshData, onClose }) => {
         responsibleId: "",
         locationId: "",
         usageId: "",
-        description: ""
+        description: "",
+      
     });
     const [imageFile, setImageFile] = useState(null);
     const [errorFetchMessage, setErrorFetchMessage] = useState("");
     const [errorFetch, setErrorFetch] = useState(false);
+    const [isLoanding, setIsLoanding] = useState(false);
 
 
     const handleImageChange = (e) => {
@@ -53,40 +56,86 @@ const ReagentForm = ({ refreshData, onClose }) => {
 
 
 
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const formData = new FormData();
+        if (isEdit) {
+            setIsLoanding(true)
 
-            const jsonBlob = new Blob([JSON.stringify(dataForm)], {
-                type: "application/json",
-            });
-            formData.append("dto", jsonBlob);
+            try {
+                const formData = new FormData();
 
-            if (imageFile) {
-                formData.append("image", imageFile);
+                const jsonBlob = new Blob([JSON.stringify(dataForm)], {
+                    type: "application/json",
+                });
+                formData.append("dto", jsonBlob);
+
+                if (imageFile) {
+                    formData.append("image", imageFile);
+                }
+
+                const res = await api.put(
+                    `/reagent/update/${dataForm.reagentsId}`,
+                    formData
+                );
+                console.log(dataForm);
+
+
+                if (res.status == 200) {
+                    setDataForm({})
+                    refreshData()
+                    onClose()
+                }
+
+                console.log(res);
+
+            } catch (error) {
+                setErrorFetchMessage("Ocurrio un error al guardar el reactivo: " + error.data.message)
+                setErrorFetch(true)
+
+            } finally {
+                setIsLoanding(false)
             }
 
-            const res = await api.post(
-                `/reagent/save/${authObject.username}`,
-                formData
-            );
-            console.log(dataForm);
+        } else {
+            setIsLoanding(true)
+            try {
+                const formData = new FormData();
+
+                const jsonBlob = new Blob([JSON.stringify(dataForm)], {
+                    type: "application/json",
+                });
+                formData.append("dto", jsonBlob);
+
+                if (imageFile) {
+                    formData.append("image", imageFile);
+                }
+
+                const res = await api.post(
+                    `/reagent/save/${authObject.username}`,
+                    formData
+                );
+                console.log(dataForm);
 
 
-            if (res.status == 201) {
-                setDataForm({})
-                refreshData()
-                onClose()
+                if (res.status == 201) {
+                    setDataForm({})
+                    refreshData()
+                    onClose()
+                }
+
+                console.log(res);
+
+            } catch (error) {
+                setErrorFetchMessage("Ocurrio un error al guardar el reactivo: " + error.data.message)
+                setErrorFetch(true)
+
+            } finally {
+                setIsLoanding(false)
             }
-
-            console.log(res);
-
-        } catch (error) {
-            setErrorFetchMessage("Ocurrio un error al guardar el reactivo: " + error.data.message)
-            setErrorFetch(true)
-
         }
     }
 
@@ -123,8 +172,18 @@ const ReagentForm = ({ refreshData, onClose }) => {
 
     useEffect(() => {
 
+        setIsLoanding(true)
         setErrorFetch(false);
         setErrorFetchMessage("")
+
+        if (data) {
+            setDataForm({
+                ...data,
+                reagentsId: data.reagentsId
+            })
+            console.log(data);
+
+        }
 
         const init = async () => {
             await fetchLocations()
@@ -133,6 +192,7 @@ const ReagentForm = ({ refreshData, onClose }) => {
         }
 
         init()
+        setIsLoanding(false)
 
     }, [])
 
@@ -140,10 +200,13 @@ const ReagentForm = ({ refreshData, onClose }) => {
 
     return (
         <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", p: "40px" }}>
-            <Typography sx={{ pb: "30px" }}>Agregar reactivo.</Typography>
+            <SimpleBackdrop open={isLoanding} />
+            <Typography sx={{ pb: "30px" }}>{isEdit ? ("Editar reactivo.") : ("Agregar reactivo.")}</Typography>
+
             <Box sx={{ display: "grid", gridTemplateColumns: "250px 250px", gap: "20px" }}>
                 <TextField
                     name='reagentName'
+                    label="Nombre"
                     placeholder='Nombre del reactivo'
                     onChange={handleInput}
                     value={dataForm.reagentName || ""}
@@ -151,6 +214,7 @@ const ReagentForm = ({ refreshData, onClose }) => {
 
                 />
                 <TextField
+                    label="Placa SENA"
                     type='number'
                     name='senaInventoryTag'
                     placeholder='Placa sena'
@@ -161,6 +225,7 @@ const ReagentForm = ({ refreshData, onClose }) => {
                 />
 
                 <TextField
+                    label="Marca"
                     name='brand'
                     placeholder='Marca'
                     onChange={handleInput}
@@ -168,6 +233,7 @@ const ReagentForm = ({ refreshData, onClose }) => {
                 />
 
                 <TextField
+                    label="Pureza"
                     name='purity'
                     placeholder='Pureza (No mayor a 100%)'
                     onChange={handleInput}
@@ -177,6 +243,7 @@ const ReagentForm = ({ refreshData, onClose }) => {
                 />
 
                 <TextField
+                    label="Unidades"
                     name='units'
                     placeholder='Escribe las unidades'
                     onChange={handleInput}
@@ -186,15 +253,17 @@ const ReagentForm = ({ refreshData, onClose }) => {
 
 
                 <TextField
+                    label="Cantidad"
                     name='quantity'
                     placeholder='Cantidad del reactivo'
                     onChange={handleInput}
-                    value={dataForm.quantity || ""}
+                    value={dataForm.quantity ?? ""}
                     required
                     type='number'
                 />
 
                 <TextField
+
                     label="Fecha de expiración"
                     name="expirationDate"
                     type="date"
@@ -270,13 +339,12 @@ const ReagentForm = ({ refreshData, onClose }) => {
 
                 <TextField
                     name='batch'
+                    label="Lote"
                     placeholder='Lote '
                     onChange={handleInput}
                     value={dataForm.batch || ""}
                     type='number'
                 />
-
-
 
                 <TextField
                     label="Descripción"
@@ -288,11 +356,19 @@ const ReagentForm = ({ refreshData, onClose }) => {
 
                 <TextField
                     type="file"
+                    label="Imagen"
                     name="image"
                     onChange={handleImageChange}
                     InputLabelProps={{ shrink: true }}
                     sx={{ flex: "1 1 100%" }}
                 />
+
+                {dataForm.imageUrl !== null && (
+                    <Box>
+                        <Typography>Imagen actual: </Typography>
+                        <img src={dataForm.imageUrl} width={"200px"} alt="imagenDeUnReactivo" />
+                    </Box>
+                )}
 
             </Box>
             {errorFetch && (<Typography>{errorFetchMessage}</Typography>)}

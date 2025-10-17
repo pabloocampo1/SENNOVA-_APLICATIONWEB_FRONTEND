@@ -1,6 +1,5 @@
 
 import { Box, Button, Typography } from "@mui/material";
-import { useAuth } from "../context/AuthContext";
 import ProfileUI from "./ProfileUI";
 import { DarkMode, NotificationAdd, NotificationImportant, Notifications, Settings, Sunny } from "@mui/icons-material";
 import ProfileInfo from "./NotificationPopover";
@@ -11,7 +10,7 @@ import imageLogoSennova from '../assets/images/sennova_logo_sin_fondo.png'
 
 
 const TopBar = () => {
-    const { authObject } = useAuth();
+ 
     const { darkMode, toggleDarkMode } = useContext(ThemeContext);
 
 
