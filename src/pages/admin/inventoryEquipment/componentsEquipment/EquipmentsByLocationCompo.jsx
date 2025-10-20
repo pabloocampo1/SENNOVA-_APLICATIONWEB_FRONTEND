@@ -7,7 +7,11 @@ import api from '../../../../service/axiosService';
 import GenericModal from '../../../../components/modals/GenericModal';
 import EquipmentMaintanence from '../../../../components/forms/Equipment/EquipmentMaintanence';
 
-const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locationName, refresh, locationId }) => {
+
+// This component has been modified to also support viewing all equipments in the "Reported Equipments" section.
+
+
+const EquipmentsByLocationCompo = ({ equipments = [], back, locationName, refresh, locationId, isShowReportEquipment = false }) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -18,7 +22,7 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
         equipmentId: null
     });
     const [stateToChange, setStateToChange] = useState("Cambiar estado.");
-    const [data, setData] = useState(equipmentsByLocationData);
+    const [data, setData] = useState(equipments);
     const [openMaintanence, setOpenMaintanence] = useState(false);
     const [equipmentIdToMaintenance, setEquipmentIdToMaintenance] = useState(0)
     const [equipmentNameToMaintenance, setEquipmentNameToMaintenance] = useState("")
@@ -29,7 +33,7 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
 
     const [reportStatus, setReportStatus] = useState(() => {
         const initialStatus = {};
-        equipmentsByLocationData.forEach(equipment => {
+        equipments.forEach(equipment => {
             if (equipment.markReport === true) {
                 initialStatus[equipment.equipmentId] = "markNotExist";
             } else if (equipment.available === true) {
@@ -102,9 +106,6 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
     };
 
 
-    // const giveValue = () => {
-
-    // }
 
 
     const handleSubmit = async (e) => {
@@ -165,20 +166,21 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
     }
 
     useEffect(() => {
-        setData(equipmentsByLocationData);
-    }, [equipmentsByLocationData]);
+        setData(equipments);
 
-    useEffect(() => {
         const updatedStatus = {};
-        data.forEach(equipment => {
-            if (equipment.markReport === true) {
+        equipments.forEach(equipment => {
+            if (equipment.markReport) {
                 updatedStatus[equipment.equipmentId] = "markNotExist";
-            } else if (equipment.available === true) {
+            } else if (equipment.available) {
                 updatedStatus[equipment.equipmentId] = "markExist";
             }
         });
+
         setReportStatus(updatedStatus);
-    }, [data]);
+    }, [equipments]);
+
+
 
 
 
@@ -229,39 +231,45 @@ const EquipmentsByLocationCompo = ({ equipmentsByLocationData = [], back, locati
             )}
 
 
-            <Box sx={{ position: "relative", width: "100%", height: "auto" }}>
-                <Box
-                    sx={{
-                        px: 2,
-                        py: 1,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: "15px",
-                        border: `1px solid ${theme.palette.primary.main}`,
-                        position: "absolute",
-                        top: 20,
-                        left: 20,
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                        "&:hover": {
-                            bgcolor: theme.palette.action.hover,
-                        },
-                    }}
-                    onClick={() => back()}
-                >
-                    <ArrowBackOutlined sx={{ color: "primary.main", mr: 1 }} />
-                    <Typography sx={{ color: "primary.main", fontWeight: 600 }}>Volver a seleccionar una ubicacion</Typography>
+            {!isShowReportEquipment && (
+                <Box sx={{ position: "relative", width: "100%", height: "auto" }}>
+                    <Box
+                        sx={{
+                            px: 2,
+                            py: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: "15px",
+                            border: `1px solid ${theme.palette.primary.main}`,
+                            position: "absolute",
+                            top: 20,
+                            left: 20,
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            "&:hover": {
+                                bgcolor: theme.palette.action.hover,
+                            },
+                        }}
+                        onClick={() => back()}
+                    >
+                        <ArrowBackOutlined sx={{ color: "primary.main", mr: 1 }} />
+                        <Typography sx={{ color: "primary.main", fontWeight: 600 }}>Volver a seleccionar una ubicacion</Typography>
+                    </Box>
                 </Box>
-            </Box>
+            )}
 
-            {equipmentsByLocationData.length < 1 && (<Box sx={{ width: "100%", textAlign: "center", mt: "100px" }}>
-                <Typography>No hay equipos con esta ubicacion asignada.</Typography>
+            {equipments.length < 1 && (<Box sx={{ width: "100%", textAlign: "center", mt: "100px" }}>
+                {isShowReportEquipment
+                    ? (<Typography>No hay equipos reportados.</Typography>)
+                    : (<Typography>No hay equipos con esta ubicacion asignada.</Typography>)}
             </Box>)}
 
-            <Box sx={{ width: "100%", textAlign: "center", mt: "70px" }}>
-                <Typography>Todos los equipos asigandos a la ubicacion: {locationName}</Typography>
-            </Box>
+            {!isShowReportEquipment && (
+                <Box sx={{ width: "100%", textAlign: "center", mt: "70px" }}>
+                    <Typography>Todos los equipos asigandos a la ubicacion: {locationName}</Typography>
+                </Box>
+            )}
 
             <Box sx={{
                 width: "100%",

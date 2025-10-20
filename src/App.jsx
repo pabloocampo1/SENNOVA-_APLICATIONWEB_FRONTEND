@@ -22,6 +22,7 @@ import SearchOptionCheckInv from "./pages/admin/inventoryEquipment/SearchOptionC
 import LocationOptionCheckInv from "./pages/admin/inventoryEquipment/LocationOptionCheckInv"
 import CustomersAndUsersPage from "./pages/admin/CustomerAndUsers/CustomersAndUsersPage"
 import ReagentInfo from "./pages/admin/inventoryReagent/ReagentInfo"
+import ReportEquipments from "./pages/admin/inventoryEquipment/ReportEquipments"
 
 
 
@@ -48,13 +49,16 @@ function App() {
 
                                     <Route path="inventory/equipments" element={<EquipmentPage />} />
                                     <Route path="inventory/equipments/info/:idEquipment" element={<EquipmentInfo />} />
+                                    <Route path="inventory/equipment/report" element={<ReportEquipments />}/>
                                     <Route path="inventory/check/:typeInventory" element={<SelectOptionToCheckInventoryPage />}/>
                                     <Route path="inventory/check/search/:typeInventory" element={<SearchOptionCheckInv />}/>
                                     <Route path="inventory/check/location/:typeInventory" element={<LocationOptionCheckInv />}/>
-                                    <Route path="inventory/reagents/info/:reagentId" element={<ReagentInfo />}/>
+                                    
+                                    
 
 
                                     <Route path="inventory/reagents" element={<ReagmentPage />} />
+                                    <Route path="inventory/reagents/info/:reagentId" element={<ReagentInfo />}/>
                                     <Route path="quotes" element={<QuotesPage />} />
                                     <Route path="results" element={<ResultsRelease />} />
                                     <Route path="users" element={<CustomersAndUsersPage />} />

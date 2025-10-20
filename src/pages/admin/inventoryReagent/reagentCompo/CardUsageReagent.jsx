@@ -48,6 +48,13 @@ const CardUsageReagent = ({usage = {}, dataReagent}) => {
 
           
             <Typography sx={{ mb: 1 }}>
+                Cantidad antes del uso:{" "}
+                <Box component="span" fontWeight="600">
+                    {usage.previousQuantity} {dataReagent.unitOfMeasure}
+                </Box>
+            </Typography>
+
+            <Typography sx={{ mb: 1 }}>
                 Cantidad usada:{" "}
                 <Box component="span" fontWeight="600">
                     {usage.quantity_used} {dataReagent.unitOfMeasure}

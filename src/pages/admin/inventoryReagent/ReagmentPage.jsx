@@ -278,7 +278,7 @@ const ReagentPage = () => {
                             <TableCell sx={{ fontWeight: "700" }}>Pureza</TableCell>
                             <TableCell sx={{ fontWeight: "700" }}>Unidades</TableCell>
                             <TableCell sx={{ fontWeight: "700" }}>Cantidad</TableCell>
-                            <TableCell sx={{ fontWeight: "700" }}>Unidad</TableCell>
+                            <TableCell sx={{ fontWeight: "700" }}>Ubicacion</TableCell>
                             <TableCell sx={{ fontWeight: "700" }}>Fecha de vencimiento</TableCell>
                             <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
                         </TableRow>
@@ -292,8 +292,8 @@ const ReagentPage = () => {
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.brand}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.purity}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.units}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.quantity}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.measurementUnit}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.quantity} {" "} {reagent.unitOfMeasure}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.locationName}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.expirationDate}</TableCell>
                                 <TableCell align="right">
                                     <IconButton

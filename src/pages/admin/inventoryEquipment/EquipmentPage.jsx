@@ -1,4 +1,4 @@
-import { Add, BuildCircle, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, TableChart } from '@mui/icons-material';
+import { Add, BuildCircle, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, Report, TableChart } from '@mui/icons-material';
 import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CardsSummaryEquipment from './componentsEquipment/CardsSummaryEquipment';
@@ -377,6 +377,9 @@ const EquipmentPage = () => {
 
                     <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => navigate("/system/inventory/check/equipment")}>
                         Chequeo de inventario
+                    </Button>
+                    <Button variant="outlined" endIcon={<Report />} onClick={() => navigate("/system/inventory/equipment/report")}>
+                        Equipos reportados
                     </Button>
                 </Box>
             </Box>

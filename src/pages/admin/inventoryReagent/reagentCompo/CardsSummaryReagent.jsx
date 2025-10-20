@@ -13,7 +13,9 @@ const CardsSummaryReagent = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const res = await api.get("");
+            const res = await api.get("/reagent/get-summary-inventory");
+            console.log(res);
+            
             if (res.status === 200) {
                 setData(res.data);
               
@@ -57,7 +59,7 @@ const CardsSummaryReagent = () => {
         {
             title: "Total de Reactivos",
             subtitle: "Registrados",
-            value: data?.countAll || 0,
+            value: data?.totalReagent || 0,
             icon: Inventory,
             color: "#39A900",
             bgGradient: isDark
@@ -67,7 +69,7 @@ const CardsSummaryReagent = () => {
         {
             title: "Bajo Stock",
             subtitle: "Sin contenido disponible",
-            value: 12,
+            value: data?.totalReagentWithLowStock || 0,
             icon: TrendingDown ,
             color: "#7E57C2",
             bgGradient: isDark
@@ -77,7 +79,7 @@ const CardsSummaryReagent = () => {
         {
             title: "Total de reactivos vencidos",
             subtitle: "Caducados",
-            value: data?.countAvailableTrue || 0,
+            value: data?.totalReagentExpired || 0,
             icon: AccessTimeFilled,
             color: "#39A900",
             bgGradient: isDark

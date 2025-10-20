@@ -67,7 +67,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
         {
             title: "Total de Equipos reportados",
             subtitle: "Reportados",
-            value: data?.countAll || 0,
+            value: data?.countReported || 0,
             icon: Inventory,
             color: "#39A900",
             bgGradient: isDark

@@ -264,7 +264,7 @@ const LocationOptionCheckInv = () => {
 
                     (
                         <>
-                            {typeInventory == "equipment" && (<EquipmentsByLocationCompo equipmentsByLocationData={elementsByLocationData} back={() => setShowElementByLocation(false)} locationName={locationName} refresh={(locationSelectedId, locationName) => fetchDataByLocationId(locationSelectedId, locationName)} locationId={locationSelectedId} />)}
+                            {typeInventory == "equipment" && (<EquipmentsByLocationCompo equipments={elementsByLocationData} back={() => setShowElementByLocation(false)} locationName={locationName} refresh={(locationSelectedId, locationName) => fetchDataByLocationId(locationSelectedId, locationName)} locationId={locationSelectedId}  />)}
                             {typeInventory == "reagent" && (
                                 <ReagentByLocationCompo
                                     data={elementsByLocationData}
