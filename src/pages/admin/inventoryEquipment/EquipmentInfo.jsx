@@ -1,4 +1,4 @@
-import { ArrowBackOutlined, Assignment, Construction, Download } from '@mui/icons-material';
+import { ArrowBackOutlined, Assignment, Construction, Download, ReportProblem } from '@mui/icons-material';
 import { Alert, Box, Button, Divider, Paper, Snackbar, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -345,8 +345,14 @@ const EquipmentInfo = () => {
             </Box>
             <Divider sx={{ mb: "20px", mt: "50px" }}>Informacion</Divider>
 
-            {/* maintenance days info */}
-            {/* <MaintenanceStatusBox maintenanceDate={data.maintenanceDate} /> */}
+
+            {/* message report equipment */}
+            {data.markReport && (
+                <Box sx={{width:"100%", height:"100px", bgcolor:"#ea3b3bff", mb: "40px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
+                    <ReportProblem />
+                   <Typography sx={{color:"text.primary", opacity:"0.90"}} variant='body2'>El equipo ha sido reportado como inexistente.</Typography>
+                </Box>
+            )}
 
 
             {/** cards info */}
@@ -435,9 +441,9 @@ const EquipmentInfo = () => {
                     </Button>
                 </Paper>
             </Box>
-            
+
             {/* maintenance days info */}
-            <Box sx={{display:"flex", justifyContent:"center", mt:"50px"}}>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: "50px" }}>
                 <MaintenanceStatusBox maintenanceDate={data.maintenanceDate} />
             </Box>
 

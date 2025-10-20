@@ -1,6 +1,7 @@
-import { Box, Button, TextField, Typography, MenuItem } from "@mui/material";
+import { Box, Button, TextField, Typography, MenuItem, Switch } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import api from "../../../service/axiosService";
+import { Label } from "@mui/icons-material";
 
 const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
     const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
         state: "",
         responsibleId: "",
         locationId: "",
+        markReport: false,
         description: "",
         usageId: "",
         imageUrl: "",
@@ -64,16 +66,19 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 locationId: Number(formData.locationId),
                 usageId: Number(formData.usageId),
                 imageUrl: formData.imageUrl,
-                senaInventoryTag: formData.senaInventoryTag
+                senaInventoryTag: formData.senaInventoryTag,
+                markReport: formData.markReport
             };
             method(equipmentRequestDto, imageFile);
         }
     };
 
     const handleChange = (e) => {
+        const { name, type, value, checked } = e.target;
+
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value,
+            [name]: type === "checkbox" ? checked : value,
         });
     };
 
@@ -106,7 +111,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
     }
 
     useEffect(() => {
-      
+
         if (data) {
             console.log(data);
             setFormData({
@@ -177,7 +182,7 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 <TextField
                     label="Placa sena"
                     name="senaInventoryTag"
-                    value={formData.SenaInventoryTag}
+                    value={formData.senaInventoryTag}
                     onChange={handleChange}
                     error={!!errors?.SenaInventoryTag}
                     helperText={errors?.SenaInventoryTag}
@@ -362,6 +367,48 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
 
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 />
+                {isEdit && (
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        sx={{
+                            backgroundColor: (theme) =>
+                                theme.palette.mode === "light"
+                                    ? "#f9f9f9"
+                                    : "rgba(255,255,255,0.08)",
+                            borderRadius: 2,
+                            p: 2,
+                            mt: 1,
+                            boxShadow: (theme) =>
+                                theme.palette.mode === "light"
+                                    ? "0 1px 4px rgba(0,0,0,0.1)"
+                                    : "0 1px 3px rgba(0,0,0,0.3)",
+                        }}
+                    >
+                        <Box>
+                            <Typography fontWeight={600} fontSize={15}>
+                                Reportar como no existente
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ maxWidth: "320px" }}
+                            >
+                                Activa esta opción si el equipo ya no se encuentra disponible o no fue
+                                localizado durante la verificación.
+                            </Typography>
+                        </Box>
+
+                        <Switch
+                            checked={formData.markReport || false}
+                            onChange={handleChange}
+                            name="markReport"
+                            color="error"
+                        />
+                    </Box>
+                )}
+
                 <TextField
                     type="file"
                     name="image"
@@ -384,8 +431,8 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
             {errors && (
                 <Typography sx={{ color: "red", textAlign: "center" }}>
                     {typeof errors === "string"
-                        ? errors 
-                        : Object.values(errors)[0]} 
+                        ? errors
+                        : Object.values(errors)[0]}
                 </Typography>
             )}
         </Box>

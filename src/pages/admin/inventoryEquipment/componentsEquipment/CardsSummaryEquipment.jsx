@@ -76,7 +76,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
         },
         {
             title: "Mantenimiento",
-            subtitle: formatMonthYear(new Date()),
+            subtitle: `para el mes : ${formatMonthYear(new Date())}`,
             value: data?.countMaintenanceMonth || 0,
             icon: Build,
             color: "#7E57C2",

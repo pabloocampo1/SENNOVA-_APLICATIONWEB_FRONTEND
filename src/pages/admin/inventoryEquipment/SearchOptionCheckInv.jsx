@@ -53,6 +53,17 @@ const SearchOptionCheckInv = () => {
     const [equipmentNameToMaintenance, setEquipmentNameToMaintenance] = useState("");
     const [responseAlert, setResponseAlert] = useState({ status: false, message: "" });
     const [openScanner, setOpenScanner] = useState(false);
+    const [reportStatus, setReportStatus] = useState(() => {
+        const initialStatus = {};
+        data.forEach(equipment => {
+            if (equipment.markReport === true) {
+                initialStatus[equipment.equipmentId] = "markNotExist";
+            } else if (equipment.available === true) {
+                initialStatus[equipment.equipmentId] = "markExist";
+            }
+        });
+        return initialStatus;
+    });
 
     const open = Boolean(anchorEl);
 
@@ -72,6 +83,59 @@ const SearchOptionCheckInv = () => {
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const handleMarkExist = (equipmentId, type) => {
+        setReportStatus(prev => ({
+            ...prev,
+            [equipmentId]: type
+        }));
+
+        const changeState = async () => {
+            try {
+                let res;
+                switch (type) {
+                    case "markNotExist":
+                        res = await api.put(`/equipment/report-equipment/${equipmentId}`);
+                        if (res.status == 200) {
+                            setResponseAlert({
+                                status: true,
+                                message: "Se reporto el equipo correctamente."
+                            })
+                        }
+                        break;
+                    case "markExist":
+                        res = await api.put(`/equipment/markEquipmentAsExisting/${equipmentId}`);
+                        if (res.status == 200) {
+                            setResponseAlert({
+                                status: true,
+                                message: "Se marco como existente correctamente."
+                            })
+                        }
+                        break;
+                    default:
+                        break;
+
+                }
+                const equipmentUpdate = res.data;
+                const newListEquipment = data.map(equipment => {
+                    if (equipment.equipmentId == equipmentId) {
+                        return equipmentUpdate
+                    } else {
+                        return equipment;
+                    }
+                })
+
+                setData(newListEquipment);
+
+            } catch (err) {
+                console.error(err);
+            }
+
+        }
+        changeState()
+
+
     };
 
 
@@ -120,6 +184,18 @@ const SearchOptionCheckInv = () => {
     useEffect(() => {
         if (search) getByParam();
     }, [search, searchBy]);
+
+    useEffect(() => {
+        const updatedStatus = {};
+        data.forEach(equipment => {
+            if (equipment.markReport === true) {
+                updatedStatus[equipment.equipmentId] = "markNotExist";
+            } else if (equipment.available === true) {
+                updatedStatus[equipment.equipmentId] = "markExist";
+            }
+        });
+        setReportStatus(updatedStatus);
+    }, [data]);
 
     return (
         <Box sx={{ width: "100%", minHeight: "100vh", position: "relative", p: 3 }}>
@@ -206,8 +282,8 @@ const SearchOptionCheckInv = () => {
                 sx={{
                     width: "100%",
                     mt: 6,
-                   
-                
+
+
                 }}
             >
                 {
@@ -227,6 +303,8 @@ const SearchOptionCheckInv = () => {
                             stateToChange={stateToChange}
                             setStateToChange={setStateToChange}
                             setChangeStateEquipment={setChangeStateEquipment}
+                            handleMarkExist={(id, type) => handleMarkExist(id, type)}
+                            reportStatus={reportStatus}
                         />
                     )
                 }
@@ -236,7 +314,7 @@ const SearchOptionCheckInv = () => {
                         <ReagentByLocationCompo
                             data={data}
                             isSearch={true}
-                            
+
                         />
                     )
                 }

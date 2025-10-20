@@ -10,8 +10,9 @@ import {
     Paper,
     Chip,
     Fade,
+    Switch,
 } from "@mui/material";
-import { MoreVertOutlined } from "@mui/icons-material";
+import { MoreVertOutlined, ReportProblem } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import MaintenanceStatusBox from "./MaintenanceStatusBox";
 import PropTypes from "prop-types";
@@ -31,6 +32,8 @@ const CardInventoryInfo = ({
     stateToChange,
     setStateToChange,
     setChangeStateEquipment,
+    reportStatus = {},
+    handleMarkExist
 }) => {
     const theme = useTheme();
 
@@ -109,6 +112,13 @@ const CardInventoryInfo = ({
 
                         {/* Header */}
                         <Box sx={{ mb: 2 }}>
+
+                            {equipment.markReport && (
+                                <Box sx={{ width: "100%", height: "100px", mb: "40px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                                    <ReportProblem color='error' />
+                                    <Typography color='error' sx={{ opacity: "0.90", textAlign: "center" }} variant='body2'>El equipo ha sido reportado como inexistente.</Typography>
+                                </Box>
+                            )}
                             <Typography variant="h6" sx={{ fontWeight: 700 }}>
                                 {equipment.equipmentName}
                             </Typography>
@@ -144,6 +154,86 @@ const CardInventoryInfo = ({
                                     }}
                                 />
                             </Box>
+                        </Box>
+
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            sx={{
+                                backgroundColor: (theme) =>
+                                    theme.palette.mode === "light"
+                                        ? "#f9f9f9"
+                                        : "rgba(255,255,255,0.08)",
+                                borderRadius: 2,
+                                p: 2,
+                                mt: 1,
+                                boxShadow: (theme) =>
+                                    theme.palette.mode === "light"
+                                        ? "0 1px 4px rgba(0,0,0,0.1)"
+                                        : "0 1px 3px rgba(0,0,0,0.3)",
+                            }}
+                        >
+                            <Box>
+                                <Typography fontWeight={600} fontSize={15}>
+                                    Reportar como NO existente
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ maxWidth: "320px" }}
+                                >
+                                    Activa esta opción si el equipo ya no se encuentra disponible o no fue
+                                    localizado durante la verificación.
+                                </Typography>
+                            </Box>
+
+                            <Switch
+                                checked={reportStatus[equipment.equipmentId] === "markNotExist"}
+                                onChange={() => handleMarkExist(equipment.equipmentId, "markNotExist")}
+                                name="markReport"
+                                color="error"
+                            />
+                        </Box>
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            sx={{
+                                backgroundColor: (theme) =>
+                                    theme.palette.mode === "light"
+                                        ? "#f9f9f9"
+                                        : "rgba(255,255,255,0.08)",
+                                borderRadius: 2,
+                                p: 2,
+                                mt: 1,
+                                boxShadow: (theme) =>
+                                    theme.palette.mode === "light"
+                                        ? "0 1px 4px rgba(0,0,0,0.1)"
+                                        : "0 1px 3px rgba(0,0,0,0.3)",
+                            }}
+                        >
+                            <Box>
+                                <Typography fontWeight={600} fontSize={15}>
+                                    Reportar como existente
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ maxWidth: "320px" }}
+                                >
+                                    Activa esta opción si el equipo se encuentra disponible y fue
+                                    localizado durante la verificación.
+                                </Typography>
+                            </Box>
+
+                            <Switch
+
+                                checked={reportStatus[equipment.equipmentId] === "markExist"}
+                                onChange={() => handleMarkExist(equipment.equipmentId, "markExist")}
+                                name="markReport"
+                                color="success"
+                            />
                         </Box>
 
                         {/* Change state form */}
