@@ -20,7 +20,7 @@ const TopBar = () => {
             sx={{
                 height: "10vh",
                 bgcolor: "background.paper",
-                display: "flex",
+                display: { xs: "none", md: "flex" },
                 alignItems: "center",
                 justifyContent: "space-between",
                 px: 2,

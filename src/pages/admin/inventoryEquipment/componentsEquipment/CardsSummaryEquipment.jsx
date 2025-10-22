@@ -36,7 +36,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
                     width: "100%",
                     display: "grid",
                     gap: 2,
-                    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
                     mt: 3
                 }}
             >

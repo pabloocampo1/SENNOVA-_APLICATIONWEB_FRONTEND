@@ -110,11 +110,12 @@ const SelectOptionToCheckInventoryPage = () => {
                 <Typography sx={{ color: "primary.main", fontWeight: 600 }}>Volver</Typography>
             </Box>
 
-            {/* Título */}
+          
             <Typography
                 variant="h4"
                 component="h2"
                 sx={{
+                    pt:{xs:"100px", mb:"10px"},
                     pb: "30px",
                     fontWeight: "700",
                     textAlign: "center",

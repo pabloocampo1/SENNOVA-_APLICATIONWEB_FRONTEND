@@ -293,7 +293,7 @@ const ReagentPage = () => {
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.purity}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.units}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.quantity} {" "} {reagent.unitOfMeasure}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.locationName}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>{reagent.locationName == null || reagent.locationName == "" ? "Null" : reagent.locationName}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.expirationDate}</TableCell>
                                 <TableCell align="right">
                                     <IconButton

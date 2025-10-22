@@ -42,7 +42,7 @@ const CardInventoryInfo = ({
             sx={{
                 width: "100%",
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))",
+                gridTemplateColumns: {xs:"repeat(auto-fill, minmax(300px, 1fr))" ,mb:"repeat(auto-fill, minmax(330px, 1fr))"},
                 gap: 3,
                 mt: "90px",
                 p: 2,

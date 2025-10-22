@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import api from '../../../service/axiosService';
 import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Close, Delete } from '@mui/icons-material';
 
-const EquipmentMaintanence = ({equipmentId, send, nameOfTheEquipment}) => {
+const EquipmentMaintanence = ({ equipmentId, send, nameOfTheEquipment, onClose }) => {
     const [data, setData] = useState({
         performedBy: "",
         notes: "",
@@ -19,7 +20,7 @@ const EquipmentMaintanence = ({equipmentId, send, nameOfTheEquipment}) => {
             try {
                 const res = await api.post("/maintenance/equipment/save", data);
                 console.log(res);
-                
+
                 if (res.status == 201) {
                     send()
                 }
@@ -27,7 +28,7 @@ const EquipmentMaintanence = ({equipmentId, send, nameOfTheEquipment}) => {
 
             } catch (error) {
                 console.log(error);
-               
+
             }
         }
         sendData()
@@ -42,21 +43,30 @@ const EquipmentMaintanence = ({equipmentId, send, nameOfTheEquipment}) => {
     }
 
     return (
-        <Box>
-            <Typography sx={{ pb: "40px", pt: "40px", fontSize: "1.5rem", textAlign:"center" }}>Registro para: {nameOfTheEquipment}</Typography>
+        <Box sx={{
+            width: { xs: "280px", sm: "500px" },
+            mx: "auto",
+
+        }}>
+            <Typography sx={{ pb: "40px", pt: "40px", fontSize: "1.5rem", textAlign: "center" }}>Registro para: {nameOfTheEquipment}</Typography>
             <Box component={"form"} onSubmit={handleSubmit}
                 sx={{
-                    width: "550px",
+                    width: "100%",
+                    minWidth: "320px",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    flexDirection:"column"
+                    flexDirection: "column"
                 }}>
 
                 <Box sx={{
-                    width: "500px",
+                    width: "100%",
                     display: "grid",
-                    gridTemplateColumns: "250px 250px",
+                    gridTemplateColumns: {
+                        xs: "200px",
+                        sm: "200px 200px",
+                    },
+
                     gap: "20px"
                 }}>
 
@@ -85,7 +95,7 @@ const EquipmentMaintanence = ({equipmentId, send, nameOfTheEquipment}) => {
                         sx={{ flex: "1 1 calc(50% - 8px)" }}
                     />
 
-                     <TextField
+                    <TextField
                         label="Tipo de mantenimiento"
                         name="maintenanceType"
                         value={data.maintenanceType}
@@ -110,14 +120,30 @@ const EquipmentMaintanence = ({equipmentId, send, nameOfTheEquipment}) => {
                     />
 
 
-                    
+
                 </Box>
 
 
 
 
-                <Button sx={{ width: "100%", mt:"20px" }} variant='contained' type='submit'>Guardar registro</Button>
-
+                <Button sx={{ width: "100%", mt: "20px" }} variant='contained' type='submit'>Guardar registro</Button>
+            
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => onClose()}
+                    startIcon={<Close />}
+                    sx={{
+                        display: { xs: "flex", sm: "none" },
+                        boxShadow: 2,
+                        mt:"20px",
+                        '&:hover': {
+                            boxShadow: 4
+                        }
+                    }}
+                >
+                    Cancelar
+                </Button>
             </Box>
         </Box>
     );

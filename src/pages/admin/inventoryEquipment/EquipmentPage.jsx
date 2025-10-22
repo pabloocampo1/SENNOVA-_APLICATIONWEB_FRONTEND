@@ -1,5 +1,5 @@
 import { Add, BuildCircle, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, Report, TableChart } from '@mui/icons-material';
-import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CardsSummaryEquipment from './componentsEquipment/CardsSummaryEquipment';
 import api from '../../../service/axiosService';
@@ -29,7 +29,8 @@ const EquipmentPage = () => {
     const navigate = useNavigate();
     const [isLoanding, setIsLoanding] = useState(false);
     const [refreshSummary, setRefreshSummary] = useState(0);
-
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 
 
@@ -283,7 +284,7 @@ const EquipmentPage = () => {
         }
 
         return {
-            label: `✅ Al día (faltan ${diffDays} día(s))`,   
+            label: `✅ Al día (faltan ${diffDays} día(s))`,
         };
     };
 
@@ -353,7 +354,6 @@ const EquipmentPage = () => {
             <Box
                 sx={{
                     width: "100%",
-
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -385,12 +385,12 @@ const EquipmentPage = () => {
             </Box>
             <CardsSummaryEquipment refresh={refreshSummary} />
 
-            <Divider sx={{mt:"20px"}} />
+            <Divider sx={{ mt: "20px" }} />
 
             <Box>
                 {/** table content header */}
-                <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", mt: "40px" }}>
-                    <Box sx={{ display: "flex" }}>
+                <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", flexWrap: "wrap", alignItems: "center", mt: "40px" }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                         <SearchBar onSearch={(value) => setSearch(value)} />
                         <FormControl sx={{ width: "120px", borderRadius: "20px", ml: "20px" }}>
                             <InputLabel id="demo-simple-select-label">Buscar por:</InputLabel>
@@ -418,77 +418,151 @@ const EquipmentPage = () => {
                 {dataEquipments.length < 1 ? (
                     <Typography sx={{ textAlign: "center" }}>No hay equipos</Typography>
                 ) : (
-                    <TableContainer sx={{ mt: "20px" }} component={Paper}>
-                        <Table>
+                    <TableContainer
+                        component={Paper}
+                        sx={{
+                            width: "100%", // 👈 ocupa todo el espacio disponible
+                            mt: "20px",
+                            overflowX: "auto", // 👈 permite scroll horizontal si se pasa del ancho
+                            overflowY: "hidden",
+                            borderRadius: "12px",
+                            boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+
+                            // 👇 scroll bar elegante
+                            "&::-webkit-scrollbar": {
+                                height: "8px",
+                            },
+                            "&::-webkit-scrollbar-thumb": {
+                                backgroundColor: "#bfbfbf",
+                                borderRadius: "10px",
+                            },
+                            "&::-webkit-scrollbar-thumb:hover": {
+                                backgroundColor: "#9a9a9a",
+                            },
+                        }}
+                    >
+                        <Table
+                            stickyHeader
+                            sx={{
+                                width: "100%", 
+                              
+                            }}
+                            aria-label="tabla de equipos"
+                        >
                             <TableHead>
-                                <TableRow >
+                                <TableRow>
                                     <TableCell sx={{ fontWeight: "700" }}>ID</TableCell>
                                     <TableCell sx={{ fontWeight: "700" }}>Código interno</TableCell>
                                     <TableCell sx={{ fontWeight: "700" }}>Nombre</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Mantenimiento</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Modelo</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Ubicación</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Estado</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Creado</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
+                                    {!isMobile && (<>
+                                        <TableCell sx={{ fontWeight: "700" }}>Mantenimiento</TableCell>
+                                        <TableCell sx={{ fontWeight: "700" }}>Modelo</TableCell>
+                                        <TableCell sx={{ fontWeight: "700" }}>Ubicación</TableCell>
+                                        <TableCell sx={{ fontWeight: "700" }}>Estado</TableCell>
+                                        <TableCell sx={{ fontWeight: "700" }}>Creado</TableCell>
+                                        <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
+                                    </>)}
                                 </TableRow>
                             </TableHead>
+
                             <TableBody>
                                 {dataEquipments.map((equipment) => (
                                     <TableRow key={equipment.equipmentId} hover>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.equipmentId}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.internalCode}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.equipmentName}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>
-                                            {(() => {
-                                                const status = getMaintenanceStatus(equipment.maintenanceDate);
-                                                return (
-                                                    <Box
-                                                        sx={{
-                                                            width: "120px",
-                                                            height: "100%",
-                                                            bgcolor: status.color,
-                                                            border: status.border,
-                                                            borderRadius: "15px",
-                                                            textAlign: "center",
-                                                            p: "10px"
-                                                        }}
-                                                    >
-                                                        {status.label}
-                                                    </Box>
-                                                );
-                                            })()}
-                                        </TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.model}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment.locationName}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>
-                                            {equipment.available ? (<Box sx={{ width: "100px", height: "100%", bgcolor: "#07f60f30", border: "2px solid green", borderRadius: "15px", textAlign: "center", p: "10px" }}>Disponible</Box>) : (<Box sx={{ width: "100px", height: "100%", bgcolor: "#f6070730", border: "2px solid red", borderRadius: "15px", textAlign: "center", p: "10px" }}> No Disponible</Box>)}
-                                        </TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>
-                                            {equipment.createAt ? new Date(equipment.createAt).toLocaleDateString("es-CO") : "null"}
-                                        </TableCell>
-                                       
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment?.equipmentId ?? "NaN"}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment?.internalCode?.trim() || "NaN"}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{equipment?.equipmentName?.trim() || "NaN"}</TableCell>
+
+                                        {!isMobile && (
+
+                                            <>
+                                                <TableCell sx={{ opacity: "0.70" }}>
+                                                    {(() => {
+                                                        const status = getMaintenanceStatus(equipment?.maintenanceDate);
+                                                        return (
+                                                            <Box
+                                                                sx={{
+                                                                    width: "110px",
+                                                                    bgcolor: status.color,
+                                                                    border: status.border,
+                                                                    borderRadius: "15px",
+                                                                    textAlign: "center",
+                                                                    p: "8px",
+                                                                    fontSize: "0.85rem",
+                                                                }}
+                                                            >
+                                                                {status.label || "NaN"}
+                                                            </Box>
+                                                        );
+                                                    })()}
+                                                </TableCell>
+
+                                                <TableCell sx={{ opacity: "0.70" }}>{equipment?.model?.trim() || "NaN"}</TableCell>
+                                                <TableCell sx={{ opacity: "0.70" }}>{equipment?.locationName?.trim() || "NaN"}</TableCell>
+
+                                                <TableCell sx={{ opacity: "0.70" }}>
+                                                    {equipment?.available !== undefined ? (
+                                                        equipment.available ? (
+                                                            <Box
+                                                                sx={{
+                                                                    width: "100px",
+                                                                    bgcolor: "#07f60f30",
+                                                                    border: "2px solid green",
+                                                                    borderRadius: "15px",
+                                                                    textAlign: "center",
+                                                                    p: "8px",
+                                                                    fontSize: "0.85rem",
+                                                                }}
+                                                            >
+                                                                Disponible
+                                                            </Box>
+                                                        ) : (
+                                                            <Box
+                                                                sx={{
+                                                                    width: "100px",
+                                                                    bgcolor: "#f6070730",
+                                                                    border: "2px solid red",
+                                                                    borderRadius: "15px",
+                                                                    textAlign: "center",
+                                                                    p: "8px",
+                                                                    fontSize: "0.85rem",
+                                                                }}
+                                                            >
+                                                                No Disponible
+                                                            </Box>
+                                                        )
+                                                    ) : (
+                                                        "NaN"
+                                                    )}
+                                                </TableCell>
+
+                                                <TableCell sx={{ opacity: "0.70" }}>
+                                                    {equipment?.createAt
+                                                        ? new Date(equipment.createAt).toLocaleDateString("es-CO")
+                                                        : "NaN"}
+                                                </TableCell>
+                                            </>
+                                        )}
+
                                         <TableCell align="right">
                                             <IconButton
                                                 size="small"
                                                 color="primary"
                                                 onClick={() => {
                                                     setEquipmentToEdit(equipment);
-                                                    setOpenEditEquipment(true)
+                                                    setOpenEditEquipment(true);
                                                 }}
                                             >
-                                                <Edit sx={{color:"primary.main"}} fontSize="small" />
+                                                <Edit fontSize="small" />
                                             </IconButton>
                                             <IconButton
                                                 size="small"
                                                 color="primary"
                                                 onClick={() => {
-                                                    setEquipmentToDeleteId(equipment.equipmentId)
-                                                    setOpenModalDelete(true)
-                                                }
-                                                }
+                                                    setEquipmentToDeleteId(equipment.equipmentId);
+                                                    setOpenModalDelete(true);
+                                                }}
                                             >
-                                                <Delete sx={{color:"primary.main"}} fontSize="small" />
+                                                <Delete fontSize="small" />
                                             </IconButton>
                                             <IconButton
                                                 size="small"
@@ -497,7 +571,7 @@ const EquipmentPage = () => {
                                                     navigate(`/system/inventory/equipments/info/${equipment.equipmentId}`)
                                                 }
                                             >
-                                                <Info sx={{color:"primary.main"}} fontSize="small" />
+                                                <Info fontSize="small" />
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>
@@ -505,6 +579,7 @@ const EquipmentPage = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
+
                 )}
                 <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mb: "20px", mt: "20px" }}>
 
@@ -518,7 +593,7 @@ const EquipmentPage = () => {
 
 
 
-        </Box>
+        </Box >
     );
 };
 

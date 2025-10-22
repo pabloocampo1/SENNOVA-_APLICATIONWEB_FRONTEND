@@ -198,7 +198,7 @@ const SearchOptionCheckInv = () => {
     }, [data]);
 
     return (
-        <Box sx={{ width: "100%", minHeight: "100vh", position: "relative", p: 3 }}>
+        <Box sx={{ width: "100%", minHeight: "100vh", position: "relative", p: 1 }}>
             {/* Modales */}
             <GenericModal
                 open={openMaintanence}
@@ -257,9 +257,9 @@ const SearchOptionCheckInv = () => {
                 Buscar de manera individual
             </Typography>
 
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
+            <Box sx={{ width:"100%", display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
                 <SearchBar placeholder={searchBy} onSearch={(value) => setSearch(value)} />
-                <FormControl sx={{ width: 160 }}>
+                <FormControl sx={{ width: 160, display:"flex", flexWrap:"wrap"  }}>
                     <InputLabel>Buscar por</InputLabel>
                     <Select value={searchBy} label="Buscar por" onChange={(e) => setSearchBy(e.target.value)}>
                         <MenuItem value="name">Nombre</MenuItem>

@@ -184,7 +184,7 @@ const LocationOptionCheckInv = () => {
                 }}
             >
                 {/* Encabezado */}
-                <Box sx={{ textAlign: "center", mb: 3, display: "flex" }}>
+                <Box sx={{ textAlign: "center", mb: {xs:3, mb:4},mt: {xs:4, mb:3},  display: "flex", flex:"wrap" }}>
                     <SearchBar placeholder={"Buscar Ubicación..."} onSearch={handleSearch} />
                     <Button
                         variant="contained"
@@ -210,11 +210,11 @@ const LocationOptionCheckInv = () => {
                         <Box
                             sx={{
                                 display: "grid",
-                                gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+                                  gridTemplateColumns: {xs:"repeat(auto-fill, minmax(250px, 1fr))" ,mb:"repeat(auto-fill, minmax(330px, 1fr))"},
                                 gap: 3,
                                 width: "100%",
                                 mt: 4,
-                                maxWidth: "1000px",
+                               
                                 mx: "auto",
                                 justifyContent: "center",
                             }}

@@ -12,7 +12,7 @@ const SearchBar = ({ onSearch, placeholder = "Buscar..." }) => {
 
     return (
         <Box
-            sx={{ display: "flex", alignItems: "center", width: "400px", p: "4px 12px", borderRadius:"15px", border:"1px solid #39A90060" }}
+            sx={{ display: "flex", alignItems: "center",  width: { xs: "100%", sm: "280px", md: "350px", lg: "400px" }, borderRadius:"15px", border:"1px solid #39A90060" }}
         >
             <TextField
                 variant="standard"

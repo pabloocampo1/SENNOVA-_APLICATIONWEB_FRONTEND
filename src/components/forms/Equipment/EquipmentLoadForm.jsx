@@ -1,6 +1,7 @@
 import { Box, Button, InputLabel, MenuItem, Switch, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import api from '../../../service/axiosService';
+import { Close } from '@mui/icons-material';
 
 const EquipmentLoadForm = ({ send, onClose, nameOfTheEquipment, equipmentId }) => {
     const [data, setData] = useState({
@@ -41,11 +42,13 @@ const EquipmentLoadForm = ({ send, onClose, nameOfTheEquipment, equipmentId }) =
     }
 
     return (
-        <Box>
+        <Box sx={{
+            width: { xs: "300px", sm: "500px" },
+        }}>
             <Typography sx={{ pb: "40px", pt: "40px", fontSize: "1.5rem", textAlign:"center" }}>Registro para: {nameOfTheEquipment}</Typography>
             <Box component={"form"} onSubmit={handleSubmit}
                 sx={{
-                    width: "500px",
+                    
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -53,9 +56,12 @@ const EquipmentLoadForm = ({ send, onClose, nameOfTheEquipment, equipmentId }) =
                 }}>
 
                 <Box sx={{
-                    width: "500px",
+                    width: "100%",
                     display: "grid",
-                    gridTemplateColumns: "250px 250px",
+                    gridTemplateColumns: {
+                        xs: "200px",
+                        sm:"200px 200px"
+                    },
                     gap: "20px"
                 }}>
 
@@ -116,13 +122,23 @@ const EquipmentLoadForm = ({ send, onClose, nameOfTheEquipment, equipmentId }) =
                     </TextField>
                 </Box>
 
-
-
-
-
-
-
                 <Button sx={{ width: "100%", mt:"20px" }} variant='contained' type='submit'>Guardar registro</Button>
+                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => onClose()}
+                                    startIcon={<Close />}
+                                    sx={{
+                                        display: { xs: "flex", sm: "none" },
+                                        boxShadow: 2,
+                                        mt:"20px",
+                                        '&:hover': {
+                                            boxShadow: 4
+                                        }
+                                    }}
+                                >
+                                    Cancelar
+                                </Button>
 
             </Box>
         </Box>

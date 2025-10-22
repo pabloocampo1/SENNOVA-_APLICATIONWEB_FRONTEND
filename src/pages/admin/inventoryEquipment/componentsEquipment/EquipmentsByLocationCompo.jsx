@@ -266,8 +266,8 @@ const EquipmentsByLocationCompo = ({ equipments = [], back, locationName, refres
             </Box>)}
 
             {!isShowReportEquipment && (
-                <Box sx={{ width: "100%", textAlign: "center", mt: "70px" }}>
-                    <Typography>Todos los equipos asigandos a la ubicacion: {locationName}</Typography>
+                <Box sx={{ width: "100%", textAlign: "center", mt: { xs: "200px", mb: "70px" } }}>
+                    <Typography>Todos los equipos asigandos a la ubicacion: {locationName} - total {" "} {data.length}</Typography>
                 </Box>
             )}
 
@@ -320,11 +320,34 @@ const EquipmentsByLocationCompo = ({ equipments = [], back, locationName, refres
                                             vertical: 'top',
                                             horizontal: 'left',
                                         }}
+                                        PaperProps={{
+                                            elevation: 2, // 🔥 reduce la sombra (por defecto es 8)
+                                            sx: {
+                                                boxShadow: "0px 2px 6px rgba(0,0,0,0.15)", // más sutil y elegante
+                                                borderRadius: "10px",
+                                                minWidth: 200,
+                                            },
+                                        }}
                                     >
                                         <MenuItem onClick={handleCloseMenu}>Cerrar</MenuItem>
                                         <MenuItem onClick={() => openChangeState()}>Cambiar estado</MenuItem>
-                                        <MenuItem onClick={() => addMaintenance(selectedEquipment.equipmentId, selectedEquipment.equipmentName)}>Registrar mantenimiento</MenuItem>
-                                        <MenuItem onClick={() => navigate(`/system/inventory/equipments/info/${selectedEquipment.equipmentId}`)}>Ver mas detalles</MenuItem>
+                                        <MenuItem
+                                            onClick={() =>
+                                                addMaintenance(
+                                                    selectedEquipment.equipmentId,
+                                                    selectedEquipment.equipmentName
+                                                )
+                                            }
+                                        >
+                                            Registrar mantenimiento
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() =>
+                                                navigate(`/system/inventory/equipments/info/${selectedEquipment.equipmentId}`)
+                                            }
+                                        >
+                                            Ver más detalles
+                                        </MenuItem>
                                     </Menu>
                                 </Box>
                             </Box>
@@ -450,50 +473,7 @@ const EquipmentsByLocationCompo = ({ equipments = [], back, locationName, refres
                                             color="success"
                                         />
                                     </Box>
-
-
-                                    {changeStateEquipment.state && (
-                                        <>
-                                            {changeStateEquipment.equipmentId == equipment.equipmentId && (
-                                                <Box sx={{
-                                                    width: "100%",
-                                                    height: "auto",
-                                                    display: "flex",
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    flexDirection: "column",
-                                                    mt: "10px",
-                                                    mb: "10px"
-                                                }} component={"form"} onSubmit={handleSubmit}>
-
-                                                    <Typography variant='body2' sx={{ pb: "15px", pt: "15px" }}>Cambia el estado de este equipo.</Typography>
-                                                    <TextField
-                                                        select
-                                                        label="Estado"
-                                                        name="state"
-                                                        placeholder={stateToChange}
-                                                        onChange={(e) => setStateToChange(e.target.value)}
-                                                        required
-                                                        sx={{ flex: "1 1 calc(50% - 8px)", width: "100%" }}
-                                                    >
-                                                        <MenuItem value="Activo">Activo</MenuItem>
-                                                        <MenuItem value="Dado de baja">Dado de baja</MenuItem>
-                                                        <MenuItem value="Fuera de servicio">Fuera de servicio</MenuItem>
-                                                    </TextField>
-
-                                                    <Box sx={{ display: "flex" }}>
-                                                        <Button sx={{ m: "20px" }} variant='outlined' type='submit'>Cambiar</Button>
-
-                                                        <Button sx={{ bgcolor: "red", m: "20px" }} variant='contained' onClick={() => setChangeStateEquipment({
-                                                            ...changeStateEquipment,
-                                                            state: false,
-                                                            equipmentId: null
-                                                        })}>Cancelar</Button>
-                                                    </Box>
-                                                </Box>
-                                            )}
-                                        </>
-                                    )}
+                                    
                                     {changeStateEquipment.state && (
                                         <>
                                             {changeStateEquipment.equipmentId == equipment.equipmentId && (

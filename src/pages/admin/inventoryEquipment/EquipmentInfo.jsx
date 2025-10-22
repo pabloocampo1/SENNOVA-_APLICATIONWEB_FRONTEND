@@ -316,14 +316,14 @@ const EquipmentInfo = () => {
 
 
             {/** Header of the info page */}
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", alignItems: "center",flexWrap:"wrap", justifyContent: "space-between" }}>
                 <Box sx={{ width: "100px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "15px", border: "1px solid green" }}
                     onClick={() => navigate(- 1)}>
                     <ArrowBackOutlined sx={{ color: "primary.main" }} /> <Typography sx={{ color: "primary.main" }}> Volver</Typography>
                 </Box>
 
 
-                <Box>
+                <Box sx={{mt:{xs:"40px"}}}>
                     <Button variant='outlined' sx={{ width: "auto", p: "20px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}
                         onClick={() => alert("esta funcion esta en desarrollo")}>
                         <Download />  <Typography sx={{ pl: "10px" }}>Descargar informacion de este equipo</Typography>
@@ -332,14 +332,14 @@ const EquipmentInfo = () => {
             </Box>
 
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", mt: "40px" }}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mt: "40px", flexWrap:"wrap" }}>
+                <Box sx={{ display: "flex", alignItems: "center", flexDirection:{xs:"column"} }}>
                     <Typography variant='h2' component={"h2"}>Informacion sobre /  </Typography>
-                    <Typography variant='h2' component={"h2"} sx={{ color: "text.primary", pl: "5px", opacity: "0.60" }}> {data.equipmentName}</Typography>
+                    <Typography variant='h2' component={"h2"} sx={{ color: "text.primary", pl: "5px", pt:{xs:"20px"}, opacity: "0.60" }}> {data.equipmentName}</Typography>
 
                 </Box>
                 <Box>
-                    <Button sx={{ mr: "15px" }} variant='contained' onClick={() => setOpenMaintanence(true)}> <Construction /> Registrar mantenimiento</Button>
+                    <Button sx={{ mr: "15px", mb:{xs:"20px"} }} variant='contained' onClick={() => setOpenMaintanence(true)}> <Construction /> Registrar mantenimiento</Button>
                     <Button sx={{ color: "primary.main" }} variant='outlined' onClick={() => setOpenLoadForm(true)}><Assignment /> Registrar prestamo</Button>
                 </Box>
             </Box>
