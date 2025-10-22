@@ -40,6 +40,7 @@ const SearchOptionCheckInv = () => {
     const [searchBy, setSearchBy] = useState("name");
     const [data, setData] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
+
     const [selectedEquipment, setSelectedEquipment] = useState(null);
 
     const [stateToChange, setStateToChange] = useState("Activo");
@@ -84,6 +85,25 @@ const SearchOptionCheckInv = () => {
             console.error(error);
         }
     };
+
+     const handleScamCode = (code) => {
+        getByISenaInventoryTag(code);
+        setOpenScanner(false)
+
+    }
+
+    const getByISenaInventoryTag = async (code) => {
+        try {
+            const res = await api.get(`/equipment/get-all-by-sena-inventory-tag/${code}`);
+    
+            setData(res.data)
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
 
     const handleMarkExist = (equipmentId, type) => {
         setReportStatus(prev => ({
@@ -216,7 +236,7 @@ const SearchOptionCheckInv = () => {
             <GenericModal
                 open={openScanner}
                 onClose={() => setOpenScanner(false)}
-                compo={<ScamCompo handleScamCode={(code) => console.log(code)} />}
+                compo={<ScamCompo handleScamCode={(code) => handleScamCode(code)} />}
             />
 
             {/* Alertas */}

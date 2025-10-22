@@ -42,7 +42,7 @@ const BarcodeScanner = ({ open, onDetected, onClose, preferBackCamera = true }) 
         );
         const cameraId = (pick && pick.id) || cameras[0].id;
 
-        // IMPORTANTE: aseguramos que el div existe antes de crear
+     
         if (!document.getElementById(scannerId.current)) return;
 
         html5QrcodeRef.current = new Html5Qrcode(scannerId.current);

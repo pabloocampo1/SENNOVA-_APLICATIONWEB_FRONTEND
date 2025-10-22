@@ -52,7 +52,7 @@ const ScamCompo = ({ handleScamCode }) => {
                 </Typography>
             </Box>
 
-            {/* Main Button */}
+           
             <Paper
                 sx={{
                     background: 'linear-gradient(135deg, #46ec31ff 0%, #17760aff 100%)',
