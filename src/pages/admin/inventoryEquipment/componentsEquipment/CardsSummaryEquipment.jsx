@@ -4,7 +4,7 @@ import { Inventory, Build, CheckCircle, Cancel } from '@mui/icons-material';
 import { formatMonthYear } from '../../../../Utils/DateUtils';
 import api from '../../../../service/axiosService';
 
-const CardsSummaryEquipment = ({ refresh }) => {
+const CardsSummaryEquipment = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const theme = useTheme();
@@ -16,7 +16,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
             const res = await api.get("/equipment/summaryStatics/card");
             if (res.status === 200) {
                 setData(res.data);
-                refresh();
+               
             }
         } catch (error) {
             console.error(error);
@@ -27,7 +27,7 @@ const CardsSummaryEquipment = ({ refresh }) => {
 
     useEffect(() => {
         fetchData();
-    }, [refresh]);
+    }, []);
 
     if (loading) {
         return (

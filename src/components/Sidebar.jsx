@@ -15,7 +15,7 @@ const Sidebar = () => {
     return (
         <Box
             sx={{
-                minWidth: {lg: "320px", xl: "400px" },
+                minWidth: {lg: "310px", xl: "400px" },
                 height: "100%",
                 bgcolor: "background.default",
                 borderRadius: "0px 30px 30px 0px",

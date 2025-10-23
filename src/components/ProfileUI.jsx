@@ -28,7 +28,6 @@ const ProfileUI = () => {
 
     return (
 
-
         <Box sx={{ mr: "15px" }}>
             <IconButton sx={{
                 "&:hover": {
@@ -50,23 +49,23 @@ const ProfileUI = () => {
                     <Box sx={{
                         width: "100%",
                         height: "100%",
-                        display: "flex",
+                        display: {xs: "none", sm:"flex"},
                         flexDirection: "column",
                         justifyContent: "end",
                         alignItems: "end",
                         pr: "10px",
                         pl: "10px"
                     }}>
-                        <Typography sx={{ fontSize: "16px", fontWeight: "600", opacity: "0.99", }}>{authObject.name}</Typography>
+                        <Typography sx={{ fontSize: "16px", fontWeight: "600", opacity: "0.99" }}>{authObject.name}</Typography>
                         <Typography sx={{ fontSize: "14px", opacity: "0.50" }}>{authObject.position}</Typography>
                     </Box>
 
                     <Box sx={{
-                        width: "60px",
-                        height: "50px",
+                        width: "40px",
+                        height: "40px",
                         ml: "5px"
                     }} >
-                        <img src={authObject.imageProfile} style={{ width: "100%", borderRadius: "100%", height: "100%" }} alt="notImage" />
+                        <img src={authObject.imageProfile} style={{ width: "100%", borderRadius: "100%", height: "100%" }} alt="profilePhoto" />
                     </Box>
 
 

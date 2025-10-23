@@ -15,10 +15,12 @@ import {
     TableRow,
     TextField,
     Typography,
+    useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import api from "../../../service/axiosService";
-import { Add, ChecklistOutlined, Delete, Edit, FileDownloadOutlined, Info, Science, Search } from "@mui/icons-material";
+import { Add, ChecklistOutlined, Delete, Edit, FileDownloadOutlined, Grade, Info, Science, Search } from "@mui/icons-material";
 import SearchBar from "../../../components/SearchBar";
 import GenericModal from "../../../components/modals/GenericModal";
 import ReagentForm from "../../../components/forms/Reagent/ReagentForm";
@@ -40,6 +42,8 @@ const ReagentPage = () => {
     const [dataToEdit, setDataToEdit] = useState({});
     const [reagentIdToDelete, setReagentIdToDelete] = useState(null);
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 
     const [openModalReagentForm, setOpenModalReagentForm] = useState(false);
@@ -80,17 +84,17 @@ const ReagentPage = () => {
             const res = await api.delete(`/reagent/delete/${reagentIdToDelete}`);
             if (res.status == 200) {
                 const currentData = reagents;
-                const newData = currentData.filter(data => data.reagentsId !== reagentIdToDelete )
+                const newData = currentData.filter(data => data.reagentsId !== reagentIdToDelete)
                 setReagents(newData);
                 setOpenModalToDelete(false)
-                
+
             }
 
 
         } catch (error) {
             console.log(error);
 
-        }finally{
+        } finally {
             setIsLoanding(false)
         }
     }
@@ -197,8 +201,8 @@ const ReagentPage = () => {
 
             {/* Header compo */}
 
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", mb: "40px" }}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", mb: "40px", flexWrap:"wrap" }}>
+                <Box sx={{ display: "flex", alignItems: "center", mb:{xs:"20px"} }}>
                     <Typography variant="h2" component={"h2"}>Inventorio de reactivos</Typography>
                     <Science sx={{ ml: "10px", color: "primary.main" }} />
                 </Box>
@@ -207,6 +211,7 @@ const ReagentPage = () => {
                     <Button
                         variant="contained"
                         startIcon={<FileDownloadOutlined />}
+                       
                     >
                         Descargar Excel
                     </Button>
@@ -217,7 +222,9 @@ const ReagentPage = () => {
                 </Box>
             </Box>
 
-            <CardsSummaryReagent />
+            <Box sx={{m:"10px"}}>
+                <CardsSummaryReagent />
+            </Box>
 
             <Divider sx={{ mt: "20px" }} />
 
@@ -229,6 +236,7 @@ const ReagentPage = () => {
                     width: "100%",
                     display: "flex",
                     justifyContent: "space-between",
+                    flexWrap:"wrap",
                     mb: "30px",
                     mt: "30px",
                     alignItems: "center",
@@ -262,6 +270,9 @@ const ReagentPage = () => {
                     onClick={() => setOpenModalReagentForm(true)}
                     variant="outlined"
                     startIcon={<Add />}
+                    sx={{
+                        mt:{xs:"40px"}
+                    }}
                 >
                     Agregar nuevo reactivo
                 </Button>
@@ -269,17 +280,26 @@ const ReagentPage = () => {
 
             {/* Tabla */}
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="tabla de reactivos">
+                <Table sx={{  }} aria-label="tabla de reactivos">
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ fontWeight: "700" }}>Id</TableCell>
                             <TableCell sx={{ fontWeight: "700" }}>Nombre</TableCell>
-                            <TableCell sx={{ fontWeight: "700" }}>Marca</TableCell>
-                            <TableCell sx={{ fontWeight: "700" }}>Pureza</TableCell>
-                            <TableCell sx={{ fontWeight: "700" }}>Unidades</TableCell>
+                            {!isMobile && (
+                                <>
+                                    <TableCell sx={{ fontWeight: "700" }}>Marca</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Pureza</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Unidades</TableCell>
+                                </>
+                            )}
                             <TableCell sx={{ fontWeight: "700" }}>Cantidad</TableCell>
-                            <TableCell sx={{ fontWeight: "700" }}>Ubicacion</TableCell>
-                            <TableCell sx={{ fontWeight: "700" }}>Fecha de vencimiento</TableCell>
+
+                            {!isMobile && (
+                                <>
+                                    <TableCell sx={{ fontWeight: "700" }}>Ubicacion</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>Fecha de vencimiento</TableCell>
+                                </>
+                            )}
                             <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
                         </TableRow>
                     </TableHead>
@@ -289,12 +309,21 @@ const ReagentPage = () => {
                             <TableRow key={reagent.reagentsId} hover>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentsId}</TableCell>
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentName}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.brand}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.purity}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.units}</TableCell>
+                                {!isMobile && (
+                                    <>
+                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.brand}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.purity}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.units}</TableCell>
+                                    </>
+                                )}
                                 <TableCell sx={{ opacity: "0.70" }}>{reagent.quantity} {" "} {reagent.unitOfMeasure}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.locationName == null || reagent.locationName == "" ? "Null" : reagent.locationName}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.expirationDate}</TableCell>
+                                {!isMobile && (
+                                    <>
+                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.locationName == null || reagent.locationName == "" ? "Null" : reagent.locationName}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.expirationDate}</TableCell>
+                                    </>
+                                )}
+
                                 <TableCell align="right">
                                     <IconButton
                                         size="small"

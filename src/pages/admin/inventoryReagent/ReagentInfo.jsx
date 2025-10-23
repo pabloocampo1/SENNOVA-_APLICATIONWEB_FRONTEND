@@ -97,16 +97,16 @@ const ReagentInfo = () => {
 
 
     const deleteFile = async (publicId) => {
-       setIsLoanding(true)
+        setIsLoanding(true)
         try {
             const res = await api.delete(`/reagent/delete-file/${publicId}`);
-            
+
             if (res.status == 200) {
                 getFiles()
             }
         } catch (error) {
             console.error(error);
-        }finally{
+        } finally {
             setIsLoanding(false)
         }
     };
@@ -242,6 +242,7 @@ const ReagentInfo = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                flexWrap:"wrap",
                 mt: "20px"
             }}>
                 <ButtonBack />
@@ -261,30 +262,35 @@ const ReagentInfo = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                flexWrap: "wrap",
                 mt: "50px"
             }}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
                     <Typography variant='h2' component={"h2"} sx={{ color: "primary.main" }}>Reactivo /  </Typography>
                     <Typography variant='h2' component={"h2"} sx={{ color: "text.primary", pl: "5px", opacity: "0.60" }}> {dataReagent.reagentName}</Typography>
-
                 </Box>
 
-                <Box>
+                <Box sx={{
+                    mt: { xs: "20px" }
+                }}>
                     <Button onClick={() => setOpenModalUsage(true)} variant='outlined' startIcon={<HandymanOutlined />}>Registrar uso</Button>
                 </Box>
             </Box>
 
-            <Divider>Informacion</Divider>
+            <Divider sx={{
+                mt: { xs: "50px" },
+                mb: { xs: "50px" },
+            }}>Informacion del reactivo</Divider>
 
             <Box sx={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
                 gap: "20px",
                 mt: "20px"
             }}>
 
                 {/* main information */}
-                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "300px", p: "20px" }}>
+                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "200px", p: "20px" }}>
                     <Box sx={{ display: "flex", mb: "10px" }}>
                         <Typography variant="caption" sx={styleSubtitleInfo}>Nombre : </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.reagentName}</Typography>
@@ -328,7 +334,7 @@ const ReagentInfo = () => {
                 </Card>
 
                 {/* image and description */}
-                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "300px", p: "20px" }}>
+                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "200px", p: "20px" }}>
 
                     <Box sx={{ display: "flex", mb: "30px", justifyContent: "center", width: "100%", }}>
                         <Box sx={{ width: "50%" }}>
@@ -370,7 +376,7 @@ const ReagentInfo = () => {
                     elevation={3}
                     sx={{
                         minHeight: "400px",
-                        minWidth: "300px",
+                        minWidth: "200px",
                         p: "20px",
                         display: "flex",
                         flexDirection: "column",
@@ -464,7 +470,7 @@ const ReagentInfo = () => {
 
             </Box>
 
-            
+
             <Box sx={{
                 width: "100%",
                 mt: "40px"

@@ -1,18 +1,20 @@
 
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Drawer, IconButton, Menu, Typography } from "@mui/material";
 import ProfileUI from "./ProfileUI";
-import { DarkMode, NotificationAdd, NotificationImportant, Notifications, Settings, Sunny } from "@mui/icons-material";
+import { DarkMode, Help, InfoOutline, MenuBook, MenuOpen, MenuRounded, MoreHorizOutlined, MoreOutlined, MoreSharp, MoreVert, NotificationAdd, NotificationImportant, Notifications, OpenInNewTwoTone, Settings, Sunny, VerticalAlignBottom } from "@mui/icons-material";
 import ProfileInfo from "./NotificationPopover";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import NotificationPopover from "./NotificationPopover";
 import imageLogoSennova from '../assets/images/sennova_logo_sin_fondo.png'
+import NavBarOptions from "./navBarOptions";
+import Sidebar from "./Sidebar";
 
 
 const TopBar = () => {
- 
-    const { darkMode, toggleDarkMode } = useContext(ThemeContext);
 
+    const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+    const [menuMobile, setMenuMobile] = useState(false);
 
 
     return (
@@ -20,7 +22,7 @@ const TopBar = () => {
             sx={{
                 height: "10vh",
                 bgcolor: "background.paper",
-                display: { xs: "none", md: "flex" },
+                display: { xs: "flex", md: "flex" },
                 alignItems: "center",
                 justifyContent: "space-between",
                 px: 2,
@@ -32,23 +34,86 @@ const TopBar = () => {
                 alignItems: "center",
                 justifyContent: "center"
             }}>
-                {/* <Typography sx={{ fontSize: "24px" }}>Bienvenido, </Typography>
-                <Typography sx={{ color: "primary.main", fontWeight: "bold", fontSize: "26px", pl: "7px" }}> {authObject.name}</Typography> */}
-                <Box sx={{ mt: "15%" }}>
-                <img src={imageLogoSennova} width={250} alt="logo sennova" />
-            </Box>
-
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={() => setMenuMobile(true)}
+                    sx={{  display: { sm: 'none' } }}
+                >
+                    <MenuRounded />
+                </IconButton>
+                <Box sx={{ mt: "15%", width: { xs: "150px", sm: "200px" } }}>
+                    <img src={imageLogoSennova} width={"100%"} alt="logo sennova" />
+                </Box>
             </Box>
             <Box sx={{
                 display: "flex",
                 alignItems: "center",
             }}>
 
-
-                {darkMode ? (<Sunny onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px" }} />) : (<DarkMode onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px" }} />)}
+                {darkMode ? (<Sunny onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px", }} />) : (<DarkMode onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px", }} />)}
 
                 <NotificationPopover />
                 <ProfileUI />
+            </Box>
+
+
+
+            <Box sx={{ display: { xs: "flex", sm: "none" } }}>
+
+                <Drawer
+                    anchor="left"
+                    sx={{
+
+                    }}
+                    open={menuMobile}
+                    onClose={() => setMenuMobile(false)}>
+                    <Box sx={{ width: 250, height: "100%", p: 2, bgcolor: "background.paper" }}>
+                        <Box
+                            sx={{
+                                minWidth: { lg: "320px", xl: "400px" },
+
+                                height: "100%",
+
+                                borderRadius: "0px 30px 30px 0px",
+                                // borderRight: "1px solid  #39A900",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "space-between"
+                            }}
+                        >
+
+                            <Box sx={{ mt: "15%", width: { xs: "150px", sm: "200px" } }}>
+                                <img src={imageLogoSennova} width={"100%"} alt="logo sennova" />
+                            </Box>
+
+
+                            <Box sx={{
+                                width: "80%",
+                               
+                            }}>
+                                <NavBarOptions onCloseMenu={() => setMenuMobile(false)} />
+                            </Box>
+
+
+                            <Box sx={{
+                                width: "80%",
+                                mb: "50px"
+                            }}>
+                                <Box sx={{ display: "flex", alignItems: "center", mt: "20px" }}>
+                                    <Help sx={{ color: 'text.secondary' }} />  <Typography sx={{ pl: "10px", color: "text.secondary" }}>Ayuda</Typography>
+                                </Box>
+
+                                <Box sx={{ display: "flex", alignItems: "center", mt: "20px" }}>
+                                    <InfoOutline sx={{ color: 'text.secondary' }} />  <Typography sx={{ pl: "10px", color: "text.secondary" }}>Acerca del sistema</Typography>
+                                </Box>
+                            </Box>
+
+                        </Box>
+                    </Box>
+                </Drawer>
             </Box>
         </Box>
     );

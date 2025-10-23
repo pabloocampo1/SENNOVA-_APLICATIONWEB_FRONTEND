@@ -37,6 +37,7 @@ const UsageForm = ({ method, errors = {}, data = null, isEdit }) => {
                 width: { xs: "100%", sm: "400px" },
                 p: 3,
                 borderRadius: 2,
+              
             }}
         >
             <Typography

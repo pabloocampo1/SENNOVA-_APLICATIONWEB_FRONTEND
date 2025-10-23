@@ -363,7 +363,7 @@ const EquipmentPage = () => {
                 }}
             >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography variant="h2" component={"h2"}>Inventorio de reactivos</Typography>
+                    <Typography variant="h2" component={"h2"}>Inventorio de equipos</Typography>
                     <BuildCircle sx={{ ml: "10px", color: "primary.main" }} />
                 </Box>
 

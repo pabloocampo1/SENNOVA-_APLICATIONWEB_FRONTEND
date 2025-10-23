@@ -11,7 +11,7 @@ import {
     SupervisedUserCircleOutlined
 } from '@mui/icons-material';
 
-const NavBarOptions = () => {
+const NavBarOptions = ({ onCloseMenu}) => {
     const { authObject } = useAuth();
     const [modules, setModules] = useState([]);
     const navigate = useNavigate();
@@ -57,14 +57,21 @@ const NavBarOptions = () => {
                         p: "8px",
                         borderRadius: "8px",
                         cursor: "pointer",
+                        mb: { xs: "10px", sm: "none" },
                         display: "flex",
                         alignItems: "center",
                         fontWeight: active === module.name ? 600 : 0
                     }}
-                    onClick={() => handleClick(module)}
+                    onClick={() => {
+
+
+                        handleClick(module);
+                        if (onCloseMenu) onCloseMenu();
+
+                    }}
                 >
                     <Box>{module.icon}</Box>
-                    <Typography sx={{ textDecoration: "none", color: "text.secondary", ml: "15px"  }}>
+                    <Typography sx={{ textDecoration: "none", color: "text.secondary", ml: "15px" }}>
                         {module.name}
                     </Typography>
                 </Box>

@@ -203,7 +203,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
             <SimpleBackdrop open={isLoanding} />
             <Typography sx={{ pb: "30px" }}>{isEdit ? ("Editar reactivo.") : ("Agregar reactivo.")}</Typography>
 
-            <Box sx={{ display: "grid", gridTemplateColumns: "250px 250px", gap: "20px" }}>
+            <Box sx={{ display: "grid", gridTemplateColumns: {xs: "250px",mb: "250px 250px"}, gap: "20px" }}>
                 <TextField
                     name='reagentName'
                     label="Nombre"

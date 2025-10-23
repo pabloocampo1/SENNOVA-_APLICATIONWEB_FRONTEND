@@ -26,22 +26,22 @@ const ModalUsageReagent = ({ onClose, success, reagentId, unitOfMeasure, stock, 
         e.preventDefault();
 
         try {
-            const res = await api.post("/reagent/save-usage", dataForm );
-            if(res.status == 201){
+            const res = await api.post("/reagent/save-usage", dataForm);
+            if (res.status == 201) {
                 onClose()
                 success()
             }
-            
+
         } catch (error) {
-           if(error.response.data.errors.general){
+            if (error.response.data.errors.general) {
                 setError({
-                    stateError:true,
-                    message:error.response.data.errors.general
+                    stateError: true,
+                    message: error.response.data.errors.general
                 })
-           };
-            
+            };
+
         }
-        
+
 
         console.log(dataForm);
 
@@ -110,12 +110,12 @@ const ModalUsageReagent = ({ onClose, success, reagentId, unitOfMeasure, stock, 
             }}>
             <Typography variant='h3'>Registrar uso del reactivo</Typography>
             <Typography sx={{ fontWeight: "bold" }}>Cantidad disponible: {stock} {unitOfMeasure}</Typography>
-            
+
 
             <Box
                 sx={{
                     display: "grid",
-                    gridTemplateColumns: "220px 220px",
+                    gridTemplateColumns: { xs: "250px", mb: "250px 250px" },
                     gap: "20px",
                     mt: "40px"
                 }}
@@ -153,7 +153,7 @@ const ModalUsageReagent = ({ onClose, success, reagentId, unitOfMeasure, stock, 
             {errorStock.stateError &&
                 (<Typography sx={{
                     color: "red",
-                   
+
                     textAlign: "center",
                     pt: "20px",
                     pb: "20px"
@@ -167,7 +167,7 @@ const ModalUsageReagent = ({ onClose, success, reagentId, unitOfMeasure, stock, 
                     textAlign: "center",
                     pt: "20px",
                     pb: "20px",
-                    
+
                 }}>
                     {notifyExpiration.message}
                 </Typography>)}
@@ -178,7 +178,7 @@ const ModalUsageReagent = ({ onClose, success, reagentId, unitOfMeasure, stock, 
                     textAlign: "center",
                     pt: "20px",
                     pb: "20px",
-                    
+
                 }}>
                     {error.message}
                 </Typography>)}
