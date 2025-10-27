@@ -1,6 +1,6 @@
-import { AccessTimeOutlined, CheckBox, EmailOutlined, Label, LockClockOutlined, PersonOffOutlined } from '@mui/icons-material';
-import { Box, Button, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, Switch, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import { AccessTimeOutlined, EmailOutlined, LockClockOutlined, PersonOffOutlined } from '@mui/icons-material';
+import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Switch, Typography, useMediaQuery, useTheme } from '@mui/material';
+import  { useContext, useEffect, useState } from 'react';
 import ProductsCompo from '../../components/SettingComponents/ProductsCompo';
 import UsageCompo from '../../components/SettingComponents/UsageCompo';
 import LocationsCompo from '../../components/SettingComponents/LocationsCompo';
@@ -10,6 +10,7 @@ import GenericModal from '../../components/modals/GenericModal';
 import ChangeEmailCompo from '../../components/forms/Auth/changeEmailCompo';
 import ChangePasswordCompo from '../../components/forms/Auth/ChangePasswordCompo';
 import DeactivateAccountConfirmation from '../../components/SettingComponents/DeactivateAccountConfirmation';
+import ButtonBack from '../../components/ButtonBack';
 
 const SettingPage = () => {
     const { authObject, setAuthObject } = useContext(AuthContext);
@@ -22,6 +23,8 @@ const SettingPage = () => {
     const [openChangeEmail, setOpenChangeEmail] = useState(false);
     const [openChangePassword, setOpenChangePassword] = useState(false);
     const [openDeactivateAccount, setOpenDeactivateAccount] = useState(false);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
 
 
@@ -73,6 +76,10 @@ const SettingPage = () => {
 
     return (
         <Box>
+
+            <Box sx={{mb:"20px"}}>
+                <ButtonBack />
+            </Box>
             <Typography component={"h2"} sx={{
                 fontWeight: "bold",
                 fontSize: "24px",
@@ -199,6 +206,7 @@ const SettingPage = () => {
                                 Cambiar
                             </Button>
                         }
+
                     >
                         <ListItemIcon>
                             <EmailOutlined color="primary" />
@@ -228,7 +236,7 @@ const SettingPage = () => {
                     <ListItem
                         secondaryAction={
                             authObject.available ? (
-                                <Button variant='outlined' sx={{borderColor:"red", color:"red"}} onClick={() => setOpenDeactivateAccount(true)}>
+                                <Button variant='outlined' sx={{ borderColor: "red", color: "red" }} onClick={() => setOpenDeactivateAccount(true)}>
                                     Desactivar
                                 </Button>
                             ) : (
@@ -263,9 +271,9 @@ const SettingPage = () => {
 
 
             <Box >
-                <ProductsCompo />
-                <UsageCompo />
-                <LocationsCompo />
+                <ProductsCompo isMobile={isMobile} />
+                <UsageCompo isMobile={isMobile} />
+                <LocationsCompo isMobile={isMobile} />
             </Box>
 
 

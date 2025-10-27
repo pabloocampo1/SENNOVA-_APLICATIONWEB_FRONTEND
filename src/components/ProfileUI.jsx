@@ -1,11 +1,10 @@
 import { Box, IconButton, Popover, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { ThemeContext } from '../context/ThemeContext';
-import { AccountBox, AccountBoxOutlined, DarkMode, Help, Logout, Settings, Sunny } from '@mui/icons-material';
+
+import {  Logout, Settings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
-// import imageNotImage from "../assets/images/no-image-icon-6.png"
 
 const ProfileUI = () => {
     const { authObject } = useAuth();
@@ -46,22 +45,8 @@ const ProfileUI = () => {
 
                 }}>
 
-                    <Box sx={{
-                        width: "100%",
-                        height: "100%",
-                        display: {xs: "none", sm:"flex"},
-                        flexDirection: "column",
-                        justifyContent: "end",
-                        alignItems: "end",
-                        pr: "10px",
-                        pl: "10px"
-                    }}>
-                        <Typography sx={{ fontSize: "16px", fontWeight: "600", opacity: "0.99" }}>{authObject.name}</Typography>
-                        <Typography sx={{ fontSize: "14px", opacity: "0.50" }}>{authObject.position}</Typography>
-                    </Box>
-
-                    <Box sx={{
-                        width: "40px",
+                     <Box sx={{
+                        width: "50px",
                         height: "40px",
                         ml: "5px"
                     }} >
@@ -69,8 +54,19 @@ const ProfileUI = () => {
                     </Box>
 
 
-
-
+                    <Box sx={{
+                        width: "100%",
+                        height: "100%",
+                        display: { xs: "none", sm: "flex" },
+                        flexDirection: "column",
+                        justifyContent: "start",
+                        alignItems: "start",
+                        pr: "10px",
+                        pl: "10px"
+                    }}>
+                        <Typography sx={{ fontSize: "16px", fontWeight: "600", opacity: "0.99" }}>{authObject.name}</Typography>
+                        <Typography sx={{ fontSize: "14px", opacity: "0.50" }}>{authObject.position}</Typography>
+                    </Box>
 
 
                 </Box>

@@ -1,20 +1,24 @@
 
-import { Box, Button, Drawer, IconButton, Menu, Typography } from "@mui/material";
-import ProfileUI from "./ProfileUI";
-import { DarkMode, Help, InfoOutline, MenuBook, MenuOpen, MenuRounded, MoreHorizOutlined, MoreOutlined, MoreSharp, MoreVert, NotificationAdd, NotificationImportant, Notifications, OpenInNewTwoTone, Settings, Sunny, VerticalAlignBottom } from "@mui/icons-material";
-import ProfileInfo from "./NotificationPopover";
+import { Box,  Drawer, IconButton, Tooltip, Typography } from "@mui/material";
+
+import { DarkMode, Help, InfoOutline, Logout, MenuRounded,  Settings, Sunny } from "@mui/icons-material";
+
 import { useContext, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import NotificationPopover from "./NotificationPopover";
 import imageLogoSennova from '../assets/images/sennova_logo_sin_fondo.png'
 import NavBarOptions from "./navBarOptions";
-import Sidebar from "./Sidebar";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 
 const TopBar = () => {
 
     const { darkMode, toggleDarkMode } = useContext(ThemeContext);
     const [menuMobile, setMenuMobile] = useState(false);
+     const { logout } = useAuth();
+     const navigate = useNavigate()
 
 
     return (
@@ -34,7 +38,7 @@ const TopBar = () => {
                 alignItems: "center",
                 justifyContent: "center"
             }}>
-                <IconButton
+                 <IconButton
                     color="inherit"
                     aria-label="open drawer"
                     edge="start"
@@ -50,12 +54,22 @@ const TopBar = () => {
             <Box sx={{
                 display: "flex",
                 alignItems: "center",
+                mr: "20px"
             }}>
 
-                {darkMode ? (<Sunny onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px", }} />) : (<DarkMode onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px", }} />)}
 
+                <Tooltip title="Cambiar tema">
+                    {darkMode ? (<Sunny onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px", }} />) : (<DarkMode onClick={() => toggleDarkMode()} fontSize="medium" sx={{ color: "text.secondary", mr: "10px", }} />)}
+                </Tooltip>
                 <NotificationPopover />
-                <ProfileUI />
+                <Tooltip title="Elementos del sistema">
+                    <Settings onClick={() => navigate("/system/settings")} sx={{ color: 'text.secondary', ml: "10px" }} />
+                </Tooltip>
+                <Tooltip title="Cerrar sesion">
+                    <Logout onClick={() => logout()} sx={{ color: 'text.secondary', ml: "20px" }} />
+                </Tooltip>
+
+
             </Box>
 
 
@@ -77,7 +91,7 @@ const TopBar = () => {
                                 height: "100%",
 
                                 borderRadius: "0px 30px 30px 0px",
-                                // borderRight: "1px solid  #39A900",
+                               
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",
@@ -92,7 +106,7 @@ const TopBar = () => {
 
                             <Box sx={{
                                 width: "80%",
-                               
+
                             }}>
                                 <NavBarOptions onCloseMenu={() => setMenuMobile(false)} />
                             </Box>
@@ -120,3 +134,4 @@ const TopBar = () => {
 };
 
 export default TopBar;
+

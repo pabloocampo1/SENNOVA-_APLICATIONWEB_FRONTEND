@@ -7,7 +7,7 @@ import CreateProductForm from '../forms/Product/ProductForm';
 import ProductForm from '../forms/Product/ProductForm';
 import SearchBar from '../SearchBar';
 
-const ProductsCompo = () => {
+const ProductsCompo = ({isMobile}) => {
     const [productData, setProductData] = useState([]);
     const [errorFetch, setErrorFetch] = useState(false);
     const [errorDelete, setErrorDelete] = useState({
@@ -213,7 +213,7 @@ const ProductsCompo = () => {
             } />} onClose={() => setProductToEdit(null)} />
 
 
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", flexWrap:"wrap" }}>
                 <Box>
                     <SearchBar onSearch={(value) => setSearch(value)} />
                 </Box>

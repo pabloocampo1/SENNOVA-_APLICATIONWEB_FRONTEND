@@ -6,7 +6,7 @@ import GenericModal from '../modals/GenericModal';
 import SearchBar from '../SearchBar';
 import LocationForm from '../forms/Location/LocationForm';
 
-const LocationsCompo = () => {
+const LocationsCompo = ({ isMobile }) => {
     const [locationData, setLocationData] = useState([]);
     const [errorFetch, setErrorFetch] = useState(false);
     const [errorDelete, setErrorDelete] = useState({
@@ -297,8 +297,12 @@ const LocationsCompo = () => {
                                     <TableRow>
                                         <TableCell>ID</TableCell>
                                         <TableCell>Nombre de Ubicación</TableCell>
-                                        <TableCell>Creado</TableCell>
-                                        <TableCell>Actualizado</TableCell>
+                                        {!isMobile && (
+                                            <>
+                                                <TableCell>Creado</TableCell>
+                                                <TableCell>Actualizado</TableCell>
+                                            </>
+                                        )}
                                         <TableCell align="right">Acciones</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -307,12 +311,16 @@ const LocationsCompo = () => {
                                         <TableRow key={location.equipmentLocationId} hover>
                                             <TableCell>{location.equipmentLocationId}</TableCell>
                                             <TableCell>{location.locationName}</TableCell>
-                                            <TableCell>
-                                                {new Date(location.createAt).toLocaleDateString()}
-                                            </TableCell>
-                                            <TableCell>
-                                                {new Date(location.updateAt).toLocaleDateString()}
-                                            </TableCell>
+                                            {!isMobile && (
+                                                <>
+                                                    <TableCell>
+                                                        {new Date(location.createAt).toLocaleDateString()}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {new Date(location.updateAt).toLocaleDateString()}
+                                                    </TableCell>
+                                                </>
+                                            )}
                                             <TableCell align="right">
                                                 <IconButton
                                                     size="small"

@@ -1,4 +1,4 @@
-import { Alert, Box, Button,  IconButton, Pagination, Paper, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Alert, Box, Button, IconButton, Pagination, Paper, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import api from '../../service/axiosService';
 import { Add, Delete, Edit } from '@mui/icons-material';
@@ -6,7 +6,7 @@ import GenericModal from '../modals/GenericModal';
 import SearchBar from '../SearchBar';
 import UsageForm from '../forms/Usage/UsageForm';
 
-const UsageCompo = () => {
+const UsageCompo = ({ isMobile }) => {
     const [usageData, setUsageData] = useState([]);
     const [errorFetch, setErrorFetch] = useState(false);
     const [errorDelete, setErrorDelete] = useState({
@@ -78,7 +78,7 @@ const UsageCompo = () => {
                     ...errorDelete,
                     "status": true,
                     "usage": usageName,
-                    "message":" ocurrio un error"
+                    "message": " ocurrio un error"
                 })
                 setOpen(true)
             }
@@ -298,8 +298,12 @@ const UsageCompo = () => {
                                     <TableRow>
                                         <TableCell>ID</TableCell>
                                         <TableCell>Nombre de Uso</TableCell>
-                                        <TableCell>Creado</TableCell>
-                                        <TableCell>Actualizado</TableCell>
+                                        {!isMobile && (
+                                            <>
+                                                <TableCell>Creado</TableCell>
+                                                <TableCell>Actualizado</TableCell>
+                                            </>
+                                        )}
                                         <TableCell align="right">Acciones</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -308,8 +312,12 @@ const UsageCompo = () => {
                                         <TableRow key={usage.equipmentUsageId} hover>
                                             <TableCell>{usage.equipmentUsageId}</TableCell>
                                             <TableCell>{usage.usageName}</TableCell>
-                                            <TableCell>{usage.createAt}</TableCell>
-                                            <TableCell>{usage.updateAt}</TableCell>
+                                            {!isMobile && (
+                                                <>
+                                                    <TableCell>{usage.createAt}</TableCell>
+                                                    <TableCell>{usage.updateAt}</TableCell>
+                                                </>
+                                            )}
                                             <TableCell align="right">
                                                 <IconButton
                                                     size="small"
