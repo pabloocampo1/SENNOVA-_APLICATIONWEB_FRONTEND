@@ -13,7 +13,7 @@ import EquipmentPage from "./pages/admin/inventoryEquipment/EquipmentPage"
 import ReagmentPage from "./pages/admin/inventoryReagent/ReagmentPage"
 import SettingPage from "./pages/admin/SettingPage"
 import ProfilePage from "./pages/admin/ProfilePage" 
-import QuotesPage from "./pages/admin/QuotesPage"
+import QuotesPage from "./pages/admin/quotes/QuotesPage"
 import ResultsRelease from "./pages/admin/ResultsRelease"
 
 import EquipmentInfo from "./pages/admin/inventoryEquipment/EquipmentInfo"
@@ -23,6 +23,8 @@ import LocationOptionCheckInv from "./pages/admin/inventoryEquipment/LocationOpt
 import CustomersAndUsersPage from "./pages/admin/CustomerAndUsers/CustomersAndUsersPage"
 import ReagentInfo from "./pages/admin/inventoryReagent/ReagentInfo"
 import ReportEquipments from "./pages/admin/inventoryEquipment/ReportEquipments"
+import PublicLayout from "./layouts/PublicLayout"
+import QuotationCustomer from "./pages/public/QuotationCustomer"
 
 
 
@@ -39,6 +41,11 @@ function App() {
                             <Route path="/signIn" element={<AuthLayaout />}>
                                 <Route index element={<LoginPage />} />
                                 <Route path="noAccess" element={<NoAccessModal />} />
+                            </Route>
+
+                            <Route path="/public" element={<PublicLayout />}>
+                                <Route index element={<LoginPage />} />
+                                <Route path="cotizacion/ensayo" element={<QuotationCustomer />} />
                             </Route>
 
                             <Route element={<PrivateRoute allowedRoles={["ROLE_ADMIN", "ROLE_SUPERADMIN"]} />}>
