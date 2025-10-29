@@ -21,6 +21,8 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
     }
     const handlSubmit = (e) => {
         e.preventDefault()
+        console.log(listAnalisysSelected);
+        
         saveAnalysis(listAnalisysSelected)
     }
 

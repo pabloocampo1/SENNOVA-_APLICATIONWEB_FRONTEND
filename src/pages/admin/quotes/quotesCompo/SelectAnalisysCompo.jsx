@@ -49,6 +49,8 @@ const SelectAnalisysCompo = () => {
 
    
     const saveAnalysis = (listAnalisys) => {
+        console.log("list:",listAnalisys);
+        
         let originalList = analisysSelectedList;
         let newAnalysis = listAnalisys;
 
