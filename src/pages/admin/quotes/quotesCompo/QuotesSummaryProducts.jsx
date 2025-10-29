@@ -3,7 +3,7 @@ import { Box, Button, Typography } from '@mui/material';
 import React from 'react';
 import imageAdd from "../../../../assets/images/add_image.svg"
 
-const QuotesSummaryProducts = ({ samples = [] }) => {
+const QuotesSummaryProducts = ({ samples = [], handleOpenModalToSelectAnalisys }) => {
     return (
         <Box sx={{
             width: "100%",
@@ -34,7 +34,7 @@ const QuotesSummaryProducts = ({ samples = [] }) => {
                         <Typography variant='body1' sx={{ fontWeight: "500" }}>No hay productos/analisis agregados aun.</Typography>
                         <Typography variant='body2' sx={{ opacity: "0.70", mb: "20px" }}>Debes de agregar productos/analisis para la realizacion de la cotizacion.</Typography>
                         <img width={"100px"} src={imageAdd} alt="image_add" />
-                        <Button startIcon={<Add />} sx={{ mt: "20px" }} variant='outlined'>Agregar.</Button>
+                        <Button onClick={() => handleOpenModalToSelectAnalisys()} startIcon={<Add />} sx={{ mt: "20px" }} variant='outlined'>Agregar.</Button>
                     </Box>
                 )}
 

@@ -4,7 +4,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
 
-const CustomerInfoQuote = ({ saveInfoCustomer }) => {
+const CustomerInfoQuote = ({ saveInfoCustomer, handleOpenModalToSelectAnalisys }) => {
     const [customerData, setCustomerData] = useState({
         customerName: "",
         email: "",
@@ -42,7 +42,7 @@ const CustomerInfoQuote = ({ saveInfoCustomer }) => {
             flexDirection: "column",
             justifyContent: "start"
         }}>
-            <Button startIcon={<Add />} variant='outlined'>Agregar un producto {"(Analisis)"}.</Button>
+            <Button onClick={() => handleOpenModalToSelectAnalisys()} startIcon={<Add />} variant='outlined'>Agregar un producto {"(Analisis)"}.</Button>
 
             <Typography sx={{ textAlign: "center", fontWeight: "700", mt: "50px", mb: "20px" }}>Informacion del cliente</Typography>
 
