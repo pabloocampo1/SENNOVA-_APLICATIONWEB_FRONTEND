@@ -62,14 +62,13 @@ api.interceptors.response.use(
           setTokenFn(newAccessToken);
         }
 
-        // 🔥 aseguramos que siempre se reemplace el header viejo
+       
         originalRequest.headers = {
           ...(originalRequest.headers || {}),
           Authorization: `Bearer ${newAccessToken}`,
         };
 
-        // 🔥 MUY IMPORTANTE: usar axios.request en lugar de api()
-        // porque api puede volver a meter el token viejo del state
+       
         return axios.request(originalRequest);
 
       } catch (refreshError) {

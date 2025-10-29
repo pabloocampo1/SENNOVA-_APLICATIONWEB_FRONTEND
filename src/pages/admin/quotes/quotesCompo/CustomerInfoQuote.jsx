@@ -1,10 +1,10 @@
 
 import { Add, Done } from '@mui/icons-material';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 
 
-const CustomerInfoQuote = ({ saveInfoCustomer, handleOpenModalToSelectAnalisys }) => {
+const CustomerInfoQuote = forwardRef(({ saveInfoCustomer }, ref) => {
     const [customerData, setCustomerData] = useState({
         customerName: "",
         email: "",
@@ -24,10 +24,24 @@ const CustomerInfoQuote = ({ saveInfoCustomer, handleOpenModalToSelectAnalisys }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setIsSavedCustomer(true)
-        
-        // save tenporally
+        const isSaveCustomer = saveInfoCustomer(customerData)
+        setIsSavedCustomer(isSaveCustomer)
+
     }
+
+    useImperativeHandle(ref, () => ({
+        cleanForm: () => {
+            setCustomerData({
+                customerName: "",
+                email: "",
+                phoneNumber: "",
+                address: "",
+                city: ""
+            })
+
+            setIsSavedCustomer(false)
+        }
+    }))
 
     return (
         <Box sx={{
@@ -42,12 +56,12 @@ const CustomerInfoQuote = ({ saveInfoCustomer, handleOpenModalToSelectAnalisys }
             flexDirection: "column",
             justifyContent: "start"
         }}>
-            <Button onClick={() => handleOpenModalToSelectAnalisys()} startIcon={<Add />} variant='outlined'>Agregar un producto {"(Analisis)"}.</Button>
+
 
             <Typography sx={{ textAlign: "center", fontWeight: "700", mt: "50px", mb: "20px" }}>Informacion del cliente</Typography>
 
-            <Box component={"form"} onSubmit={handleSubmit} sx={{height:"100%", display:"flex", flexDirection:"column", justifyContent:"space-between"}} >
-                <Box  sx={{ display: "flex", flexDirection:"column", gap: "20px", pl:"20px", pr:"20px" }}>
+            <Box component={"form"} onSubmit={handleSubmit} sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }} >
+                <Box sx={{ display: "flex", flexDirection: "column", gap: "20px", pl: "20px", pr: "20px" }}>
                     <TextField
                         label="Nombre completo"
                         name='customerName'
@@ -92,16 +106,16 @@ const CustomerInfoQuote = ({ saveInfoCustomer, handleOpenModalToSelectAnalisys }
                     />
                 </Box>
 
-               {!isSavedCustomer ? (
-                 <Button type='submit' variant='contained'>Guardar</Button>
-               ) : (
-                <Box sx={{height:"80px", bgcolor:"green", display:"flex", justifyContent:"center", alignItems:"center", borderRadius:"10px"}}>
-                   <Typography sx={{color:"white", textAlign:"center", fontWeight:"bold"}}>Informacion guardada correctamente.</Typography> <Done sx={{color:"white",}}/>
-                </Box>
-               )}
+                {!isSavedCustomer ? (
+                    <Button type='submit' variant='contained'>Guardar informacion</Button>
+                ) : (
+                    <Box sx={{ height: "80px", bgcolor: "green", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "10px" }}>
+                        <Typography sx={{ color: "white", textAlign: "center", fontWeight: "bold" }}>Informacion guardada correctamente.</Typography> <Done sx={{ color: "white", }} />
+                    </Box>
+                )}
             </Box>
         </Box>
     );
-};
+})
 
 export default CustomerInfoQuote;

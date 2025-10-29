@@ -421,9 +421,9 @@ const EquipmentPage = () => {
                     <TableContainer
                         component={Paper}
                         sx={{
-                            width: "100%", // 👈 ocupa todo el espacio disponible
+                            width: "100%", 
                             mt: "20px",
-                            overflowX: "auto", // 👈 permite scroll horizontal si se pasa del ancho
+                            overflowX: "auto", 
                             overflowY: "hidden",
                             borderRadius: "12px",
                             boxShadow: "0 4px 10px rgba(0,0,0,0.05)",

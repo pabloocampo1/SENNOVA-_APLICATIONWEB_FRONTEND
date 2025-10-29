@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react';
 
 const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, saveAnalysis }) => {
     const [listAnalisysSelected, setListAnalisysSelected] = useState([]);
+    // const [quantity, setQuantity] = useState();
 
 
-   
     const theme = useTheme();
-   
+
 
     useEffect(() => {
 
@@ -17,23 +17,57 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
 
 
     const containgInTheList = (productId) => {
-        return listAnalisysSelected.some(product => product.productId === productId);
+        return listAnalisysSelected.some(object => object.product.productId === productId);
     }
-    const handlSubmit = (e) => {
-        e.preventDefault()
-        console.log(listAnalisysSelected);
-        
-        saveAnalysis(listAnalisysSelected)
-    }
+
 
     const toggleProduct = (product) => {
         if (containgInTheList(product.productId)) {
-
-            setListAnalisysSelected(prev => prev.filter(p => p.productId !== product.productId));
+            setListAnalisysSelected(prev => prev.filter(p => p.product.productId !== product.productId));
         } else {
+            const objectToSave = {
+                product: product,
+                quantity: 0
+            }
 
-            setListAnalisysSelected(prev => [...prev, product]);
+            setListAnalisysSelected(prev => [...prev, objectToSave]);
         }
+    }
+
+    const handleSubmitChildForm = () => {
+
+        let counterObjectWithoutQuantity = 0;
+        listAnalisysSelected.forEach(object => {
+            if (object.quantity <= 0) {
+                counterObjectWithoutQuantity++;
+            }
+        })
+
+        if (counterObjectWithoutQuantity >= 1) {
+            alert("Debes de agregar la cantidad en los analisys.")
+        } else {
+            saveAnalysis(listAnalisysSelected)
+        }
+
+
+
+    }
+
+    const addQuantity = (e, productId) => {
+
+        const quantityValue = e.target.value;
+
+        const listUpdate = listAnalisysSelected.map(item => {
+            if (item.product.productId === productId) {
+                return {
+                    ...item,
+                    quantity: quantityValue
+                };
+            }
+            return item;
+        });
+
+        setListAnalisysSelected(listUpdate);
     }
 
     return (
@@ -42,7 +76,7 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
             maxHeight: "85vh",
             display: "flex",
             flexDirection: "column",
-        }} component={"form"} onSubmit={handlSubmit}>
+        }}>
             {/* Header Section */}
             <Box sx={{
                 px: 3,
@@ -153,6 +187,7 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
                                                 label="Cantidad de analisis"
                                                 size="small"
                                                 fullWidth
+                                                onChange={(e) => addQuantity(e, product.productId)}
                                                 onClick={(e) => e.stopPropagation()}
                                                 sx={{
                                                     "& .MuiOutlinedInput-root": {
@@ -192,7 +227,7 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
                 </Button>
                 <Button
                     variant='contained'
-                    type='submit'
+                    onClick={() => handleSubmitChildForm()}
                     fullWidth
                     sx={{
                         borderRadius: "8px",
@@ -203,7 +238,7 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
                 >
                     Guardar
                 </Button>
-                
+
             </Box>
         </Box>
     );

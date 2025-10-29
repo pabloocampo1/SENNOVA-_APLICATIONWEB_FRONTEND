@@ -1,11 +1,11 @@
-import { Add } from '@mui/icons-material';
-import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Add, ExitToApp, Remove } from '@mui/icons-material';
+import { Box, Button, MenuItem, TextField, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import api from '../../../../service/axiosService';
 import GenericModal from '../../../../components/modals/GenericModal';
 import SelectAnalisysByMatrixModal from './SelectAnalisysByMatrixModal';
 
-const SelectAnalisysCompo = () => {
+const SelectAnalisysCompo = ({ saveSample }) => {
 
     const [analisysSelectedList, setAnalisysSelectedList] = useState([]);
     const [products, setProducts] = useState([]);
@@ -18,15 +18,9 @@ const SelectAnalisysCompo = () => {
         isError: false,
         message: ""
     })
+    const theme = useTheme()
     const [openModalAnalisys, setOpenModalAnalisys] = useState(false)
 
-    // get all products
-
-    // show only the matriz.
-
-    // when the user select "add analisys" show only the prodcutos with that matriz
-
-    // send the matriz and analisis to that sample
 
     const fetchProducts = async () => {
         try {
@@ -46,32 +40,55 @@ const SelectAnalisysCompo = () => {
         })
     }
 
-
-   
-    const saveAnalysis = (listAnalisys) => {
-        console.log("list:",listAnalisys);
+    const deleteAnalysisToTheList = (productId) => {
+     
         
-        let originalList = analisysSelectedList;
-        let newAnalysis = listAnalisys;
-
-        let mergeList = [...originalList, ...newAnalysis];
-
-        const conteo = mergeList.reduce((acc, product) => {
-            acc[product.analysis] = (acc[product.analysis] || 0) + 1;
-            return acc;
-        }, {});
-
-        const listaConteo = Object.entries(conteo).map(([analysis, quantity]) => ({
-            analysis,
-            quantity,
-        }));
-
-
-        setAnalisysSelectedList([
-            ...listaConteo
-        ])
-        setOpenModalAnalisys(false)
+        setAnalisysSelectedList(prev => prev.filter(object => object.product.productId !== productId))
     }
+
+
+    const saveAnalysis = (listAnalisys = []) => {
+        let updatedList = [...analisysSelectedList];
+
+        listAnalisys.forEach(newItem => {
+            const newQuantity = Number(newItem.quantity);
+
+            const index = updatedList.findIndex(
+                item => item.product.productId === newItem.product.productId
+            );
+
+            if (index !== -1) {
+                const currentQuantity = Number(updatedList[index].quantity);
+                updatedList[index] = {
+                    ...updatedList[index],
+                    quantity: currentQuantity + newQuantity
+                };
+            } else {
+                updatedList.push({
+                    ...newItem,
+                    quantity: newQuantity
+                });
+            }
+        });
+
+        setAnalisysSelectedList(updatedList);
+        setSampleData({
+            ...sampleData,
+            analisys: updatedList,
+        })
+
+        if (updatedList.length >= 1) {
+            setErrorObject({
+                isError: false,
+                message: ""
+            })
+        }
+
+        setOpenModalAnalisys(false);
+
+    };
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -82,13 +99,15 @@ const SelectAnalisysCompo = () => {
                 message: "Debes de agregar un analisis a esta prueba."
             })
         }
-        console.log(sampleData);
+        saveSample(sampleData)
 
     }
 
     useEffect(() => {
         fetchProducts()
     }, [])
+
+
 
     return (
         <Box component={"form"} sx={{
@@ -141,7 +160,6 @@ const SelectAnalisysCompo = () => {
 
                 <TextField
                     name='description'
-                    required
                     value={sampleData.description || ""}
                     onChange={(e) => handleChange(e)}
                     label="description"
@@ -171,11 +189,44 @@ const SelectAnalisysCompo = () => {
                     </Box>
                 ) : (
                     <Box>
-                        {analisysSelectedList.map(a => (
-                            <>
-                                {a.analysis}
-                                {a.quantity}
-                            </>
+
+                        <Box sx={{
+                            width: "100%",
+                            bgcolor: "background.default",
+                            pt: "10px",
+                            pb: "10px",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center"
+                        }}>
+                            <Typography>Quitar</Typography>
+                            <Typography>Analisis</Typography>
+                            <Typography>Canti.</Typography>
+                        </Box>
+                        {analisysSelectedList.map((object) => (
+                            <Box key={object.product.productId} sx={{
+                                width: "100%",
+                                pt: "10px",
+                                pb: "10px",
+                                mb: "10px",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                borderBottom: `1px solid ${theme.palette.border.primary}`
+                            }}>
+                                <Remove
+                                    onClick={() => deleteAnalysisToTheList(object.product.productId)}
+                                    sx={{
+                                        ":hover": {
+                                            bgcolor: theme.palette.border.primary,
+                                            borderRadius: "50px",
+                                            p: "2px"
+                                        }
+                                    }}
+                                />
+                                <Typography> {object.product.analysis}</Typography>
+                                <Typography> {object.quantity}</Typography>
+                            </Box>
                         ))}
                     </Box>
                 )}

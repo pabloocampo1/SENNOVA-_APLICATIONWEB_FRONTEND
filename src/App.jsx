@@ -44,7 +44,7 @@ function App() {
                             </Route>
 
                             <Route path="/public" element={<PublicLayout />}>
-                                <Route index element={<LoginPage />} />
+                               
                                 <Route path="cotizacion/ensayo" element={<QuotationCustomer />} />
                             </Route>
 
