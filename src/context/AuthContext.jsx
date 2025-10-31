@@ -1,46 +1,44 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
-import api, { injectTokenGetter, injectTokenSetter } from "../service/axiosService";
+import api, {
+    injectTokenGetter,
+    injectTokenSetter,
+} from "../service/axiosService";
 import { useNavigate } from "react-router-dom";
 
-
 export const AuthContext = createContext();
-
-
 
 export const AuthContextProvider = ({ children }) => {
     const [token, setToken] = useState("");
     const navigate = useNavigate();
     const [authObject, setAuthObject] = useState({
-        "username": "",
-        "name": "",
-        "isAuthenticate": false,
-        "position": "",
-        "imageProfile": "",
-        "role": "",
-        "preferencesNotification": null,
-        "email": "",
-        "lastSession": "",
-        "available": false
-    })
+        username: "",
+        name: "",
+        isAuthenticate: false,
+        position: "",
+        imageProfile: "",
+        role: "",
+        preferencesNotification: null,
+        email: "",
+        lastSession: "",
+        available: false,
+    });
     const [loading, setLoading] = useState(true);
-
 
     const getToken = () => {
         return token;
-    }
+    };
 
     const signIn = async (username, password) => {
         localStorage.removeItem("SectionName");
         localStorage.removeItem("PathName");
 
         try {
-            const authRequest = { "username": username, "password": password };
+            const authRequest = { username: username, password: password };
             console.log(authRequest);
             const response = await api.post("/auth/signIn", authRequest);
 
             const data = response.data;
-
 
             console.log(data);
 
@@ -54,27 +52,23 @@ export const AuthContextProvider = ({ children }) => {
                 preferencesNotification: data.userPreferenceResponse,
                 email: data.email,
                 lastSession: data.lastSession,
-                available:data.available,
-            })
+                available: data.available,
+            });
 
             if (data.accessToken) {
                 setToken(data.accessToken);
                 navigate("/system");
             }
-
         } catch (error) {
-
             return {
-                "status": false,
-                "message": error.response.data.message
+                status: false,
+                message: error.response.data.message,
             };
         }
     };
 
     const signInWithGoogle = (objectResponse) => {
-
         if (objectResponse.status) {
-
             if (objectResponse.accessToken) {
                 setAuthObject({
                     username: objectResponse.username,
@@ -83,56 +77,60 @@ export const AuthContextProvider = ({ children }) => {
                     position: objectResponse.position,
                     imageProfile: objectResponse.imageProfile,
                     role: objectResponse.authorities,
-                    preferencesNotification: objectResponse.userPreferenceResponse,
+                    preferencesNotification:
+                        objectResponse.userPreferenceResponse,
                     email: objectResponse.email,
                     lastSession: objectResponse.lastSession,
-                    available: objectResponse.available
-                })
+                    available: objectResponse.available,
+                });
                 setToken(objectResponse.accessToken);
                 console.log(objectResponse);
 
                 navigate("/system");
             }
         }
-    }
+    };
 
     const logout = async () => {
         const fetchLogout = async () => {
             try {
                 const username = authObject.username;
                 const response = await api.post("/auth/logout", null, {
-                    params: { username: username }
-                })
+                    params: { username: username },
+                });
 
                 if (response.status !== 200) {
-                    alert("Ocurrio un error al intentar cerrar sesion, por favor, notificar este error.")
+                    alert(
+                        "Ocurrio un error al intentar cerrar sesion, por favor, notificar este error."
+                    );
                 } else {
-                    localStorage.removeItem("token")
+                    localStorage.removeItem("token");
                     setAuthObject({
-                        "username": "",
-                        "name": "",
-                        "isAuthenticate": false,
-                        "imageProfile": "",
-                        "position": "",
-                        "role": "",
-                        "preferencesNotification": null,
-                        "email": null,
-                        "lastSession":"",
-                        "available": false
-                    })
-                    setToken("")
+                        username: "",
+                        name: "",
+                        isAuthenticate: false,
+                        imageProfile: "",
+                        position: "",
+                        role: "",
+                        preferencesNotification: null,
+                        email: null,
+                        lastSession: "",
+                        available: false,
+                    });
+                    setToken("");
                     localStorage.removeItem("SectionName");
                     localStorage.removeItem("PathName");
                 }
-
             } catch (error) {
-                alert("Ocurrio un error al intentar cerrar sesion, por favor, notificar este error.")
+                alert(
+                    "Ocurrio un error al intentar cerrar sesion, por favor, notificar este error."
+                );
                 console.error(error);
             }
-        }
+        };
 
-        fetchLogout()
-    }
+        fetchLogout();
+    };
 
     const tryRefresh = async () => {
         try {
@@ -148,7 +146,7 @@ export const AuthContextProvider = ({ children }) => {
                 preferencesNotification: res.data.userPreferenceResponse,
                 email: res.data.email,
                 lastSession: res.data.lastSession,
-                available: res.data.available
+                available: res.data.available,
             });
         } catch (err) {
             console.log("No se pudo refrescar el token", err);
@@ -167,20 +165,36 @@ export const AuthContextProvider = ({ children }) => {
         injectTokenSetter(setToken);
     }, [token]);
 
-
     useEffect(() => {
         if (!loading && token === "") {
-            navigate("/signIn");
+            const publicPaths = ["/signIn", "/public"];
+            const isPublic = publicPaths.some((path) =>
+                window.location.pathname.startsWith(path)
+            );
+
+            if (!isPublic) {
+                navigate("/signIn");
+            }
         }
     }, [token, loading, navigate]);
 
-
-
     return (
-        <AuthContext.Provider value={{ token, setToken, getToken, signIn, logout, authObject, loading, signInWithGoogle, setAuthObject }}>
+        <AuthContext.Provider
+            value={{
+                token,
+                setToken,
+                getToken,
+                signIn,
+                logout,
+                authObject,
+                loading,
+                signInWithGoogle,
+                setAuthObject,
+            }}
+        >
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 
 export const useAuth = () => useContext(AuthContext);
