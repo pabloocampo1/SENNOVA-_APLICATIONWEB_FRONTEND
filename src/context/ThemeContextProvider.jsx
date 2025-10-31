@@ -5,7 +5,7 @@ import { ThemeContext } from "./ThemeContext";
 export function ThemeContextProvider({ children }) {
     const [darkMode, setDarkMode] = useState(() => {
         const mode = localStorage.getItem("dark");
-        return mode === "true"
+        return mode === "true";
     });
 
     const toggleDarkMode = () => {
@@ -13,15 +13,13 @@ export function ThemeContextProvider({ children }) {
             localStorage.setItem("dark", !prev);
             return !prev;
         });
-
     };
-
 
     const theme = useMemo(
         () =>
             createTheme({
                 typography: {
-                 fontFamily: `"Space Grotesk", "Helvetica", "Arial", sans-serif`,
+                    fontFamily: `"Space Grotesk", "Helvetica", "Arial", sans-serif`,
                 },
                 palette: {
                     mode: darkMode ? "dark" : "light",
@@ -35,21 +33,22 @@ export function ThemeContextProvider({ children }) {
                         secondary: darkMode ? "#d2e4d2ff" : "#426640",
                     },
                     border: {
-                        primary: darkMode ? "#c3c3c330" : "#00000010"
-                    }
+                        primary: darkMode ? "#c3c3c330" : "#00000030",
+                    },
                 },
                 components: {
-
                     MuiOutlinedInput: {
                         styleOverrides: {
                             root: {
                                 backgroundColor: "transparent",
                                 color: "text.primary",
                                 "& input:-webkit-autofill": {
-                                    WebkitBoxShadow: "0 0 0 1000px transparent inset",
+                                    WebkitBoxShadow:
+                                        "0 0 0 1000px transparent inset",
                                     WebkitTextFillColor: "#000",
                                     caretColor: "#000",
-                                    transition: "background-color 5000s ease-in-out 0s",
+                                    transition:
+                                        "background-color 5000s ease-in-out 0s",
                                 },
                             },
                         },
@@ -61,7 +60,7 @@ export function ThemeContextProvider({ children }) {
                                 style: {
                                     fontSize: "16px",
                                     color: darkMode ? "#ffffffff" : "#000000ff",
-                                    opacity: 0.50,
+                                    opacity: 0.5,
                                     lineHeight: 1.6,
                                 },
                             },

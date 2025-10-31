@@ -1,98 +1,115 @@
-import { CheckBox } from '@mui/icons-material';
-import { Box, Button, Checkbox, FormControlLabel, Input, TextField, Tooltip, Typography, useTheme, Chip, Paper, Fade } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { CheckBox } from "@mui/icons-material";
+import {
+    Box,
+    Button,
+    Checkbox,
+    FormControlLabel,
+    Input,
+    TextField,
+    Tooltip,
+    Typography,
+    useTheme,
+    Chip,
+    Paper,
+    Fade,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 
-
-const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, saveAnalysis }) => {
+const SelectAnalisysByMatrixModal = ({
+    products = [],
+    onClose,
+    matrixSelected,
+    saveAnalysis,
+}) => {
     const [listAnalisysSelected, setListAnalisysSelected] = useState([]);
     // const [quantity, setQuantity] = useState();
 
-
     const theme = useTheme();
 
-
-    useEffect(() => {
-
-    }, [])
-
+    useEffect(() => {}, []);
 
     const containgInTheList = (productId) => {
-        return listAnalisysSelected.some(object => object.product.productId === productId);
-    }
-
+        return listAnalisysSelected.some(
+            (object) => object.product.productId === productId
+        );
+    };
 
     const toggleProduct = (product) => {
         if (containgInTheList(product.productId)) {
-            setListAnalisysSelected(prev => prev.filter(p => p.product.productId !== product.productId));
+            setListAnalisysSelected((prev) =>
+                prev.filter((p) => p.product.productId !== product.productId)
+            );
         } else {
             const objectToSave = {
                 product: product,
-                quantity: 0
-            }
+                quantity: 0,
+            };
 
-            setListAnalisysSelected(prev => [...prev, objectToSave]);
+            setListAnalisysSelected((prev) => [...prev, objectToSave]);
         }
-    }
+    };
 
     const handleSubmitChildForm = () => {
-
         let counterObjectWithoutQuantity = 0;
-        listAnalisysSelected.forEach(object => {
+        listAnalisysSelected.forEach((object) => {
             if (object.quantity <= 0) {
                 counterObjectWithoutQuantity++;
             }
-        })
+        });
 
         if (counterObjectWithoutQuantity >= 1) {
-            alert("Debes de agregar la cantidad en los analisys.")
+            alert("Debes de agregar la cantidad en los analisys.");
         } else {
-            saveAnalysis(listAnalisysSelected)
+            saveAnalysis(listAnalisysSelected);
         }
-
-
-
-    }
+    };
 
     const addQuantity = (e, productId) => {
-
         const quantityValue = e.target.value;
 
-        const listUpdate = listAnalisysSelected.map(item => {
+        const listUpdate = listAnalisysSelected.map((item) => {
             if (item.product.productId === productId) {
                 return {
                     ...item,
-                    quantity: quantityValue
+                    quantity: quantityValue,
                 };
             }
             return item;
         });
 
         setListAnalisysSelected(listUpdate);
-    }
+    };
 
     return (
-        <Box sx={{
-            width: { xs: "340px", sm: "480px", md: "540px" },
-            maxHeight: "85vh",
-            display: "flex",
-            flexDirection: "column",
-        }}>
+        <Box
+            sx={{
+                width: { xs: "340px", sm: "480px", md: "540px" },
+                maxHeight: "85vh",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             {/* Header Section */}
-            <Box sx={{
-                px: 3,
-                pt: 3,
-                pb: 2,
-                borderBottom: `1px solid ${theme.palette.divider}`,
-            }}>
-                <Typography variant='h6' sx={{
-                    fontWeight: 600,
-                    mb: 1,
-                    color: "text.primary"
-                }}>
+            <Box
+                sx={{
+                    px: 3,
+                    pt: 3,
+                    pb: 2,
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                }}
+            >
+                <Typography
+                    variant="h6"
+                    sx={{
+                        fontWeight: 600,
+                        mb: 1,
+                        color: "text.primary",
+                    }}
+                >
                     Seleccionar Análisis
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant='body2' color="text.secondary">
+                    <Typography variant="body2" color="text.secondary">
                         Matriz:
                     </Typography>
                     <Chip
@@ -105,38 +122,50 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
             </Box>
 
             {/* Products List Section */}
-            <Box sx={{
-                flex: 1,
-                overflowY: "auto",
-                px: 3,
-                py: 2,
-                "&::-webkit-scrollbar": {
-                    width: "8px",
-                },
-                "&::-webkit-scrollbar-track": {
-                    backgroundColor: "transparent",
-                },
-                "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: theme.palette.action.hover,
-                    borderRadius: "4px",
-                },
-            }}>
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: "auto",
+                    px: 3,
+                    py: 2,
+                    "&::-webkit-scrollbar": {
+                        width: "8px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                        backgroundColor: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: theme.palette.action.hover,
+                        borderRadius: "4px",
+                    },
+                }}
+            >
                 {products
-                    .filter(p => p.matrix.toLowerCase().includes(matrixSelected.toLowerCase()))
+                    .filter((p) =>
+                        p.matrix
+                            .toLowerCase()
+                            .includes(matrixSelected.toLowerCase())
+                    )
                     .map((product) => (
                         <Fade in={true} key={product.productId}>
                             <Paper
-                                elevation={containgInTheList(product.productId) ? 3 : 0}
+                                elevation={
+                                    containgInTheList(product.productId) ? 3 : 0
+                                }
                                 sx={{
                                     mb: 2,
                                     p: 2.5,
                                     cursor: "pointer",
                                     transition: "all 0.3s ease",
-                                    border: `2px solid ${containgInTheList(product.productId)
-                                        ? theme.palette.primary.main
-                                        : theme.palette.divider}`,
+                                    border: `2px solid ${
+                                        containgInTheList(product.productId)
+                                            ? theme.palette.primary.main
+                                            : theme.palette.divider
+                                    }`,
                                     borderRadius: "12px",
-                                    backgroundColor: containgInTheList(product.productId)
+                                    backgroundColor: containgInTheList(
+                                        product.productId
+                                    )
                                         ? theme.palette.action.selected
                                         : "background.paper",
                                     "&:hover": {
@@ -147,25 +176,31 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
                                 }}
                                 onClick={() => toggleProduct(product)}
                             >
-                                <Box sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "flex-start",
-                                    mb: containgInTheList(product.productId) ? 2 : 0
-                                }}>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "flex-start",
+                                        mb: containgInTheList(product.productId)
+                                            ? 2
+                                            : 0,
+                                    }}
+                                >
                                     <Typography
                                         variant="subtitle1"
                                         sx={{
                                             fontWeight: 600,
                                             color: "text.primary",
-                                            flex: 1
+                                            flex: 1,
                                         }}
                                     >
                                         {product.analysis}
                                     </Typography>
 
                                     <Checkbox
-                                        checked={containgInTheList(product.productId)}
+                                        checked={containgInTheList(
+                                            product.productId
+                                        )}
                                         onChange={() => toggleProduct(product)}
                                         onClick={(e) => e.stopPropagation()}
                                         sx={{
@@ -177,22 +212,32 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
 
                                 {containgInTheList(product.productId) && (
                                     <Fade in={true}>
-                                        <Box sx={{
-                                            pt: 2,
-                                            borderTop: `1px solid ${theme.palette.divider}`,
-                                        }}>
+                                        <Box
+                                            sx={{
+                                                pt: 2,
+                                                borderTop: `1px solid ${theme.palette.divider}`,
+                                            }}
+                                        >
                                             <TextField
                                                 type="number"
                                                 required
                                                 label="Cantidad de analisis"
                                                 size="small"
                                                 fullWidth
-                                                onChange={(e) => addQuantity(e, product.productId)}
-                                                onClick={(e) => e.stopPropagation()}
+                                                onChange={(e) =>
+                                                    addQuantity(
+                                                        e,
+                                                        product.productId
+                                                    )
+                                                }
+                                                onClick={(e) =>
+                                                    e.stopPropagation()
+                                                }
                                                 sx={{
-                                                    "& .MuiOutlinedInput-root": {
-                                                        borderRadius: "8px",
-                                                    }
+                                                    "& .MuiOutlinedInput-root":
+                                                        {
+                                                            borderRadius: "8px",
+                                                        },
                                                 }}
                                             />
                                         </Box>
@@ -204,17 +249,19 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
             </Box>
 
             {/* Footer Actions */}
-            <Box sx={{
-                display: "flex",
-                gap: 2,
-                px: 3,
-                py: 2.5,
-                borderTop: `1px solid ${theme.palette.divider}`,
-                backgroundColor: "background.paper",
-            }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: 2,
+                    px: 3,
+                    py: 2.5,
+                    borderTop: `1px solid ${theme.palette.divider}`,
+                    backgroundColor: "background.paper",
+                }}
+            >
                 <Button
-                    variant='outlined'
-                    color='inherit'
+                    variant="outlined"
+                    color="inherit"
                     fullWidth
                     onClick={() => onClose()}
                     sx={{
@@ -226,7 +273,7 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
                     Cancelar
                 </Button>
                 <Button
-                    variant='contained'
+                    variant="contained"
                     onClick={() => handleSubmitChildForm()}
                     fullWidth
                     sx={{
@@ -238,7 +285,6 @@ const SelectAnalisysByMatrixModal = ({ products = [], onClose, matrixSelected, s
                 >
                     Guardar
                 </Button>
-
             </Box>
         </Box>
     );
