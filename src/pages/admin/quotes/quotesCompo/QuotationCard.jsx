@@ -179,7 +179,6 @@ const QuotationCard = ({ data = {}, openInfo, setQuotateSelected }) => {
                             borderRadius: "12px",
                             boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
 
-                            // 👇 scroll bar elegante
                             "&::-webkit-scrollbar": {
                                 height: "8px",
                             },

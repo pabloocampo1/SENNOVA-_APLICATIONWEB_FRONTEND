@@ -22,7 +22,7 @@ const NoAccessModal = () => {
             }}
         >
             <img src={image} width={100} alt="security_image" />
-            <Typography sx={{ mt: "20px", mb: "20px" }}>
+            <Typography sx={{ mt: "20px", mb: "20px", color: "black" }}>
                 No tienes acceso a este recurso o tu sesion fue cerrada, por
                 favor inicia sesion.
             </Typography>
