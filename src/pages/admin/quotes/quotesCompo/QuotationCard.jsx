@@ -163,6 +163,7 @@ const QuotationCard = ({ data = {}, openInfo, setQuotateSelected }) => {
                 <Box
                     sx={{
                         mt: "40px",
+                        mb: "30px",
                     }}
                 >
                     <Typography sx={{ textAlign: "center" }}>

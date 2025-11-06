@@ -56,6 +56,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                 message:
                     "Debes de rellenar los datos del cliente para el envio de la cotizacion.",
             });
+            setIsLoanding(false);
             return;
         } else {
             setErrorToSendQuote({
@@ -70,6 +71,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                 message:
                     "Debes de agregar muestras y seleccionar analisis para el envio de la cotizacion.",
             });
+            setIsLoanding(false);
             return;
         } else {
             setErrorToSendQuote({

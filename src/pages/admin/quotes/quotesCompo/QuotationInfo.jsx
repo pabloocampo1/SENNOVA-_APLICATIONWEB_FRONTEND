@@ -25,12 +25,15 @@ import { AuthContext, useAuth } from "../../../../context/AuthContext";
 import GenericModal from "../../../../components/modals/GenericModal";
 import ModalToAcceptQuote from "./ModalToAcceptQuote";
 import ModalToDeleteTestRequest from "./ModalToDeleteTestRequest";
+import ModalToRejectTestRequest from "./ModalToRejectTestRequest";
 
 const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
     const [isLoanding, setIsLoanding] = useState(false);
     const [samplesInfo, setSamplesInfo] = useState({});
     const { authObject } = useAuth(AuthContext);
     const [openModalToSendEmail, setOpenModalToSendEmail] = useState(false);
+    const [openModalToRejectTestRequest, setOpenModalToRejectTestRequest] =
+        useState(false);
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
     const [dataTestRequest, setDataTestRequest] = useState(data);
 
@@ -111,6 +114,21 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                         customerInfo={dataTestRequest.customer}
                         testRequestId={dataTestRequest.testRequestId}
                         onClose={() => setOpenModalToSendEmail(false)}
+                    />
+                }
+            />
+            <GenericModal
+                open={openModalToRejectTestRequest}
+                onClose={() => setOpenModalToRejectTestRequest(false)}
+                compo={
+                    <ModalToRejectTestRequest
+                        updateData={(object) => {
+                            setDataTestRequest(object);
+                            refreshData();
+                        }}
+                        customerInfo={dataTestRequest.customer}
+                        testRequestId={dataTestRequest.testRequestId}
+                        onClose={() => setOpenModalToRejectTestRequest(false)}
                     />
                 }
             />
@@ -515,7 +533,13 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                             p: "20px",
                         }}
                     >
-                        <Button variant="contained" color="error">
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() =>
+                                setOpenModalToRejectTestRequest(true)
+                            }
+                        >
                             Rechazar
                         </Button>
                         <Button
