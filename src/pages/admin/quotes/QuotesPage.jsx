@@ -23,6 +23,9 @@ const QuotesPage = () => {
     const [open, setOpen] = React.useState(false);
     const [quotateSelected, setQuotateSelected] = useState({});
     const [isLoanding, setIsLoanding] = useState(false);
+    const [optionSelectedFilterBy, setOptionSelectedFilterBy] = useState("all");
+    const [searchBy, setSearchBy] = useState("code");
+    const [search, setSearch] = useState("");
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -32,6 +35,39 @@ const QuotesPage = () => {
         setIsLoanding(true);
         try {
             const res = await api.get("/testRequest/get-all");
+
+            setQuotationData(res.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
+    };
+
+    const getDataByState = async (state) => {
+        if (state == "all") {
+            getData();
+        }
+
+        setIsLoanding(true);
+        setOptionSelectedFilterBy(state);
+        try {
+            const res = await api.get(`/testRequest/get-by-state/${state}`);
+            setQuotationData(res.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
+    };
+
+    const getDataBySearch = async (e) => {
+        setSearch(e);
+        setIsLoanding(true);
+        try {
+            const res = await api.get(
+                `/testRequest/get-by-option-search/${searchBy}/${e}`
+            );
             console.log(res);
             setQuotationData(res.data);
         } catch (error) {
@@ -42,8 +78,10 @@ const QuotesPage = () => {
     };
 
     useEffect(() => {
-        getData();
-    }, []);
+        if (search == "") {
+            getData();
+        }
+    }, [search]);
 
     useEffect(() => {}, [quotationData]);
 
@@ -87,7 +125,10 @@ const QuotesPage = () => {
                                 display: "flex",
                             }}
                         >
-                            <SearchBar placeholder="Buscar cotizacion" />
+                            <SearchBar
+                                onSearch={(e) => getDataBySearch(e)}
+                                placeholder="Buscar cotizacion"
+                            />
                             <FormControl
                                 sx={{
                                     width: "150px",
@@ -102,15 +143,15 @@ const QuotesPage = () => {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Buscar por:"
+                                    value={searchBy}
+                                    onChange={(e) => {
+                                        setSearchBy(e.target.value);
+                                        setSearch("");
+                                    }}
                                 >
-                                    <MenuItem value={"name"}>
-                                        Sin aceptar
-                                    </MenuItem>
-                                    <MenuItem value={"serialNumber"}>
-                                        Aceptadas
-                                    </MenuItem>
-                                    <MenuItem value={"internalCode"}>
-                                        No aceptadas
+                                    <MenuItem value={"code"}>Codigo</MenuItem>
+                                    <MenuItem value={"customerName"}>
+                                        Nombre cliente
                                     </MenuItem>
                                 </Select>
                             </FormControl>
@@ -128,16 +169,21 @@ const QuotesPage = () => {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Filtrar por:"
+                                    value={optionSelectedFilterBy}
+                                    onChange={(e) =>
+                                        getDataByState(e.target.value)
+                                    }
                                 >
-                                    <MenuItem value={"name"}>
+                                    <MenuItem value={"PENDIENTE"}>
                                         Sin aceptar
                                     </MenuItem>
-                                    <MenuItem value={"serialNumber"}>
+                                    <MenuItem value={"ACEPTADA"}>
                                         Aceptadas
                                     </MenuItem>
-                                    <MenuItem value={"internalCode"}>
+                                    <MenuItem value={"RECHAZADA"}>
                                         No aceptadas
                                     </MenuItem>
+                                    <MenuItem value={"all"}>Todas</MenuItem>
                                 </Select>
                             </FormControl>
                         </Box>
@@ -151,10 +197,35 @@ const QuotesPage = () => {
                         </Button>
                     </Box>
 
+                    {quotationData.length < 1 && (
+                        <Box
+                            sx={{
+                                width: "100%",
+                                height: "50vh",
+                                mt: "20px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    textAlign: "center",
+                                    fontWeight: "bold",
+                                    fontSize: "1.8rem",
+                                }}
+                            >
+                                No hay cotizaciones.
+                            </Typography>
+                        </Box>
+                    )}
+
                     <Box
                         sx={{
                             width: "100%",
                             display: "grid",
+                            mt: "30px",
+                            mb: "50px",
                             gridTemplateColumns: {
                                 xs: "repeat(auto-fill, minmax(300px, 1fr))",
                                 md: "repeat(auto-fill, minmax(300px, 1fr))",

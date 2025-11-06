@@ -73,7 +73,6 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                     `/testRequest/get-samples-by-testRequestId/${data.testRequestId}`
                 );
                 setSamplesInfo(res.data);
-                console.log(res);
             } catch (error) {
                 console.error(error);
             } finally {
