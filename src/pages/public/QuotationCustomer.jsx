@@ -7,6 +7,7 @@ import GenericModal from "../../components/modals/GenericModal";
 import SelectAnalisysCompo from "../admin/quotes/quotesCompo/SelectAnalisysCompo";
 import api from "../../service/axiosService";
 import ButtonBack from "../../components/ButtonBack";
+import SimpleBackdrop from "../../components/SimpleBackDrop";
 
 const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
     const [openModalToSelectProduct, setOpenModalToSelectProduct] =
@@ -17,6 +18,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
         status: false,
         message: "",
     });
+    const [isLoanding, setIsLoanding] = useState(false);
 
     const [isSend, setIsSend] = useState(false);
 
@@ -46,6 +48,8 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
     };
 
     const saveAndSendQuote = async () => {
+        setIsLoanding(true);
+
         if (customerInfo == null) {
             setErrorToSendQuote({
                 status: true,
@@ -110,6 +114,8 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoanding(false);
         }
     };
 
@@ -120,9 +126,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
     };
 
     const saveSampleInfo = (sampleInfo) => {
-        console.log(sampleInfo);
         setSampleSelectByTheUser([...samplesSelectByTheUser, sampleInfo]);
-        console.log(sampleInfo);
 
         setOpenModalToSelectProduct(false);
 
@@ -144,6 +148,10 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                 flexDirection: "column",
             }}
         >
+            <SimpleBackdrop
+                open={isLoanding}
+                text="Enviando y guardando cotizacion..."
+            />
             {/* modals */}
 
             {isAdmin && (

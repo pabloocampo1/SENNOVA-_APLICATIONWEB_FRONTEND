@@ -15,24 +15,29 @@ import { Add, RequestQuote } from "@mui/icons-material";
 import api from "../../../service/axiosService";
 import QuotationCard from "./quotesCompo/QuotationCard";
 import QuotationInfo from "./quotesCompo/QuotationInfo";
+import SimpleBackdrop from "../../../components/SimpleBackDrop";
 
 const QuotesPage = () => {
     const [showQuotation, setShowQuotation] = useState(false);
     const [quotationData, setQuotationData] = useState([]);
     const [open, setOpen] = React.useState(false);
     const [quotateSelected, setQuotateSelected] = useState({});
+    const [isLoanding, setIsLoanding] = useState(false);
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
 
     const getData = async () => {
+        setIsLoanding(true);
         try {
             const res = await api.get("/testRequest/get-all");
             console.log(res);
             setQuotationData(res.data);
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoanding(false);
         }
     };
 
@@ -40,17 +45,26 @@ const QuotesPage = () => {
         getData();
     }, []);
 
+    useEffect(() => {}, [quotationData]);
+
     return (
         <Box>
             {showQuotation ? (
                 <Box>
                     <QuotationCustomer
                         isAdmin={true}
-                        backSectionQuotation={() => setShowQuotation(false)}
+                        backSectionQuotation={() => {
+                            setShowQuotation(false);
+                            getData();
+                        }}
                     />
                 </Box>
             ) : (
                 <Box>
+                    <SimpleBackdrop
+                        open={isLoanding}
+                        text="Cargando cotizaciones"
+                    />
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Typography component={"h2"} variant="h2">
                             Gestio de cotizaciones y creacion de ensayos.
@@ -164,7 +178,11 @@ const QuotesPage = () => {
                         open={open}
                         onClose={toggleDrawer(false)}
                     >
-                        <QuotationInfo data={quotateSelected} />
+                        <QuotationInfo
+                            data={quotateSelected}
+                            onClose={toggleDrawer(false)}
+                            refreshData={() => getData()}
+                        />
                     </Drawer>
                 </Box>
             )}

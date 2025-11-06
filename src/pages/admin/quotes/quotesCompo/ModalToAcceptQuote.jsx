@@ -2,12 +2,40 @@ import { Close, Info, Send } from "@mui/icons-material";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import CustomerInfoQuote from "./CustomerInfoQuote";
+import api from "../../../../service/axiosService";
+import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 
-const ModalToAcceptQuote = ({ onClose, customerInfo = {} }) => {
-    const [text, setText] = useState("");
+const ModalToAcceptQuote = ({
+    onClose,
+    customerInfo = {},
+    updateData,
+    testRequestId,
+}) => {
+    const [objectToSend, setObjectToSend] = useState({
+        emailCustomer: customerInfo.email,
+        isApproved: true,
+        message: "",
+        testRequestId: testRequestId,
+    });
+    const [isLoanding, setIsLoanding] = useState(false);
 
-    const handleSend = () => {
-        alert(text);
+    const handleSend = async () => {
+        setIsLoanding(true);
+        try {
+            const res = await api.put(
+                "/testRequest/accept-or-reject-test-request",
+                objectToSend
+            );
+
+            if (res.status == 200) {
+                updateData(res.data);
+                onClose();
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
     };
 
     return (
@@ -16,6 +44,7 @@ const ModalToAcceptQuote = ({ onClose, customerInfo = {} }) => {
                 width: { xs: "300px", md: "600px" },
             }}
         >
+            <SimpleBackdrop open={isLoanding} text="Aceptando cotizacion..." />
             <Box
                 sx={{
                     width: "100%",
@@ -57,8 +86,13 @@ const ModalToAcceptQuote = ({ onClose, customerInfo = {} }) => {
                 minRows={4}
                 maxRows={8}
                 fullWidth
-                value={text || ""}
-                onChange={(e) => setText(e.target.value)}
+                value={objectToSend.message || ""}
+                onChange={(e) =>
+                    setObjectToSend({
+                        ...objectToSend,
+                        message: e.target.value,
+                    })
+                }
                 variant="outlined"
                 sx={{
                     mt: 2,

@@ -24,12 +24,15 @@ import api from "../../../../service/axiosService";
 import { AuthContext, useAuth } from "../../../../context/AuthContext";
 import GenericModal from "../../../../components/modals/GenericModal";
 import ModalToAcceptQuote from "./ModalToAcceptQuote";
+import ModalToDeleteTestRequest from "./ModalToDeleteTestRequest";
 
-const QuotationInfo = ({ data = {} }) => {
+const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
     const [isLoanding, setIsLoanding] = useState(false);
     const [samplesInfo, setSamplesInfo] = useState({});
     const { authObject } = useAuth(AuthContext);
     const [openModalToSendEmail, setOpenModalToSendEmail] = useState(false);
+    const [openModalToDelete, setOpenModalToDelete] = useState(false);
+    const [dataTestRequest, setDataTestRequest] = useState(data);
 
     const formatCurrency = (value) =>
         new Intl.NumberFormat("es-CO", {
@@ -38,8 +41,14 @@ const QuotationInfo = ({ data = {} }) => {
             minimumFractionDigits: 2,
         }).format(value);
 
+    const onCloseDeleted = () => {
+        onClose();
+        setOpenModalToDelete(false);
+
+        refreshData();
+    };
     const asignedColorState = () => {
-        switch (data.state) {
+        switch (dataTestRequest.state) {
             case "PENDIENTE":
                 return "#FBBF24";
 
@@ -72,6 +81,8 @@ const QuotationInfo = ({ data = {} }) => {
         getDataSamplesByTestRequest();
     }, []);
 
+    useEffect(() => {}, [dataTestRequest]);
+
     if (data.testRequestId == null) {
         return (
             <Box>
@@ -93,11 +104,30 @@ const QuotationInfo = ({ data = {} }) => {
                 onClose={() => setOpenModalToSendEmail(false)}
                 compo={
                     <ModalToAcceptQuote
-                        customerInfo={data.customer}
+                        updateData={(object) => {
+                            setDataTestRequest(object);
+                            refreshData();
+                        }}
+                        customerInfo={dataTestRequest.customer}
+                        testRequestId={dataTestRequest.testRequestId}
                         onClose={() => setOpenModalToSendEmail(false)}
                     />
                 }
             />
+            <GenericModal
+                open={openModalToDelete}
+                onClose={() => setOpenModalToDelete(false)}
+                compo={
+                    <ModalToDeleteTestRequest
+                        testRequestId={dataTestRequest.testRequestId}
+                        isAccepted={dataTestRequest.isApproved}
+                        onCloseDeleted={() => onCloseDeleted()}
+                        requestCode={dataTestRequest.requestCode}
+                        onClose={() => setOpenModalToDelete(false)}
+                    />
+                }
+            />
+
             <SimpleBackdrop
                 open={isLoanding}
                 text="Cargando informacion de la cotizacion"
@@ -141,7 +171,7 @@ const QuotationInfo = ({ data = {} }) => {
                 </Box>
 
                 {/* options */}
-                <Box>
+                <Box onClick={() => setOpenModalToDelete(true)}>
                     {authObject.role == "ROLE_SUPERADMIN" ? (
                         <Tooltip title="Eliminar cotizacion">
                             <DeleteOutlineOutlined
@@ -157,7 +187,7 @@ const QuotationInfo = ({ data = {} }) => {
             <Box sx={{ width: "100%", p: "40px" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                     <Typography sx={{ fontWeight: "bold" }}>
-                        Cotizacion/ensayo #{data.requestCode}
+                        Cotizacion/ensayo #{dataTestRequest.requestCode}
                     </Typography>
                     <Box
                         sx={{
@@ -180,7 +210,7 @@ const QuotationInfo = ({ data = {} }) => {
                             }}
                         ></Box>
                         <Typography variant="body2" color={asignedColorState()}>
-                            {data.state}
+                            {dataTestRequest.state}
                         </Typography>
                     </Box>
                 </Box>
@@ -195,7 +225,7 @@ const QuotationInfo = ({ data = {} }) => {
                     <Typography variant="body2">Fecha de creacion</Typography>
 
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {data.createAt}
+                        {dataTestRequest.createAt}
                     </Typography>
                 </Box>
 
@@ -209,7 +239,7 @@ const QuotationInfo = ({ data = {} }) => {
                     <Typography variant="body2">Esta aceptado</Typography>
 
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {!data.isApproved ? "No" : "Si"}
+                        {!dataTestRequest.isApproved ? "No" : "Si"}
                     </Typography>
                 </Box>
 
@@ -221,19 +251,19 @@ const QuotationInfo = ({ data = {} }) => {
                     }}
                 >
                     <Typography variant="body2">
-                        {!data.isApproved
+                        {!dataTestRequest.isApproved
                             ? "Fecha de rechazo"
                             : "Fecha de aprovacion"}
                     </Typography>
 
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {!data.isApproved
-                            ? data.ApprovalDate == null
-                                ? "Sin fecha de rechazo"
-                                : data.ApprovalDate
-                            : data.discardDate == null
-                            ? "Sin fecha de aprovacion"
-                            : data.discardDate}
+                        {dataTestRequest.isApproved
+                            ? dataTestRequest.approvalDate == null
+                                ? "Sin fecha de aprovacion"
+                                : dataTestRequest.approvalDate
+                            : dataTestRequest.discardDate == null
+                            ? "Sin fecha de rechazo"
+                            : dataTestRequest.discardDate}
                     </Typography>
                 </Box>
                 <Box
@@ -246,7 +276,7 @@ const QuotationInfo = ({ data = {} }) => {
                     <Typography variant="body2">Total de muestras</Typography>
 
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {data.samples.length}
+                        {dataTestRequest.samples.length}
                     </Typography>
                 </Box>
                 <Box
@@ -259,124 +289,138 @@ const QuotationInfo = ({ data = {} }) => {
                     <Typography variant="body2">Precio total</Typography>
 
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {formatCurrency(data.price)}
+                        {formatCurrency(dataTestRequest.price)}
                     </Typography>
                 </Box>
             </Box>
 
             <Divider sx={{ mt: "20px" }}>Detalles de las muestras</Divider>
-
             <Box sx={{ width: "100%", p: "40px" }}>
-                {Object.entries(samplesInfo).map(([k, v], index) => {
-                    return (
-                        <Box
-                            key={k}
-                            sx={{
-                                mb: "20px",
-                                bgcolor: "background.paper",
-                                p: "10px",
-                                borderRadius: "10px",
-                            }}
-                        >
-                            <Typography
-                                variant="body2"
-                                sx={{ textAlign: "center" }}
-                            >
-                                muestra {index + 1}
-                            </Typography>
-                            <Typography
-                                variant="body1"
+                {isLoanding ? null : Object.keys(samplesInfo).length === 0 ? (
+                    <Typography
+                        sx={{
+                            textAlign: "center",
+                            fontStyle: "italic",
+                            color: "text.secondary",
+                        }}
+                    >
+                        No se cargaron las muestras para esta cotización.
+                    </Typography>
+                ) : (
+                    Object.entries(samplesInfo).map(([k, v], index) => {
+                        return (
+                            <Box
+                                key={k}
                                 sx={{
-                                    fontWeight: "500",
                                     mb: "20px",
-                                    textAlign: "center",
-                                    color: "primary.main",
+                                    bgcolor: "background.paper",
+                                    p: "10px",
+                                    borderRadius: "10px",
                                 }}
                             >
-                                {k}
-                            </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ textAlign: "center" }}
+                                >
+                                    Muestra {index + 1}
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    sx={{
+                                        fontWeight: "500",
+                                        mb: "20px",
+                                        textAlign: "center",
+                                        color: "primary.main",
+                                    }}
+                                >
+                                    {k}
+                                </Typography>
 
-                            <TableContainer>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Analisis</TableCell>
-                                            <TableCell>P. unitario</TableCell>
-                                            <TableCell>Cantidad</TableCell>
-                                            <TableCell>P. total</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-
-                                    <TableBody>
-                                        {v.map((s, index) => (
-                                            <TableRow key={index}>
+                                <TableContainer>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Analisis</TableCell>
                                                 <TableCell>
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                        }}
-                                                    >
-                                                        <Circle
+                                                    P. unitario
+                                                </TableCell>
+                                                <TableCell>Cantidad</TableCell>
+                                                <TableCell>P. total</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+
+                                        <TableBody>
+                                            {v.map((s, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>
+                                                        <Box
                                                             sx={{
-                                                                color: "primary.third",
-                                                                width: "15px",
-                                                                mr: "5px",
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
                                                             }}
-                                                        />
+                                                        >
+                                                            <Circle
+                                                                sx={{
+                                                                    color: "primary.third",
+                                                                    width: "15px",
+                                                                    mr: "5px",
+                                                                }}
+                                                            />
+                                                            <Typography
+                                                                variant="body2"
+                                                                sx={{
+                                                                    opacity:
+                                                                        "0.80",
+                                                                }}
+                                                            >
+                                                                {s.analysis}
+                                                            </Typography>
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell>
                                                         <Typography
                                                             variant="body2"
                                                             sx={{
                                                                 opacity: "0.80",
                                                             }}
                                                         >
-                                                            {s.analysis}
+                                                            {s.priceByAnalysis}
                                                         </Typography>
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            opacity: "0.80",
-                                                        }}
-                                                    >
-                                                        {s.priceByAnalysis}
-                                                    </Typography>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            opacity: "0.80",
-                                                        }}
-                                                    >
-                                                        {
-                                                            s.quantityAnalysisBySample
-                                                        }
-                                                    </Typography>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            opacity: "0.80",
-                                                        }}
-                                                    >
-                                                        {formatCurrency(
-                                                            s.total
-                                                        )}
-                                                    </Typography>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Box>
-                    );
-                })}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                opacity: "0.80",
+                                                            }}
+                                                        >
+                                                            {
+                                                                s.quantityAnalysisBySample
+                                                            }
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                opacity: "0.80",
+                                                            }}
+                                                        >
+                                                            {formatCurrency(
+                                                                s.total
+                                                            )}
+                                                        </Typography>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Box>
+                        );
+                    })
+                )}
             </Box>
 
             <Divider sx={{ mt: "20px" }}>Cliente</Divider>
@@ -390,7 +434,8 @@ const QuotationInfo = ({ data = {} }) => {
                 >
                     <Typography variant="body2">Nombre</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {data.customer?.customerName || "Sin información"}
+                        {dataTestRequest.customer?.customerName ||
+                            "Sin información"}
                     </Typography>
                 </Box>
                 <Box
@@ -402,7 +447,7 @@ const QuotationInfo = ({ data = {} }) => {
                 >
                     <Typography variant="body2">Correo</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {data.customer?.email || "Sin información"}
+                        {dataTestRequest.customer?.email || "Sin información"}
                     </Typography>
                 </Box>
                 <Box
@@ -414,7 +459,8 @@ const QuotationInfo = ({ data = {} }) => {
                 >
                     <Typography variant="body2">Teléfono</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {data.customer?.phoneNumber || "Sin información"}
+                        {dataTestRequest.customer?.phoneNumber ||
+                            "Sin información"}
                     </Typography>
                 </Box>
                 <Box
@@ -426,7 +472,7 @@ const QuotationInfo = ({ data = {} }) => {
                 >
                     <Typography variant="body2">Direccion</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {data.customer?.address || "Sin información"}
+                        {dataTestRequest.customer?.address || "Sin información"}
                     </Typography>
                 </Box>
                 <Box
@@ -438,13 +484,13 @@ const QuotationInfo = ({ data = {} }) => {
                 >
                     <Typography variant="body2">Ciudad</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {data.customer?.city || "Sin información"}
+                        {dataTestRequest.customer?.city || "Sin información"}
                     </Typography>
                 </Box>
             </Box>
 
             {/* validate if the quotation was accepted */}
-            {data.isApproved ? (
+            {dataTestRequest.isApproved ? (
                 <Typography
                     sx={{
                         bgcolor: "#42664030",
