@@ -1,57 +1,72 @@
-import { AccessTimeOutlined, EmailOutlined, LockClockOutlined, PersonOffOutlined } from '@mui/icons-material';
-import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Switch, Typography, useMediaQuery, useTheme } from '@mui/material';
-import  { useContext, useEffect, useState } from 'react';
-import ProductsCompo from '../../components/SettingComponents/ProductsCompo';
-import UsageCompo from '../../components/SettingComponents/UsageCompo';
-import LocationsCompo from '../../components/SettingComponents/LocationsCompo';
-import { AuthContext } from '../../context/AuthContext';
-import api from '../../service/axiosService';
-import GenericModal from '../../components/modals/GenericModal';
-import ChangeEmailCompo from '../../components/forms/Auth/changeEmailCompo';
-import ChangePasswordCompo from '../../components/forms/Auth/ChangePasswordCompo';
-import DeactivateAccountConfirmation from '../../components/SettingComponents/DeactivateAccountConfirmation';
-import ButtonBack from '../../components/ButtonBack';
+import {
+    AccessTimeOutlined,
+    AttachMoney,
+    EmailOutlined,
+    Inventory,
+    Inventory2,
+    Inventory2Outlined,
+    LockClockOutlined,
+    PersonOffOutlined,
+} from "@mui/icons-material";
+import {
+    Box,
+    Button,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Switch,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import ProductsCompo from "../../components/SettingComponents/ProductsCompo";
+import UsageCompo from "../../components/SettingComponents/UsageCompo";
+import LocationsCompo from "../../components/SettingComponents/LocationsCompo";
+import { AuthContext } from "../../context/AuthContext";
+import api from "../../service/axiosService";
+import GenericModal from "../../components/modals/GenericModal";
+import ChangeEmailCompo from "../../components/forms/Auth/changeEmailCompo";
+import ChangePasswordCompo from "../../components/forms/Auth/ChangePasswordCompo";
+import DeactivateAccountConfirmation from "../../components/SettingComponents/DeactivateAccountConfirmation";
+import ButtonBack from "../../components/ButtonBack";
 
 const SettingPage = () => {
     const { authObject, setAuthObject } = useContext(AuthContext);
-    const [preferences, setPreferences] = useState({
-        inventoryEquipment: false,
-        inventoryReagents: false,
-        quotations: false,
-        results: false,
-    });
+    const [preferences, setPreferences] = useState(
+        authObject.preferencesNotification
+    );
     const [openChangeEmail, setOpenChangeEmail] = useState(false);
     const [openChangePassword, setOpenChangePassword] = useState(false);
     const [openDeactivateAccount, setOpenDeactivateAccount] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-
-
-
-
-    const handleSubmitPreferences = (e) => {
-        e.preventDefault();
-        const changePreferences = async () => {
-            try {
-                const response = await api.post(`/users/changePreferences/${authObject.username}`, preferences);
-                console.log(response);
-
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        changePreferences()
-
-    }
-
-    const handlePreferences = (e) => {
+    const handlePreferences = async (e) => {
         const { name, checked } = e.target;
-        setPreferences((prev) => ({
-            ...prev,
+
+        // Crea una copia actualizada de las preferencias
+        const updatedPreferences = {
+            ...preferences,
             [name]: checked,
-        }));
+        };
+
+        // Actualiza el estado
+        setPreferences(updatedPreferences);
+
+        // Envía la versión actualizada al backend
+        try {
+            const response = await api.post(
+                `/users/changePreferences/${authObject.username}`,
+                updatedPreferences
+            );
+            console.log(response);
+
+            setPreferences(response.data);
+        } catch (error) {
+            console.error("❌ Error al actualizar preferencias:", error);
+        }
     };
 
     const formatDate = (dateString) => {
@@ -65,148 +80,171 @@ const SettingPage = () => {
         });
     };
 
-
-
     useEffect(() => {
-        console.log("preferences:" + authObject.preferencesNotification);
+        Object.entries(authObject.preferencesNotification).forEach(
+            (element) => {
+                console.log(element);
+            }
+        );
 
-        setPreferences(authObject.preferencesNotification)
-    }, [])
-
+        setPreferences(authObject.preferencesNotification);
+    }, []);
 
     return (
         <Box>
-
-            <Box sx={{mb:"20px"}}>
+            <Box sx={{ mb: "40px" }}>
                 <ButtonBack />
             </Box>
-            <Typography component={"h2"} sx={{
-                fontWeight: "bold",
-                fontSize: "24px",
-                opacity: "0.90"
-            }}>
+            <Typography
+                component={"h2"}
+                sx={{
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    opacity: "0.90",
+                }}
+            >
                 Configuración del sistema
             </Typography>
-
-            <Typography variant='description'>
+            <Typography variant="description">
                 Preferencias de notificación (via email).
             </Typography>
 
-            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "end", mb: "20px" }} component={"form"} onSubmit={handleSubmitPreferences}>
-                <Box sx={{
-                    width: "100%",
-                    height: "auto",
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                    gap: "10px",
-                    mt: "20px",
-                    mb: "20px"
-                }}>
-
-                    <Box sx={{
-                        height: "100px",
-                        borderRadius: "10px",
-                        border: `1px solid #acacacff`,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        p: "20px"
-                    }} >
-                        <Box>
-                            <Typography sx={{ fontWeight: "600" }}>Inventario - Equipos</Typography>
-                            <Typography variant='description'>Recibir alertas de mantenimiento programado.</Typography>
-                        </Box>
+            <List
+                sx={{ border: "1px solid #ddd", borderRadius: 2, mt: "20px" }}
+            >
+                <ListItem
+                    secondaryAction={
                         <Switch
                             name="inventoryEquipment"
                             checked={preferences.inventoryEquipment}
                             onChange={handlePreferences}
                         />
-                    </Box>
+                    }
+                >
+                    <ListItemIcon>
+                        <Inventory color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Inventario 1 - Equipos"
+                        secondary="Recibir alertas de mantenimiento programado."
+                    />
+                </ListItem>
 
-                    <Box sx={{
-                        height: "100px",
-                        borderRadius: "10px",
-                        border: `1px solid #acacacff`,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        p: "20px"
-                    }} >
-                        <Box>
-                            <Typography sx={{ fontWeight: "600" }}>Inventario - Reactivos</Typography>
-                            <Typography variant='description'>Notificar bajo stock o vencimiento cercano.</Typography>
-                        </Box>
+                <ListItem
+                    secondaryAction={
                         <Switch
                             name="inventoryReagents"
                             checked={preferences.inventoryReagents}
                             onChange={handlePreferences}
                         />
-                    </Box>
+                    }
+                >
+                    <ListItemIcon>
+                        <Inventory2Outlined color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary=" Inventario 2 - Reactivos"
+                        secondary="Notificar bajo stock o vencimiento cercano."
+                    />
+                </ListItem>
 
-                    <Box sx={{
-                        height: "100px",
-                        borderRadius: "10px",
-                        border: `1px solid #acacacff`,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        p: "20px"
-                    }} >
-                        <Box>
-                            <Typography sx={{ fontWeight: "600" }}>Cotizaciones</Typography>
-                            <Typography variant='description'>Avisar sobre nuevas solicitudes de cotización.</Typography>
-                        </Box>
+                <ListItem
+                    secondaryAction={
                         <Switch
                             name="quotations"
                             checked={preferences.quotations}
                             onChange={handlePreferences}
                         />
-                    </Box>
+                    }
+                >
+                    <ListItemIcon>
+                        <AttachMoney color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Cotizaciones"
+                        secondary=" Avisar sobre nuevas solicitudes de cotización."
+                    />
+                </ListItem>
 
-                    <Box sx={{
-                        height: "100px",
-                        borderRadius: "10px",
-                        border: `1px solid #acacacff`,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        p: "20px"
-                    }} >
-                        <Box>
-                            <Typography sx={{ fontWeight: "600" }}>Resultados</Typography>
-                            <Typography variant='description'>Notificación al concluir análisis de muestras.</Typography>
-                        </Box>
+                <ListItem
+                    secondaryAction={
                         <Switch
                             name="results"
                             checked={preferences.results}
                             onChange={handlePreferences}
                         />
-                    </Box>
-
-                </Box>
-                <Button variant='contained' type='submit'>Cambiar preferencias</Button>
-            </Box>
-
-
+                    }
+                >
+                    <ListItemIcon>
+                        <AccessTimeOutlined color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Resultados de ensayos"
+                        secondary="Notificación al concluir análisis de muestras."
+                    />
+                </ListItem>
+            </List>
             <Box sx={{ mb: "50px" }}>
+                <GenericModal
+                    open={openChangeEmail}
+                    compo={
+                        <ChangeEmailCompo
+                            authObject={authObject}
+                            setAuthObject={setAuthObject}
+                            onClose={() => setOpenChangeEmail(false)}
+                        />
+                    }
+                    onClose={() => setOpenChangeEmail(false)}
+                />
+                <GenericModal
+                    open={openChangePassword}
+                    compo={
+                        <ChangePasswordCompo
+                            authObject={authObject}
+                            onClose={() => setOpenChangePassword(false)}
+                        />
+                    }
+                    onClose={() => setOpenChangePassword(false)}
+                />
+                <GenericModal
+                    open={openDeactivateAccount}
+                    compo={
+                        <DeactivateAccountConfirmation
+                            authObject={authObject}
+                            setAuthObject={setAuthObject}
+                            onClose={() => setOpenDeactivateAccount(false)}
+                        />
+                    }
+                    onClose={() => setOpenDeactivateAccount(false)}
+                />
 
-                <GenericModal open={openChangeEmail} compo={<ChangeEmailCompo authObject={authObject} setAuthObject={setAuthObject} onClose={() => setOpenChangeEmail(false)} />} onClose={() => setOpenChangeEmail(false)} />
-                <GenericModal open={openChangePassword} compo={<ChangePasswordCompo authObject={authObject} onClose={() => setOpenChangePassword(false)} />} onClose={() => setOpenChangePassword(false)} />
-                <GenericModal open={openDeactivateAccount} compo={<DeactivateAccountConfirmation authObject={authObject} setAuthObject={setAuthObject} onClose={() => setOpenDeactivateAccount(false)} />} onClose={() => setOpenDeactivateAccount(false)} />
-
-                <Typography component={"h3"} variant='h3' sx={{ pt: "40px", pb: "20px", fontSize: "24px" }}>
+                <Typography
+                    component={"h3"}
+                    variant="h3"
+                    sx={{ pt: "40px", fontSize: "24px" }}
+                >
                     Seguridad
                 </Typography>
+                <Typography variant="description">
+                    Parámetros de autenticación y control de acceso.
+                </Typography>
 
-
-                <List sx={{ border: "1px solid #ddd", borderRadius: 2 }}>
+                <List
+                    sx={{
+                        border: "1px solid #ddd",
+                        borderRadius: 2,
+                        mt: "20px",
+                    }}
+                >
                     <ListItem
                         secondaryAction={
-                            <Button variant="outlined" onClick={() => setOpenChangeEmail(true)}>
+                            <Button
+                                variant="outlined"
+                                onClick={() => setOpenChangeEmail(true)}
+                            >
                                 Cambiar
                             </Button>
                         }
-
                     >
                         <ListItemIcon>
                             <EmailOutlined color="primary" />
@@ -219,7 +257,10 @@ const SettingPage = () => {
 
                     <ListItem
                         secondaryAction={
-                            <Button variant="outlined" onClick={() => setOpenChangePassword(true)}>
+                            <Button
+                                variant="outlined"
+                                onClick={() => setOpenChangePassword(true)}
+                            >
                                 Cambiar
                             </Button>
                         }
@@ -236,11 +277,22 @@ const SettingPage = () => {
                     <ListItem
                         secondaryAction={
                             authObject.available ? (
-                                <Button variant='outlined' sx={{ borderColor: "red", color: "red" }} onClick={() => setOpenDeactivateAccount(true)}>
+                                <Button
+                                    variant="outlined"
+                                    sx={{ borderColor: "red", color: "red" }}
+                                    onClick={() =>
+                                        setOpenDeactivateAccount(true)
+                                    }
+                                >
                                     Desactivar
                                 </Button>
                             ) : (
-                                <Button variant='outlined' onClick={() => setOpenDeactivateAccount(true)}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        setOpenDeactivateAccount(true)
+                                    }
+                                >
                                     Activar
                                 </Button>
                             )
@@ -255,7 +307,6 @@ const SettingPage = () => {
                         />
                     </ListItem>
 
-
                     <ListItem>
                         <ListItemIcon>
                             <AccessTimeOutlined color="primary" />
@@ -266,21 +317,13 @@ const SettingPage = () => {
                         />
                     </ListItem>
                 </List>
-
             </Box>
-
-
-            <Box >
+            <Box>
                 <ProductsCompo isMobile={isMobile} />
                 <UsageCompo isMobile={isMobile} />
                 <LocationsCompo isMobile={isMobile} />
             </Box>
-
-
-
-
         </Box>
-
     );
 };
 

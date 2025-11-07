@@ -73,7 +73,7 @@ const CustomerInfoQuote = forwardRef(({ saveInfoCustomer }, ref) => {
                     height: "100%",
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "space-between",
+                    justifyContent: "space-evenly",
                 }}
             >
                 <Box
