@@ -33,10 +33,15 @@ const QuotesPage = () => {
 
     const getData = async () => {
         setIsLoanding(true);
+        // const ob = {
+        //     testRequestId: 12,
+        //     users: [1, 2, 3],
+        // };
         try {
-            const res = await api.get("/testRequest/get-all");
-
+            const res = await api.get("/testRequest/get-all/quotation");
+            // const res1 = await api.post("/testRequest/assign-members", ob);
             setQuotationData(res.data);
+            // console.log(res1);
         } catch (error) {
             console.error(error);
         } finally {

@@ -1,5 +1,5 @@
-import { Close, Info, Send } from "@mui/icons-material";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Close, CloseOutlined, Info, Send } from "@mui/icons-material";
+import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import CustomerInfoQuote from "./CustomerInfoQuote";
 import api from "../../../../service/axiosService";
@@ -7,6 +7,7 @@ import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 
 const ModalToAcceptQuote = ({
     onClose,
+    openSelectMembers,
     customerInfo = {},
     updateData,
     testRequestId,
@@ -18,6 +19,7 @@ const ModalToAcceptQuote = ({
         testRequestId: testRequestId,
     });
     const [isLoanding, setIsLoanding] = useState(false);
+    const theme = useTheme();
 
     const handleSend = async () => {
         setIsLoanding(true);
@@ -27,10 +29,9 @@ const ModalToAcceptQuote = ({
                 objectToSend
             );
 
-            if (res.status == 200) {
-                updateData(res.data);
-                onClose();
-            }
+            updateData(res.data);
+            openSelectMembers();
+            onClose();
         } catch (error) {
             console.error(error);
         } finally {
@@ -45,30 +46,25 @@ const ModalToAcceptQuote = ({
             }}
         >
             <SimpleBackdrop open={isLoanding} text="Aceptando cotizacion..." />
+
             <Box
                 sx={{
-                    width: "100%",
-                    display: "flex",
+                    display: "grid",
                     justifyContent: "end",
-                    mb: "40px",
+                    mb: "20px",
                 }}
+                onClick={() => onClose()}
             >
-                <Box
-                    onClick={() => onClose()}
+                <CloseOutlined
                     sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        p: "10px",
                         ":hover": {
-                            bgcolor: "#42664090",
-                            borderRadius: "20px",
-                            cursor: "pointer",
+                            bgcolor: `${theme.palette.primary.main + "20"}`,
+                            p: "2px",
+                            borderRadius: "50px",
+                            border: `1pz solid ${theme.palette.primary.main}`,
                         },
                     }}
-                >
-                    <Typography>Cancelar</Typography>
-                    <Close />
-                </Box>
+                />
             </Box>
 
             <Typography variant="h3" sx={{ textAlign: "center", mb: "20px" }}>

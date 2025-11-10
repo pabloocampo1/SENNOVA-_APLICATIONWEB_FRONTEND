@@ -26,6 +26,7 @@ import GenericModal from "../../../../components/modals/GenericModal";
 import ModalToAcceptQuote from "./ModalToAcceptQuote";
 import ModalToDeleteTestRequest from "./ModalToDeleteTestRequest";
 import ModalToRejectTestRequest from "./ModalToRejectTestRequest";
+import AssignMemberWhenAccept from "./assignMemberWhenAccept";
 
 const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
     const [isLoanding, setIsLoanding] = useState(false);
@@ -36,6 +37,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
         useState(false);
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
     const [dataTestRequest, setDataTestRequest] = useState(data);
+    const [openModalAssignUsers, setOpenModalAssignUsers] = useState(false);
 
     const formatCurrency = (value) =>
         new Intl.NumberFormat("es-CO", {
@@ -113,9 +115,11 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                         customerInfo={dataTestRequest.customer}
                         testRequestId={dataTestRequest.testRequestId}
                         onClose={() => setOpenModalToSendEmail(false)}
+                        openSelectMembers={() => setOpenModalAssignUsers(true)}
                     />
                 }
             />
+
             <GenericModal
                 open={openModalToRejectTestRequest}
                 onClose={() => setOpenModalToRejectTestRequest(false)}
@@ -141,6 +145,17 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                         onCloseDeleted={() => onCloseDeleted()}
                         requestCode={dataTestRequest.requestCode}
                         onClose={() => setOpenModalToDelete(false)}
+                    />
+                }
+            />
+            <GenericModal
+                open={openModalAssignUsers}
+                onClose={() => setOpenModalAssignUsers(false)}
+                compo={
+                    <AssignMemberWhenAccept
+                        testRequestId={dataTestRequest.testRequestId}
+                        requestCode={dataTestRequest.requestCode}
+                        onClose={() => setOpenModalAssignUsers(false)}
                     />
                 }
             />
