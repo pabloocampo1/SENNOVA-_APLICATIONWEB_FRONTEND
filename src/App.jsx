@@ -14,7 +14,7 @@ import ReagmentPage from "./pages/admin/inventoryReagent/ReagmentPage";
 import SettingPage from "./pages/admin/SettingPage";
 import ProfilePage from "./pages/admin/ProfilePage";
 import QuotesPage from "./pages/admin/quotes/QuotesPage";
-import ResultsRelease from "./pages/admin/ResultsRelease";
+import ResultsRelease from "./pages/admin/ResultRelease/ResultsRelease";
 
 import EquipmentInfo from "./pages/admin/inventoryEquipment/EquipmentInfo";
 import SelectOptionToCheckInventoryPage from "./pages/admin/inventoryEquipment/SelectOptionToCheckInventoryPage";

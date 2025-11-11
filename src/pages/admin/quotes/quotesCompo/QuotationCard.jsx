@@ -111,7 +111,7 @@ const QuotationCard = ({ data = {}, openInfo, setQuotateSelected }) => {
                 key={data.testRequestId}
                 sx={{
                     minHeight: "auto",
-                    bgcolor: "background.default",
+                    bgcolor: "background.paper",
                     border: `1px solid ${theme.palette.border.primary}`,
                     borderRadius: "20px",
                     p: "10px",

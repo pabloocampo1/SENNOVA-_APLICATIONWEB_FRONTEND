@@ -70,10 +70,15 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
     useEffect(() => {
         const getDataSamplesByTestRequest = async () => {
             setIsLoanding(true);
+            console.log("se ejecuto");
+
             try {
                 const res = await api.get(
                     `/testRequest/get-samples-by-testRequestId/${data.testRequestId}`
                 );
+                console.log("res");
+                console.log(res);
+
                 setSamplesInfo(res.data);
             } catch (error) {
                 console.error(error);

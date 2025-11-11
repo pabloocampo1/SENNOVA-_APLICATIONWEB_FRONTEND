@@ -91,7 +91,13 @@ const QuotesPage = () => {
     useEffect(() => {}, [quotationData]);
 
     return (
-        <Box>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                p: "10px",
+                borderRadius: "20px",
+            }}
+        >
             {showQuotation ? (
                 <Box>
                     <QuotationCustomer

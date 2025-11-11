@@ -113,7 +113,7 @@ const ModalToAcceptQuote = ({
                     mb: "30px",
                 }}
             >
-                Enviar
+                Aceptar y enviar respuesta
             </Button>
         </Box>
     );
