@@ -11,10 +11,12 @@ export default function SimpleBackdrop({ open, text = "Cargando" }) {
                 sx={(theme) => ({
                     color: "#fff",
                     zIndex: theme.zIndex.drawer + 1,
+                    display: "flex",
+                    flexDirection: "column",
                 })}
                 open={open}
             >
-                <CircularProgress color="inherit" />
+                <CircularProgress color="inherit" sx={{ mb: "20px" }} />
                 <Typography>{text}</Typography>
             </Backdrop>
         </div>

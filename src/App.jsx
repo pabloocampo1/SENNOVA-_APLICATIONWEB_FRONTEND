@@ -25,6 +25,7 @@ import ReagentInfo from "./pages/admin/inventoryReagent/ReagentInfo";
 import ReportEquipments from "./pages/admin/inventoryEquipment/ReportEquipments";
 import PublicLayout from "./layouts/PublicLayout";
 import QuotationCustomer from "./pages/public/QuotationCustomer";
+import TestRequestInfo from "./pages/admin/ResultRelease/TestRequestInfo";
 
 function App() {
     return (
@@ -123,6 +124,10 @@ function App() {
                                             element={<ResultsRelease />}
                                         />
                                         <Route
+                                            path="result/test-request/:testRequestId"
+                                            element={<TestRequestInfo />}
+                                        />
+                                        <Route
                                             path="users"
                                             element={<CustomersAndUsersPage />}
                                         />
@@ -140,51 +145,3 @@ function App() {
 }
 
 export default App;
-
-// return <>
-//         <GoogleOAuthProvider clientId="205317144145-dntssvrb84osb754okeetq2349hua44f.apps.googleusercontent.com">
-//             <Router>
-//                 <AuthContextProvider>
-//                     <ThemeContextProvider>
-//                         <Routes>
-
-//                             <Route path="/signIn" element={<AuthLayaout />}>
-//                                 <Route index element={<LoginPage />} />
-//                                 <Route path="noAccess" element={<NoAccessModal />} />
-//                             </Route>
-
-//                             <Route path="/public" element={<PublicLayout />}>
-
-//                                 <Route path="cotizacion/ensayo" element={<QuotationCustomer />} />
-//                             </Route>
-
-//                             <Route element={<PrivateRoute allowedRoles={["ROLE_ADMIN", "ROLE_SUPERADMIN"]} />}>
-//                                 <Route path="/system" element={<SystemLayaout />}>
-//                                     <Route index element={<DashboardPage />} />
-//                                     <Route path="settings" element={<SettingPage />} />
-//                                     <Route path="profile" element={<ProfilePage />} />
-
-//                                     <Route path="inventory/equipments" element={<EquipmentPage />} />
-//                                     <Route path="inventory/equipments/info/:idEquipment" element={<EquipmentInfo />} />
-//                                     <Route path="inventory/equipment/report" element={<ReportEquipments />}/>
-//                                     <Route path="inventory/check/:typeInventory" element={<SelectOptionToCheckInventoryPage />}/>
-//                                     <Route path="inventory/check/search/:typeInventory" element={<SearchOptionCheckInv />}/>
-//                                     <Route path="inventory/check/location/:typeInventory" element={<LocationOptionCheckInv />}/>
-
-//                                     <Route path="inventory/reagents" element={<ReagmentPage />} />
-//                                     <Route path="inventory/reagents/info/:reagentId" element={<ReagentInfo />}/>
-//                                     <Route path="quotes" element={<QuotesPage />} />
-//                                     <Route path="results" element={<ResultsRelease />} />
-//                                     <Route path="users" element={<CustomersAndUsersPage />} />
-
-//                                     {/* <Route/> */}
-//                                 </Route>
-//                             </Route>
-
-//                         </Routes>
-//                     </ThemeContextProvider>
-
-//                 </AuthContextProvider>
-//             </Router>
-//         </GoogleOAuthProvider>
-//     </>

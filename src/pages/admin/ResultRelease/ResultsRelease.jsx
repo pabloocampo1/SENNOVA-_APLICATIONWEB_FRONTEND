@@ -9,12 +9,15 @@ import {
     Science,
     TrendingUp,
     Visibility,
+    VoiceChatRounded,
 } from "@mui/icons-material";
 import {
     Avatar,
     AvatarGroup,
     Box,
     Button,
+    Card,
+    CardMedia,
     Chip,
     Divider,
     FormControl,
@@ -29,17 +32,65 @@ import {
 import React, { useEffect, useState } from "react";
 import SearchBar from "../../../components/SearchBar";
 import api from "../../../service/axiosService";
+import { useNavigate } from "react-router-dom";
+import SimpleBackdrop from "../../../components/SimpleBackDrop";
+import cloudImage from "../../../assets/images/undraw_clouds_bmtk.svg";
 
 const ResultsRelease = () => {
     const theme = useTheme();
     const [testRequest, setTestRequest] = useState([]);
+    const navigate = useNavigate();
+    const [isLoanding, setIsLoanding] = useState(false);
+    const [search, setSearch] = useState("");
+    const [optionSelectedFilterBy, setOptionSelectedFilterBy] = useState("ALL");
 
     const getTestRequestAccepted = async () => {
+        setIsLoanding(true);
         try {
             const res = await api.get("/testRequest/get-all-info-summary");
             setTestRequest(res.data);
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
+    };
+
+    const getDataBySearch = async (e) => {
+        setSearch(e);
+        setIsLoanding(true);
+
+        try {
+            const res = await api.get(
+                `/testRequest/get-all-info-summary-by-code/${e}`
+            );
+            console.log(res);
+            setTestRequest(res.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
+    };
+
+    const getDataByState = async (state) => {
+        console.log(state);
+
+        if (state == "ALL") {
+            getTestRequestAccepted();
+        }
+
+        setIsLoanding(true);
+        setOptionSelectedFilterBy(state);
+        try {
+            const res = await api.get(
+                `/testRequest/get-all-info-summary-by-status/${state}`
+            );
+            setTestRequest(res.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
         }
     };
 
@@ -83,8 +134,8 @@ const ResultsRelease = () => {
                 color: "success",
                 icon: <CheckCircle sx={{ fontSize: 16 }} />,
             },
-            "En Vencida": {
-                label: "Completado",
+            Vencida: {
+                label: "Vencida",
                 color: "error",
                 icon: <InfoOutline sx={{ fontSize: 16 }} />,
             },
@@ -97,8 +148,10 @@ const ResultsRelease = () => {
         return configs[status] || configs["Espera de recepción"];
     };
     useEffect(() => {
-        getTestRequestAccepted();
-    }, []);
+        if (search == "") {
+            getTestRequestAccepted();
+        }
+    }, [search]);
 
     return (
         <Box
@@ -109,6 +162,7 @@ const ResultsRelease = () => {
                 borderRadius: "20px",
             }}
         >
+            <SimpleBackdrop text="Cargando ensayos" open={isLoanding} />
             {/* HEADER */}
             <Box>
                 {/* info about header */}
@@ -155,7 +209,7 @@ const ResultsRelease = () => {
                     }}
                 >
                     <SearchBar
-                        // onSearch={(e) => getDataBySearch(e)}
+                        onSearch={(e) => getDataBySearch(e)}
                         placeholder="Buscar ensayo por codigo"
                     />
 
@@ -173,31 +227,49 @@ const ResultsRelease = () => {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             label="Filtrar por:"
-                            // value={}
-                            // onChange={(e) =>
-                            //     getDataByState(e.target.value)
-                            // }
+                            value={optionSelectedFilterBy}
+                            onChange={(e) => getDataByState(e.target.value)}
                             sx={{
                                 borderRadius: "10px",
                             }}
                         >
-                            <MenuItem value={"PENDIENTE"}>
+                            <MenuItem value={"Espera de recepción"}>
                                 Sin recepcion de muestras
                             </MenuItem>
-                            <MenuItem value={"ACEPTADA"}>En Proceso</MenuItem>
-                            <MenuItem value={"RECHAZADA"}>
-                                Entregadas {"(Finalizadas)"}
+                            <MenuItem value={"En proceso"}>En Proceso</MenuItem>
+                            <MenuItem value={"Terminada"}>
+                                Entregadas {"(TERMINADAS)"}
                             </MenuItem>
-                            <MenuItem value={"all"}>
+                            <MenuItem value={"Vencida"}>
                                 Vencidas {"(Tiempo finalizado)"}
                             </MenuItem>
-                            <MenuItem value={"all"}>Todas</MenuItem>
+                            <MenuItem value={"ALL"}>Todas</MenuItem>
                         </Select>
                     </FormControl>
                 </Box>
             </Box>
 
             {/* CONTENT */}
+
+            {testRequest.length < 1 && (
+                <Box
+                    sx={{
+                        width: "100%",
+                        height: "50vh",
+                        display: "flex",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                    }}
+                >
+                    <Typography sx={{ fontSize: "1.3rem", mb: "20px" }}>
+                        {" "}
+                        No hay ensayos
+                    </Typography>
+
+                    <img src={cloudImage} alt="imageCloud" width={"200px"} />
+                </Box>
+            )}
 
             <Box
                 sx={{
@@ -377,9 +449,10 @@ const ResultsRelease = () => {
                                                 },
                                             }}
                                         >
-                                            {test.teamAssigned.length > 1 ? (
-                                                <>
-                                                    {test.teamAssigned.map(
+                                            <AvatarGroup>
+                                                {test.teamAssigned.length >
+                                                1 ? (
+                                                    test.teamAssigned.map(
                                                         (user, idx) => (
                                                             <Tooltip
                                                                 key={idx}
@@ -398,18 +471,17 @@ const ResultsRelease = () => {
                                                                 />
                                                             </Tooltip>
                                                         )
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <Typography
-                                                    sx={{ pt: "20px" }}
-                                                    variant="body2"
-                                                >
-                                                    {" "}
-                                                    Este ensayo no tiene
-                                                    usuarios asignados
-                                                </Typography>
-                                            )}
+                                                    )
+                                                ) : (
+                                                    <Typography
+                                                        sx={{ pt: "20px" }}
+                                                        variant="body2"
+                                                    >
+                                                        Este ensayo no tiene
+                                                        usuarios asignados
+                                                    </Typography>
+                                                )}
+                                            </AvatarGroup>
                                         </AvatarGroup>
                                     </Box>
                                 </Box>
@@ -422,6 +494,11 @@ const ResultsRelease = () => {
                                         variant="outlined"
                                         size="small"
                                         startIcon={<TrendingUp />}
+                                        onClick={() =>
+                                            navigate(
+                                                `/system/result/test-request/${test.testRequestId}`
+                                            )
+                                        }
                                     >
                                         Gestionar
                                     </Button>
