@@ -16,7 +16,12 @@ import {
     Science,
 } from "@mui/icons-material";
 
-const AssignMemberWhenAccept = ({ requestCode, onClose, testRequestId }) => {
+const AssignMemberWhenAccept = ({
+    requestCode,
+    onClose,
+    testRequestId,
+    isAddAnotherMember = false,
+}) => {
     const [users, setUsers] = useState([]);
     const [usersSelected, setUsersSelected] = useState([]);
     const theme = useTheme();
@@ -77,53 +82,78 @@ const AssignMemberWhenAccept = ({ requestCode, onClose, testRequestId }) => {
                     }}
                 />
             </Box>
-            <Box
-                sx={{
-                    background: `linear-gradient(135deg, ${theme.palette.primary.main}15 0%, ${theme.palette.primary.main}05 100%)`,
 
-                    p: 3,
-                    borderRadius: "12px 12px 0 0",
-                    mb: 2,
-                }}
-            >
+            {isAddAnotherMember ? (
                 <Box
                     sx={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 1,
-                        mb: 1,
+                        justifyContent: "center",
                     }}
                 >
-                    <Science color="primary" sx={{ fontSize: 28 }} />
                     <Typography
-                        variant="h6"
                         sx={{
-                            fontWeight: 600,
-                            color: theme.palette.primary.main,
+                            fontWeight: "bold",
+                            textAlign: "center",
+                            color: "primary.main",
+                            display: "flex",
+                            alignItems: "center",
                         }}
+                        variant="h3"
+                        component={"h3"}
                     >
-                        Ensayo Aceptado
+                        <PersonAddAlt1 sx={{ mr: "10px" }} /> Agregar usuario
                     </Typography>
                 </Box>
-                <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ lineHeight: 1.6 }}
+            ) : (
+                <Box
+                    sx={{
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main}15 0%, ${theme.palette.primary.main}05 100%)`,
+
+                        p: 3,
+                        borderRadius: "12px 12px 0 0",
+                        mb: 2,
+                    }}
                 >
-                    Asigna los responsables para la emisión de resultados del
-                    ensayo
-                    <Chip
-                        label={`#${requestCode}`}
-                        size="small"
+                    <Box
                         sx={{
-                            ml: 1,
-                            fontWeight: 600,
-                            bgcolor: theme.palette.primary.main + "20",
-                            color: theme.palette.primary.main,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mb: 1,
                         }}
-                    />
-                </Typography>
-            </Box>
+                    >
+                        <Science color="primary" sx={{ fontSize: 28 }} />
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                fontWeight: 600,
+                                color: theme.palette.primary.main,
+                            }}
+                        >
+                            Ensayo Aceptado
+                        </Typography>
+                    </Box>
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ lineHeight: 1.6 }}
+                    >
+                        Asigna los responsables para la emisión de resultados
+                        del ensayo
+                        <Chip
+                            label={`#${requestCode}`}
+                            size="small"
+                            sx={{
+                                ml: 1,
+                                fontWeight: 600,
+                                bgcolor: theme.palette.primary.main + "20",
+                                color: theme.palette.primary.main,
+                            }}
+                        />
+                    </Typography>
+                </Box>
+            )}
 
             <Box
                 sx={{

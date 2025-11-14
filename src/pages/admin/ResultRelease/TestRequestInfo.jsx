@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     Divider,
+    Drawer,
     LinearProgress,
     Typography,
     useTheme,
@@ -29,6 +30,8 @@ import {
 import CustomerCardTestRequest from "../CustomerAndUsers/CustomerCardTestRequest";
 import UserUIMiniCard from "../CustomerAndUsers/UserUIMiniCard";
 import SamplesTestRequestCompo from "./SamplesTestRequestCompo";
+import AddMemberCompo from "./componentsTestRequets/AddMemberCompo";
+// import imageNoFinishTestRequest from "../../../assets/images/undraw_next-tasks_y3rm.svg";
 
 const TestRequestInfo = () => {
     const { testRequestId } = useParams();
@@ -36,6 +39,7 @@ const TestRequestInfo = () => {
     const [testRequest, setTestRequest] = useState({});
     const theme = useTheme();
     const [team, setTeam] = useState([]);
+    const [open, setOpen] = useState(false);
 
     const getInformationAboutTestRequest = async () => {
         setIsLoanding(true);
@@ -53,6 +57,9 @@ const TestRequestInfo = () => {
         }
     };
 
+    const toggleDrawer = (newOpen) => () => {
+        setOpen(newOpen);
+    };
     const iconByStatus = (status) => {
         const config = {
             "Espera de recepción": (
@@ -112,7 +119,40 @@ const TestRequestInfo = () => {
         }
     };
 
-    const assignUserToTestRequest = async () => {};
+    const getTotalSamplesFinished = () => {
+        const total = testRequest.samples.reduce((acc, sample) => {
+            let areFinished = true;
+            sample.analysisEntities.forEach((element) => {
+                if (!element.stateResult) {
+                    areFinished = false;
+                }
+            });
+
+            if (areFinished) {
+                return acc + 1;
+            } else {
+                return acc;
+            }
+        }, 0);
+
+        return total;
+    };
+
+    const removeMember = async (userId) => {
+        try {
+            const res = await api.put(
+                `/testRequest/remove-member/${testRequestId}/${userId}`
+            );
+
+            const newListTeam = team.filter((user) => user.userId !== userId);
+
+            if (res.status == 200) {
+                setTeam(newListTeam);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const getToTalAnalysis = () => {
         const total = [...testRequest.samples].reduce(
@@ -145,6 +185,7 @@ const TestRequestInfo = () => {
                 bgcolor: "background.default",
                 width: "100%",
                 p: "20px",
+                borderRadius: "20px",
             }}
         >
             <SimpleBackdrop
@@ -212,6 +253,7 @@ const TestRequestInfo = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     mt: "20px",
+                    mb: "50px",
                 }}
             >
                 <Box>
@@ -223,15 +265,15 @@ const TestRequestInfo = () => {
                             borderRadius: "20px",
                         }}
                     >
-                        Progreso
+                        Progreso de este ensayo
                     </Typography>
                 </Box>
+                <Typography sx={{ mt: "20px" }}>{getProgres()}%</Typography>
                 {testRequest?.samples ? (
                     <Box
                         sx={{
                             width: "100%",
-                            display: "flex",
-                            mb: "20px",
+                            mb: "5px",
                         }}
                     >
                         <LinearProgress
@@ -239,7 +281,10 @@ const TestRequestInfo = () => {
                             value={getProgres()}
                             sx={{
                                 width: "100%",
-                                height: 8,
+                                height: 15,
+                                border: `1px solid ${
+                                    theme.palette.primary.main + 90
+                                }`,
                                 mt: "20px",
                                 borderRadius: 4,
                                 bgcolor: theme.palette.grey[200],
@@ -252,13 +297,14 @@ const TestRequestInfo = () => {
                                 },
                             }}
                         />
-                        <Typography sx={{ ml: "20px", mr: "20px" }}>
-                            {getProgres()}%
-                        </Typography>
                     </Box>
                 ) : (
                     "Cargando progreso..."
                 )}
+                <Typography variant="body2" sx={{ opacity: 0.7 }}>
+                    Este porcentaje representa las muestras analizadas hasta el
+                    momento.
+                </Typography>
             </Box>
 
             <Box sx={{ display: "flex", gap: "20px", mb: "30px", mt: "20px" }}>
@@ -268,7 +314,7 @@ const TestRequestInfo = () => {
                         width: "60%",
                         minHeight: "370px",
                         bgcolor: "background.paper",
-
+                        border: `1px solid ${theme.palette.border.primary}`,
                         borderRadius: "20px",
                         p: "20px",
                     }}
@@ -471,7 +517,10 @@ const TestRequestInfo = () => {
                                 asignado
                             </Typography>
 
-                            <Button startIcon={<PersonAdd />}>
+                            <Button
+                                startIcon={<PersonAdd />}
+                                onClick={toggleDrawer(true)}
+                            >
                                 Agregar un miembro
                             </Button>
                         </Box>
@@ -498,6 +547,7 @@ const TestRequestInfo = () => {
                                     <Button
                                         variant="outlined"
                                         startIcon={<PersonAdd />}
+                                        onClick={toggleDrawer(true)}
                                     >
                                         Agregar integrante
                                     </Button>
@@ -511,7 +561,14 @@ const TestRequestInfo = () => {
                                     }}
                                 >
                                     {team.map((user) => {
-                                        return <UserUIMiniCard user={user} />;
+                                        return (
+                                            <UserUIMiniCard
+                                                user={user}
+                                                onDeleteMember={(userId) =>
+                                                    removeMember(userId)
+                                                }
+                                            />
+                                        );
                                     })}
                                 </Box>
                             )}
@@ -521,7 +578,35 @@ const TestRequestInfo = () => {
             </Box>
 
             {/* SAMPLES */}
-            <SamplesTestRequestCompo samples={testRequest.samples} />
+            <SamplesTestRequestCompo
+                samples={testRequest.samples}
+                getTotalFinished={() => getTotalSamplesFinished()}
+            />
+
+            <Box
+                sx={{
+                    mb: "20px",
+                    mt: "40px",
+                }}
+            >
+                {getTotalSamplesFinished() == testRequest.samples.length
+                    ? "ya esta listo"
+                    : "aun falta"}
+                <Button>aceptar ensayo</Button>
+            </Box>
+
+            {/* ASSIGN MEMBER */}
+
+            <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+                <AddMemberCompo
+                    onClose={() => {
+                        getTheTeam();
+                        setOpen(false);
+                    }}
+                    requestCode={testRequest.requestCode}
+                    testRequestId={testRequest.testRequestId}
+                />
+            </Drawer>
         </Box>
     );
 };

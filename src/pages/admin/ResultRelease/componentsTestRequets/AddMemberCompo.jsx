@@ -1,0 +1,28 @@
+import { Box } from "@mui/material";
+
+import AssignMemberWhenAccept from "../../quotes/quotesCompo/assignMemberWhenAccept";
+
+const AddMemberCompo = ({ testRequestId, requestCode, onClose }) => {
+    return (
+        <Box
+            sx={{
+                display: "flex",
+                height: "100%",
+                justifyContent: "start",
+                alignItems: "center",
+                flexDirection: "column",
+                bgcolor: "background.paper",
+                p: "20px",
+            }}
+        >
+            <AssignMemberWhenAccept
+                onClose={() => onClose()}
+                testRequestId={testRequestId}
+                requestCode={requestCode}
+                isAddAnotherMember={true}
+            />
+        </Box>
+    );
+};
+
+export default AddMemberCompo;

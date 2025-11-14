@@ -12,6 +12,7 @@ const CustomerCardTestRequest = ({ objectData = {} }) => {
                 width: "40%",
                 height: "370px",
                 bgcolor: "background.paper",
+                border: `1px solid ${theme.palette.border.primary}`,
                 p: "20px 10px",
                 display: "flex",
                 flexDirection: "column",
@@ -31,7 +32,7 @@ const CustomerCardTestRequest = ({ objectData = {} }) => {
             </Box>
             <Box
                 sx={{
-                    width: "400px",
+                    width: "100%",
                     height: "100px",
                     bgcolor: `${theme.palette.primary.main + 10} `,
                     display: "flex",

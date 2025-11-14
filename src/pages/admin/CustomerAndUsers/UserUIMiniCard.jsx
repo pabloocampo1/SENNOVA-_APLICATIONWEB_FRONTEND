@@ -1,8 +1,17 @@
-import { CloseOutlined, RemoveCircle } from "@mui/icons-material";
-import { Avatar, Box, Typography, useTheme } from "@mui/material";
+import {
+    CloseOutlined,
+    PersonAddAlt1Outlined,
+    RemoveCircle,
+} from "@mui/icons-material";
+import { Avatar, Box, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
 
-const UserUIMiniCard = ({ user = {} }) => {
+const UserUIMiniCard = ({
+    user = {},
+    onDeleteMember,
+    addMember,
+    isToAdd = false,
+}) => {
     const theme = useTheme();
 
     return (
@@ -26,14 +35,23 @@ const UserUIMiniCard = ({ user = {} }) => {
                 {user.name}
             </Typography>
 
-            <CloseOutlined
-                sx={{
-                    ":hover": {
-                        bgcolor: "primary.third",
-                        borderRadius: "20px",
-                    },
-                }}
-            />
+            {isToAdd ? (
+                <>
+                    <Tooltip title="Agregarlo al ensayo">
+                        <PersonAddAlt1Outlined
+                            onClick={() => addMember(user.userId)}
+                        />
+                    </Tooltip>
+                </>
+            ) : (
+                <>
+                    <Tooltip title="Sacarlo del ensayo">
+                        <CloseOutlined
+                            onClick={() => onDeleteMember(user.userId)}
+                        />
+                    </Tooltip>
+                </>
+            )}
         </Box>
     );
 };

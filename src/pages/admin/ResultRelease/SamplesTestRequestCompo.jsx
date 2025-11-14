@@ -1,7 +1,7 @@
 import { Box, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
 
-const SamplesTestRequestCompo = ({ samples = [] }) => {
+const SamplesTestRequestCompo = ({ samples = [], getTotalFinished }) => {
     const theme = useTheme();
 
     const getTotalSamplesAnalysisFinished = (list) => {
@@ -9,38 +9,19 @@ const SamplesTestRequestCompo = ({ samples = [] }) => {
         return total;
     };
 
-    const getTotalSamplesFinished = () => {
-        const total = samples.reduce((acc, sample) => {
-            let areFinished = true;
-            sample.analysisEntities.forEach((element) => {
-                if (!element.stateResult) {
-                    areFinished = false;
-                }
-            });
-
-            if (areFinished) {
-                return acc + 1;
-            } else {
-                return acc;
-            }
-        }, 0);
-
-        return total;
-    };
-
     return (
         <Box
             sx={{
                 mt: "40px",
-                mb: "40px",
+                mb: "100px",
             }}
         >
             <Typography variant="h3" sx={{ fontWeight: "bold" }}>
                 Muestras
             </Typography>
             <Typography sx={{ opacity: "0.80", mb: "40px" }}>
-                {getTotalSamplesFinished()}/{samples.length} de las muestras
-                estan finalizadas
+                {getTotalFinished()}/{samples.length} de las muestras estan
+                finalizadas
             </Typography>
 
             <Box
