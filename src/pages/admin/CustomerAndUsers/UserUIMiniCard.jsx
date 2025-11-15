@@ -17,12 +17,13 @@ const UserUIMiniCard = ({
     return (
         <Box
             sx={{
-                width: "260px",
+                width: "250px",
                 bgcolor: "background.default",
                 borderRadius: "20px",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                border: `1px solid ${theme.palette.border.primary}`,
                 p: "20px",
                 ":hover": {
                     bgcolor: `${theme.palette.primary.main + 10} `,

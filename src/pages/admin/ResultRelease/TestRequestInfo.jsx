@@ -4,6 +4,7 @@ import {
     Divider,
     Drawer,
     LinearProgress,
+    Tooltip,
     Typography,
     useTheme,
 } from "@mui/material";
@@ -18,6 +19,8 @@ import {
     CalendarMonth,
     CheckCircle,
     Circle,
+    DeleteForever,
+    DeleteForeverOutlined,
     FastForward,
     Groups2Outlined,
     InfoOutline,
@@ -31,6 +34,10 @@ import CustomerCardTestRequest from "../CustomerAndUsers/CustomerCardTestRequest
 import UserUIMiniCard from "../CustomerAndUsers/UserUIMiniCard";
 import SamplesTestRequestCompo from "./SamplesTestRequestCompo";
 import AddMemberCompo from "./componentsTestRequets/AddMemberCompo";
+import MembersOfTestRequest from "./componentsTestRequets/MembersOfTestRequest";
+import GenericModal from "../../../components/modals/GenericModal";
+import ModalToDeleteTestRequest from "../quotes/quotesCompo/ModalToDeleteTestRequest";
+import TestRequestNotFound from "./componentsTestRequets/TestRequestNotFound";
 // import imageNoFinishTestRequest from "../../../assets/images/undraw_next-tasks_y3rm.svg";
 
 const TestRequestInfo = () => {
@@ -40,6 +47,7 @@ const TestRequestInfo = () => {
     const theme = useTheme();
     const [team, setTeam] = useState([]);
     const [open, setOpen] = useState(false);
+    const [openModalToDelete, setOpenModalToDelete] = useState(false);
 
     const getInformationAboutTestRequest = async () => {
         setIsLoanding(true);
@@ -174,8 +182,7 @@ const TestRequestInfo = () => {
     if (!testRequest?.testRequestId) {
         return (
             <Box>
-                <ButtonBack />
-                Ocurrió un error, vuelve a intentarlo
+                <TestRequestNotFound />
             </Box>
         );
     }
@@ -192,8 +199,46 @@ const TestRequestInfo = () => {
                 text="Cargando informacion del ensayo"
                 open={isLoanding}
             />
-            <ButtonBack />
-            {/* HEADER */}
+
+            <GenericModal
+                open={openModalToDelete}
+                onClose={() => setOpenModalToDelete(false)}
+                compo={
+                    <ModalToDeleteTestRequest
+                        onClose={() => setOpenModalToDelete(false)}
+                        onCloseDeleted={() => {
+                            setOpenModalToDelete(false);
+                            setTestRequest(null);
+                        }}
+                        requestCode={testRequest.requestCode}
+                        // here put yes becase we need the modal show the option to delete, but this test request was accepted
+                        isAccepted={false}
+                        testRequestId={testRequest.testRequestId}
+                    />
+                }
+            />
+
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                {/* BUTON COME BACK TO THE LAST SECTION */}
+                <ButtonBack />
+
+                {/* ICON TO DELETE TEST REQUEST */}
+
+                <Tooltip title="Elimianar ensayo.">
+                    <DeleteForeverOutlined
+                        color="warning"
+                        onClick={() => setOpenModalToDelete(true)}
+                    />
+                </Tooltip>
+            </Box>
+
+            {/* HEADER of the section */}
             <Box
                 sx={{
                     display: "flex",
@@ -252,7 +297,7 @@ const TestRequestInfo = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    mt: "20px",
+                    mt: "50px",
                     mb: "50px",
                 }}
             >
@@ -317,14 +362,36 @@ const TestRequestInfo = () => {
                         border: `1px solid ${theme.palette.border.primary}`,
                         borderRadius: "20px",
                         p: "20px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexDirection: "column",
+                        alignItems: "center",
                     }}
                 >
                     <Box
                         sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mt: "20px",
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                            variant="caption"
+                        >
+                            <CheckCircle /> Informacion del ensayo
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            width: "100%",
                             display: "grid",
                             gridTemplateColumns:
                                 "repeat(auto-fill, minmax(200px, 1fr))",
-                            gap: "20px",
+                            gap: "30px",
                         }}
                     >
                         <Box>
@@ -494,88 +561,17 @@ const TestRequestInfo = () => {
                             </Typography>
                         </Box>
                     </Box>
-
-                    {/* USER ASSIGNED */}
-
-                    <Divider sx={{ mt: "30px", mb: "20px" }} />
-                    <Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                mb: "20px",
-                            }}
-                        >
-                            <Typography
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                }}
-                            >
-                                {" "}
-                                <Groups2Outlined sx={{ mr: "10px" }} /> Equipo
-                                asignado
-                            </Typography>
-
-                            <Button
-                                startIcon={<PersonAdd />}
-                                onClick={toggleDrawer(true)}
-                            >
-                                Agregar un miembro
-                            </Button>
-                        </Box>
-
-                        <Box>
-                            {team.length < 1 ? (
-                                <Box
-                                    sx={{
-                                        height: "100%",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            mt: "20px",
-                                        }}
-                                    >
-                                        No hay integrantes para este ensayo
-                                    </Typography>
-
-                                    <Button
-                                        variant="outlined"
-                                        startIcon={<PersonAdd />}
-                                        onClick={toggleDrawer(true)}
-                                    >
-                                        Agregar integrante
-                                    </Button>
-                                </Box>
-                            ) : (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        gap: "15px",
-                                    }}
-                                >
-                                    {team.map((user) => {
-                                        return (
-                                            <UserUIMiniCard
-                                                user={user}
-                                                onDeleteMember={(userId) =>
-                                                    removeMember(userId)
-                                                }
-                                            />
-                                        );
-                                    })}
-                                </Box>
-                            )}
-                        </Box>
-                    </Box>
                 </Box>
             </Box>
+
+            {/* USER ASSIGNED */}
+
+            <Divider sx={{ mt: "30px", mb: "20px" }} />
+            <MembersOfTestRequest
+                toggleDrawer={toggleDrawer}
+                team={team}
+                removeMember={(userId) => removeMember(userId)}
+            />
 
             {/* SAMPLES */}
             <SamplesTestRequestCompo

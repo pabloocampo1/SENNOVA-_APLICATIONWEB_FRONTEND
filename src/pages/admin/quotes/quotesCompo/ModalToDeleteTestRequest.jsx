@@ -8,6 +8,8 @@ import {
 } from "@mui/icons-material";
 import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 import api from "../../../../service/axiosService";
+import { useAuth } from "../../../../context/AuthContext";
+import NoPermissionCompo from "../../ResultRelease/componentsTestRequets/NoPermissionCompo";
 
 const ModalToDeleteTestRequest = ({
     onClose,
@@ -17,6 +19,7 @@ const ModalToDeleteTestRequest = ({
     testRequestId,
 }) => {
     const [loanding, setLoading] = useState(false);
+    const { authObject } = useAuth();
 
     const method = async () => {
         setLoading(true);
@@ -34,6 +37,10 @@ const ModalToDeleteTestRequest = ({
             setLoading(false);
         }
     };
+
+    if (authObject.role !== "ROLE_SUPERADMIN") {
+        return <NoPermissionCompo onClose={() => onClose()} />;
+    }
 
     return (
         <Box
@@ -166,7 +173,7 @@ const ModalToDeleteTestRequest = ({
                             sx={{ px: 2 }}
                         >
                             Esta acción no se puede deshacer. Seguro que deseas
-                            eliminar esta cotizacion? #{requestCode}.
+                            eliminar esto? se eliminaran todo lo asociado.
                         </Typography>
                     </Stack>
 
