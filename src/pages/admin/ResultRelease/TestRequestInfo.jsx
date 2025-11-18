@@ -29,6 +29,7 @@ import {
     PersonAdd,
     ScienceOutlined,
     ScienceTwoTone,
+    Timeline,
 } from "@mui/icons-material";
 import CustomerCardTestRequest from "../CustomerAndUsers/CustomerCardTestRequest";
 import UserUIMiniCard from "../CustomerAndUsers/UserUIMiniCard";
@@ -38,7 +39,7 @@ import MembersOfTestRequest from "./componentsTestRequets/MembersOfTestRequest";
 import GenericModal from "../../../components/modals/GenericModal";
 import ModalToDeleteTestRequest from "../quotes/quotesCompo/ModalToDeleteTestRequest";
 import TestRequestNotFound from "./componentsTestRequets/TestRequestNotFound";
-// import imageNoFinishTestRequest from "../../../assets/images/undraw_next-tasks_y3rm.svg";
+import imageNoFinishTestRequest from "../../../assets/images/undraw_next-tasks_y3rm.svg";
 
 const TestRequestInfo = () => {
     const { testRequestId } = useParams();
@@ -582,16 +583,50 @@ const TestRequestInfo = () => {
             <Box
                 sx={{
                     mb: "20px",
-                    mt: "40px",
+                    mt: "20px",
                 }}
             >
-                {getTotalSamplesFinished() == testRequest.samples.length
-                    ? "ya esta listo"
-                    : "aun falta"}
-                <Button>aceptar ensayo</Button>
+                {getTotalSamplesFinished() == testRequest.samples.length ? (
+                    <Box
+                        sx={{
+                            width: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                            mb: "20px",
+                        }}
+                    >
+                        <Button variant="outlined">Finalizar ensayo</Button>
+                    </Box>
+                ) : (
+                    <Box
+                        sx={{
+                            width: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                            mb: "20px",
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                mb: "10px",
+                            }}
+                        >
+                            Este ensayo aun no esta finalizado
+                        </Typography>
+                        <img
+                            width={"200px"}
+                            src={imageNoFinishTestRequest}
+                            alt="imagenofinbished"
+                        />
+                    </Box>
+                )}
             </Box>
 
-            {/* ASSIGN MEMBER */}
+            {/* ASSIGN MEMBER MODAl*/}
 
             <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
                 <AddMemberCompo

@@ -54,22 +54,12 @@ const SamplesTestRequestCompo = ({ samples = [], getTotalFinished }) => {
                                         : "5px solid #1E90FF",
                                 borderRadius: "10px",
                                 p: "10px 20px",
+                                ":hover": {
+                                    transform: "scale(1.03)",
+                                    boxShadow: 5,
+                                },
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    height: "100%",
-                                    borderRight: `2px solid ${theme.palette.border.primary}`,
-                                }}
-                            >
-                                <Typography sx={{ pr: "20px" }}>
-                                    {index + 1}
-                                </Typography>
-                            </Box>
                             <Box
                                 sx={{
                                     display: "flex",
