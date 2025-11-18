@@ -26,6 +26,7 @@ import ReportEquipments from "./pages/admin/inventoryEquipment/ReportEquipments"
 import PublicLayout from "./layouts/PublicLayout";
 import QuotationCustomer from "./pages/public/QuotationCustomer";
 import TestRequestInfo from "./pages/admin/ResultRelease/TestRequestInfo";
+import SampleInfo from "./pages/admin/ResultRelease/componentsTestRequets/SampleInfo";
 
 function App() {
     return (
@@ -126,6 +127,10 @@ function App() {
                                         <Route
                                             path="result/test-request/:testRequestId"
                                             element={<TestRequestInfo />}
+                                        />
+                                        <Route
+                                            path="result/test-request/:requestCode/:sampleId"
+                                            element={<SampleInfo />}
                                         />
                                         <Route
                                             path="users"

@@ -255,7 +255,9 @@ const TestRequestInfo = () => {
                             mt: "40px",
                         }}
                     >
-                        <ScienceOutlined sx={{ mr: "10px" }} />
+                        <ScienceOutlined
+                            sx={{ mr: "10px", color: "primary.main" }}
+                        />
                         <Typography
                             sx={{
                                 mr: "10px",
@@ -266,7 +268,13 @@ const TestRequestInfo = () => {
                             Ensayo
                         </Typography>
                         <Typography> #{testRequest.requestCode}</Typography>
-                        <Circle sx={{ m: "0px 10px", width: "15px" }} />
+                        <Circle
+                            sx={{
+                                m: "0px 10px",
+                                width: "15px",
+                                color: "primary.main",
+                            }}
+                        />
                         <Typography
                             sx={{
                                 mr: "10px",
@@ -578,6 +586,7 @@ const TestRequestInfo = () => {
             <SamplesTestRequestCompo
                 samples={testRequest.samples}
                 getTotalFinished={() => getTotalSamplesFinished()}
+                requestCode={testRequest.requestCode}
             />
 
             <Box

@@ -1,8 +1,14 @@
 import { Box, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const SamplesTestRequestCompo = ({ samples = [], getTotalFinished }) => {
+const SamplesTestRequestCompo = ({
+    samples = [],
+    getTotalFinished,
+    requestCode,
+}) => {
     const theme = useTheme();
+    const navigate = useNavigate();
 
     const getTotalSamplesAnalysisFinished = (list) => {
         const total = list.reduce((acc, a) => acc + (a.stateResult ? 1 : 0), 0);
@@ -41,7 +47,7 @@ const SamplesTestRequestCompo = ({ samples = [], getTotalFinished }) => {
                             key={index}
                             sx={{
                                 width: "350px",
-                                height: "100px",
+                                height: "150px",
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
@@ -59,6 +65,11 @@ const SamplesTestRequestCompo = ({ samples = [], getTotalFinished }) => {
                                     boxShadow: 5,
                                 },
                             }}
+                            onClick={() =>
+                                navigate(
+                                    `/system/result/test-request/${requestCode}/${sample.sampleId}`
+                                )
+                            }
                         >
                             <Box
                                 sx={{
@@ -70,6 +81,19 @@ const SamplesTestRequestCompo = ({ samples = [], getTotalFinished }) => {
                                     {sample.sampleCode}
                                 </Typography>
                                 <Typography>{sample.matrix}</Typography>
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        p: "5px",
+                                        bgcolor: "action.hover",
+                                        borderRadius: "20px",
+                                        mt: "10px",
+                                    }}
+                                >
+                                    {sample.statusReception
+                                        ? "Con recepcion de muestra"
+                                        : "Sin Recepcion de muestras"}
+                                </Typography>
                             </Box>
                             <Box
                                 sx={{
