@@ -13,10 +13,11 @@ const SampleInfo = () => {
     const [sampleData, setSampleData] = useState({});
     const [analysis, setAnalysis] = useState([]);
     const [sampleReceptionDto, setSampleReceptionDto] = useState({
-        sampling_time: null,
-        sampling_date: null,
+        sampleEntryDate: null,
+        sampleReceptionDate: null,
         gross_weight: null,
         temperature: null,
+        statusReception: null,
         packageDescription: null,
         createAt: null,
         identificationSample: null,
@@ -34,8 +35,9 @@ const SampleInfo = () => {
                 const data = res.data;
 
                 setSampleReceptionDto({
-                    sampling_time: data.sampling_time,
-                    sampling_date: data.sampling_date,
+                    sampleEntryDate: data.sampleEntryDate,
+                    statusReception: data.statusReception,
+                    sampleReceptionDate: data.sampleReceptionDate,
                     gross_weight: data.gross_weight,
                     temperature: data.temperature,
                     createAt: data.createAt,

@@ -27,7 +27,7 @@ const SampleReception = ({ data }) => {
                     textAlign: "center",
                 }}
                 variant="body1"
-                color={data.statusReception ? "text.primary" : "error.main"}
+                color={data.statusReception ? "primary.main" : "error.main"}
             >
                 {data.statusReception
                     ? "Recepción de muestra registrada"
@@ -81,10 +81,10 @@ const SampleReception = ({ data }) => {
                         variant="body2"
                         sx={{ fontWeight: "500", opacity: "0.80" }}
                     >
-                        Fecha de muestreo
+                        Fecha de ingreso muestra
                     </Typography>
                     <Typography variant="body1">
-                        {checkValue(data.createAt)}
+                        {checkValue(data.sampleEntryDate)}
                     </Typography>
                 </Box>
 
@@ -101,10 +101,10 @@ const SampleReception = ({ data }) => {
                         variant="body2"
                         sx={{ fontWeight: "500", opacity: "0.80" }}
                     >
-                        Fecha de recepcion
+                        Fecha de recepción
                     </Typography>
                     <Typography variant="body1">
-                        {checkValue(data.sampling_date)}
+                        {checkValue(data.sampleReceptionDate)}
                     </Typography>
                 </Box>
 
@@ -124,7 +124,7 @@ const SampleReception = ({ data }) => {
                         Peso bruto
                     </Typography>
                     <Typography variant="body1">
-                        {checkValue(data.gross_weight)}
+                        {checkValue(data.gross_weight)} {"(g)"}
                     </Typography>
                 </Box>
 

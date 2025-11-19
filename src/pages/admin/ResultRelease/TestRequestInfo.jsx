@@ -9,7 +9,7 @@ import {
     useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ButtonBack from "../../../components/ButtonBack";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import api from "../../../service/axiosService";
@@ -47,6 +47,7 @@ const TestRequestInfo = () => {
     const [testRequest, setTestRequest] = useState({});
     const theme = useTheme();
     const [team, setTeam] = useState([]);
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
 
@@ -296,7 +297,16 @@ const TestRequestInfo = () => {
                     </Typography>
                 </Box>
 
-                <Button variant="contained">Recepcion de muestras</Button>
+                <Button
+                    variant="contained"
+                    onClick={() =>
+                        navigate(
+                            `/system/result/test-request/${testRequest.testRequestId}/recepcion-muestras`
+                        )
+                    }
+                >
+                    Recepción de muestras
+                </Button>
             </Box>
             {/* INFO BASIC */}
 

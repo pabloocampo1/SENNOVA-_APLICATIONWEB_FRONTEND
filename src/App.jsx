@@ -27,6 +27,7 @@ import PublicLayout from "./layouts/PublicLayout";
 import QuotationCustomer from "./pages/public/QuotationCustomer";
 import TestRequestInfo from "./pages/admin/ResultRelease/TestRequestInfo";
 import SampleInfo from "./pages/admin/ResultRelease/componentsTestRequets/SampleInfo";
+import SampleReceptionPage from "./pages/admin/ResultRelease/componentsTestRequets/SampleReceptionPage";
 
 function App() {
     return (
@@ -131,6 +132,10 @@ function App() {
                                         <Route
                                             path="result/test-request/:requestCode/:sampleId"
                                             element={<SampleInfo />}
+                                        />
+                                        <Route
+                                            path="result/test-request/:testRequestId/recepcion-muestras"
+                                            element={<SampleReceptionPage />}
                                         />
                                         <Route
                                             path="users"
