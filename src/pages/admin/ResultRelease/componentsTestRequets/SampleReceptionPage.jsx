@@ -8,6 +8,15 @@ import ButtonBack from "../../../../components/ButtonBack";
 import notImage from "../../../../assets/images/no-image-icon-6.png";
 import SampleReceptionForm from "../../../../components/forms/TestRequest/SampleReceptionForm";
 
+/*
+RECEPTION PAGE OF ONE TEST REQUEST
+
+here all samples going to be show for select witch will register reception
+when the user select one, the system show the form to 
+
+
+*/
+
 const SampleReceptionPage = () => {
     const { testRequestId } = useParams();
     const [isLoanding, setIsLoanding] = useState(false);
@@ -34,14 +43,11 @@ const SampleReceptionPage = () => {
         }
     };
 
-    const closeAndUpdateList = (sampleId) => {
+    const closeAndUpdateList = (sampleId, imageUrl) => {
         const updatedList = samples.map((sample) => {
             if (sample.sampleId == sampleId) {
                 sample.statusReception = true;
-                console.log("la que entro pa: ");
-
-                console.log(sample);
-
+                sample.sampleImage = imageUrl;
                 return sample;
             } else {
                 return sample;
@@ -239,7 +245,11 @@ const SampleReceptionPage = () => {
                             </Box>
                             <Box>
                                 <img
-                                    src={notImage}
+                                    src={
+                                        sampleSelected.sampleImage
+                                            ? sampleSelected.sampleImage
+                                            : notImage
+                                    }
                                     width={"300px"}
                                     alt="imagenSample"
                                 />
@@ -249,10 +259,12 @@ const SampleReceptionPage = () => {
                         {/* FORM TO SAVE RECEPTION */}
                         <SampleReceptionForm
                             data={sampleSelected}
-                            onClose={(sampleId) => {
+                            onClose={(sampleId, sampleImage) => {
                                 // This method ensures that when a user registers a sample reception, they are redirected back to the reception section
                                 //  and the sample list is updated so that the newly registered sample appears as received.
-                                closeAndUpdateList(sampleId);
+
+                                // return also the image if have
+                                closeAndUpdateList(sampleId, sampleImage);
                             }}
                         />
                     </Box>

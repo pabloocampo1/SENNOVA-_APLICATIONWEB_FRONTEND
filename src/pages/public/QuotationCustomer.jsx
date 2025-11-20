@@ -8,6 +8,7 @@ import SelectAnalisysCompo from "../admin/quotes/quotesCompo/SelectAnalisysCompo
 import api from "../../service/axiosService";
 import ButtonBack from "../../components/ButtonBack";
 import SimpleBackdrop from "../../components/SimpleBackDrop";
+import ExplanatoryNotesQuotation from "../admin/quotes/quotesCompo/ExplanatoryNotesQuotation";
 
 const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
     const [openModalToSelectProduct, setOpenModalToSelectProduct] =
@@ -265,7 +266,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                             width: { xs: "100%", md: "80%" },
                             display: "flex",
                             justifyContent: "end",
-                            mb: "100px",
+
                             gap: "20px",
                             p: { xs: "10px", md: "20px" },
                         }}
@@ -321,6 +322,8 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                     </Button>
                 </Box>
             )}
+
+            <ExplanatoryNotesQuotation />
         </Box>
     );
 };

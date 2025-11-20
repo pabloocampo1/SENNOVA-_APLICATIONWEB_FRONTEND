@@ -15,6 +15,7 @@ const SampleInfo = () => {
     const [sampleReceptionDto, setSampleReceptionDto] = useState({
         sampleEntryDate: null,
         sampleReceptionDate: null,
+        sampleImage: null,
         gross_weight: null,
         temperature: null,
         statusReception: null,
@@ -37,6 +38,7 @@ const SampleInfo = () => {
                 setSampleReceptionDto({
                     sampleEntryDate: data.sampleEntryDate,
                     statusReception: data.statusReception,
+                    sampleImage: data.sampleImage,
                     sampleReceptionDate: data.sampleReceptionDate,
                     gross_weight: data.gross_weight,
                     temperature: data.temperature,

@@ -1,5 +1,12 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import React from "react";
+import notImage from "../../../../assets/images/notImageAvailable.jpg";
+
+/*
+COMPONENT : INFORMATION OF RECEPCION OF THE ONE SAMPLE
+
+this component only show reception information
+*/
 
 const SampleReception = ({ data }) => {
     const theme = useTheme();
@@ -166,6 +173,27 @@ const SampleReception = ({ data }) => {
                     <Typography variant="body1">
                         {checkValue(data.packageDescription)}
                     </Typography>
+                </Box>
+                <Box
+                    sx={{
+                        height: "100px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <Typography
+                        variant="body2"
+                        sx={{ fontWeight: "500", opacity: "0.80" }}
+                    >
+                        Imagen
+                    </Typography>
+                    <img
+                        src={data.sampleImage ? data.sampleImage : notImage}
+                        alt="imageSampleReception"
+                        width={"200px"}
+                    />
                 </Box>
             </Box>
         </Box>

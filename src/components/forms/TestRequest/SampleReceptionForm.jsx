@@ -4,9 +4,17 @@ import api from "../../../service/axiosService";
 
 const SampleReceptionForm = ({ data, onClose }) => {
     const [sampleSelected, setSampleSelected] = useState(data);
+    const [image, setImage] = useState(null);
+
+    const handleImage = (e) => {
+        setImage(e.target.files[0]);
+    };
 
     const onSubmit = async (e) => {
         e.preventDefault();
+
+        const formData = new FormData();
+
         const objectToSend = {
             sampleEntryDate: sampleSelected?.sampleEntryDate ?? null,
             sampleReceptionDate: sampleSelected?.sampleReceptionDate ?? null,
@@ -16,16 +24,34 @@ const SampleReceptionForm = ({ data, onClose }) => {
             identificationSample: sampleSelected?.identificationSample ?? null,
             storageConditions: sampleSelected?.storageConditions ?? null,
             observations: sampleSelected?.observations ?? null,
-            sampleImage: sampleSelected?.sampleImage ?? null,
         };
 
+        formData.append(
+            "dto",
+            new Blob([JSON.stringify(objectToSend)], {
+                type: "application/json",
+            })
+        );
+
+        formData.append("sampleId", data.sampleId);
+
+        if (image != null) {
+            formData.append("file", image, image.name);
+        }
+
+        for (const pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+        }
+
         try {
-            const res = await api.post(
-                `/sample/save-reception/${data.sampleId}`,
-                objectToSend
-            );
-            if (res.status == 200) {
-                onClose(sampleSelected.sampleId);
+            const res = await api.post(`/sample/save-reception`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            if (res.status === 200) {
+                onClose(sampleSelected.sampleId, res.data.sampleImage);
             }
         } catch (error) {
             console.error(error);
@@ -179,15 +205,11 @@ const SampleReceptionForm = ({ data, onClose }) => {
                     <Button variant="outlined" component="label" fullWidth>
                         Subir imagen
                         <input
-                            type="file"
                             hidden
+                            type="file"
+                            name="file"
                             accept="image/*"
-                            onChange={(e) =>
-                                setSampleSelected({
-                                    ...sampleSelected,
-                                    imageFile: e.target.files[0],
-                                })
-                            }
+                            onChange={(e) => handleImage(e)}
                         />
                     </Button>
                 </Box>

@@ -41,6 +41,14 @@ import ModalToDeleteTestRequest from "../quotes/quotesCompo/ModalToDeleteTestReq
 import TestRequestNotFound from "./componentsTestRequets/TestRequestNotFound";
 import imageNoFinishTestRequest from "../../../assets/images/undraw_next-tasks_y3rm.svg";
 
+/*
+    PAGE WITH ALL THE INFORMATION ABOUT A TEST REQUEST
+
+    This component displays everything related to a test request,
+    including sample details, customer information, and request data.
+    It also provides access to the sample reception page.
+*/
+
 const TestRequestInfo = () => {
     const { testRequestId } = useParams();
     const [isLoanding, setIsLoanding] = useState(true);
