@@ -1,6 +1,7 @@
 import {
     AccessTime,
     Biotech,
+    BlockOutlined,
     CalendarMonth,
     CalendarMonthOutlined,
     CalendarToday,
@@ -35,6 +36,8 @@ import api from "../../../service/axiosService";
 import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import cloudImage from "../../../assets/images/undraw_clouds_bmtk.svg";
+import { getDays } from "../../../Utils/DateUtils";
+import { useAuth } from "../../../context/AuthContext";
 
 const ResultsRelease = () => {
     const theme = useTheme();
@@ -43,6 +46,7 @@ const ResultsRelease = () => {
     const [isLoanding, setIsLoanding] = useState(false);
     const [search, setSearch] = useState("");
     const [optionSelectedFilterBy, setOptionSelectedFilterBy] = useState("ALL");
+    const { authObject } = useAuth();
 
     const getTestRequestAccepted = async () => {
         setIsLoanding(true);
@@ -54,6 +58,17 @@ const ResultsRelease = () => {
         } finally {
             setIsLoanding(false);
         }
+    };
+
+    const checkIfAreAssignedToTestRequet = (
+        usersAssignedToTestRequest = []
+    ) => {
+        if (authObject.role == "ROLE_SUPERADMIN") {
+            return true;
+        }
+        return usersAssignedToTestRequest.some(
+            (user) => user.email == authObject.email
+        );
     };
 
     const getDataBySearch = async (e) => {
@@ -307,15 +322,37 @@ const ResultsRelease = () => {
                                 #ENS-{test.requestCode}
                             </Typography>
 
-                            <Chip
+                            <Box
                                 sx={{
-                                    mt: "10px",
+                                    display: "flex",
+                                    flexDirection: "column",
                                 }}
-                                icon={configStatus.icon}
-                                color={configStatus.color}
-                                label={configStatus.label}
-                            />
+                            >
+                                <Chip
+                                    sx={{
+                                        mt: "10px",
+                                        maxWidth: "150px",
+                                    }}
+                                    icon={configStatus.icon}
+                                    color={configStatus.color}
+                                    label={configStatus.label}
+                                />
 
+                                <Chip
+                                    sx={{
+                                        mt: "10px",
+                                    }}
+                                    label={
+                                        test.dueDate == null
+                                            ? `Sin fecha generada`
+                                            : getDays(test.dueDate) <= 0
+                                            ? `fecha vencida`
+                                            : `Quedan ${getDays(
+                                                  test.dueDate
+                                              )} dias para la entrega`
+                                    }
+                                />
+                            </Box>
                             <Divider sx={{ my: 2 }} />
 
                             <Typography
@@ -367,7 +404,7 @@ const ResultsRelease = () => {
                                         Fecha de entrega:{" "}
                                         {test.dueDate == null
                                             ? "Sin fecha"
-                                            : formattDate(test.approvalDate)}
+                                            : formattDate(test.dueDate)}
                                     </Typography>
                                 </Box>
 
@@ -489,19 +526,45 @@ const ResultsRelease = () => {
                                 <Divider sx={{ my: 2 }} />
 
                                 <Box sx={{ display: "flex", gap: 1 }}>
-                                    <Button
-                                        fullWidth
-                                        variant="outlined"
-                                        size="small"
-                                        startIcon={<TrendingUp />}
-                                        onClick={() =>
-                                            navigate(
-                                                `/system/result/test-request/${test.testRequestId}`
-                                            )
-                                        }
-                                    >
-                                        Gestionar
-                                    </Button>
+                                    {checkIfAreAssignedToTestRequet(
+                                        test.teamAssigned
+                                    ) ? (
+                                        <Button
+                                            fullWidth
+                                            variant="outlined"
+                                            size="small"
+                                            startIcon={<TrendingUp />}
+                                            onClick={() =>
+                                                navigate(
+                                                    `/system/result/test-request/${test.testRequestId}`
+                                                )
+                                            }
+                                        >
+                                            Gestionar
+                                        </Button>
+                                    ) : (
+                                        <Box
+                                            sx={{
+                                                width: "100%",
+                                                bgcolor: "background.default",
+                                                p: "10px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                borderRadius: "20px",
+                                            }}
+                                        >
+                                            <Typography variant="body2">
+                                                No tienes acceso a este ensayo
+                                            </Typography>
+                                            <BlockOutlined
+                                                sx={{
+                                                    width: "20px",
+                                                    ml: "5px",
+                                                }}
+                                            />
+                                        </Box>
+                                    )}
                                 </Box>
                             </Box>
                         </Box>

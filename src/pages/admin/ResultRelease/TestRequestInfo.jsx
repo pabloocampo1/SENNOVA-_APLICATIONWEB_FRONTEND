@@ -384,13 +384,13 @@ const TestRequestInfo = () => {
                 <Box
                     sx={{
                         width: "60%",
-                        minHeight: "370px",
+                        minHeight: "300px",
                         bgcolor: "background.paper",
                         border: `1px solid ${theme.palette.border.primary}`,
                         borderRadius: "20px",
                         p: "20px",
                         display: "flex",
-                        justifyContent: "space-between",
+                        justifyContent: "space-around",
                         flexDirection: "column",
                         alignItems: "center",
                     }}

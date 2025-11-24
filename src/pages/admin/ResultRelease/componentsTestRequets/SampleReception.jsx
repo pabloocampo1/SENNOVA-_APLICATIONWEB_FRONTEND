@@ -1,4 +1,15 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import {
+    Box,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import React from "react";
 import notImage from "../../../../assets/images/notImageAvailable.jpg";
 
@@ -43,158 +54,193 @@ const SampleReception = ({ data }) => {
 
             <Box
                 sx={{
-                    width: "100%",
-                    height: "300px",
-                    bgcolor: "background.default",
-                    borderRadius: "20px",
-                    border: `1px solid ${theme.palette.border.primary}`,
-                    p: "20px",
-                    display: "grid",
-                    gridTemplateColumns:
-                        "repeat(auto-fill, minmax(200px, 1fr))",
-                    gap: "10px",
+                    display: "flex",
+                    alignItems: "center",
                 }}
             >
-                <Box
+                <TableContainer
+                    component={Paper}
                     sx={{
-                        height: "100px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        maxWidth: 900,
+                        margin: "20px auto",
+                        border: `1px solid ${theme.palette.border.primary}`,
+                        borderRadius: "20px",
                     }}
                 >
-                    <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "500", opacity: "0.80" }}
-                    >
-                        Identificacion de la muestra
-                    </Typography>
-                    <Typography variant="body1">
-                        {checkValue(data.identificationSample)}
-                    </Typography>
-                </Box>
+                    <Table aria-label="explanatory notes table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell
+                                    sx={{
+                                        fontWeight: "bold",
+                                        width: 60,
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    #
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Description
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
 
-                <Box
-                    sx={{
-                        height: "100px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "500", opacity: "0.80" }}
-                    >
-                        Fecha de ingreso muestra
-                    </Typography>
-                    <Typography variant="body1">
-                        {checkValue(data.sampleEntryDate)}
-                    </Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        height: "100px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "500", opacity: "0.80" }}
-                    >
-                        Fecha de recepción
-                    </Typography>
-                    <Typography variant="body1">
-                        {checkValue(data.sampleReceptionDate)}
-                    </Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        height: "100px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "500", opacity: "0.80" }}
-                    >
-                        Peso bruto
-                    </Typography>
-                    <Typography variant="body1">
-                        {checkValue(data.gross_weight)} {"(g)"}
-                    </Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        height: "100px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "500", opacity: "0.80" }}
-                    >
-                        Condicion de almacenamiento
-                    </Typography>
-                    <Typography variant="body1">
-                        {checkValue(data.storageConditions)}
-                    </Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        height: "100px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "500", opacity: "0.80" }}
-                    >
-                        Des. empaque
-                    </Typography>
-                    <Typography variant="body1">
-                        {checkValue(data.packageDescription)}
-                    </Typography>
-                </Box>
-                <Box
-                    sx={{
-                        height: "100px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography
-                        variant="body2"
-                        sx={{ fontWeight: "500", opacity: "0.80" }}
-                    >
-                        Imagen
-                    </Typography>
-                    <img
-                        src={data.sampleImage ? data.sampleImage : notImage}
-                        alt="imageSampleReception"
-                        width={"200px"}
-                    />
-                </Box>
+                        <TableBody>
+                            <TableRow
+                                sx={{
+                                    bgcolor: "background.default",
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    sx={{
+                                        verticalAlign: "top",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Identificacion de la muestra
+                                </TableCell>
+                                <TableCell sx={{ whiteSpace: "normal" }}>
+                                    {checkValue(data.identificationSample)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    bgcolor: "background.paper",
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    sx={{
+                                        verticalAlign: "top",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Fecha de ingreso muestra
+                                </TableCell>
+                                <TableCell sx={{ whiteSpace: "normal" }}>
+                                    {checkValue(data.sampleEntryDate)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    bgcolor: "background.default",
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    sx={{
+                                        verticalAlign: "top",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Fecha de recepción
+                                </TableCell>
+                                <TableCell sx={{ whiteSpace: "normal" }}>
+                                    {checkValue(data.sampleReceptionDate)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    bgcolor: "background.paper",
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    sx={{
+                                        verticalAlign: "top",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Peso bruto
+                                </TableCell>
+                                <TableCell sx={{ whiteSpace: "normal" }}>
+                                    {checkValue(data.gross_weight)} {"(g)"}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    bgcolor: "background.default",
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    sx={{
+                                        verticalAlign: "top",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Condicion de almacenamiento
+                                </TableCell>
+                                <TableCell sx={{ whiteSpace: "normal" }}>
+                                    {checkValue(data.storageConditions)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    bgcolor: "background.paper",
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    sx={{
+                                        verticalAlign: "top",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Des. empaque
+                                </TableCell>
+                                <TableCell sx={{ whiteSpace: "normal" }}>
+                                    {checkValue(data.packageDescription)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow
+                                sx={{
+                                    bgcolor: "background.default",
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    sx={{
+                                        verticalAlign: "top",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Imagen
+                                </TableCell>
+                                <TableCell sx={{ whiteSpace: "normal" }}>
+                                    <img
+                                        src={
+                                            data.sampleImage
+                                                ? data.sampleImage
+                                                : notImage
+                                        }
+                                        alt="imageSampleReception"
+                                        width={"200px"}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
         </Box>
     );

@@ -10,12 +10,13 @@ const CustomerCardTestRequest = ({ objectData = {} }) => {
         <Box
             sx={{
                 width: "40%",
-                height: "370px",
+                height: "300px",
                 bgcolor: "background.paper",
                 border: `1px solid ${theme.palette.border.primary}`,
                 p: "20px 10px",
                 display: "flex",
                 flexDirection: "column",
+                justifyContent: "space-around",
                 borderRadius: "20px",
             }}
         >

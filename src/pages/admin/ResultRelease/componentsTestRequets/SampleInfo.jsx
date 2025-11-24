@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ButtonBack from "../../../../components/ButtonBack";
@@ -6,6 +6,14 @@ import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 import api from "../../../../service/axiosService";
 import { Circle, ScienceOutlined, Upload } from "@mui/icons-material";
 import SampleReception from "./SampleReception";
+import SampleAnalysisResultCard from "./SampleAnalysisResultCard";
+
+/* 
+    SAMPLE RESULT
+
+    This component handles all analyses for a single sample.
+    It also provides a form to submit the results.
+*/
 
 const SampleInfo = () => {
     const { sampleId } = useParams();
@@ -56,6 +64,8 @@ const SampleInfo = () => {
             setIsLoanding(false);
         }
     };
+
+    const sendResultFinal = () => {};
 
     useEffect(() => {
         getSampleData();
@@ -131,84 +141,13 @@ const SampleInfo = () => {
                 sx={{
                     display: "grid",
                     gridTemplateColumns:
-                        "repeat(auto-fill, minmax(300px, 1fr))",
+                        "repeat(auto-fill, minmax(400px, 1fr))",
                     gap: "20px",
                     mb: "40px",
                 }}
             >
                 {analysis.map((a) => {
-                    return (
-                        <Box
-                            sx={{
-                                minHeight: "300px",
-                                bgcolor: "background.default",
-                                p: "10px",
-                                borderRadius: "10px",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "space-between",
-                            }}
-                            key={a.sampleProductAnalysisId}
-                        >
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                }}
-                            >
-                                <Typography variant="body1">
-                                    {a.product.analysis}
-                                </Typography>
-                                <Circle
-                                    sx={{
-                                        width: "15px",
-                                        mr: "10px",
-                                        ml: "10px",
-                                    }}
-                                />
-                                <Typography variant="body2">
-                                    {a.code}
-                                </Typography>
-                            </Box>
-
-                            <Box component={"form"}>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                    }}
-                                >
-                                    <TextField
-                                        label={"Resultado final"}
-                                        type="text"
-                                        placeholder="Digite el resultaado final"
-                                    />
-                                    <TextField
-                                        type="datetime-local"
-                                        placeholder="Digite el resultaado final"
-                                    />
-                                </Box>
-                            </Box>
-
-                            <Box>
-                                <Button
-                                    sx={{
-                                        width: "100%",
-                                    }}
-                                    startIcon={<Upload />}
-                                >
-                                    Agregar archivo
-                                </Button>
-
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        width: "100%",
-                                    }}
-                                >
-                                    Guardar resultado
-                                </Button>
-                            </Box>
-                        </Box>
-                    );
+                    return <SampleAnalysisResultCard data={a} />;
                 })}
             </Box>
         </Box>
