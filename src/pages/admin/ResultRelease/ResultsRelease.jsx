@@ -7,6 +7,7 @@ import {
     CalendarToday,
     CheckCircle,
     InfoOutline,
+    RunningWithErrors,
     Science,
     TrendingUp,
     Visibility,
@@ -216,6 +217,8 @@ const ResultsRelease = () => {
             <Box
                 sx={{
                     mt: "40px",
+                    display: "flex",
+                    justifyContent: "space-between",
                 }}
             >
                 <Box
@@ -261,6 +264,20 @@ const ResultsRelease = () => {
                             <MenuItem value={"ALL"}>Todas</MenuItem>
                         </Select>
                     </FormControl>
+                </Box>
+
+                <Box>
+                    {authObject.role == "ROLE_SUPERADMIN" && (
+                        <Button
+                            startIcon={<RunningWithErrors />}
+                            variant="outlined"
+                            onClick={() =>
+                                navigate("/system/result/execution-test")
+                            }
+                        >
+                            Ejecutar revision
+                        </Button>
+                    )}
                 </Box>
             </Box>
 
