@@ -33,7 +33,7 @@ import {
 } from "@mui/icons-material";
 import CustomerCardTestRequest from "../CustomerAndUsers/CustomerCardTestRequest";
 import UserUIMiniCard from "../CustomerAndUsers/UserUIMiniCard";
-import SamplesTestRequestCompo from "./SamplesTestRequestCompo";
+import SamplesTestRequestCompo from "./componentsTestRequets/SamplesTestRequestCompo";
 import AddMemberCompo from "./componentsTestRequets/AddMemberCompo";
 import MembersOfTestRequest from "./componentsTestRequets/MembersOfTestRequest";
 import GenericModal from "../../../components/modals/GenericModal";

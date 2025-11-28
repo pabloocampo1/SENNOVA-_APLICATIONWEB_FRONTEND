@@ -13,7 +13,7 @@ const PrivateRoute = ({ allowedRoles = [] }) => {
     }
 
     if (!isAuthenticated) {
-        return <Navigate to="/signIn/noAccess" replace />;
+        return <Navigate to="/signIn" replace />;
     }
 
     if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {

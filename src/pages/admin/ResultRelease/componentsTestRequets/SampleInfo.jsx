@@ -16,7 +16,7 @@ import SampleAnalysisResultCard from "./SampleAnalysisResultCard";
 */
 
 const SampleInfo = () => {
-    const { sampleId } = useParams();
+    const { sampleId, requestCode } = useParams();
     const [isLoanding, setIsLoanding] = useState(false);
     const [sampleData, setSampleData] = useState({});
     const [analysis, setAnalysis] = useState([]);
@@ -64,8 +64,6 @@ const SampleInfo = () => {
             setIsLoanding(false);
         }
     };
-
-    const sendResultFinal = () => {};
 
     useEffect(() => {
         getSampleData();
@@ -142,12 +140,19 @@ const SampleInfo = () => {
                     display: "grid",
                     gridTemplateColumns:
                         "repeat(auto-fill, minmax(400px, 1fr))",
-                    gap: "20px",
+                    gap: "40px",
                     mb: "40px",
                 }}
             >
-                {analysis.map((a) => {
-                    return <SampleAnalysisResultCard data={a} />;
+                {analysis.map((a, index) => {
+                    return (
+                        <Box key={index}>
+                            <SampleAnalysisResultCard
+                                data={a}
+                                requestCode={requestCode}
+                            />
+                        </Box>
+                    );
                 })}
             </Box>
         </Box>

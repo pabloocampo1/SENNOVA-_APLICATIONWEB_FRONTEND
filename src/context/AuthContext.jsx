@@ -125,7 +125,8 @@ export const AuthContextProvider = ({ children }) => {
                 alert(
                     "Ocurrio un error al intentar cerrar sesion, por favor, notificar este error."
                 );
-                console.error(error);
+            } finally {
+                navigate("/signIn");
             }
         };
 
