@@ -97,8 +97,9 @@ const SelectAnalisysCompo = ({ saveSample }) => {
                 isError: true,
                 message: "Debes de agregar un analisis a esta prueba.",
             });
+        } else {
+            saveSample(sampleData);
         }
-        saveSample(sampleData);
     };
 
     useEffect(() => {
@@ -275,9 +276,26 @@ const SelectAnalisysCompo = ({ saveSample }) => {
                 )}
             </Box>
             {errorObject.isError && (
-                <Typography sx={{ mt: "20px" }} color="error" variant="body1">
-                    {errorObject.message}
-                </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            mt: "20px",
+                            textAlign: "center",
+                            mb: "30px",
+                            p: "10px",
+                            bgcolor: "#fe020230",
+                        }}
+                        color="error"
+                        variant="caption"
+                    >
+                        {errorObject.message}
+                    </Typography>
+                </Box>
             )}
 
             <Box

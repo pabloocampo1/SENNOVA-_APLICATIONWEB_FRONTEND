@@ -116,7 +116,10 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                 setIsSend(true);
             }
         } catch (error) {
-            console.error(error);
+            setErrorToSendQuote({
+                message: error.message,
+                status: true,
+            });
         } finally {
             setIsLoanding(false);
         }

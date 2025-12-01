@@ -2,6 +2,8 @@ import {
     Box,
     Button,
     Checkbox,
+    Drawer,
+    FormControlLabel,
     MenuItem,
     Table,
     TableBody,
@@ -11,7 +13,6 @@ import {
     TableRow,
     TextField,
     Typography,
-    useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import api from "../../../../service/axiosService";
@@ -19,23 +20,38 @@ import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 import { getDays } from "../../../../Utils/DateUtils";
 import {
     CheckBox,
+    Delete,
+    DeleteOutline,
+    DeleteOutlineTwoTone,
     Looks,
     PictureAsPdf,
     Visibility,
     Watch,
     WatchLaterOutlined,
 } from "@mui/icons-material";
+import GenericModal from "../../../../components/modals/GenericModal";
+import DeleteSamplesModalConfirmation from "./DeleteSamplesModalConfirmation";
+import InfoSamplesResultExecution from "./InfoSamplesResultExecution";
 
 const getLenght = (analisys = []) => {
     return analisys.length;
 };
 
 const ResultExecutionSamplesAvailable = () => {
+    const [open, setOpen] = React.useState(false);
     const [isLoanding, setIsLoanding] = useState(false);
     const [data, setData] = useState([]);
     const [originalData, setOriginalData] = useState([]);
+    const [dataSelected, setDataSelected] = useState([]);
     const [order, setOrder] = useState("all");
-    const theme = useTheme();
+    const [openModalToDeleteSamples, setOpenModalToDeleteSamples] =
+        useState(false);
+    const [sampleSelected, setSampleSelected] = useState({});
+    // const theme = useTheme();
+
+    const toggleDrawer = (newOpen) => () => {
+        setOpen(newOpen);
+    };
 
     const getData = async () => {
         setIsLoanding(true);
@@ -43,6 +59,7 @@ const ResultExecutionSamplesAvailable = () => {
         try {
             const res = await api.get("/sample/get-all-status-process");
             setData(res.data);
+
             setOriginalData(res.data);
         } catch (error) {
             console.error(error);
@@ -64,6 +81,11 @@ const ResultExecutionSamplesAvailable = () => {
             return "ya se acabo manito";
         }
     };
+
+    const countAnalysisCompleteBySample = (analysis = []) => {
+        return analysis.reduce((c, a) => c + a.stateResult, 0);
+    };
+
     const getPriority = (dueDate) => {
         const days = getDays(dueDate);
 
@@ -162,6 +184,25 @@ const ResultExecutionSamplesAvailable = () => {
         }
     };
 
+    const handleDataSelected = (sampleId, checked) => {
+        if (checked) {
+            setDataSelected([...dataSelected, sampleId]);
+        } else {
+            setDataSelected(dataSelected.filter((id) => id !== sampleId));
+        }
+    };
+
+    const handleSelectAll = (checked) => {
+        if (checked) {
+            const selectedList = data.map((s) => s.sampleId);
+            console.log(selectedList);
+
+            setDataSelected(selectedList);
+        } else {
+            setDataSelected([]);
+        }
+    };
+
     useEffect(() => {
         getData();
     }, []);
@@ -169,34 +210,93 @@ const ResultExecutionSamplesAvailable = () => {
     return (
         <Box>
             <SimpleBackdrop open={isLoanding} />
+
+            <GenericModal
+                compo={
+                    <DeleteSamplesModalConfirmation
+                        onClose={() => setOpenModalToDeleteSamples(false)}
+                    />
+                }
+                open={openModalToDeleteSamples}
+                onClose={() => setOpenModalToDeleteSamples(false)}
+            />
+
+            {dataSelected.length >= 1 && (
+                <Box
+                    sx={{
+                        mt: "10px",
+                        mb: "20px",
+                        display: "flex",
+                        justifyContent: "end",
+                    }}
+                >
+                    <Button
+                        variant="outlined"
+                        startIcon={<DeleteOutlineTwoTone />}
+                        onClick={() => setOpenModalToDeleteSamples(true)}
+                    >
+                        Eliminar muestras
+                    </Button>
+                </Box>
+            )}
             <Box
                 sx={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
                 }}
             >
-                <Typography
+                <Box
                     sx={{
-                        mr: "20px",
+                        display: "flex",
+                        alignItems: "center",
                     }}
                 >
-                    Muetras para ejecutar
-                </Typography>
-                <TextField
-                    label="filtrar por prioridad"
-                    select
-                    value={order}
-                    onChange={(e) => {
-                        setOrder(e.target.value);
-                        handleFilterPriorityList(e.target.value);
+                    <TextField
+                        label="filtrar por prioridad"
+                        select
+                        value={order}
+                        onChange={(e) => {
+                            setOrder(e.target.value);
+                            handleFilterPriorityList(e.target.value);
+                        }}
+                    >
+                        <MenuItem value="low">Prioridad baja</MenuItem>
+                        <MenuItem value="intermediate">
+                            Prioridad media
+                        </MenuItem>
+                        <MenuItem value="high">Prioridad alta</MenuItem>
+                        <MenuItem value="all">Todos</MenuItem>
+                    </TextField>
+                </Box>
+
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
                     }}
                 >
-                    <MenuItem value="low">Prioridad baja</MenuItem>
-                    <MenuItem value="intermediate">Prioridad media</MenuItem>
-                    <MenuItem value="high">Prioridad alta</MenuItem>
-                    <MenuItem value="all">Todos</MenuItem>
-                </TextField>
+                    <Typography sx={{ mr: "20px" }}>
+                        Elementos seleccionados: {dataSelected.length}
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        onClick={() => console.log(dataSelected)}
+                    >
+                        Ejecutar finalizacion
+                    </Button>
+                </Box>
             </Box>
+
+            <FormControlLabel
+                sx={{ mt: "20px" }}
+                control={
+                    <Checkbox
+                        onChange={(e) => handleSelectAll(e.target.checked)}
+                    />
+                }
+                label="Seleccionar todos"
+            />
 
             <Box>
                 <TableContainer>
@@ -205,8 +305,8 @@ const ResultExecutionSamplesAvailable = () => {
                             <TableRow>
                                 <TableCell>Seleccionar</TableCell>
                                 <TableCell>Muestra {"(Matrix)"}</TableCell>
-                                <TableCell>Codigo</TableCell>
-                                <TableCell>total de analisis</TableCell>
+                                <TableCell>Codigo {"(muestra)"}</TableCell>
+                                <TableCell>Total de analisis</TableCell>
                                 <TableCell>PDF</TableCell>
                                 <TableCell>Dias restantes</TableCell>
                                 <TableCell>Prioridad</TableCell>
@@ -227,25 +327,45 @@ const ResultExecutionSamplesAvailable = () => {
                                         }}
                                     >
                                         <TableCell>
-                                            <Checkbox label="Seleccionar" />
+                                            <Checkbox
+                                                label="Seleccionar"
+                                                checked={dataSelected.includes(
+                                                    sample.sampleId
+                                                )}
+                                                onChange={(e) =>
+                                                    handleDataSelected(
+                                                        sample.sampleId,
+                                                        e.target.checked
+                                                    )
+                                                }
+                                                // onClick={() =>
+                                                //     handleDataSelected(
+                                                //         sample.sampleId
+                                                //     )
+                                                // }
+                                            />
                                         </TableCell>
                                         <TableCell>{sample.matrix}</TableCell>
                                         <TableCell>
+                                            {" "}
                                             {sample.sampleCode}
                                         </TableCell>
+
                                         <TableCell>
+                                            {countAnalysisCompleteBySample(
+                                                sample.analysisEntities
+                                            )}{" "}
+                                            /{" "}
                                             {getLenght(sample.analysisEntities)}
                                         </TableCell>
-                                        <TableCell
-                                            sx={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                            }}
-                                        >
-                                            <PictureAsPdf />
-                                            <Button variant="outlined">
-                                                Ver o generar
-                                            </Button>
+                                        <TableCell>
+                                            <PictureAsPdf
+                                                onClick={() =>
+                                                    alert(
+                                                        "funcionalidad en progreso"
+                                                    )
+                                                }
+                                            />
                                         </TableCell>
                                         <TableCell>
                                             {getDays(sample.dueDate)} dias
@@ -253,7 +373,13 @@ const ResultExecutionSamplesAvailable = () => {
                                         <TableCell>
                                             {getPriority(sample.dueDate)}
                                         </TableCell>
-                                        <TableCell>
+
+                                        <TableCell
+                                            onClick={() => {
+                                                setOpen(true),
+                                                    setSampleSelected(sample);
+                                            }}
+                                        >
                                             <Visibility />
                                         </TableCell>
                                     </TableRow>
@@ -263,6 +389,10 @@ const ResultExecutionSamplesAvailable = () => {
                     </Table>
                 </TableContainer>
             </Box>
+
+            <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+                <InfoSamplesResultExecution data={sampleSelected} />
+            </Drawer>
         </Box>
     );
 };

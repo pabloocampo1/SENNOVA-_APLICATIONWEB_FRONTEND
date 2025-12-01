@@ -15,21 +15,17 @@ import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import api from "../../../service/axiosService";
 import {
     AccessTime,
-    Add,
     CalendarMonth,
     CheckCircle,
     Circle,
-    DeleteForever,
     DeleteForeverOutlined,
-    FastForward,
-    Groups2Outlined,
+    DoneAll,
     InfoOutline,
     Inventory2,
     LockClock,
-    PersonAdd,
     ScienceOutlined,
     ScienceTwoTone,
-    Timeline,
+    WarningAmber,
 } from "@mui/icons-material";
 import CustomerCardTestRequest from "../CustomerAndUsers/CustomerCardTestRequest";
 import UserUIMiniCard from "../CustomerAndUsers/UserUIMiniCard";
@@ -600,58 +596,47 @@ const TestRequestInfo = () => {
                 removeMember={(userId) => removeMember(userId)}
             />
 
-            {/* SAMPLES */}
-            <SamplesTestRequestCompo
-                samples={testRequest.samples}
-                getTotalFinished={() => getTotalSamplesFinished()}
-                requestCode={testRequest.requestCode}
-            />
-
             <Box
                 sx={{
                     mb: "20px",
                     mt: "20px",
                 }}
             >
-                {getTotalSamplesFinished() == testRequest.samples.length ? (
-                    <Box
-                        sx={{
-                            width: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            mb: "20px",
-                        }}
-                    >
-                        <Button variant="outlined">Finalizar ensayo</Button>
-                    </Box>
-                ) : (
-                    <Box
-                        sx={{
-                            width: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            mb: "20px",
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                mb: "10px",
-                            }}
-                        >
-                            Este ensayo aun no esta finalizado
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        mb: "20px",
+                    }}
+                >
+                    {getTotalSamplesFinished() == testRequest.samples.length ? (
+                        <Typography color="primary.main" sx={{ mb: "40px" }}>
+                            Este ensayo ah completado todos los análisis de las
+                            muestras. <DoneAll />
                         </Typography>
-                        <img
-                            width={"200px"}
-                            src={imageNoFinishTestRequest}
-                            alt="imagenofinbished"
-                        />
-                    </Box>
-                )}
+                    ) : (
+                        <Typography color="warning" sx={{ mb: "40px" }}>
+                            Este ensayo aun no completa los análisis de las
+                            muestras. <WarningAmber />
+                        </Typography>
+                    )}
+                    <img
+                        width={"200px"}
+                        src={imageNoFinishTestRequest}
+                        alt="imagenofinbished"
+                    />
+                </Box>
             </Box>
+
+            {/* SAMPLES */}
+            <SamplesTestRequestCompo
+                samples={testRequest.samples}
+                getTotalFinished={() => getTotalSamplesFinished()}
+                requestCode={testRequest.requestCode}
+            />
 
             {/* ASSIGN MEMBER MODAl*/}
 
