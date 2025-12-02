@@ -191,18 +191,8 @@ const ResultsRelease = () => {
                     >
                         <Science sx={{ color: "primary.main", mr: "15px" }} />
                         <Typography component={"h2"} variant="h2">
-                            Ensayos Activos
+                            Gestion de emision de resultados / ensayos
                         </Typography>
-
-                        <Chip
-                            label={testRequest.length}
-                            sx={{
-                                bgcolor: `${theme.palette.primary.main}40`,
-                                ml: "15px",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                            }}
-                        />
                     </Box>
                     <Box>
                         <Typography variant="body1" sx={{ opacity: "0.80" }}>
@@ -210,6 +200,15 @@ const ResultsRelease = () => {
                             proceso de ensayo
                         </Typography>
                     </Box>
+                    <Chip
+                        label={"total de ensayos: " + testRequest.length}
+                        sx={{
+                            bgcolor: `${theme.palette.primary.main}40`,
+                            mt: "20px",
+                            fontWeight: "500",
+                            textAlign: "center",
+                        }}
+                    />
                 </Box>
             </Box>
 

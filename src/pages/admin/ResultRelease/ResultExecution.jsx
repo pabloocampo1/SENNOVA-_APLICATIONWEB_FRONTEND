@@ -66,6 +66,8 @@ const ResultExecution = () => {
                 variant="h3"
                 sx={{
                     mt: "20px",
+                    color: "primary.main",
+                    textAlign: "center",
                 }}
             >
                 Ejecucion de resultados

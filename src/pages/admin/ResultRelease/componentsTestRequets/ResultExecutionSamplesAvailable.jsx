@@ -288,22 +288,24 @@ const ResultExecutionSamplesAvailable = () => {
                 </Box>
             </Box>
 
-            <FormControlLabel
-                sx={{ mt: "20px" }}
-                control={
-                    <Checkbox
-                        onChange={(e) => handleSelectAll(e.target.checked)}
-                    />
-                }
-                label="Seleccionar todos"
-            />
-
             <Box>
                 <TableContainer>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Seleccionar</TableCell>
+                                <TableCell>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                onChange={(e) =>
+                                                    handleSelectAll(
+                                                        e.target.checked
+                                                    )
+                                                }
+                                            />
+                                        }
+                                    />
+                                </TableCell>
                                 <TableCell>Muestra {"(Matrix)"}</TableCell>
                                 <TableCell>Codigo {"(muestra)"}</TableCell>
                                 <TableCell>Total de analisis</TableCell>
