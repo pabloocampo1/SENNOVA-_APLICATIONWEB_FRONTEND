@@ -1,10 +1,19 @@
-import { Add, CheckCircle, Upload } from "@mui/icons-material";
 import {
+    Add,
+    CheckCircle,
+    DeleteForeverOutlined,
+    Download,
+    FileOpen,
+} from "@mui/icons-material";
+import {
+    Alert,
     Box,
     Button,
     Chip,
     MenuItem,
+    Snackbar,
     TextField,
+    Tooltip,
     Typography,
     useTheme,
 } from "@mui/material";
@@ -19,15 +28,17 @@ const SampleAnalysisResultCard = ({
     isAdminEdit = false,
 }) => {
     const theme = useTheme();
-    const [ListFiles, setListFiles] = useState([]);
+    const [listFiles, setListFiles] = useState([]);
     const [dataToUse, setDataToUse] = useState(data);
     const { authObject } = useAuth();
     const [isLoanding, setIsLoanding] = useState(false);
-
-    console.log("data em resultu", data);
+    const [responseAlert, setResponseAlert] = useState({
+        status: false,
+        message: "",
+    });
 
     const handleFiles = (e) => {
-        setListFiles(e.target.files);
+        setListFiles((prev) => [...prev, ...Array.from(e.target.files)]);
     };
 
     const handleSubmit = async (e) => {
@@ -35,7 +46,6 @@ const SampleAnalysisResultCard = ({
         setIsLoanding(true);
         const data = {
             data: dataToUse,
-            filesList: ListFiles,
         };
 
         const formData = new FormData();
@@ -51,10 +61,6 @@ const SampleAnalysisResultCard = ({
             })
         );
         formData.append("testRequestId", requestCode);
-
-        if (data.filesList != null) {
-            formData.append("file", data.filesList);
-        }
 
         try {
             const res = await api.post(`/sample/save-result`, formData, {
@@ -73,11 +79,71 @@ const SampleAnalysisResultCard = ({
         }
     };
 
+    const handleSaveDoc = async () => {
+        setIsLoanding(true);
+        const formData = new FormData();
+
+        listFiles.forEach((file) => formData.append("docs", file));
+        formData.append("analysisResultId", dataToUse.sampleProductAnalysisId);
+
+        try {
+            const res = await api.post(
+                "/sample/save-document-analysis",
+                formData
+            );
+
+            if (res.status == 201) {
+                setListFiles([]);
+                setDataToUse((prev) => ({
+                    ...prev,
+                    sampleProductDocumentResult: [
+                        ...prev.sampleProductDocumentResult,
+                        ...res.data,
+                    ],
+                }));
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
+    };
+
     const handleChangeInput = (e) => {
         setDataToUse({
             ...dataToUse,
             [e.target.name]: e.target.value,
         });
+    };
+
+    const deleteFile = async (sampleProductDocumentResultId, nameFile) => {
+        // delete in this method the cod with that link
+        console.log(dataToUse);
+
+        const listDpcsUpdate = dataToUse.sampleProductDocumentResult.filter(
+            (doc) =>
+                doc.sampleProductDocumentResultId !==
+                sampleProductDocumentResultId
+        );
+
+        setDataToUse({
+            ...dataToUse,
+            sampleProductDocumentResult: listDpcsUpdate,
+        });
+
+        setResponseAlert({
+            message: ` Se elimino el archivo correctamente el archivo ${nameFile}`,
+            status: true,
+        });
+
+        try {
+            const res = await api.delete(
+                `/sample/delete-file-result/${sampleProductDocumentResultId}`
+            );
+            console.log(res);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -95,6 +161,37 @@ const SampleAnalysisResultCard = ({
                 position: "relative",
             }}
         >
+            {/** Messages to show */}
+            {responseAlert.status && (
+                <Snackbar
+                    open={responseAlert.status}
+                    autoHideDuration={3000}
+                    onClose={() => {
+                        setResponseAlert({
+                            ...responseAlert,
+                            status: false,
+                        });
+                        setResponseAlert({
+                            status: false,
+                            message: "",
+                        });
+                    }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                >
+                    <Alert
+                        severity="success"
+                        onClose={() =>
+                            setResponseAlert({
+                                status: false,
+                                message: "",
+                            })
+                        }
+                        sx={{ width: "100%" }}
+                    >
+                        {responseAlert.message}
+                    </Alert>
+                </Snackbar>
+            )}
             <SimpleBackdrop open={isLoanding} text="Guardando resultado." />
             <Box
                 sx={{
@@ -257,34 +354,163 @@ const SampleAnalysisResultCard = ({
                             mt: "40px",
                         }}
                     >
-                        <Typography variant="body2">Archivos: </Typography>
+                        <Typography variant="body2">
+                            Archivos subidos:{" "}
+                        </Typography>
                         <Box
                             sx={{
                                 width: "100%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
                             }}
                         >
-                            <Typography
-                                sx={{
-                                    textAlign: "center",
-                                }}
-                            >
-                                No hay archivos
-                            </Typography>
+                            {dataToUse.sampleProductDocumentResult.length >=
+                            1 ? (
+                                <Box
+                                    sx={{
+                                        display: "grid",
+                                        gridTemplateColumns:
+                                            "repeat(auto-fill, minmax(200px, 1fr))",
+                                        gap: "20px",
+                                        mb: "20px",
+                                        mt: "20px",
+                                    }}
+                                >
+                                    {dataToUse.sampleProductDocumentResult.map(
+                                        (doc, index) => {
+                                            return (
+                                                <Box
+                                                    key={index}
+                                                    sx={{
+                                                        width: "200px",
+                                                        bgcolor:
+                                                            "background.paper",
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        border: `1px solid ${theme.palette.border.primary}`,
+                                                        alignItems: "center",
+                                                        p: "20px",
+                                                        borderRadius: "10px",
+                                                        cursor: "pointer",
+                                                    }}
+                                                >
+                                                    <FileOpen />
+                                                    <Typography
+                                                        sx={{
+                                                            textAlign: "center",
+                                                            wordBreak:
+                                                                "break-word",
+                                                        }}
+                                                        variant="body2"
+                                                    >
+                                                        {doc.nameFile ||
+                                                            "Sin nombre registrado"}
+                                                    </Typography>
+
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            justifyContent:
+                                                                "center",
+                                                            gap: "20px",
+                                                            mt: "20px",
+                                                        }}
+                                                    >
+                                                        <Tooltip
+                                                            title={
+                                                                "Descargar documento"
+                                                            }
+                                                        >
+                                                            <a
+                                                                href={doc.url}
+                                                                download={
+                                                                    doc.nameFile
+                                                                }
+                                                                style={{
+                                                                    textDecoration:
+                                                                        "none",
+                                                                    color: "inherit",
+                                                                }}
+                                                            >
+                                                                <Button variant="outlined">
+                                                                    {" "}
+                                                                    <Download />
+                                                                </Button>
+                                                            </a>
+                                                        </Tooltip>
+
+                                                        <Tooltip
+                                                            title={
+                                                                "Eliminar documento"
+                                                            }
+                                                        >
+                                                            <Button
+                                                                variant="contained"
+                                                                onClick={() =>
+                                                                    deleteFile(
+                                                                        doc.sampleProductDocumentResultId,
+                                                                        doc.nameFile
+                                                                    )
+                                                                }
+                                                            >
+                                                                <DeleteForeverOutlined />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    </Box>
+                                                </Box>
+                                            );
+                                        }
+                                    )}
+                                </Box>
+                            ) : (
+                                <Typography
+                                    sx={{
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    No hay archivos
+                                </Typography>
+                            )}
                         </Box>
                         <Button variant="outlined" component="label" fullWidth>
-                            Subir imagen
+                            Seleccionar archivos
                             <input
                                 hidden
                                 multiple
                                 type="file"
                                 name="file"
-                                accept="image/*"
+                                accept=".doc,.docx,.xls,.xlsx,.txt"
                                 onChange={(e) => handleFiles(e)}
                             />
                         </Button>
+
+                        {listFiles.length >= 1 && (
+                            <>
+                                <Typography sx={{ textAlign: "center" }}>
+                                    hay {listFiles.length}{" "}
+                                    {listFiles.length == 1
+                                        ? "archivo seleccionado"
+                                        : "archivos seleccionados"}
+                                </Typography>
+                                <Button
+                                    onClick={() => handleSaveDoc()}
+                                    variant="contained"
+                                    fullWidth
+                                >
+                                    Subir archivos
+                                </Button>
+                            </>
+                        )}
+                        <Typography
+                            sx={{
+                                textAlign: "center",
+                                mt: "20px",
+                                bgcolor: "action.hover",
+                                p: "5px",
+                                borderRadius: "10px",
+                            }}
+                            variant="caption"
+                        >
+                            Preocura no subir archivos muy pesados.
+                        </Typography>
                     </Box>
 
                     {/* OPTION TO UPLOAD FILE AND SAVE RESULT */}
