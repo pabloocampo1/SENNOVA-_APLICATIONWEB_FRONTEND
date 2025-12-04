@@ -326,7 +326,6 @@ const ResultsRelease = () => {
                                 borderRadius: "15px",
                             }}
                         >
-                            <Typography variant="body1">Ensayo</Typography>
                             <Typography
                                 sx={{
                                     fontWeight: "bold",
@@ -335,7 +334,7 @@ const ResultsRelease = () => {
                                     opacity: "0.80",
                                 }}
                             >
-                                #ENS-{test.requestCode}
+                                #ENS {test.requestCode}
                             </Typography>
 
                             <Box
@@ -461,8 +460,11 @@ const ResultsRelease = () => {
                                             sx={{
                                                 height: 8,
                                                 borderRadius: 4,
-                                                bgcolor:
-                                                    theme.palette.grey[200],
+                                                border: `1px solid ${
+                                                    theme.palette.primary.main +
+                                                    90
+                                                }`,
+                                                bgcolor: "background.paper",
                                                 "& .MuiLinearProgress-bar": {
                                                     borderRadius: 4,
                                                     background:

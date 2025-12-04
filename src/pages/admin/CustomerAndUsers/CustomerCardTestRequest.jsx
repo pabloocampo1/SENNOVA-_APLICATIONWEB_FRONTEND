@@ -9,8 +9,8 @@ const CustomerCardTestRequest = ({ objectData = {} }) => {
     return (
         <Box
             sx={{
-                width: "40%",
-                height: "300px",
+                width: "100%",
+                height: "400px",
                 bgcolor: "background.paper",
                 border: `1px solid ${theme.palette.border.primary}`,
                 p: "20px 10px",

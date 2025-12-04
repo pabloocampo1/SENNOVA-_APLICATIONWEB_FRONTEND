@@ -193,39 +193,37 @@ const SampleAnalysisResultCard = ({
                 </Snackbar>
             )}
             <SimpleBackdrop open={isLoanding} text="Guardando resultado." />
+
             <Box
                 sx={{
                     display: "flex",
-                    justifyContent: "flex-end",
-                    mt: "10px",
-                }}
-            >
-                <Chip
-                    label={
-                        dataToUse.stateResult
-                            ? "Resultado emitido"
-                            : "Sin emitir resultado"
-                    }
-                    color={dataToUse.stateResult ? "success" : "warning"}
-                    size="small"
-                    sx={{
-                        p: "15px",
-                    }}
-                />
-            </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
+                    justifyContent: "space-between",
                     mb: "40px",
                     mt: "20px",
                 }}
             >
-                <Typography variant="body1" sx={{ color: "primary.main" }}>
-                    {dataToUse.product.analysis}
-                </Typography>
+                <Box>
+                    <Typography variant="body1" sx={{ color: "primary.main" }}>
+                        {dataToUse.product.analysis}
+                    </Typography>
 
-                <Typography variant="body2">{dataToUse.code}</Typography>
+                    <Typography variant="body2">{dataToUse.code}</Typography>
+                </Box>
+
+                <Box>
+                    <Chip
+                        label={
+                            dataToUse.stateResult
+                                ? "Resultado emitido"
+                                : "Sin emitir resultado"
+                        }
+                        color={dataToUse.stateResult ? "info" : "warning"}
+                        size="small"
+                        sx={{
+                            p: "15px",
+                        }}
+                    />
+                </Box>
             </Box>
             {/* FORM TO SAVE RESULT. */}
             <Box
@@ -484,7 +482,15 @@ const SampleAnalysisResultCard = ({
 
                         {listFiles.length >= 1 && (
                             <>
-                                <Typography sx={{ textAlign: "center" }}>
+                                <Typography
+                                    sx={{
+                                        textAlign: "center",
+                                        mt: "10px",
+                                        mb: "20px",
+                                        color: "primary.third",
+                                        fontWeight: "bold",
+                                    }}
+                                >
                                     hay {listFiles.length}{" "}
                                     {listFiles.length == 1
                                         ? "archivo seleccionado"

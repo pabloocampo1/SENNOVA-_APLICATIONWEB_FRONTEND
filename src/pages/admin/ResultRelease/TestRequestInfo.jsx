@@ -3,6 +3,7 @@ import {
     Button,
     Divider,
     Drawer,
+    IconButton,
     LinearProgress,
     Tooltip,
     Typography,
@@ -15,6 +16,7 @@ import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import api from "../../../service/axiosService";
 import {
     AccessTime,
+    ArrowBack,
     CalendarMonth,
     CheckCircle,
     Circle,
@@ -35,7 +37,9 @@ import MembersOfTestRequest from "./componentsTestRequets/MembersOfTestRequest";
 import GenericModal from "../../../components/modals/GenericModal";
 import ModalToDeleteTestRequest from "../quotes/quotesCompo/ModalToDeleteTestRequest";
 import TestRequestNotFound from "./componentsTestRequets/TestRequestNotFound";
-import imageNoFinishTestRequest from "../../../assets/images/undraw_next-tasks_y3rm.svg";
+
+import InfoSummaryTestRequest from "./componentsTestRequets/InfoSummaryTestRequest";
+import { useAuth } from "../../../context/AuthContext";
 
 /*
     PAGE WITH ALL THE INFORMATION ABOUT A TEST REQUEST
@@ -54,6 +58,7 @@ const TestRequestInfo = () => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
+    const { authObject } = useAuth();
 
     const getInformationAboutTestRequest = async () => {
         setIsLoanding(true);
@@ -229,26 +234,143 @@ const TestRequestInfo = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 2,
+                    p: 2.5,
+                    bgcolor: "background.paper",
+                    borderRadius: 2,
+                    border: `1px solid ${theme.palette.divider}`,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
                 }}
             >
-                {/* BUTON COME BACK TO THE LAST SECTION */}
-                <ButtonBack />
-
-                {/* ICON TO DELETE TEST REQUEST */}
-
-                <Tooltip title="Elimianar ensayo.">
-                    <DeleteForeverOutlined
-                        color="warning"
-                        onClick={() => setOpenModalToDelete(true)}
-                    />
+                {/* Botón de regreso */}
+                <Tooltip title="Volver atrás" arrow placement="bottom">
+                    <Button
+                        variant="outlined"
+                        startIcon={<ArrowBack />}
+                        sx={{
+                            borderRadius: 2,
+                            textTransform: "none",
+                            fontWeight: 600,
+                            px: 2.5,
+                            "&:hover": {
+                                transform: "translateX(-4px)",
+                                transition: "transform 0.2s ease",
+                            },
+                        }}
+                    >
+                        Atrás
+                    </Button>
                 </Tooltip>
+
+                {/* Acciones principales */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        flexWrap: "wrap",
+                    }}
+                >
+                    {/* Botón Finalizar */}
+                    <Tooltip
+                        title={
+                            authObject.role ==
+                            "Ejecutar el ensayo con los datos actuales"
+                        }
+                        arrow
+                        placement="bottom"
+                    >
+                        <Button
+                            variant="outlined"
+                            startIcon={<CheckCircle />}
+                            sx={{
+                                borderRadius: 2,
+                                textTransform: "none",
+                                fontWeight: 600,
+                                px: 2.5,
+                                color: "success.main",
+                                borderColor: "success.main",
+                                "&:hover": {
+                                    borderColor: "success.dark",
+                                    bgcolor: "success.main",
+                                    color: "white",
+                                },
+                            }}
+                        >
+                            Finalizar ensayo
+                        </Button>
+                    </Tooltip>
+
+                    {/* Botón Recepción de muestras */}
+                    <Tooltip
+                        title="Ir a recepción de muestras"
+                        arrow
+                        placement="bottom"
+                    >
+                        <Button
+                            variant="contained"
+                            startIcon={<Inventory2 />}
+                            onClick={() =>
+                                navigate(
+                                    `/system/result/test-request/${testRequest.testRequestId}/recepcion-muestras`
+                                )
+                            }
+                            sx={{
+                                borderRadius: 2,
+                                textTransform: "none",
+                                fontWeight: 600,
+                                px: 2.5,
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                                "&:hover": {
+                                    boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+                                    transform: "translateY(-2px)",
+                                    transition: "all 0.2s ease",
+                                },
+                            }}
+                        >
+                            Recepción de muestras
+                        </Button>
+                    </Tooltip>
+
+                    {/* Divisor visual */}
+                    <Divider
+                        orientation="vertical"
+                        flexItem
+                        sx={{
+                            mx: 0.5,
+                            bgcolor: theme.palette.divider,
+                        }}
+                    />
+
+                    {/* Botón Eliminar */}
+                    <Tooltip title="Eliminar ensayo" arrow placement="bottom">
+                        <IconButton
+                            onClick={() => setOpenModalToDelete(true)}
+                            sx={{
+                                border: `1px solid ${theme.palette.error.main}30`,
+                                borderRadius: 2,
+                                color: "error.main",
+                                "&:hover": {
+                                    bgcolor: "error.main",
+                                    color: "white",
+                                    borderColor: "error.main",
+                                    transform: "rotate(5deg)",
+                                    transition: "all 0.2s ease",
+                                },
+                            }}
+                        >
+                            <DeleteForeverOutlined />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
             </Box>
 
             {/* HEADER of the section */}
             <Box
                 sx={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "start",
                     alignItems: "center",
                 }}
             >
@@ -300,17 +422,6 @@ const TestRequestInfo = () => {
                               )} dias para la entrega de la muestra`}
                     </Typography>
                 </Box>
-
-                <Button
-                    variant="contained"
-                    onClick={() =>
-                        navigate(
-                            `/system/result/test-request/${testRequest.testRequestId}/recepcion-muestras`
-                        )
-                    }
-                >
-                    Recepción de muestras
-                </Button>
             </Box>
             {/* INFO BASIC */}
 
@@ -355,7 +466,7 @@ const TestRequestInfo = () => {
                                 }`,
                                 mt: "20px",
                                 borderRadius: 4,
-                                bgcolor: theme.palette.grey[200],
+                                bgcolor: "background.paper",
                                 "& .MuiLinearProgress-bar": {
                                     borderRadius: 4,
                                     background:
@@ -376,257 +487,42 @@ const TestRequestInfo = () => {
             </Box>
 
             <Box sx={{ display: "flex", gap: "20px", mb: "30px", mt: "20px" }}>
-                <CustomerCardTestRequest objectData={testRequest.customer} />
-                <Box
-                    sx={{
-                        width: "60%",
-                        minHeight: "300px",
-                        bgcolor: "background.paper",
-                        border: `1px solid ${theme.palette.border.primary}`,
-                        borderRadius: "20px",
-                        p: "20px",
-                        display: "flex",
-                        justifyContent: "space-around",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            mt: "20px",
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                            variant="caption"
-                        >
-                            <CheckCircle /> Informacion del ensayo
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={{
-                            width: "100%",
-                            display: "grid",
-                            gridTemplateColumns:
-                                "repeat(auto-fill, minmax(200px, 1fr))",
-                            gap: "30px",
-                        }}
-                    >
-                        <Box>
-                            <Typography
-                                variant="body1"
-                                sx={{ display: "flex", alignItems: "center" }}
-                            >
-                                <Circle
-                                    sx={{
-                                        width: "15px",
-                                        mr: "10px",
-                                        color: "primary.main",
-                                    }}
-                                />{" "}
-                                Fecha de creacion
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    opacity: "0.80",
-                                }}
-                            >
-                                {" "}
-                                <CalendarMonth
-                                    sx={{ width: "20px", mr: "10px" }}
-                                />{" "}
-                                {testRequest.createAt}{" "}
-                            </Typography>
-                        </Box>
-
-                        <Box>
-                            <Typography
-                                variant="body1"
-                                sx={{ display: "flex", alignItems: "center" }}
-                            >
-                                <Circle
-                                    sx={{
-                                        width: "15px",
-                                        mr: "10px",
-                                        color: "primary.main",
-                                    }}
-                                />{" "}
-                                Fecha de aceptacion
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    opacity: "0.80",
-                                }}
-                            >
-                                {" "}
-                                <CalendarMonth
-                                    sx={{ width: "20px", mr: "10px" }}
-                                />{" "}
-                                {testRequest.approvalDate}{" "}
-                            </Typography>
-                        </Box>
-                        <Box>
-                            <Typography
-                                variant="body1"
-                                sx={{ display: "flex", alignItems: "center" }}
-                            >
-                                <Circle
-                                    sx={{
-                                        width: "15px",
-                                        mr: "10px",
-                                        color: "primary.main",
-                                    }}
-                                />{" "}
-                                Fecha de entrega del ensayo
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    opacity: "0.80",
-                                }}
-                            >
-                                {" "}
-                                <CalendarMonth
-                                    sx={{ width: "20px", mr: "10px" }}
-                                />{" "}
-                                {testRequest.dueDate == null
-                                    ? "Sin fecha generada."
-                                    : testRequest.dueDate}{" "}
-                            </Typography>
-                        </Box>
-                        <Box>
-                            <Typography variant="body1">
-                                Estado actual de ensayo
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    opacity: "0.80",
-                                }}
-                            >
-                                {" "}
-                                {iconByStatus(testRequest.deliveryStatus)}{" "}
-                                {testRequest.deliveryStatus}{" "}
-                            </Typography>
-                        </Box>
-
-                        <Box>
-                            <Typography
-                                variant="body1"
-                                sx={{ display: "flex", alignItems: "center" }}
-                            >
-                                <Circle
-                                    sx={{
-                                        width: "15px",
-                                        mr: "10px",
-                                        color: "primary.main",
-                                    }}
-                                />{" "}
-                                Total de muestras
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    opacity: "0.80",
-                                }}
-                            >
-                                {" "}
-                                <Inventory2
-                                    sx={{ width: "20px", mr: "10px" }}
-                                />{" "}
-                                {testRequest.samples.length}{" "}
-                            </Typography>
-                        </Box>
-                        <Box>
-                            <Typography
-                                variant="body1"
-                                sx={{ display: "flex", alignItems: "center" }}
-                            >
-                                <Circle
-                                    sx={{
-                                        width: "15px",
-                                        mr: "10px",
-                                        color: "primary.main",
-                                    }}
-                                />{" "}
-                                Total de analisis
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    opacity: "0.80",
-                                }}
-                            >
-                                {" "}
-                                <ScienceTwoTone
-                                    sx={{ width: "20px", mr: "10px" }}
-                                />{" "}
-                                {getToTalAnalysis()}{" "}
-                            </Typography>
-                        </Box>
-                    </Box>
-                </Box>
+                <InfoSummaryTestRequest
+                    testRequest={testRequest}
+                    getToTalAnalysis={() => getToTalAnalysis()}
+                    iconByStatus={(param) => iconByStatus(param)}
+                    getTotalSamplesFinished={() => getTotalSamplesFinished()}
+                />
             </Box>
 
             {/* USER ASSIGNED */}
 
             <Divider sx={{ mt: "30px", mb: "20px" }} />
-            <MembersOfTestRequest
-                toggleDrawer={toggleDrawer}
-                team={team}
-                removeMember={(userId) => removeMember(userId)}
-            />
-
             <Box
                 sx={{
-                    mb: "20px",
-                    mt: "20px",
+                    display: "flex",
                 }}
             >
                 <Box
                     sx={{
-                        width: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        mb: "20px",
+                        width: "60%",
                     }}
                 >
-                    {getTotalSamplesFinished() == testRequest.samples.length ? (
-                        <Typography color="primary.main" sx={{ mb: "40px" }}>
-                            Este ensayo ah completado todos los análisis de las
-                            muestras. <DoneAll />
-                        </Typography>
-                    ) : (
-                        <Typography color="warning" sx={{ mb: "40px" }}>
-                            Este ensayo aun no completa los análisis de las
-                            muestras. <WarningAmber />
-                        </Typography>
-                    )}
-                    <img
-                        width={"200px"}
-                        src={imageNoFinishTestRequest}
-                        alt="imagenofinbished"
+                    <MembersOfTestRequest
+                        toggleDrawer={toggleDrawer}
+                        team={team}
+                        removeMember={(userId) => removeMember(userId)}
+                    />
+                </Box>
+                <Box
+                    sx={{
+                        width: "40%",
+                        display: "flex",
+                        alignItems: "center",
+                    }}
+                >
+                    <CustomerCardTestRequest
+                        objectData={testRequest.customer}
                     />
                 </Box>
             </Box>
