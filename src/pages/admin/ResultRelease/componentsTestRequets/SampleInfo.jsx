@@ -20,19 +20,7 @@ const SampleInfo = () => {
     const [isLoanding, setIsLoanding] = useState(false);
     const [sampleData, setSampleData] = useState({});
     const [analysis, setAnalysis] = useState([]);
-    const [sampleReceptionDto, setSampleReceptionDto] = useState({
-        sampleEntryDate: null,
-        sampleReceptionDate: null,
-        sampleImage: null,
-        gross_weight: null,
-        temperature: null,
-        statusReception: null,
-        packageDescription: null,
-        createAt: null,
-        identificationSample: null,
-        storageConditions: null,
-        observations: null,
-    });
+    const [sampleReceptionDto, setSampleReceptionDto] = useState({});
 
     const getSampleData = async () => {
         setIsLoanding(true);
@@ -43,19 +31,7 @@ const SampleInfo = () => {
 
                 const data = res.data;
 
-                setSampleReceptionDto({
-                    sampleEntryDate: data.sampleEntryDate,
-                    statusReception: data.statusReception,
-                    sampleImage: data.sampleImage,
-                    sampleReceptionDate: data.sampleReceptionDate,
-                    gross_weight: data.gross_weight,
-                    temperature: data.temperature,
-                    createAt: data.createAt,
-                    storageConditions: data.storageConditions,
-                    identificationSample: data.identificationSample,
-                    packageDescription: data.packageDescription,
-                    observations: data.observations,
-                });
+                setSampleReceptionDto(data);
                 setAnalysis(data.analysisEntities);
             }
         } catch (error) {
@@ -120,7 +96,35 @@ const SampleInfo = () => {
                         Emision de resultado
                     </Typography>
                 </Box>
+                <Box
+                    sx={{
+                        mt: "10px",
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            textAlign: "center",
+                            p: "10px",
+                            borderRadius: "15px",
+
+                            bgcolor: sampleData.statusReception
+                                ? "#c7919120"
+                                : "#ee0f0f20",
+                        }}
+                        variant="caption"
+                        color={
+                            sampleData.statusReception
+                                ? "primary.main"
+                                : "error.main"
+                        }
+                    >
+                        {sampleData.statusReception
+                            ? "Recepción de muestra registrada"
+                            : "Esta muestra no ha registrado recepción"}
+                    </Typography>
+                </Box>
             </Box>
+
             {/* SAMPLES */}
             <SampleReception data={sampleReceptionDto} />
 

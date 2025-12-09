@@ -23,6 +23,7 @@ const SampleReception = ({ data }) => {
     const theme = useTheme();
 
     const EMPTY_MESSAGE = "Campo vacío";
+    console.log(data);
 
     const checkValue = (value) => (value ? value : EMPTY_MESSAGE);
 
@@ -37,21 +38,25 @@ const SampleReception = ({ data }) => {
     }
 
     return (
-        <Box>
-            <Typography
+        <Box
+            sx={{
+                mt: "20px",
+            }}
+        >
+            <Box
                 sx={{
-                    mt: "20px",
-                    mb: "10px",
-                    textAlign: "center",
+                    mt: "40px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
                 }}
-                variant="body1"
-                color={data.statusReception ? "primary.main" : "error.main"}
             >
-                {data.statusReception
-                    ? "Recepción de muestra registrada"
-                    : "Esta muestra no ha registrado recepción"}
-            </Typography>
-
+                <Typography variant="body1" sx={{ color: "primary.main" }}>
+                    Informacion de recepcion de la muestra
+                </Typography>
+                <Typography variant="body2">{data.matrix}</Typography>
+            </Box>
             <Box
                 sx={{
                     display: "flex",

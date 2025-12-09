@@ -244,24 +244,7 @@ const TestRequestInfo = () => {
                 }}
             >
                 {/* Botón de regreso */}
-                <Tooltip title="Volver atrás" arrow placement="bottom">
-                    <Button
-                        variant="outlined"
-                        startIcon={<ArrowBack />}
-                        sx={{
-                            borderRadius: 2,
-                            textTransform: "none",
-                            fontWeight: 600,
-                            px: 2.5,
-                            "&:hover": {
-                                transform: "translateX(-4px)",
-                                transition: "transform 0.2s ease",
-                            },
-                        }}
-                    >
-                        Atrás
-                    </Button>
-                </Tooltip>
+                <ButtonBack />
 
                 {/* Acciones principales */}
                 <Box

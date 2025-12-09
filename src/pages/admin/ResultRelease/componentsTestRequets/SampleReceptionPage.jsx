@@ -139,7 +139,7 @@ const SampleReceptionPage = () => {
                         display: "grid",
                         gridTemplateColumns:
                             "repeat(auto-fill, minmax(200px, 1fr))",
-                        gap: "10px",
+                        gap: "20px",
                     }}
                 >
                     {samples.map((sample) => {
@@ -156,7 +156,7 @@ const SampleReceptionPage = () => {
                                     sx={{
                                         bgcolor: "background.default",
                                         border: `1px solid ${theme.palette.border.primary}`,
-                                        height: "100px",
+
                                         borderRadius: "20px",
                                         display: "flex",
                                         justifyContent: "center",
@@ -174,13 +174,19 @@ const SampleReceptionPage = () => {
                                         cursor: "pointer",
                                     }}
                                 >
-                                    <Typography>{sample.matrix}</Typography>
+                                    <Typography
+                                        sx={{ textAlign: "center", mt: "10px" }}
+                                    >
+                                        {sample.matrix}
+                                    </Typography>
                                     <Typography
                                         variant="body2"
                                         sx={{
                                             color: sample.statusReception
                                                 ? "primary.main"
                                                 : "red",
+                                            textAlign: "center",
+                                            mt: "10px",
                                         }}
                                     >
                                         {sample.statusReception

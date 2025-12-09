@@ -1,10 +1,12 @@
 import {
+    Alert,
     Box,
     Button,
     Checkbox,
     Drawer,
     FormControlLabel,
     MenuItem,
+    Snackbar,
     Table,
     TableBody,
     TableCell,
@@ -47,7 +49,10 @@ const ResultExecutionSamplesAvailable = () => {
     const [openModalToDeleteSamples, setOpenModalToDeleteSamples] =
         useState(false);
     const [sampleSelected, setSampleSelected] = useState({});
-    // const theme = useTheme();
+    const [responseAlert, setResponseAlert] = useState({
+        status: false,
+        message: "",
+    });
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -203,6 +208,19 @@ const ResultExecutionSamplesAvailable = () => {
         }
     };
 
+    const handleSubmitResult = () => {
+        if (dataSelected.length < 1) {
+            setResponseAlert({
+                status: true,
+                message:
+                    "Debes seleccionar las muestras para realizar entrega final",
+            });
+            return;
+        }
+
+        // open the modal I think
+    };
+
     useEffect(() => {
         getData();
     }, []);
@@ -220,6 +238,37 @@ const ResultExecutionSamplesAvailable = () => {
                 open={openModalToDeleteSamples}
                 onClose={() => setOpenModalToDeleteSamples(false)}
             />
+
+            {responseAlert.status && (
+                <Snackbar
+                    open={responseAlert.status}
+                    autoHideDuration={5000}
+                    onClose={() => {
+                        setResponseAlert({
+                            ...responseAlert,
+                            status: false,
+                        });
+                        setResponseAlert({
+                            status: false,
+                            message: "",
+                        });
+                    }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                >
+                    <Alert
+                        severity="error"
+                        onClose={() =>
+                            setResponseAlert({
+                                status: false,
+                                message: "",
+                            })
+                        }
+                        sx={{ width: "100%" }}
+                    >
+                        {responseAlert.message}
+                    </Alert>
+                </Snackbar>
+            )}
 
             {dataSelected.length >= 1 && (
                 <Box
@@ -281,7 +330,7 @@ const ResultExecutionSamplesAvailable = () => {
                     </Typography>
                     <Button
                         variant="contained"
-                        onClick={() => console.log(dataSelected)}
+                        onClick={() => handleSubmitResult()}
                     >
                         Ejecutar finalizacion
                     </Button>
@@ -323,9 +372,13 @@ const ResultExecutionSamplesAvailable = () => {
                                         sx={{
                                             width: "100%",
                                             height: "50px",
+                                            borderBottom: "1px solid blue",
                                             borderLeft: `10px solid ${styleBackgroundColorByRestDays(
                                                 sample.dueDate
                                             )}`,
+                                            bgcolor: ` ${styleBackgroundColorByRestDays(
+                                                sample.dueDate
+                                            )}20`,
                                         }}
                                     >
                                         <TableCell>
@@ -382,7 +435,19 @@ const ResultExecutionSamplesAvailable = () => {
                                                     setSampleSelected(sample);
                                             }}
                                         >
-                                            <Visibility />
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                }}
+                                            >
+                                                <Visibility />{" "}
+                                                <Typography>
+                                                    Ver resultados
+                                                </Typography>
+                                            </Box>
                                         </TableCell>
                                     </TableRow>
                                 );

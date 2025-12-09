@@ -505,7 +505,7 @@ const ResultsRelease = () => {
                                             }}
                                         >
                                             <AvatarGroup>
-                                                {test.teamAssigned.length >
+                                                {test.teamAssigned.length >=
                                                 1 ? (
                                                     test.teamAssigned.map(
                                                         (user, idx) => (

@@ -557,6 +557,13 @@ const SampleAnalysisResultCard = ({
                                 </Typography>
                                 <Typography variant="body2">
                                     {" "}
+                                    Editado :{" "}
+                                    <span style={{ fontWeight: "bold" }}>
+                                        {dataToUse.updateAt}
+                                    </span>
+                                </Typography>
+                                <Typography variant="body2">
+                                    {" "}
                                     por :{" "}
                                     <span style={{ fontWeight: "bold" }}>
                                         {" "}
