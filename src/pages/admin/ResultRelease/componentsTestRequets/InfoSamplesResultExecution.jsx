@@ -17,7 +17,8 @@ const InfoSamplesResultExecution = ({ data = {} }) => {
                 variant="body1"
                 sx={{
                     mt: "50px",
-
+                    mb: "10px",
+                    fontWeight: "bold",
                     textAlign: "center",
                 }}
             >
@@ -26,11 +27,25 @@ const InfoSamplesResultExecution = ({ data = {} }) => {
             <Typography
                 variant="body2"
                 sx={{
+                    color: "primary.main",
                     textAlign: "center",
-                    mb: "30px",
                 }}
             >
-                muestra {data.sampleCode}
+                Codigo de muestra {data.sampleCode}
+            </Typography>
+            <Typography
+                variant="body2"
+                sx={{
+                    color: "primary.main",
+                    textAlign: "center",
+                    mb: "60px",
+                }}
+            >
+                Matrix {data.matrix}
+            </Typography>
+
+            <Typography variant="caption">
+                Como super administrador solo tu puedes editar esta informacion
             </Typography>
             {data.analysisEntities.map((a, index) => {
                 return (
@@ -39,7 +54,6 @@ const InfoSamplesResultExecution = ({ data = {} }) => {
                     </Box>
                 );
             })}
-            {data.matrix}
         </Box>
     );
 };

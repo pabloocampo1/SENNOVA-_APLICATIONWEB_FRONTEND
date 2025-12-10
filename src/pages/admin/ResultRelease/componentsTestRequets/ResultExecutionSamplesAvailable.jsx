@@ -15,6 +15,7 @@ import {
     TableRow,
     TextField,
     Typography,
+    useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import api from "../../../../service/axiosService";
@@ -34,6 +35,7 @@ import {
 import GenericModal from "../../../../components/modals/GenericModal";
 import DeleteSamplesModalConfirmation from "./DeleteSamplesModalConfirmation";
 import InfoSamplesResultExecution from "./InfoSamplesResultExecution";
+import SamplesSelectedInResultExecution from "./SamplesSelectedInResultExecution";
 
 const getLenght = (analisys = []) => {
     return analisys.length;
@@ -41,6 +43,8 @@ const getLenght = (analisys = []) => {
 
 const ResultExecutionSamplesAvailable = () => {
     const [open, setOpen] = React.useState(false);
+    const [openShowDrawerSamplesToExecute, setOpenShowDrawerSamplesToExecute] =
+        React.useState(false);
     const [isLoanding, setIsLoanding] = useState(false);
     const [data, setData] = useState([]);
     const [originalData, setOriginalData] = useState([]);
@@ -53,9 +57,13 @@ const ResultExecutionSamplesAvailable = () => {
         status: false,
         message: "",
     });
+    const theme = useTheme();
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
+    };
+    const toggleDrawerShowSamplesSelected = (newOpen) => () => {
+        setOpenShowDrawerSamplesToExecute(newOpen);
     };
 
     const getData = async () => {
@@ -146,7 +154,21 @@ const ResultExecutionSamplesAvailable = () => {
                 </Box>
             );
         } else {
-            return "ya se acabo manito";
+            return (
+                <Box
+                    sx={{
+                        color: "#E53935",
+                        p: "10px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        textAlign: "center",
+                        borderRadius: "20px",
+                    }}
+                >
+                    Fecha vencida
+                </Box>
+            );
         }
     };
 
@@ -219,6 +241,7 @@ const ResultExecutionSamplesAvailable = () => {
         }
 
         // open the modal I think
+        setOpenShowDrawerSamplesToExecute(true);
     };
 
     useEffect(() => {
@@ -293,6 +316,7 @@ const ResultExecutionSamplesAvailable = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    mt: "20px",
                 }}
             >
                 <Box
@@ -317,6 +341,20 @@ const ResultExecutionSamplesAvailable = () => {
                         <MenuItem value="high">Prioridad alta</MenuItem>
                         <MenuItem value="all">Todos</MenuItem>
                     </TextField>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Checkbox
+                            onChange={(e) => handleSelectAll(e.target.checked)}
+                        />
+
+                        <Typography variant="body1">
+                            Seleccionar todos
+                        </Typography>
+                    </Box>
                 </Box>
 
                 <Box
@@ -337,24 +375,25 @@ const ResultExecutionSamplesAvailable = () => {
                 </Box>
             </Box>
 
-            <Box>
+            <Box
+                sx={{
+                    mt: "40px",
+                }}
+            >
                 <TableContainer>
-                    <Table>
-                        <TableHead>
+                    <Table
+                        sx={{
+                            border: `1px solid ${theme.palette.border.primary}`,
+                        }}
+                    >
+                        <TableHead
+                            sx={{
+                                borderRadius: "20px",
+                                bgcolor: "background.default",
+                            }}
+                        >
                             <TableRow>
-                                <TableCell>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                onChange={(e) =>
-                                                    handleSelectAll(
-                                                        e.target.checked
-                                                    )
-                                                }
-                                            />
-                                        }
-                                    />
-                                </TableCell>
+                                <TableCell></TableCell>
                                 <TableCell>Muestra {"(Matrix)"}</TableCell>
                                 <TableCell>Codigo {"(muestra)"}</TableCell>
                                 <TableCell>Total de analisis</TableCell>
@@ -378,7 +417,7 @@ const ResultExecutionSamplesAvailable = () => {
                                             )}`,
                                             bgcolor: ` ${styleBackgroundColorByRestDays(
                                                 sample.dueDate
-                                            )}20`,
+                                            )}10`,
                                         }}
                                     >
                                         <TableCell>
@@ -434,6 +473,9 @@ const ResultExecutionSamplesAvailable = () => {
                                                 setOpen(true),
                                                     setSampleSelected(sample);
                                             }}
+                                            sx={{
+                                                cursor: "pointer",
+                                            }}
                                         >
                                             <Box
                                                 sx={{
@@ -443,9 +485,13 @@ const ResultExecutionSamplesAvailable = () => {
                                                     justifyContent: "center",
                                                 }}
                                             >
-                                                <Visibility />{" "}
-                                                <Typography>
-                                                    Ver resultados
+                                                <Visibility />
+                                                <Typography
+                                                    sx={{
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    resultados
                                                 </Typography>
                                             </Box>
                                         </TableCell>
@@ -457,8 +503,26 @@ const ResultExecutionSamplesAvailable = () => {
                 </TableContainer>
             </Box>
 
+            {/* THIS DRAWER IS FOR SHOW THE RESULTS OF ONE SAMPLE */}
             <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
                 <InfoSamplesResultExecution data={sampleSelected} />
+            </Drawer>
+
+            {/* THIS DRAWER IS FOR SHOW ALL SAMPLES SELECTED TO RESULT EXECUTION */}
+            <Drawer
+                anchor="right"
+                open={openShowDrawerSamplesToExecute}
+                onClose={toggleDrawerShowSamplesSelected(false)}
+            >
+                <SamplesSelectedInResultExecution
+                    samplesSelectet={dataSelected}
+                    onClose={toggleDrawerShowSamplesSelected(false)}
+                    samples={data}
+                    cleanData={() => setDataSelected([])}
+                    countAnalysisCompleteBySample={(a) =>
+                        countAnalysisCompleteBySample(a)
+                    }
+                />
             </Drawer>
         </Box>
     );
