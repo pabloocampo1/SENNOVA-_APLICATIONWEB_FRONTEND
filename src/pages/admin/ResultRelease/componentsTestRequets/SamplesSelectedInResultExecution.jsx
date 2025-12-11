@@ -11,12 +11,12 @@ import {
 import React, { useEffect, useState } from "react";
 import api from "../../../../service/axiosService";
 import SimpleBackdrop from "../../../../components/SimpleBackDrop";
+import MessageSamplesSelectedExecution from "./MessageSamplesSelectedExecution";
 
 // THIS COMPONENT SHOW THE SAMPLES SELECTED IN RESULTEXECUTION TO EXECUTE
 
 const SamplesSelectedInResultExecution = ({
     samplesSelected = [],
-
     cleanData,
     onClose,
 }) => {
@@ -60,6 +60,17 @@ const SamplesSelectedInResultExecution = ({
 
     const tooltipTextResults = (results) => {
         return results.map((r) => `${r.analysis}: ${r.resultFinal}`).join("\n");
+    };
+
+    const checkIfAllSamplesAreReady = () => {
+        let isAllReady = true;
+        samples.forEach((sample) => {
+            if (sample.totalAnalysis !== sample.totalAnalysisFinished) {
+                isAllReady = false;
+            }
+        });
+
+        return isAllReady;
     };
 
     useEffect(() => {
@@ -121,61 +132,11 @@ const SamplesSelectedInResultExecution = ({
                     mt: "40px",
                 }}
             >
-                <Box
-                    sx={{
-                        width: "40%",
-                        maxHeight: "80vh",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        p: "20px",
-                    }}
-                >
-                    <CheckCircleOutline
-                        sx={{
-                            color: "primary.main",
-                            width: "100px",
-                            height: "100px",
-                            mb: "40px",
-                        }}
-                    />
-                    <Typography
-                        sx={{
-                            textAlign: "center",
-                            mb: "10px",
-                            fontWeight: "bold",
-                        }}
-                    >
-                        Todos las muestras seleccionadas tienen sus analisis
-                        finalizados
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            textAlign: "center",
-                            mb: "50px",
-                            opacity: "0.90",
-                        }}
-                    >
-                        Hemos revisado toda la información y confirmado que cada
-                        una de las muestras ya tiene sus análisis finalizados.
-                        Estás listo para enviar los resultados cuando lo desees.
-                    </Typography>
-                    <Button variant="outlined" sx={{ width: "300px" }}>
-                        Confirmar y enviar resultados
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{ width: "300px", mt: "20px" }}
-                        onClick={() => {
-                            onClose(), cleanData();
-                        }}
-                    >
-                        Cancelar proceso
-                    </Button>
-                </Box>
-
+                <MessageSamplesSelectedExecution
+                    onClose={() => onClose()}
+                    cleanData={() => cleanData()}
+                    isAllSamplesAlReady={checkIfAllSamplesAreReady()}
+                />
                 <Box
                     sx={{
                         width: "60%",

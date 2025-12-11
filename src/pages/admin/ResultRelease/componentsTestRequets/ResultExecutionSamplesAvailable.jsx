@@ -517,7 +517,6 @@ const ResultExecutionSamplesAvailable = () => {
                 <SamplesSelectedInResultExecution
                     samplesSelected={dataSelected}
                     onClose={toggleDrawerShowSamplesSelected(false)}
-                    samples={data}
                     cleanData={() => setDataSelected([])}
                 />
             </Drawer>
