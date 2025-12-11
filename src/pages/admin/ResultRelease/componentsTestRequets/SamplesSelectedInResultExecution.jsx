@@ -40,7 +40,21 @@ const SamplesSelectedInResultExecution = ({
                 p: "20px",
             }}
         >
-            <Close sx={{ color: "primary.main" }} onClick={() => onClose()} />
+            <Box
+                onClick={() => onClose()}
+                sx={{
+                    display: "flex",
+                    bgcolor: "background.default",
+                    width: "100px",
+                    p: "10px",
+                    borderRadius: "20px",
+                    cursor: "pointer",
+                    border: `1px solid ${theme.palette.border.primary}`,
+                }}
+            >
+                <Close sx={{ color: "primary.main" }} />
+                <Typography>Cerrar</Typography>
+            </Box>
             <Typography
                 sx={{
                     textAlign: "center",

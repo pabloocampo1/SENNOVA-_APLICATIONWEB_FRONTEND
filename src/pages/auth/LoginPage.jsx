@@ -1,12 +1,21 @@
-import { Box, Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import logoSennova from "../../assets/images/sennova_logo_sin_fondo.png"
-import { Link } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
-import { Google } from '@mui/icons-material';
-import { useAuth } from '../../context/AuthContext';
-import SimpleBackdrop from '../../components/SimpleBackDrop';
-import api from '../../service/axiosService';
+import {
+    Box,
+    Button,
+    Checkbox,
+    FormControlLabel,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import logoSennova from "../../assets/images/sennova_logo_sin_fondo.png";
+import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { Google } from "@mui/icons-material";
+import { useAuth } from "../../context/AuthContext";
+import SimpleBackdrop from "../../components/SimpleBackDrop";
+import api from "../../service/axiosService";
+import TitleSoftware from "../../components/TitleSoftware";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -22,8 +31,7 @@ const LoginPage = () => {
             const res = await api.post("/auth/signIn/google", { token });
             console.log(res);
 
-            signInWithGoogle(res.data)
-
+            signInWithGoogle(res.data);
         } catch (err) {
             console.error("Error Google login:", err);
         }
@@ -31,51 +39,80 @@ const LoginPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setIsLoanding(true)
+        setIsLoanding(true);
 
         const fetchAuth = async (username, password) => {
-
             try {
                 const response = await signIn(username, password);
-              
+
                 if (!response.status) {
-                    setError(true)
+                    setError(true);
                     setMessageErrorSignIn(response.message);
                 }
-
             } catch (error) {
                 console.error(error);
-            
-                setError(true)
+
+                setError(true);
             }
-        }
+        };
 
-        fetchAuth(username, password)
+        fetchAuth(username, password);
 
-        setIsLoanding(false)
-    }
+        setIsLoanding(false);
+    };
 
     return (
-        <Box sx={{
-            width: { xs: "85%", md: "60%", lg: "30%" },
-            height: { xs: "80%", md: "70%", lg: "65%" },
-            bgcolor: "white",
-            borderRadius: "15px",
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-            pl: "50px",
-            pr: "50px",
-        }}>
-            {isLoanding && (<SimpleBackdrop open={isLoanding} />)}
+        <Box
+            sx={{
+                width: { xs: "85%", md: "60%", lg: "30%" },
+                height: { xs: "80%", md: "70%", lg: "65%" },
+                bgcolor: "white",
+                borderRadius: "15px",
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                pl: "50px",
+                pr: "50px",
+            }}
+        >
+            {isLoanding && <SimpleBackdrop open={isLoanding} />}
             <Box sx={{ mt: "20px" }}>
                 <img src={logoSennova} width={300} alt="logo sennova" />
             </Box>
 
-            <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", alignItems: 'center' }}>
-                <Typography variant="h2" sx={{ fontWeight: "700", textAlign: "center", pt: "20px", color: "black" }}>Bienvenido</Typography>
-                <Typography variant='body1' sx={{ textAlign: "center", opacity: "0.70", pt: "2px", color: "black" }}>Ingresa tu usuario y contraseña para ingresar al sistema</Typography>
-
+            <Box
+                component={"form"}
+                onSubmit={handleSubmit}
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
+            >
+                <Typography
+                    variant="h2"
+                    sx={{
+                        fontWeight: "700",
+                        textAlign: "center",
+                        pt: "20px",
+                        color: "black",
+                    }}
+                >
+                    Bienvenido
+                </Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        textAlign: "center",
+                        opacity: "0.70",
+                        pt: "2px",
+                        mb: "10px",
+                        color: "black",
+                    }}
+                >
+                    Ingresa tu usuario y contraseña para ingresar al sistema
+                </Typography>
+                <TitleSoftware />
 
                 <Stack spacing={2} sx={{ width: "100%", mt: { xs: 6, md: 8 } }}>
                     <TextField
@@ -143,31 +180,57 @@ const LoginPage = () => {
                         }}
                     />
                 </Stack>
-                <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }} >
-                    <FormControlLabel sx={{
-                        "& .MuiFormControlLabel-label": {
-                            color: "primary.main",
-                        },
-                    }} control={<Checkbox defaultChecked />} label="Guardar sesion" />
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <FormControlLabel
+                        sx={{
+                            "& .MuiFormControlLabel-label": {
+                                color: "primary.main",
+                            },
+                        }}
+                        control={<Checkbox defaultChecked />}
+                        label="Guardar sesion"
+                    />
 
-                    <Link to={"/"} style={{ color: "black", opacity: "0.70" }}>Olvide mi contraseña</Link>
-
+                    <Link to={"/"} style={{ color: "black", opacity: "0.70" }}>
+                        Olvide mi contraseña
+                    </Link>
                 </Box>
-                {error && (<Typography sx={{ color: "red" }}>{messageErrorSignIn}</Typography>)}
+                {error && (
+                    <Typography sx={{ color: "red" }}>
+                        {messageErrorSignIn}
+                    </Typography>
+                )}
 
-                <Button type='submit' sx={{ width: "100%", mt: "40px" }} variant='outlined'>Iniciar sesion</Button>
+                <Button
+                    type="submit"
+                    sx={{ width: "100%", mt: "40px" }}
+                    variant="outlined"
+                >
+                    Iniciar sesion
+                </Button>
 
-                <Typography sx={{ fontSize: "0.90rem", mt: "20px", color: "black" }}>O tambien puedes:</Typography>
+                <Typography
+                    sx={{ fontSize: "0.90rem", mt: "20px", color: "black" }}
+                >
+                    O tambien puedes:
+                </Typography>
 
                 <Box sx={{ mt: "10px" }}>
                     <GoogleLogin
                         onSuccess={handleSuccess}
-                        onError={() => console.log("Error al iniciar con Google")}
+                        onError={() =>
+                            console.log("Error al iniciar con Google")
+                        }
                     />
                 </Box>
-
             </Box>
-
         </Box>
     );
 };
