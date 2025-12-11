@@ -469,6 +469,13 @@ const TestRequestInfo = () => {
                 </Typography>
             </Box>
 
+            {/* SAMPLES */}
+            <SamplesTestRequestCompo
+                samples={testRequest.samples}
+                getTotalFinished={() => getTotalSamplesFinished()}
+                requestCode={testRequest.requestCode}
+            />
+
             <Box sx={{ display: "flex", gap: "20px", mb: "30px", mt: "20px" }}>
                 <InfoSummaryTestRequest
                     testRequest={testRequest}
@@ -486,36 +493,14 @@ const TestRequestInfo = () => {
                     display: "flex",
                 }}
             >
-                <Box
-                    sx={{
-                        width: "60%",
-                    }}
-                >
+                <Box>
                     <MembersOfTestRequest
                         toggleDrawer={toggleDrawer}
                         team={team}
                         removeMember={(userId) => removeMember(userId)}
                     />
                 </Box>
-                <Box
-                    sx={{
-                        width: "40%",
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <CustomerCardTestRequest
-                        objectData={testRequest.customer}
-                    />
-                </Box>
             </Box>
-
-            {/* SAMPLES */}
-            <SamplesTestRequestCompo
-                samples={testRequest.samples}
-                getTotalFinished={() => getTotalSamplesFinished()}
-                requestCode={testRequest.requestCode}
-            />
 
             {/* ASSIGN MEMBER MODAl*/}
 

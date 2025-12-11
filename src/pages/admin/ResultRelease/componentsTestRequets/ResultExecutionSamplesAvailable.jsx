@@ -515,13 +515,10 @@ const ResultExecutionSamplesAvailable = () => {
                 onClose={toggleDrawerShowSamplesSelected(false)}
             >
                 <SamplesSelectedInResultExecution
-                    samplesSelectet={dataSelected}
+                    samplesSelected={dataSelected}
                     onClose={toggleDrawerShowSamplesSelected(false)}
                     samples={data}
                     cleanData={() => setDataSelected([])}
-                    countAnalysisCompleteBySample={(a) =>
-                        countAnalysisCompleteBySample(a)
-                    }
                 />
             </Drawer>
         </Box>

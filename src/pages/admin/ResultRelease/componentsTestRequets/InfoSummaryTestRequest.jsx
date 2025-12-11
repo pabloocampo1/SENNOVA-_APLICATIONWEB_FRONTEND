@@ -12,6 +12,7 @@ import {
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import imageNoFinishTestRequest from "../../../../assets/images/undraw_next-tasks_y3rm.svg";
+import CustomerCardTestRequest from "../../CustomerAndUsers/CustomerCardTestRequest";
 
 // here there are only information of one test request, the
 
@@ -70,177 +71,191 @@ const InfoSummaryTestRequest = ({
                     sx={{
                         width: "70%",
                         mt: "50px",
-                        display: "grid",
-                        gridTemplateColumns:
-                            "repeat(auto-fill, minmax(200px, 1fr))",
-                        gap: "30px",
                     }}
                 >
-                    <Box>
-                        <Typography
-                            variant="body1"
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <CircleOutlined
+                    <Box
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns:
+                                "repeat(auto-fill, minmax(200px, 1fr))",
+                            gap: "30px",
+                        }}
+                    >
+                        <Box>
+                            <Typography
+                                variant="body1"
+                                sx={{ display: "flex", alignItems: "center" }}
+                            >
+                                <CircleOutlined
+                                    sx={{
+                                        width: "15px",
+                                        mr: "10px",
+                                        color: "primary.main",
+                                    }}
+                                />{" "}
+                                Fecha de creacion
+                            </Typography>
+                            <Typography
+                                variant="body2"
                                 sx={{
-                                    width: "15px",
-                                    mr: "10px",
-                                    color: "primary.main",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    opacity: "0.80",
                                 }}
-                            />{" "}
-                            Fecha de creacion
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                opacity: "0.80",
-                            }}
-                        >
-                            {" "}
-                            <CalendarMonth
-                                sx={{ width: "20px", mr: "10px" }}
-                            />{" "}
-                            {testRequest.createAt}{" "}
-                        </Typography>
-                    </Box>
+                            >
+                                {" "}
+                                <CalendarMonth
+                                    sx={{ width: "20px", mr: "10px" }}
+                                />{" "}
+                                {testRequest.createAt}{" "}
+                            </Typography>
+                        </Box>
 
-                    <Box>
-                        <Typography
-                            variant="body1"
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <CircleOutlined
+                        <Box>
+                            <Typography
+                                variant="body1"
+                                sx={{ display: "flex", alignItems: "center" }}
+                            >
+                                <CircleOutlined
+                                    sx={{
+                                        width: "15px",
+                                        mr: "10px",
+                                        color: "primary.main",
+                                    }}
+                                />{" "}
+                                Fecha de aceptacion
+                            </Typography>
+                            <Typography
+                                variant="body2"
                                 sx={{
-                                    width: "15px",
-                                    mr: "10px",
-                                    color: "primary.main",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    opacity: "0.80",
                                 }}
-                            />{" "}
-                            Fecha de aceptacion
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                opacity: "0.80",
-                            }}
-                        >
-                            {" "}
-                            <CalendarMonth
-                                sx={{ width: "20px", mr: "10px" }}
-                            />{" "}
-                            {testRequest.approvalDate}{" "}
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <Typography
-                            variant="body1"
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <CircleOutlined
+                            >
+                                {" "}
+                                <CalendarMonth
+                                    sx={{ width: "20px", mr: "10px" }}
+                                />{" "}
+                                {testRequest.approvalDate}{" "}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography
+                                variant="body1"
+                                sx={{ display: "flex", alignItems: "center" }}
+                            >
+                                <CircleOutlined
+                                    sx={{
+                                        width: "15px",
+                                        mr: "10px",
+                                        color: "primary.main",
+                                    }}
+                                />{" "}
+                                Fecha de entrega del ensayo
+                            </Typography>
+                            <Typography
+                                variant="body2"
                                 sx={{
-                                    width: "15px",
-                                    mr: "10px",
-                                    color: "primary.main",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    opacity: "0.80",
                                 }}
-                            />{" "}
-                            Fecha de entrega del ensayo
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                opacity: "0.80",
-                            }}
-                        >
-                            {" "}
-                            <CalendarMonth
-                                sx={{ width: "20px", mr: "10px" }}
-                            />{" "}
-                            {testRequest.dueDate == null
-                                ? "Sin fecha generada."
-                                : testRequest.dueDate}{" "}
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <Typography variant="body1">
-                            Estado actual de ensayo
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                opacity: "0.80",
-                            }}
-                        >
-                            {" "}
-                            {iconByStatus(testRequest.deliveryStatus)}{" "}
-                            {testRequest.deliveryStatus}{" "}
-                        </Typography>
-                    </Box>
+                            >
+                                {" "}
+                                <CalendarMonth
+                                    sx={{ width: "20px", mr: "10px" }}
+                                />{" "}
+                                {testRequest.dueDate == null
+                                    ? "Sin fecha generada."
+                                    : testRequest.dueDate}{" "}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="body1">
+                                Estado actual de ensayo
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    opacity: "0.80",
+                                }}
+                            >
+                                {" "}
+                                {iconByStatus(testRequest.deliveryStatus)}{" "}
+                                {testRequest.deliveryStatus}{" "}
+                            </Typography>
+                        </Box>
 
-                    <Box>
-                        <Typography
-                            variant="body1"
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <CircleOutlined
+                        <Box>
+                            <Typography
+                                variant="body1"
+                                sx={{ display: "flex", alignItems: "center" }}
+                            >
+                                <CircleOutlined
+                                    sx={{
+                                        width: "15px",
+                                        mr: "10px",
+                                        color: "primary.main",
+                                    }}
+                                />{" "}
+                                Total de muestras
+                            </Typography>
+                            <Typography
+                                variant="body2"
                                 sx={{
-                                    width: "15px",
-                                    mr: "10px",
-                                    color: "primary.main",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    opacity: "0.80",
                                 }}
-                            />{" "}
-                            Total de muestras
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                opacity: "0.80",
-                            }}
-                        >
-                            {" "}
-                            <Inventory2
-                                sx={{ width: "20px", mr: "10px" }}
-                            />{" "}
-                            {testRequest.samples.length}{" "}
-                        </Typography>
+                            >
+                                {" "}
+                                <Inventory2
+                                    sx={{ width: "20px", mr: "10px" }}
+                                />{" "}
+                                {testRequest.samples.length}{" "}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography
+                                variant="body1"
+                                sx={{ display: "flex", alignItems: "center" }}
+                            >
+                                <CircleOutlined
+                                    sx={{
+                                        width: "15px",
+                                        mr: "10px",
+                                        color: "primary.main",
+                                    }}
+                                />{" "}
+                                Total de analisis
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    opacity: "0.80",
+                                }}
+                            >
+                                {" "}
+                                <ScienceTwoTone
+                                    sx={{ width: "20px", mr: "10px" }}
+                                />{" "}
+                                {getToTalAnalysis()}{" "}
+                            </Typography>
+                        </Box>
                     </Box>
-                    <Box>
-                        <Typography
-                            variant="body1"
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <CircleOutlined
-                                sx={{
-                                    width: "15px",
-                                    mr: "10px",
-                                    color: "primary.main",
-                                }}
-                            />{" "}
-                            Total de analisis
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                opacity: "0.80",
-                            }}
-                        >
-                            {" "}
-                            <ScienceTwoTone
-                                sx={{ width: "20px", mr: "10px" }}
-                            />{" "}
-                            {getToTalAnalysis()}{" "}
-                        </Typography>
+                    <Box
+                        sx={{
+                            mt: "40px",
+                        }}
+                    >
+                        <CustomerCardTestRequest
+                            objectData={testRequest.customer}
+                        />
                     </Box>
                 </Box>
 

@@ -10,100 +10,41 @@ const CustomerCardTestRequest = ({ objectData = {} }) => {
         <Box
             sx={{
                 width: "100%",
-                height: "400px",
                 bgcolor: "background.paper",
                 border: `1px solid ${theme.palette.border.primary}`,
-                p: "20px 10px",
+                borderRadius: 3,
+                p: 3,
                 display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-around",
-                borderRadius: "20px",
+                gap: 3,
+                alignItems: "center",
             }}
         >
-            <Box sx={{ display: "flex", justifyContent: "center", mb: "5px" }}>
-                <Typography
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                    variant="caption"
-                >
-                    <CheckCircle /> Informacion del cliente
+            <Avatar src={customerPhoto} sx={{ width: 80, height: 80 }} />
+            <Box
+                sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}
+            >
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                    {objectData.customerName}
                 </Typography>
-            </Box>
-            <Box
-                sx={{
-                    width: "100%",
-                    height: "100px",
-                    bgcolor: `${theme.palette.primary.main + 10} `,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "20px",
-                    borderRadius: "30px",
-                }}
-            >
-                <Avatar src={customerPhoto} />
-
-                <Box>
-                    <Typography variant="body1" sx={{ fontWeight: "500" }}>
-                        {objectData.customerName}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            color: "text.secondary",
-                        }}
-                    >
-                        {" "}
-                        <Email sx={{ width: "20px", mr: "5px" }} />{" "}
-                        {objectData.email}
-                    </Typography>
-                </Box>
-            </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexDirection: "column",
-                }}
-            >
-                <Box sx={{ mt: "20px", mb: "20px" }}>
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            fontWeight: "bold",
-                            opacity: "0.90",
-                            display: "flex",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Phone color="info" sx={{ width: "20px", mr: "5px" }} />{" "}
-                        Numero de telefono
-                    </Typography>
-                    <Typography variant="body2">
-                        {objectData.phoneNumber}
-                    </Typography>
-                </Box>
-
-                <Box>
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            fontWeight: "bold",
-                            opacity: "0.90",
-                            display: "flex",
-                            alignItems: "center",
-                        }}
-                    >
-                        <LocationPin color="secondary" /> Direccion
-                    </Typography>
-                    <Typography variant="body2">
-                        {objectData.address}, {objectData.city}
-                    </Typography>
-                </Box>
+                <Typography
+                    variant="body2"
+                    sx={{ display: "flex", alignItems: "center" }}
+                >
+                    <Email sx={{ mr: 0.5 }} /> {objectData.email}
+                </Typography>
+                <Typography
+                    variant="body2"
+                    sx={{ display: "flex", alignItems: "center" }}
+                >
+                    <Phone sx={{ mr: 0.5 }} /> {objectData.phoneNumber}
+                </Typography>
+                <Typography
+                    variant="body2"
+                    sx={{ display: "flex", alignItems: "center" }}
+                >
+                    <LocationPin sx={{ mr: 0.5 }} /> {objectData.address},{" "}
+                    {objectData.city}
+                </Typography>
             </Box>
         </Box>
     );

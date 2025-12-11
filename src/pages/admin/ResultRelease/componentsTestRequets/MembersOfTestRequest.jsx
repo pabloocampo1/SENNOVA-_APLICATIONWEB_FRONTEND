@@ -3,7 +3,7 @@ import React from "react";
 import UserUIMiniCard from "../../CustomerAndUsers/UserUIMiniCard";
 import { Groups2Outlined, PersonAdd } from "@mui/icons-material";
 
-const MembersOfTestRequest = ({ toggleDrawer, team, removeMember }) => {
+const MembersOfTestRequest = ({ toggleDrawer, team = [], removeMember }) => {
     return (
         <Box
             sx={{
@@ -14,9 +14,7 @@ const MembersOfTestRequest = ({ toggleDrawer, team, removeMember }) => {
         >
             <Box
                 sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    mb: "20px",
+                    pb: "20px",
                 }}
             >
                 <Typography
@@ -29,6 +27,10 @@ const MembersOfTestRequest = ({ toggleDrawer, team, removeMember }) => {
                 >
                     {" "}
                     <Groups2Outlined sx={{ mr: "10px" }} /> Equipo asignado
+                </Typography>
+                <Typography variant="body2">
+                    Total de usuarios en este ensayo:{" "}
+                    <strong>{team.length}</strong> miembros
                 </Typography>
             </Box>
 

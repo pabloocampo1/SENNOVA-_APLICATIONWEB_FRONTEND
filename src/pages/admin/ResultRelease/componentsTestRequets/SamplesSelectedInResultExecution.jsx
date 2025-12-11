@@ -1,34 +1,79 @@
 import { CheckCircleOutline, Close } from "@mui/icons-material";
-import { Box, Button, Tooltip, Typography, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Tooltip,
+    Typography,
+    useTheme,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import api from "../../../../service/axiosService";
+import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 
 // THIS COMPONENT SHOW THE SAMPLES SELECTED IN RESULTEXECUTION TO EXECUTE
 
-const getLenght = (analisys = []) => {
-    return analisys.length;
-};
-
 const SamplesSelectedInResultExecution = ({
-    samplesSelectet = [],
-    samples = [],
+    samplesSelected = [],
+
     cleanData,
     onClose,
-    countAnalysisCompleteBySample,
 }) => {
-    const [samplesToExecute, setSamplesToExecute] = useState(samplesSelectet);
+    const [isLoanding, setIsLoanding] = useState(false);
+    const [samplesToExecute, setSamplesToExecute] = useState(samplesSelected);
+    const [samples, setSamples] = useState([]);
+
     const theme = useTheme();
 
-    const getSampleDataById = (sampleId) => {
-        const data = samples.filter((sample) => sample.sampleId == sampleId);
-        return data;
+    const removeSampleToExecute = (id) => {
+        const samplesSelectedUpdate = samples.filter(
+            (sample) => sample.sampleId !== id
+        );
+        setSamples(samplesSelectedUpdate);
     };
 
-    const removeSampleToExecute = (id) => {
-        const samplesSelectedUpdate = samplesToExecute.filter(
-            (sampleId) => sampleId !== id
-        );
-        setSamplesToExecute(samplesSelectedUpdate);
+    const getSamplesInfoExecution = async () => {
+        setIsLoanding(true);
+        try {
+            const ids = samplesSelected.join(",");
+            console.log(ids);
+
+            const res = await api.get(
+                "/sample/get-sample-info-execution",
+
+                {
+                    params: {
+                        samplesId: ids,
+                    },
+                }
+            );
+            if (res.data.length >= 1) {
+                setSamples(res.data);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
     };
+
+    const tooltipTextResults = (results) => {
+        return results.map((r) => `${r.analysis}: ${r.resultFinal}`).join("\n");
+    };
+
+    useEffect(() => {
+        getSamplesInfoExecution();
+    }, []);
+
+    if (isLoanding) {
+        return (
+            <SimpleBackdrop
+                text="Cargando informacion de la muestra"
+                open={isLoanding}
+            />
+        );
+    }
 
     return (
         <Box
@@ -153,7 +198,7 @@ const SamplesSelectedInResultExecution = ({
                         sx={{
                             display: "grid",
                             gridTemplateColumns:
-                                "repeat(auto-fill, minmax(250px, 1fr))",
+                                "repeat(auto-fit, minmax(350px, 1fr))",
                             gap: "10px",
 
                             maxHeight: "70vh",
@@ -162,14 +207,13 @@ const SamplesSelectedInResultExecution = ({
                             mt: "20px",
                         }}
                     >
-                        {samplesToExecute.map((sample, index) => {
-                            const data = getSampleDataById(sample);
+                        {samples.map((sample, index) => {
                             return (
                                 <Box
                                     key={index}
                                     sx={{
                                         borderRadius: "20px",
-                                        height: "150px",
+
                                         border: `1px solid ${theme.palette.border.primary}`,
                                         bgcolor: "background.paper",
                                         p: "20px",
@@ -194,34 +238,118 @@ const SamplesSelectedInResultExecution = ({
                                         >
                                             {index + 1}
                                         </Typography>
-                                        <Typography
+                                        <Box
                                             sx={{
-                                                mb: "20px",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center",
                                             }}
                                         >
-                                            {data[0].matrix}
-                                        </Typography>
+                                            <Typography
+                                                sx={{ color: "primary.main" }}
+                                            >
+                                                {sample.matrix}
+                                            </Typography>
+                                            <Typography>
+                                                {sample.testRequestCode}
+                                            </Typography>
+                                        </Box>
                                         <Tooltip title="Quitar de la lista">
                                             <Close
                                                 sx={{ color: "primary.main" }}
                                                 onClick={() =>
                                                     removeSampleToExecute(
-                                                        data[0].sampleId
+                                                        sample.sampleId
                                                     )
                                                 }
                                             />
                                         </Tooltip>
                                     </Box>
-                                    <Typography>
-                                        Total de analisis finalizados:{" "}
-                                        {countAnalysisCompleteBySample(
-                                            data[0].analysisEntities
-                                        )}
-                                    </Typography>
-                                    <Typography>
-                                        Total de analysis:{" "}
-                                        {getLenght(data[0].analysisEntities)}
-                                    </Typography>
+                                    <Card
+                                        sx={{
+                                            marginBottom: 2,
+                                            borderRadius: "20px",
+                                            mt: "20px",
+                                        }}
+                                    >
+                                        <CardContent>
+                                            <Typography
+                                                variant="h6"
+                                                gutterBottom
+                                                sx={{ opacity: "0.70" }}
+                                            >
+                                                Información de la muestra
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: "5px" }}
+                                            >
+                                                T. de análisis:{" "}
+                                                <strong>
+                                                    {sample.totalAnalysis}
+                                                </strong>
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: "5px" }}
+                                            >
+                                                T. de análisis hechos:{" "}
+                                                <strong>
+                                                    {
+                                                        sample.totalAnalysisFinished
+                                                    }
+                                                </strong>
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: "5px" }}
+                                            >
+                                                Cliente:{" "}
+                                                <strong>
+                                                    {sample.customerName}
+                                                </strong>
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: "5px" }}
+                                            >
+                                                Destino del resultado via email:{" "}
+                                                <strong>
+                                                    {sample.customerEmail}
+                                                </strong>
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: "5px" }}
+                                            >
+                                                T. de análisis fallidos:{" "}
+                                                <strong>
+                                                    {sample.totalAnalysisFailed}
+                                                </strong>
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                    <Tooltip
+                                        title={
+                                            <span
+                                                style={{
+                                                    whiteSpace: "pre-line",
+                                                }}
+                                            >
+                                                {tooltipTextResults(
+                                                    sample.results
+                                                )}
+                                            </span>
+                                        }
+                                    >
+                                        <Button fullWidth>
+                                            Ver resultados
+                                        </Button>
+                                    </Tooltip>
                                 </Box>
                             );
                         })}

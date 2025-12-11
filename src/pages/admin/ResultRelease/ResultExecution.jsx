@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ButtonBack from "../../../components/ButtonBack";
 import { Try } from "@mui/icons-material";
@@ -37,6 +37,7 @@ function a11yProps(index) {
 
 const ResultExecution = () => {
     const [value, setValue] = useState(0);
+    const theme = useTheme();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -77,10 +78,27 @@ const ResultExecution = () => {
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label="basic tabs example"
+                    aria-label="styled tabs"
+                    sx={{
+                        backgroundColor: "background.paper",
+                        borderRadius: 2,
+                        boxShadow: 1,
+                        "& .MuiTab-root": {
+                            textTransform: "none",
+                            fontWeight: "500",
+
+                            "&.Mui-selected": {
+                                color: "primary.main",
+                                backgroundColor: "background.default",
+                                borderRadius: 2,
+                                border: `1px solid ${theme.palette.border.primary}`,
+                            },
+                        },
+                    }}
                 >
-                    <Tab label="Muestras disponibles" {...a11yProps(0)} />
-                    <Tab label="Muestras vencidas" {...a11yProps(1)} />
+                    <Tab label="Disponibles" {...a11yProps(0)} />
+                    <Tab label="Vencidas" {...a11yProps(1)} />
+                    <Tab label="Entregadas" {...a11yProps(2)} />
                 </Tabs>
             </Box>
 
@@ -89,7 +107,11 @@ const ResultExecution = () => {
             </CustomTabPanel>
 
             <CustomTabPanel value={value} index={1}>
-                <Typography>hola 2</Typography>
+                <Typography>Muetsras vencidas sin entregar</Typography>
+            </CustomTabPanel>
+
+            <CustomTabPanel value={value} index={2}>
+                <Typography>Muetsras que ya se entregaron</Typography>
             </CustomTabPanel>
         </Box>
     );
