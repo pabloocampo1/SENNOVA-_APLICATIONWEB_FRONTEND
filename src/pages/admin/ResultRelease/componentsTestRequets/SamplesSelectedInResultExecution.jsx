@@ -148,8 +148,7 @@ const SamplesSelectedInResultExecution = ({
                     }}
                 >
                     <Typography variant="body1">
-                        Total de muestras seleccionadas :{" "}
-                        {samplesToExecute.length}
+                        Total de muestras seleccionadas : {samples.length}
                     </Typography>
                     <Typography variant="caption">
                         Estas son las muestras que se van a entregar a sus

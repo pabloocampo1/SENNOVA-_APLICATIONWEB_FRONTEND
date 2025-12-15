@@ -36,6 +36,7 @@ import GenericModal from "../../../../components/modals/GenericModal";
 import DeleteSamplesModalConfirmation from "./DeleteSamplesModalConfirmation";
 import InfoSamplesResultExecution from "./InfoSamplesResultExecution";
 import SamplesSelectedInResultExecution from "./SamplesSelectedInResultExecution";
+import SamplesExpired from "./ResultExecution/SamplesExpired";
 
 const getLenght = (analisys = []) => {
     return analisys.length;
@@ -47,6 +48,7 @@ const ResultExecutionSamplesAvailable = () => {
         React.useState(false);
     const [isLoanding, setIsLoanding] = useState(false);
     const [data, setData] = useState([]);
+    const [dataSamplesExpired, setDataSampleExpired] = useState([]);
     const [originalData, setOriginalData] = useState([]);
     const [dataSelected, setDataSelected] = useState([]);
     const [order, setOrder] = useState("all");
@@ -74,6 +76,19 @@ const ResultExecutionSamplesAvailable = () => {
             setData(res.data);
 
             setOriginalData(res.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoanding(false);
+        }
+    };
+
+    const getDataSamplesExpired = async () => {
+        setIsLoanding(true);
+
+        try {
+            const res = await api.get("/sample/get-all-status-expired");
+            setDataSampleExpired(res.data);
         } catch (error) {
             console.error(error);
         } finally {
@@ -151,6 +166,23 @@ const ResultExecutionSamplesAvailable = () => {
                     }}
                 >
                     Prioridad baja
+                </Box>
+            );
+        } else if (days === 0) {
+            return (
+                <Box
+                    sx={{
+                        color: "white",
+                        p: "10px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        textAlign: "center",
+                        borderRadius: "20px",
+                        bgcolor: "#8E24AA",
+                    }}
+                >
+                    Para hoy
                 </Box>
             );
         } else {
@@ -246,6 +278,7 @@ const ResultExecutionSamplesAvailable = () => {
 
     useEffect(() => {
         getData();
+        getDataSamplesExpired();
     }, []);
 
     return (
@@ -292,6 +325,41 @@ const ResultExecutionSamplesAvailable = () => {
                     </Alert>
                 </Snackbar>
             )}
+            <Box sx={{ mb: "40px" }}>
+                <Typography variant="body2">
+                    Total de muestras para ejecucion:{" "}
+                </Typography>
+                <Typography
+                    variant="caption"
+                    sx={{
+                        p: "5px 10px",
+                        bgcolor: "primary.main",
+                        color: "white",
+                        borderRadius: "20px",
+                    }}
+                >
+                    {data.length}
+                </Typography>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        mt: "20px",
+                    }}
+                >
+                    Total de muestras vencidas:{" "}
+                </Typography>
+                <Typography
+                    variant="caption"
+                    sx={{
+                        p: "5px 10px",
+                        bgcolor: "primary.main",
+                        color: "white",
+                        borderRadius: "20px",
+                    }}
+                >
+                    {dataSamplesExpired.length}
+                </Typography>
+            </Box>
 
             {dataSelected.length >= 1 && (
                 <Box
@@ -311,6 +379,7 @@ const ResultExecutionSamplesAvailable = () => {
                     </Button>
                 </Box>
             )}
+
             <Box
                 sx={{
                     display: "flex",
@@ -378,8 +447,21 @@ const ResultExecutionSamplesAvailable = () => {
             <Box
                 sx={{
                     mt: "40px",
+                    mb: "30px",
                 }}
             >
+                <Typography variant="h6">Muestras para ejecucion</Typography>
+
+                <Typography
+                    sx={{
+                        textAlign: "center",
+                        mb: "20px",
+                        color: "primary.main",
+                    }}
+                >
+                    {data.length <= 0 &&
+                        "No hay muestras vencidas disponibles para mostrar"}
+                </Typography>
                 <TableContainer>
                     <Table
                         sx={{
@@ -502,6 +584,22 @@ const ResultExecutionSamplesAvailable = () => {
                     </Table>
                 </TableContainer>
             </Box>
+
+            {/* ` Reusing the same handlers to avoid duplicating logic` */}
+            <SamplesExpired
+                styleBackgroundColorByRestDays={() =>
+                    styleBackgroundColorByRestDays()
+                }
+                handleDataSelected={(sampleId, checked) =>
+                    handleDataSelected(sampleId, checked)
+                }
+                dataSelected={dataSelected}
+                getDays={(dueDate) => getDays(dueDate)}
+                getPriority={(dueDate) => getPriority(dueDate)}
+                setSampleSelected={(sample) => setSampleSelected(sample)}
+                setOpen={(boolean) => setOpen(boolean)}
+                data={dataSamplesExpired}
+            />
 
             {/* THIS DRAWER IS FOR SHOW THE RESULTS OF ONE SAMPLE */}
             <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>

@@ -5,6 +5,7 @@ import { Try } from "@mui/icons-material";
 import api from "../../../service/axiosService";
 import PropTypes from "prop-types";
 import ResultExecutionSamplesAvailable from "./componentsTestRequets/ResultExecutionSamplesAvailable";
+import SamplesExpired from "./componentsTestRequets/ResultExecution/SamplesExpired";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -97,8 +98,9 @@ const ResultExecution = () => {
                     }}
                 >
                     <Tab label="Disponibles" {...a11yProps(0)} />
-                    <Tab label="Vencidas" {...a11yProps(1)} />
+
                     <Tab label="Entregadas" {...a11yProps(2)} />
+                    <Tab label="Sin recepcion" {...a11yProps(3)} />
                 </Tabs>
             </Box>
 
@@ -106,12 +108,11 @@ const ResultExecution = () => {
                 <ResultExecutionSamplesAvailable />
             </CustomTabPanel>
 
-            <CustomTabPanel value={value} index={1}>
-                <Typography>Muetsras vencidas sin entregar</Typography>
-            </CustomTabPanel>
-
             <CustomTabPanel value={value} index={2}>
-                <Typography>Muetsras que ya se entregaron</Typography>
+                <Typography>Muestras que ya se entregaron</Typography>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+                <Typography>Muetsras Sin recepcion</Typography>
             </CustomTabPanel>
         </Box>
     );
