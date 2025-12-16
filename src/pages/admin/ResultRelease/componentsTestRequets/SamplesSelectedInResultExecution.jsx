@@ -21,7 +21,7 @@ const SamplesSelectedInResultExecution = ({
     onClose,
 }) => {
     const [isLoanding, setIsLoanding] = useState(false);
-    const [samplesToExecute, setSamplesToExecute] = useState(samplesSelected);
+
     const [samples, setSamples] = useState([]);
 
     const theme = useTheme();

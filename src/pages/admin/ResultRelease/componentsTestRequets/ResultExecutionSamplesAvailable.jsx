@@ -325,40 +325,46 @@ const ResultExecutionSamplesAvailable = () => {
                     </Alert>
                 </Snackbar>
             )}
-            <Box sx={{ mb: "40px" }}>
-                <Typography variant="body2">
-                    Total de muestras para ejecucion:{" "}
-                </Typography>
-                <Typography
-                    variant="caption"
-                    sx={{
-                        p: "5px 10px",
-                        bgcolor: "primary.main",
-                        color: "white",
-                        borderRadius: "20px",
-                    }}
-                >
-                    {data.length}
-                </Typography>
-                <Typography
-                    variant="body2"
-                    sx={{
-                        mt: "20px",
-                    }}
-                >
-                    Total de muestras vencidas:{" "}
-                </Typography>
-                <Typography
-                    variant="caption"
-                    sx={{
-                        p: "5px 10px",
-                        bgcolor: "primary.main",
-                        color: "white",
-                        borderRadius: "20px",
-                    }}
-                >
-                    {dataSamplesExpired.length}
-                </Typography>
+            <Box
+                sx={{
+                    mb: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "start",
+                }}
+            >
+                <Box sx={{ mr: "20px" }}>
+                    <Typography variant="body2">
+                        Total de muestras para ejecucion:{" "}
+                    </Typography>
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            p: "5px 10px",
+                            bgcolor: "primary.main",
+                            color: "white",
+                            borderRadius: "20px",
+                        }}
+                    >
+                        {data.length}
+                    </Typography>
+                </Box>
+                <Box>
+                    <Typography variant="body2">
+                        Total de muestras vencidas:{" "}
+                    </Typography>
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            p: "5px 10px",
+                            bgcolor: "primary.main",
+                            color: "white",
+                            borderRadius: "20px",
+                        }}
+                    >
+                        {dataSamplesExpired.length}
+                    </Typography>
+                </Box>
             </Box>
 
             {dataSelected.length >= 1 && (

@@ -6,6 +6,7 @@ import api from "../../../service/axiosService";
 import PropTypes from "prop-types";
 import ResultExecutionSamplesAvailable from "./componentsTestRequets/ResultExecutionSamplesAvailable";
 import SamplesExpired from "./componentsTestRequets/ResultExecution/SamplesExpired";
+import SamplesDelivered from "./componentsTestRequets/ResultExecution/SamplesDelivered";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -63,7 +64,6 @@ const ResultExecution = () => {
                 width: "100%",
             }}
         >
-            <ButtonBack />
             <Typography
                 variant="h3"
                 sx={{
@@ -99,8 +99,8 @@ const ResultExecution = () => {
                 >
                     <Tab label="Disponibles" {...a11yProps(0)} />
 
-                    <Tab label="Entregadas" {...a11yProps(2)} />
-                    <Tab label="Sin recepcion" {...a11yProps(3)} />
+                    <Tab label="Entregadas" {...a11yProps(1)} />
+                    <Tab label="Sin recepcion" {...a11yProps(2)} />
                 </Tabs>
             </Box>
 
@@ -108,10 +108,11 @@ const ResultExecution = () => {
                 <ResultExecutionSamplesAvailable />
             </CustomTabPanel>
 
-            <CustomTabPanel value={value} index={2}>
-                <Typography>Muestras que ya se entregaron</Typography>
+            <CustomTabPanel value={value} index={1}>
+                <SamplesDelivered />
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
+
+            <CustomTabPanel value={value} index={2}>
                 <Typography>Muetsras Sin recepcion</Typography>
             </CustomTabPanel>
         </Box>

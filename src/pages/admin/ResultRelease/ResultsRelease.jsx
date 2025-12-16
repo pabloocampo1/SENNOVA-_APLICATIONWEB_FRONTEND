@@ -213,71 +213,51 @@ const ResultsRelease = () => {
             </Box>
 
             {/* options */}
+
             <Box
                 sx={{
-                    mt: "40px",
                     display: "flex",
-                    justifyContent: "space-between",
+                    mt: "30px",
                 }}
             >
-                <Box
+                <SearchBar
+                    onSearch={(e) => getDataBySearch(e)}
+                    placeholder="Buscar ensayo por codigo"
+                />
+
+                <FormControl
                     sx={{
-                        display: "flex",
+                        width: "150px",
+                        borderRadius: "20px",
+                        ml: "20px",
                     }}
                 >
-                    <SearchBar
-                        onSearch={(e) => getDataBySearch(e)}
-                        placeholder="Buscar ensayo por codigo"
-                    />
-
-                    <FormControl
+                    <InputLabel id="demo-simple-select-label">
+                        filtrar por:
+                    </InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Filtrar por:"
+                        value={optionSelectedFilterBy}
+                        onChange={(e) => getDataByState(e.target.value)}
                         sx={{
-                            width: "150px",
-                            borderRadius: "20px",
-                            ml: "20px",
+                            borderRadius: "10px",
                         }}
                     >
-                        <InputLabel id="demo-simple-select-label">
-                            filtrar por:
-                        </InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Filtrar por:"
-                            value={optionSelectedFilterBy}
-                            onChange={(e) => getDataByState(e.target.value)}
-                            sx={{
-                                borderRadius: "10px",
-                            }}
-                        >
-                            <MenuItem value={"Espera de recepción"}>
-                                Sin recepcion de muestras
-                            </MenuItem>
-                            <MenuItem value={"En proceso"}>En Proceso</MenuItem>
-                            <MenuItem value={"Terminada"}>
-                                Entregadas {"(TERMINADAS)"}
-                            </MenuItem>
-                            <MenuItem value={"Vencida"}>
-                                Vencidas {"(Tiempo finalizado)"}
-                            </MenuItem>
-                            <MenuItem value={"ALL"}>Todas</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>
-
-                <Box>
-                    {authObject.role == "ROLE_SUPERADMIN" && (
-                        <Button
-                            startIcon={<RunningWithErrors />}
-                            variant="outlined"
-                            onClick={() =>
-                                navigate("/system/result/execution-test")
-                            }
-                        >
-                            Ejecutar revision
-                        </Button>
-                    )}
-                </Box>
+                        <MenuItem value={"Espera de recepción"}>
+                            Sin recepcion de muestras
+                        </MenuItem>
+                        <MenuItem value={"En proceso"}>En Proceso</MenuItem>
+                        <MenuItem value={"Terminada"}>
+                            Entregadas {"(TERMINADAS)"}
+                        </MenuItem>
+                        <MenuItem value={"Vencida"}>
+                            Vencidas {"(Tiempo finalizado)"}
+                        </MenuItem>
+                        <MenuItem value={"ALL"}>Todas</MenuItem>
+                    </Select>
+                </FormControl>
             </Box>
 
             {/* CONTENT */}

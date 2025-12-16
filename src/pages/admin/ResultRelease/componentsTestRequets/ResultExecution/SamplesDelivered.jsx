@@ -1,0 +1,182 @@
+import {
+    Box,
+    Button,
+    MenuItem,
+    Pagination,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Tooltip,
+    Typography,
+    useTheme,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import api from "../../../../../service/axiosService";
+import { useNavigate } from "react-router-dom";
+
+const SamplesDelivered = () => {
+    const [data, setData] = useState([]);
+    const [totalPagesSamplesDelivered, setTotalPagesSamplesDelivered] =
+        useState(null);
+    const [page, setPage] = useState(0);
+
+    const theme = useTheme();
+    const navigate = useNavigate();
+
+    const handleChange = (event, value) => {
+        console.log(value);
+
+        setPage(value - 1);
+    };
+
+    const getData = async () => {
+        try {
+            const res = await api.get(`/sample/get-all-delivered?page=${page}`);
+            // this requets return one page
+            console.log(res);
+
+            setData(res.data.content);
+            setTotalPagesSamplesDelivered(res.data.totalPages);
+        } catch (error) {
+            error;
+        }
+    };
+
+    useEffect(() => {
+        getData();
+    }, [page]);
+
+    return (
+        <Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box>
+                    <Typography variant="h6" sx={{ mt: "20px" }}>
+                        Muestras entregadas
+                    </Typography>
+                    <Typography>
+                        Puedes dar click a las muestras para ver sus respectivos
+                        ensayos
+                    </Typography>
+                </Box>
+            </Box>
+
+            <TableContainer
+                sx={{
+                    mt: "20px",
+                    borderRadius: "20px",
+                    border: `1px solid ${theme.palette.border.primary}`,
+                }}
+            >
+                <Table>
+                    <TableHead>
+                        <TableRow
+                            sx={{
+                                bgcolor: "background.default",
+                            }}
+                        >
+                            <TableCell>Codigo muestra</TableCell>
+                            <TableCell>Matrix</TableCell>
+                            <TableCell>Codigo de ensayo</TableCell>
+                            <TableCell>Fecha de envio</TableCell>
+                            <TableCell>Cliente</TableCell>
+                            <TableCell>Emial cliente</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.map((sample, index) => {
+                            return (
+                                <Tooltip
+                                    title={`Click para ver ensayo de la muestra ${sample.sampleCode} ${sample.matrix}`}
+                                    onClick={() =>
+                                        navigate(
+                                            `/system/result/test-request/${sample.testRequestId}`
+                                        )
+                                    }
+                                >
+                                    <TableRow
+                                        key={index}
+                                        sx={{
+                                            ":hover": {
+                                                bgcolor: "background.default",
+                                                borderLeft: "3px solid red",
+                                            },
+                                        }}
+                                    >
+                                        <TableCell>
+                                            <Typography
+                                                sx={{ fontWeight: "bold" }}
+                                            >
+                                                {sample.sampleCode}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                sx={{ opacity: "0.80" }}
+                                            >
+                                                {sample.matrix}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                sx={{ opacity: "0.80" }}
+                                            >
+                                                {sample.testRequestCode}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                sx={{ opacity: "0.80" }}
+                                            >
+                                                {sample.deliveryDate}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                sx={{ opacity: "0.80" }}
+                                            >
+                                                {sample.customerName}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                sx={{
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                {sample.customerEmail}
+                                            </Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                </Tooltip>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    mb: "20px",
+                    mt: "20px",
+                }}
+            >
+                <Stack spacing={2}>
+                    <Pagination
+                        count={totalPagesSamplesDelivered}
+                        page={page + 1}
+                        onChange={handleChange}
+                    />
+                </Stack>
+            </Box>
+        </Box>
+    );
+};
+
+export default SamplesDelivered;

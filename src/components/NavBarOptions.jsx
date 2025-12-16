@@ -10,6 +10,10 @@ import {
     TaskAltOutlined,
     SupervisedUserCircleOutlined,
     Settings,
+    Science,
+    DocumentScanner,
+    AnalyticsSharp,
+    AnalyticsOutlined,
 } from "@mui/icons-material";
 
 const NavBarOptions = ({ onCloseMenu }) => {
@@ -27,8 +31,10 @@ const NavBarOptions = ({ onCloseMenu }) => {
             setModules([
                 {
                     url: "/system",
-                    name: "Inicio",
-                    icon: <HomeWorkOutlined sx={{ color: "text.secondary" }} />,
+                    name: "Inicio / analitica ",
+                    icon: (
+                        <AnalyticsOutlined sx={{ color: "text.secondary" }} />
+                    ),
                 },
                 {
                     url: "/system/inventory/equipments",
@@ -46,15 +52,20 @@ const NavBarOptions = ({ onCloseMenu }) => {
                 },
                 {
                     url: "/system/quotes",
-                    name: "Cotizaciones",
+                    name: "Cotizaciones de ensayo",
                     icon: (
                         <RequestPageOutlined sx={{ color: "text.secondary" }} />
                     ),
                 },
                 {
                     url: "/system/results",
-                    name: "Emisión de resultados",
-                    icon: <TaskAltOutlined sx={{ color: "text.secondary" }} />,
+                    name: "Gestion de ensayos",
+                    icon: <DocumentScanner sx={{ color: "text.secondary" }} />,
+                },
+                {
+                    url: "/system/result/execution-test",
+                    name: "gestion de muestras",
+                    icon: <Science sx={{ color: "text.secondary" }} />,
                 },
                 {
                     url: "/system/settings",
