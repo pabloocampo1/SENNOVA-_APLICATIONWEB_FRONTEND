@@ -23,61 +23,16 @@ const ProfileUI = () => {
     const open = Boolean(anchorEl);
 
     return (
-        <Box>
-            <IconButton
-                sx={{
-                    "&:hover": {
-                        backgroundColor: "transparent",
-                    },
-                }}
-                onClick={handleClick}
-            >
-                <Box
+        <Box sx={{ ml: "10px" }}>
+            <IconButton onClick={handleClick}>
+                <Avatar
+                    src={authObject.imageProfile}
                     sx={{
-                        width: "auto",
-                        height: "50%",
-                        borderColor: "1px solid red",
-                        borderRadius: "20px",
-                        display: "flex",
-                        alignItems: "start",
-                        justifyContent: "end",
+                        width: 33,
+                        height: 33,
+                        fontSize: 14,
                     }}
-                >
-                    <Box
-                        sx={{
-                            width: "50px",
-                            height: "40px",
-                        }}
-                    >
-                        <Avatar src={authObject.imageProfile} />
-                    </Box>
-
-                    <Box
-                        sx={{
-                            width: "100%",
-                            height: "100%",
-                            display: { xs: "none", sm: "flex" },
-                            flexDirection: "column",
-                            justifyContent: "start",
-                            alignItems: "start",
-                            pr: "10px",
-                            pl: "10px",
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                fontSize: "16px",
-                                fontWeight: "600",
-                                opacity: "0.99",
-                            }}
-                        >
-                            {authObject.name}
-                        </Typography>
-                        <Typography sx={{ fontSize: "14px", opacity: "0.50" }}>
-                            {authObject.position}
-                        </Typography>
-                    </Box>
-                </Box>
+                />
             </IconButton>
             <Popover
                 open={open}

@@ -3,7 +3,6 @@ import {
     AttachMoney,
     EmailOutlined,
     Inventory,
-    Inventory2,
     Inventory2Outlined,
     LockClockOutlined,
     PersonOffOutlined,
@@ -21,7 +20,7 @@ import {
     useTheme,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import ProductsCompo from "../../components/SettingComponents/ProductsCompo";
+
 import UsageCompo from "../../components/SettingComponents/UsageCompo";
 import LocationsCompo from "../../components/SettingComponents/LocationsCompo";
 import { AuthContext } from "../../context/AuthContext";
@@ -319,7 +318,6 @@ const SettingPage = () => {
                 </List>
             </Box>
             <Box>
-                <ProductsCompo isMobile={isMobile} />
                 <UsageCompo isMobile={isMobile} />
                 <LocationsCompo isMobile={isMobile} />
             </Box>

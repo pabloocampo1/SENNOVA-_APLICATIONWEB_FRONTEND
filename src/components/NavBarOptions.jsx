@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     HomeWorkOutlined,
@@ -14,6 +14,7 @@ import {
     DocumentScanner,
     AnalyticsSharp,
     AnalyticsOutlined,
+    Category,
 } from "@mui/icons-material";
 
 const NavBarOptions = ({ onCloseMenu }) => {
@@ -22,6 +23,7 @@ const NavBarOptions = ({ onCloseMenu }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [active, setActive] = useState("");
+    const theme = useTheme();
 
     useEffect(() => {
         if (
@@ -59,22 +61,22 @@ const NavBarOptions = ({ onCloseMenu }) => {
                 },
                 {
                     url: "/system/results",
-                    name: "Gestion de ensayos",
+                    name: "Gestión de ensayos",
                     icon: <DocumentScanner sx={{ color: "text.secondary" }} />,
                 },
                 {
                     url: "/system/result/execution-test",
-                    name: "gestion de muestras",
+                    name: "Gestión de muestras",
                     icon: <Science sx={{ color: "text.secondary" }} />,
                 },
                 {
-                    url: "/system/settings",
-                    name: "Elementos del sistema",
-                    icon: <Settings sx={{ color: "text.secondary" }} />,
+                    url: "/system/products",
+                    name: "Productos",
+                    icon: <Category sx={{ color: "text.secondary" }} />,
                 },
                 {
                     url: "/system/users",
-                    name: "Clientes y usuarios",
+                    name: "Gestión clientes y usuarios",
                     icon: (
                         <SupervisedUserCircleOutlined
                             sx={{ color: "text.secondary" }}
@@ -117,6 +119,10 @@ const NavBarOptions = ({ onCloseMenu }) => {
                         display: "flex",
                         alignItems: "center",
                         fontWeight: active === module.name ? 600 : 0,
+                        ":hover": {
+                            bgcolor: "background.paper",
+                            border: `1px solid ${theme.palette.border.primary}`,
+                        },
                     }}
                     onClick={() => {
                         handleClick(module);

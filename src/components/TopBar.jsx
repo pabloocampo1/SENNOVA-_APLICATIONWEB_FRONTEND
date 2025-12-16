@@ -6,7 +6,6 @@ import {
     InfoOutline,
     Logout,
     MenuRounded,
-    Settings,
     Sunny,
 } from "@mui/icons-material";
 
@@ -16,14 +15,13 @@ import NotificationPopover from "./NotificationPopover";
 import imageLogoSennova from "../assets/images/sennova_logo_sin_fondo.png";
 import NavBarOptions from "./navBarOptions";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+
 import ProfileUI from "./ProfileUI";
 
 const TopBar = () => {
     const { darkMode, toggleDarkMode } = useContext(ThemeContext);
     const [menuMobile, setMenuMobile] = useState(false);
     const { logout } = useAuth();
-    const navigate = useNavigate();
 
     return (
         <Box
@@ -89,8 +87,11 @@ const TopBar = () => {
                         sx={{ color: "text.secondary", ml: "10px" }}
                     />
                 </Tooltip>
+
+                <ProfileUI />
             </Box>
 
+            {/* MENU MOBILE */}
             <Box sx={{ display: { xs: "flex", sm: "none" } }}>
                 <Drawer
                     anchor="left"

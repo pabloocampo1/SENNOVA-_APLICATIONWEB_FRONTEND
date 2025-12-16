@@ -29,6 +29,7 @@ import TestRequestInfo from "./pages/admin/ResultRelease/TestRequestInfo";
 import SampleInfo from "./pages/admin/ResultRelease/componentsTestRequets/SampleInfo";
 import SampleReceptionPage from "./pages/admin/ResultRelease/componentsTestRequets/SampleReceptionPage";
 import ResultExecution from "./pages/admin/ResultRelease/ResultExecution";
+import ProductsCompo from "./pages/admin/ProductsPage";
 
 function App() {
     return (
@@ -145,6 +146,10 @@ function App() {
                                         <Route
                                             path="users"
                                             element={<CustomersAndUsersPage />}
+                                        />
+                                        <Route
+                                            path="products"
+                                            element={<ProductsCompo />}
                                         />
 
                                         {/* <Route/> */}
