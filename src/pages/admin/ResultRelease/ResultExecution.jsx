@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import ResultExecutionSamplesAvailable from "./componentsTestRequets/ResultExecutionSamplesAvailable";
 import SamplesExpired from "./componentsTestRequets/ResultExecution/SamplesExpired";
 import SamplesDelivered from "./componentsTestRequets/ResultExecution/SamplesDelivered";
+import SamplesWithoutReception from "./componentsTestRequets/ResultExecution/SamplesWithoutReception";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -72,7 +73,7 @@ const ResultExecution = () => {
                     textAlign: "center",
                 }}
             >
-                Ejecucion de resultados
+                Gestion de muestras
             </Typography>
 
             <Box sx={{ borderBottom: 1, borderColor: "divider", mt: "20px" }}>
@@ -113,7 +114,7 @@ const ResultExecution = () => {
             </CustomTabPanel>
 
             <CustomTabPanel value={value} index={2}>
-                <Typography>Muetsras Sin recepcion</Typography>
+                <SamplesWithoutReception />
             </CustomTabPanel>
         </Box>
     );

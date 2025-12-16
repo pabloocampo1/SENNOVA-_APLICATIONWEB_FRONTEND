@@ -31,7 +31,7 @@ const NavBarOptions = ({ onCloseMenu }) => {
             setModules([
                 {
                     url: "/system",
-                    name: "Inicio / analitica ",
+                    name: "Dashboard",
                     icon: (
                         <AnalyticsOutlined sx={{ color: "text.secondary" }} />
                     ),

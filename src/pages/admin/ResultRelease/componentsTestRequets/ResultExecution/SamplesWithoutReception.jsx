@@ -1,7 +1,5 @@
 import {
     Box,
-    Button,
-    MenuItem,
     Pagination,
     Stack,
     Table,
@@ -10,24 +8,23 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    TextField,
     Tooltip,
     Typography,
     useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import api from "../../../../../service/axiosService";
 import { useNavigate } from "react-router-dom";
+import api from "../../../../../service/axiosService";
 import SimpleBackdrop from "../../../../../components/SimpleBackDrop";
 
-const SamplesDelivered = () => {
+const SamplesWithoutReception = () => {
     const [data, setData] = useState([]);
     const [totalPagesSamplesDelivered, setTotalPagesSamplesDelivered] =
         useState(null);
     const [page, setPage] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
-
     const [isLoanding, setIsLoanding] = useState(false);
+
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -40,8 +37,9 @@ const SamplesDelivered = () => {
     const getData = async () => {
         setIsLoanding(true);
         try {
-            const res = await api.get(`/sample/get-all-delivered?page=${page}`);
-            // this requets return one page
+            const res = await api.get(
+                `/sample/get-all-without-reception?page=${page}`
+            );
 
             setData(res.data.content);
             setTotalPagesSamplesDelivered(res.data.totalPages);
@@ -61,16 +59,16 @@ const SamplesDelivered = () => {
         <Box>
             <SimpleBackdrop
                 open={isLoanding}
-                text="Cargando muestras entregadas"
+                text="Cargando muestras sin recepcion"
             />
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Box>
                     <Typography variant="h6" sx={{ mt: "20px" }}>
-                        Muestras entregadas
+                        Muestras sin recepcion
                     </Typography>
                     <Typography>
-                        Puedes dar click a las muestras para ver sus respectivos
-                        ensayos
+                        Puedes dar click a las muestras para digitar la
+                        recepcion de muestra
                     </Typography>
                     <Typography sx={{ mt: "20px" }}>
                         Total de muestras :{" "}
@@ -98,19 +96,19 @@ const SamplesDelivered = () => {
                             <TableCell>Codigo muestra</TableCell>
                             <TableCell>Matrix</TableCell>
                             <TableCell>Codigo de ensayo</TableCell>
-                            <TableCell>Fecha de envio</TableCell>
+                            <TableCell>Estado de la muestra</TableCell>
+                            <TableCell>Numero de analisis</TableCell>
                             <TableCell>Cliente</TableCell>
-                            <TableCell>Emial cliente</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {data.map((sample, index) => {
                             return (
                                 <Tooltip
-                                    title={`Click para ver ensayo de la muestra ${sample.sampleCode} ${sample.matrix}`}
+                                    title={`Click para ver registrar recepcion de la muestra ${sample.sampleCode} ${sample.matrix}`}
                                     onClick={() =>
                                         navigate(
-                                            `/system/result/test-request/${sample.testRequestId}`
+                                            `/system/result/test-request/${sample.testRequestId}/recepcion-muestras`
                                         )
                                     }
                                 >
@@ -119,7 +117,7 @@ const SamplesDelivered = () => {
                                         sx={{
                                             ":hover": {
                                                 bgcolor: "background.default",
-                                                borderLeft: "3px solid green",
+                                                borderLeft: "3px solid red",
                                             },
                                         }}
                                     >
@@ -146,16 +144,16 @@ const SamplesDelivered = () => {
                                         </TableCell>
                                         <TableCell>
                                             <Typography
-                                                sx={{ opacity: "0.80" }}
+                                                sx={{ color: "primary.main" }}
                                             >
-                                                {sample.deliveryDate}
+                                                {sample.statusReception}
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
                                             <Typography
                                                 sx={{ opacity: "0.80" }}
                                             >
-                                                {sample.customerName}
+                                                {sample.totalAnalysis}
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
@@ -164,7 +162,7 @@ const SamplesDelivered = () => {
                                                     fontWeight: "bold",
                                                 }}
                                             >
-                                                {sample.customerEmail}
+                                                {sample.customerName}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -195,4 +193,4 @@ const SamplesDelivered = () => {
     );
 };
 
-export default SamplesDelivered;
+export default SamplesWithoutReception;
