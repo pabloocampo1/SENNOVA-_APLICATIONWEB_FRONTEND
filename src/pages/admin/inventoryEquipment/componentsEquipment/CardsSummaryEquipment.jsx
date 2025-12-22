@@ -1,14 +1,21 @@
-import { Box, Typography, Skeleton, alpha, Chip, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { Inventory, Build, CheckCircle, Cancel } from '@mui/icons-material';
-import { formatMonthYear } from '../../../../Utils/DateUtils';
-import api from '../../../../service/axiosService';
+import {
+    Box,
+    Typography,
+    Skeleton,
+    alpha,
+    Chip,
+    useTheme,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Inventory, Build, CheckCircle, Cancel } from "@mui/icons-material";
+import { formatMonthYear } from "../../../../Utils/DateUtils";
+import api from "../../../../service/axiosService";
 
 const CardsSummaryEquipment = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const theme = useTheme();
-    const isDark = theme.palette.mode === 'dark';
+    const isDark = theme.palette.mode === "dark";
 
     const fetchData = async () => {
         setLoading(true);
@@ -16,7 +23,6 @@ const CardsSummaryEquipment = () => {
             const res = await api.get("/equipment/summaryStatics/card");
             if (res.status === 200) {
                 setData(res.data);
-               
             }
         } catch (error) {
             console.error(error);
@@ -37,7 +43,7 @@ const CardsSummaryEquipment = () => {
                     display: "grid",
                     gap: 2,
                     gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                    mt: 3
+                    mt: 3,
                 }}
             >
                 {[1, 2, 3, 4].map((i) => (
@@ -62,7 +68,7 @@ const CardsSummaryEquipment = () => {
             color: "#39A900",
             bgGradient: isDark
                 ? "linear-gradient(135deg, #2a3e2a 0%, #3a5a3a 100%)"
-                : "linear-gradient(135deg, #a5d6a7 0%, #81c784 100%)"
+                : "linear-gradient(135deg, #a5d6a7 0%, #81c784 100%)",
         },
         {
             title: "Total de Equipos reportados",
@@ -72,7 +78,7 @@ const CardsSummaryEquipment = () => {
             color: "#39A900",
             bgGradient: isDark
                 ? "linear-gradient(135deg, #2a3e2a 0%, #3a5a3a 100%)"
-                : "linear-gradient(135deg, #a5d6a7 0%, #81c784 100%)"
+                : "linear-gradient(135deg, #a5d6a7 0%, #81c784 100%)",
         },
         {
             title: "Mantenimiento",
@@ -82,7 +88,7 @@ const CardsSummaryEquipment = () => {
             color: "#7E57C2",
             bgGradient: isDark
                 ? "linear-gradient(135deg, #3e3a52 0%, #5a5072 100%)"
-                : "linear-gradient(135deg, #b39ddb 0%, #9575cd 100%)"
+                : "linear-gradient(135deg, #b39ddb 0%, #9575cd 100%)",
         },
         {
             title: "Equipos Activos",
@@ -92,8 +98,8 @@ const CardsSummaryEquipment = () => {
             color: "#39A900",
             bgGradient: isDark
                 ? "linear-gradient(135deg, #354a35 0%, #4a6a4a 100%)"
-                : "linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%)"
-        }
+                : "linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%)",
+        },
     ];
     return (
         <Box
@@ -101,8 +107,8 @@ const CardsSummaryEquipment = () => {
                 width: "100%",
                 display: "grid",
                 gap: 2.5,
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                mt: 3
+                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                mt: 3,
             }}
         >
             {cards.map((card, index) => {
@@ -111,7 +117,7 @@ const CardsSummaryEquipment = () => {
                     <Box
                         key={index}
                         sx={{
-                            position: 'relative',
+                            position: "relative",
                             p: 3,
                             height: "140px",
                             borderRadius: 3,
@@ -120,43 +126,44 @@ const CardsSummaryEquipment = () => {
                             justifyContent: "space-between",
                             background: card.bgGradient,
 
-                            overflow: 'hidden',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            cursor: 'pointer',
+                            overflow: "hidden",
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            cursor: "pointer",
 
-                            '&::before': {
+                            "&::before": {
                                 content: '""',
-                                position: 'absolute',
+                                position: "absolute",
                                 top: 0,
                                 right: 0,
-                                width: '100%',
-                                height: '100%',
+                                width: "100%",
+                                height: "100%",
                                 background: isDark
-                                    ? 'rgba(255, 255, 255, 0.05)'
-                                    : 'rgba(255, 255, 255, 0.2)',
-                                clipPath: 'circle(30% at 80% 20%)',
-                                transition: 'all 0.5s ease'
+                                    ? "rgba(255, 255, 255, 0.05)"
+                                    : "rgba(255, 255, 255, 0.2)",
+                                clipPath: "circle(30% at 80% 20%)",
+                                transition: "all 0.5s ease",
                             },
-                            '&:hover::before': {
-                                clipPath: 'circle(80% at 80% 20%)'
-                            }
+                            "&:hover::before": {
+                                clipPath: "circle(80% at 80% 20%)",
+                            },
                         }}
                     >
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'flex-start',
-                            position: 'relative',
-                            zIndex: 1
-                        }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                                position: "relative",
+                                zIndex: 1,
+                            }}
+                        >
                             <Box>
                                 <Typography
                                     sx={{
-                                        color: 'white',
-                                        fontSize: '0.875rem',
+                                        color: "white",
+                                        fontSize: "0.875rem",
                                         fontWeight: 600,
                                         mb: 0.5,
-
                                     }}
                                 >
                                     {card.title}
@@ -166,48 +173,51 @@ const CardsSummaryEquipment = () => {
                                     size="small"
                                     sx={{
                                         height: 20,
-                                        fontSize: '0.7rem',
+                                        fontSize: "0.7rem",
                                         fontWeight: 500,
                                         bgcolor: isDark
-                                            ? alpha('#fff', 0.15)
-                                            : alpha('#fff', 0.3),
-                                        color: 'text.primary',
-                                        backdropFilter: 'blur(10px)',
-
+                                            ? alpha("#fff", 0.15)
+                                            : alpha("#fff", 0.3),
+                                        color: "text.primary",
+                                        backdropFilter: "blur(10px)",
                                     }}
                                 />
                             </Box>
 
-                            <Box sx={{
-                                width: 48,
-                                height: 48,
-                                borderRadius: 2,
-                                bgcolor: isDark
-                                    ? alpha('#fff', 0.15)
-                                    : alpha('#fff', 0.25),
-                                backdropFilter: 'blur(10px)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                border: isDark
-                                    ? `1px solid ${alpha('#fff', 0.2)}`
-                                    : `1px solid ${alpha('#fff', 0.3)}`,
-                            }}>
-                                <Icon sx={{ fontSize: 28, color: 'white' }} />
+                            <Box
+                                sx={{
+                                    width: 48,
+                                    height: 48,
+                                    borderRadius: 2,
+                                    bgcolor: isDark
+                                        ? alpha("#fff", 0.15)
+                                        : alpha("#fff", 0.25),
+                                    backdropFilter: "blur(10px)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    border: isDark
+                                        ? `1px solid ${alpha("#fff", 0.2)}`
+                                        : `1px solid ${alpha("#fff", 0.3)}`,
+                                }}
+                            >
+                                <Icon sx={{ fontSize: 28, color: "white" }} />
                             </Box>
                         </Box>
 
-                        <Box sx={{
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            justifyContent: 'space-between',
-                            position: 'relative',
-                            zIndex: 1
-                        }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "flex-end",
+                                justifyContent: "space-between",
+                                position: "relative",
+                                zIndex: 1,
+                            }}
+                        >
                             <Typography
                                 sx={{
-                                    color: 'white',
-                                    fontSize: '2.5rem',
+                                    color: "white",
+                                    fontSize: "2.5rem",
                                     fontWeight: 700,
                                     lineHeight: 1,
                                 }}

@@ -35,7 +35,7 @@ import {
 import GenericModal from "../../../../components/modals/GenericModal";
 import DeleteSamplesModalConfirmation from "./DeleteSamplesModalConfirmation";
 import InfoSamplesResultExecution from "./InfoSamplesResultExecution";
-import SamplesSelectedInResultExecution from "./SamplesSelectedInResultExecution";
+import SamplesSelectedInResultExecution from "./ResultExecution/SamplesSelectedInResultExecution";
 import SamplesExpired from "./ResultExecution/SamplesExpired";
 
 const getLenght = (analisys = []) => {

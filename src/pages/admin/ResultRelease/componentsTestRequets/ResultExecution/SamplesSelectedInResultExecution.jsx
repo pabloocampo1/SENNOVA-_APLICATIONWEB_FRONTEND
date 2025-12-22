@@ -9,11 +9,11 @@ import {
     useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import api from "../../../../service/axiosService";
-import SimpleBackdrop from "../../../../components/SimpleBackDrop";
-import MessageSamplesSelectedExecution from "./MessageSamplesSelectedExecution";
+import api from "../../../../../service/axiosService";
+import SimpleBackdrop from "../../../../../components/SimpleBackDrop";
+import MessageSamplesSelectedExecution from "../MessageSamplesSelectedExecution";
 
-// THIS COMPONENT SHOW THE SAMPLES SELECTED IN RESULTEXECUTION TO EXECUTE
+// THIS COMPONENT SHOW THE SAMPLES SELECTED IN RESULT EXECUTION TO EXECUTE
 
 const SamplesSelectedInResultExecution = ({
     samplesSelected = [],
@@ -59,7 +59,14 @@ const SamplesSelectedInResultExecution = ({
     };
 
     const tooltipTextResults = (results) => {
-        return results.map((r) => `${r.analysis}: ${r.resultFinal}`).join("\n");
+        return results
+            .map(
+                (r) =>
+                    `${r.analysis}: ${
+                        r.resultFinal == null ? "Sin resultado" : r.resultFinal
+                    }`
+            )
+            .join("\n");
     };
 
     const checkIfAllSamplesAreReady = () => {
@@ -76,6 +83,8 @@ const SamplesSelectedInResultExecution = ({
     useEffect(() => {
         getSamplesInfoExecution();
     }, []);
+
+    console.log(samples);
 
     if (isLoanding) {
         return (
@@ -133,6 +142,7 @@ const SamplesSelectedInResultExecution = ({
                 }}
             >
                 <MessageSamplesSelectedExecution
+                    samples={samples}
                     onClose={() => onClose()}
                     cleanData={() => cleanData()}
                     isAllSamplesAlReady={checkIfAllSamplesAreReady()}
@@ -154,6 +164,19 @@ const SamplesSelectedInResultExecution = ({
                         Estas son las muestras que se van a entregar a sus
                         respectivos clientes
                     </Typography>
+
+                    {samples.length < 1 && (
+                        <Typography
+                            sx={{
+                                textAlign: "center",
+                                mt: "100px",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            No hay muestras seleccionadas.
+                        </Typography>
+                    )}
+
                     <Box
                         sx={{
                             display: "grid",
@@ -282,15 +305,39 @@ const SamplesSelectedInResultExecution = ({
                                                 </strong>
                                             </Typography>
 
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ mb: "5px" }}
-                                            >
-                                                T. de análisis fallidos:{" "}
-                                                <strong>
-                                                    {sample.totalAnalysisFailed}
-                                                </strong>
-                                            </Typography>
+                                            {sample.totalAnalysisFinished ==
+                                            sample.totalAnalysis ? (
+                                                <Typography
+                                                    variant="caption"
+                                                    sx={{
+                                                        bgcolor:
+                                                            "background.default",
+                                                        color: "primary.main",
+                                                        p: "5px",
+                                                        borderRadius: "10px",
+                                                        mt: "20px",
+                                                        border: `1px solid ${theme.palette.border.primary}`,
+                                                    }}
+                                                >
+                                                    Muestra lista para ejecutar
+                                                </Typography>
+                                            ) : (
+                                                <Typography
+                                                    variant="caption"
+                                                    sx={{
+                                                        bgcolor:
+                                                            "background.default",
+                                                        color: "red",
+                                                        p: "5px",
+                                                        borderRadius: "10px",
+                                                        mt: "20px",
+                                                        border: `1px solid ${theme.palette.border.primary}`,
+                                                    }}
+                                                >
+                                                    Análisis pendiente para
+                                                    habilitar la ejecución
+                                                </Typography>
+                                            )}
                                         </CardContent>
                                     </Card>
                                     <Tooltip

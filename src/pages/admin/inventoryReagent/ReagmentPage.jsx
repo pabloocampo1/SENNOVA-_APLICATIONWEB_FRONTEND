@@ -20,7 +20,17 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import api from "../../../service/axiosService";
-import { Add, ChecklistOutlined, Delete, Edit, FileDownloadOutlined, Grade, Info, Science, Search } from "@mui/icons-material";
+import {
+    Add,
+    ChecklistOutlined,
+    Delete,
+    Edit,
+    FileDownloadOutlined,
+    Grade,
+    Info,
+    Science,
+    Search,
+} from "@mui/icons-material";
 import SearchBar from "../../../components/SearchBar";
 import GenericModal from "../../../components/modals/GenericModal";
 import ReagentForm from "../../../components/forms/Reagent/ReagentForm";
@@ -36,18 +46,16 @@ const ReagentPage = () => {
     const [searchBy, setSearchBy] = useState("name");
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [isLoanding, setIsLoanding] = useState(false);
     const [openModalEdit, setOpenModalEdit] = useState(false);
     const [dataToEdit, setDataToEdit] = useState({});
     const [reagentIdToDelete, setReagentIdToDelete] = useState(null);
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     const [openModalReagentForm, setOpenModalReagentForm] = useState(false);
-
 
     const handleSearch = (value) => {
         setSearch(value);
@@ -61,11 +69,9 @@ const ReagentPage = () => {
         getData();
     };
 
-
     const getData = async () => {
-        setIsLoanding(true)
+        setIsLoanding(true);
         try {
-
             const res = await api.get(`/reagent/getAll/page?page=${page}`);
             if (res.status === 200) {
                 setReagents(res.data.content);
@@ -74,64 +80,62 @@ const ReagentPage = () => {
         } catch (error) {
             console.error("Error al traer los reactivos:", error);
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
     };
 
     const deleteReagent = async () => {
         setIsLoanding(true);
         try {
-            const res = await api.delete(`/reagent/delete/${reagentIdToDelete}`);
+            const res = await api.delete(
+                `/reagent/delete/${reagentIdToDelete}`
+            );
             if (res.status == 200) {
                 const currentData = reagents;
-                const newData = currentData.filter(data => data.reagentsId !== reagentIdToDelete)
+                const newData = currentData.filter(
+                    (data) => data.reagentsId !== reagentIdToDelete
+                );
                 setReagents(newData);
-                setOpenModalToDelete(false)
-
+                setOpenModalToDelete(false);
             }
-
-
         } catch (error) {
             console.log(error);
-
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
-    }
+    };
 
     const getDataByParam = async () => {
         switch (searchBy) {
             case "name":
-                setIsLoanding(true)
+                setIsLoanding(true);
                 console.log("entro a busvar por nombre: " + search);
 
                 try {
-                    const res = await api.get(`/reagent/getAllByName/${search}`);
+                    const res = await api.get(
+                        `/reagent/getAllByName/${search}`
+                    );
                     setReagents(res.data);
 
                     console.log("data que trajo: " + res.data);
-
-
                 } catch (error) {
                     console.error(error);
-
                 } finally {
-                    setIsLoanding(false)
+                    setIsLoanding(false);
                 }
 
                 break;
             case "interalCode":
-                setIsLoanding(true)
+                setIsLoanding(true);
                 try {
-                    const res = await api.get(`/reagent/getByInteralCode/${search}`);
+                    const res = await api.get(
+                        `/reagent/getByInteralCode/${search}`
+                    );
                     console.log(res);
-
                 } catch (error) {
                     console.error(error);
-
-                }
-                finally {
-                    setIsLoanding(false)
+                } finally {
+                    setIsLoanding(false);
                 }
 
                 break;
@@ -141,24 +145,21 @@ const ReagentPage = () => {
         }
     };
 
-
     useEffect(() => {
-
         if (search) {
             getDataByParam();
         } else {
             getData();
         }
-
     }, [page, search]);
 
-
     return (
-        <Box sx={{
-            width: "100%",
-            height: "auto"
-        }}>
-
+        <Box
+            sx={{
+                width: "100%",
+                height: "auto",
+            }}
+        >
             <GenericModal
                 open={openModalToDelete}
                 onClose={() => setOpenModalToDelete(false)}
@@ -169,7 +170,6 @@ const ReagentPage = () => {
                     />
                 }
             />
-
 
             <GenericModal
                 open={openModalReagentForm}
@@ -184,7 +184,6 @@ const ReagentPage = () => {
 
             <GenericModal
                 open={openModalEdit}
-
                 onClose={() => setOpenModalEdit(false)}
                 compo={
                     <ReagentForm
@@ -198,37 +197,62 @@ const ReagentPage = () => {
 
             <SimpleBackdrop open={isLoanding} />
 
-
             {/* Header compo */}
 
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", mb: "40px", flexWrap:"wrap" }}>
-                <Box sx={{ display: "flex", alignItems: "center", mb:{xs:"20px"} }}>
-                    <Typography variant="h2" component={"h2"}>Inventorio de reactivos</Typography>
-                    <Science sx={{ ml: "10px", color: "primary.main" }} />
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mb: "40px",
+                    flexWrap: "wrap",
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+
+                        mb: { xs: "20px" },
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography variant="h2" component={"h2"}>
+                            Inventorio de reactivos
+                        </Typography>
+                        <Science sx={{ ml: "10px", color: "primary.main" }} />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                        Modulo donde podras gestionar el stock y caducidad de
+                        los reactivos
+                    </Typography>
                 </Box>
 
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
                     <Button
                         variant="contained"
                         startIcon={<FileDownloadOutlined />}
-                       
                     >
                         Descargar Excel
                     </Button>
 
-                    <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => { navigate("/system/inventory/check/reagent") }}>
+                    <Button
+                        variant="outlined"
+                        endIcon={<ChecklistOutlined />}
+                        onClick={() => {
+                            navigate("/system/inventory/check/reagent");
+                        }}
+                    >
                         Chequeo de inventario
                     </Button>
                 </Box>
             </Box>
 
-            <Box sx={{m:"10px"}}>
+            <Box sx={{ m: "10px" }}>
                 <CardsSummaryReagent />
             </Box>
 
             <Divider sx={{ mt: "20px" }} />
-
-
 
             {/* table header */}
             <Box
@@ -236,7 +260,7 @@ const ReagentPage = () => {
                     width: "100%",
                     display: "flex",
                     justifyContent: "space-between",
-                    flexWrap:"wrap",
+                    flexWrap: "wrap",
                     mb: "30px",
                     mt: "30px",
                     alignItems: "center",
@@ -256,7 +280,6 @@ const ReagentPage = () => {
                         sx={{
                             width: "180px",
                             ml: "10px",
-
                         }}
                         variant="outlined"
                     >
@@ -271,7 +294,7 @@ const ReagentPage = () => {
                     variant="outlined"
                     startIcon={<Add />}
                     sx={{
-                        mt:{xs:"40px"}
+                        mt: { xs: "40px" },
                     }}
                 >
                     Agregar nuevo reactivo
@@ -280,47 +303,82 @@ const ReagentPage = () => {
 
             {/* Tabla */}
             <TableContainer component={Paper}>
-                <Table sx={{  }} aria-label="tabla de reactivos">
+                <Table sx={{}} aria-label="tabla de reactivos">
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ fontWeight: "700" }}>Id</TableCell>
-                            <TableCell sx={{ fontWeight: "700" }}>Nombre</TableCell>
+                            <TableCell sx={{ fontWeight: "700" }}>
+                                Nombre
+                            </TableCell>
                             {!isMobile && (
                                 <>
-                                    <TableCell sx={{ fontWeight: "700" }}>Marca</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Pureza</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Unidades</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>
+                                        Marca
+                                    </TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>
+                                        Pureza
+                                    </TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>
+                                        Unidades
+                                    </TableCell>
                                 </>
                             )}
-                            <TableCell sx={{ fontWeight: "700" }}>Cantidad</TableCell>
+                            <TableCell sx={{ fontWeight: "700" }}>
+                                Cantidad
+                            </TableCell>
 
                             {!isMobile && (
                                 <>
-                                    <TableCell sx={{ fontWeight: "700" }}>Ubicacion</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Fecha de vencimiento</TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>
+                                        Ubicacion
+                                    </TableCell>
+                                    <TableCell sx={{ fontWeight: "700" }}>
+                                        Fecha de vencimiento
+                                    </TableCell>
                                 </>
                             )}
-                            <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
+                            <TableCell sx={{ fontWeight: "700" }} align="right">
+                                Acciones
+                            </TableCell>
                         </TableRow>
                     </TableHead>
 
                     <TableBody>
                         {reagents.map((reagent) => (
                             <TableRow key={reagent.reagentsId} hover>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentsId}</TableCell>
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.reagentName}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>
+                                    {reagent.reagentsId}
+                                </TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>
+                                    {reagent.reagentName}
+                                </TableCell>
                                 {!isMobile && (
                                     <>
-                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.brand}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.purity}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.units}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
+                                            {reagent.brand}
+                                        </TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
+                                            {reagent.purity}
+                                        </TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
+                                            {reagent.units}
+                                        </TableCell>
                                     </>
                                 )}
-                                <TableCell sx={{ opacity: "0.70" }}>{reagent.quantity} {" "} {reagent.unitOfMeasure}</TableCell>
+                                <TableCell sx={{ opacity: "0.70" }}>
+                                    {reagent.quantity} {reagent.unitOfMeasure}
+                                </TableCell>
                                 {!isMobile && (
                                     <>
-                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.locationName == null || reagent.locationName == "" ? "Null" : reagent.locationName}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{reagent.expirationDate}</TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
+                                            {reagent.locationName == null ||
+                                            reagent.locationName == ""
+                                                ? "Null"
+                                                : reagent.locationName}
+                                        </TableCell>
+                                        <TableCell sx={{ opacity: "0.70" }}>
+                                            {reagent.expirationDate}
+                                        </TableCell>
                                     </>
                                 )}
 
@@ -330,30 +388,41 @@ const ReagentPage = () => {
                                         color="primary"
                                         onClick={() => {
                                             setOpenModalEdit(true);
-                                            setDataToEdit(reagent)
+                                            setDataToEdit(reagent);
                                         }}
                                     >
-                                        <Edit sx={{ color: "primary.main" }} fontSize="small" />
+                                        <Edit
+                                            sx={{ color: "primary.main" }}
+                                            fontSize="small"
+                                        />
                                     </IconButton>
                                     <IconButton
                                         size="small"
                                         color="primary"
                                         onClick={() => {
-                                            setReagentIdToDelete(reagent.reagentsId)
-                                            setOpenModalToDelete(true)
-                                        }
-                                        }
+                                            setReagentIdToDelete(
+                                                reagent.reagentsId
+                                            );
+                                            setOpenModalToDelete(true);
+                                        }}
                                     >
-                                        <Delete sx={{ color: "primary.main " }} fontSize="small" />
+                                        <Delete
+                                            sx={{ color: "primary.main " }}
+                                            fontSize="small"
+                                        />
                                     </IconButton>
                                     <IconButton
                                         size="small"
-
                                         onClick={() =>
-                                            navigate(`/system/inventory/reagents/info/${reagent.reagentsId}`)
+                                            navigate(
+                                                `/system/inventory/reagents/info/${reagent.reagentsId}`
+                                            )
                                         }
                                     >
-                                        <Info sx={{ color: "primary.main" }} fontSize="small" />
+                                        <Info
+                                            sx={{ color: "primary.main" }}
+                                            fontSize="small"
+                                        />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
@@ -362,8 +431,14 @@ const ReagentPage = () => {
                 </Table>
             </TableContainer>
 
-
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mt: 3 }}>
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 3,
+                }}
+            >
                 <Stack spacing={2}>
                     <Pagination
                         count={totalPages}

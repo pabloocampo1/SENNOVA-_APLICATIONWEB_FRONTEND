@@ -93,6 +93,7 @@ const QuotesPage = () => {
                 minHeight: "100%",
                 p: "10px",
                 borderRadius: "20px",
+                pt: "20px",
             }}
         >
             {showQuotation ? (
@@ -111,11 +112,24 @@ const QuotesPage = () => {
                         open={isLoanding}
                         text="Cargando cotizaciones"
                     />
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Typography component={"h2"} variant="h2">
-                            Gestio de cotizaciones y creacion de ensayos.
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            mb: "30px",
+                        }}
+                    >
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Typography component={"h2"} variant="h2">
+                                Gestio de cotizaciones y creacion de ensayos.
+                            </Typography>
+                            <RequestQuote sx={{ color: "primary.main" }} />
+                        </Box>
+                        <Typography variant="body2" color="text.secondary">
+                            Modulo de gestion de cotizaciones de ensayos, podras
+                            revisar, aceptar y rechazar cotizaciones de
+                            solicitudes de ensayos
                         </Typography>
-                        <RequestQuote sx={{ color: "primary.main" }} />
                     </Box>
 
                     {/* header */}

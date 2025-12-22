@@ -1,14 +1,52 @@
-import { Add, BuildCircle, ChecklistOutlined, Delete, Edit, FileDownload, FileDownloadDoneOutlined, FileDownloadOutlined, Info, QrCodeScanner, Report, TableChart } from '@mui/icons-material';
-import { Alert, Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import CardsSummaryEquipment from './componentsEquipment/CardsSummaryEquipment';
-import api from '../../../service/axiosService';
-import SearchBar from '../../../components/SearchBar';
-import GenericModal from '../../../components/modals/GenericModal';
-import EquipmentForm from '../../../components/forms/Equipment/EquipmentForm';
-import EquipmentConfirmationDelete from '../../../components/forms/Equipment/EquipmentConfirmationDelete';
-import { useNavigate } from 'react-router-dom';
-import SimpleBackdrop from '../../../components/SimpleBackDrop';
+import {
+    Add,
+    BuildCircle,
+    ChecklistOutlined,
+    Delete,
+    Edit,
+    FileDownload,
+    FileDownloadDoneOutlined,
+    FileDownloadOutlined,
+    Info,
+    QrCodeScanner,
+    Report,
+    TableChart,
+} from "@mui/icons-material";
+import {
+    Alert,
+    Box,
+    Button,
+    Divider,
+    FormControl,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Pagination,
+    Paper,
+    Select,
+    Snackbar,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import CardsSummaryEquipment from "./componentsEquipment/CardsSummaryEquipment";
+import api from "../../../service/axiosService";
+import SearchBar from "../../../components/SearchBar";
+import GenericModal from "../../../components/modals/GenericModal";
+import EquipmentForm from "../../../components/forms/Equipment/EquipmentForm";
+import EquipmentConfirmationDelete from "../../../components/forms/Equipment/EquipmentConfirmationDelete";
+import { useNavigate } from "react-router-dom";
+import SimpleBackdrop from "../../../components/SimpleBackDrop";
+import TableEquipments from "./componentsEquipment/TableEquipments";
+import OptionCheckInvAndReportEquipments from "./componentsEquipment/OptionCheckInvAndReportEquipments";
 
 const EquipmentPage = () => {
     const [dataEquipments, setDataEquipments] = useState([]);
@@ -17,22 +55,20 @@ const EquipmentPage = () => {
     const [openCreatedEquipment, setOpenCreatedEquipment] = useState(false);
     const [openEditEquipment, setOpenEditEquipment] = useState(false);
     const [search, setSearch] = useState("");
-    const [searchBy, setSearchBy] = useState('name');
+    const [searchBy, setSearchBy] = useState("name");
     const [totalPages, setTotalPages] = useState();
     const [responseAlert, setResponseAlert] = useState({
-        "status": false,
-        "message": ""
-    })
-    const [errorMessageCreate, setErrorMessageCreate] = useState({})
+        status: false,
+        message: "",
+    });
+    const [errorMessageCreate, setErrorMessageCreate] = useState({});
     const [openModalDelete, setOpenModalDelete] = useState(false);
     const [equipmentToDeleteId, setEquipmentToDeleteId] = useState(false);
     const navigate = useNavigate();
     const [isLoanding, setIsLoanding] = useState(false);
     const [refreshSummary, setRefreshSummary] = useState(0);
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleChangeSelect = (event) => {
         setSearchBy(event.target.value);
@@ -42,164 +78,159 @@ const EquipmentPage = () => {
         setPage(value - 1);
     };
 
-
     function deleteEquipment() {
-        setIsLoanding(true)
+        setIsLoanding(true);
         const fetchDelete = async () => {
             try {
-                const res = await api.delete(`/equipment/delete/${equipmentToDeleteId}`);
+                const res = await api.delete(
+                    `/equipment/delete/${equipmentToDeleteId}`
+                );
                 if (res.status == 200) {
-                    setOpenModalDelete(false)
-                    fetchData()
-                    setRefreshSummary(prev => prev + 1);
+                    setOpenModalDelete(false);
+                    fetchData();
+                    setRefreshSummary((prev) => prev + 1);
                 }
             } catch (error) {
                 console.log(error);
-
             } finally {
-                setIsLoanding(false)
+                setIsLoanding(false);
             }
-        }
+        };
 
         fetchDelete();
-
     }
 
-
     function editEquipment(equipment, image) {
-        setIsLoanding(true)
-
+        setIsLoanding(true);
 
         const edit = async () => {
             try {
                 const formData = new FormData();
-                formData.append("dto", new Blob([JSON.stringify(equipment)], { type: "application/json" }));
+                formData.append(
+                    "dto",
+                    new Blob([JSON.stringify(equipment)], {
+                        type: "application/json",
+                    })
+                );
                 formData.append("image", image);
 
-                const res = await api.put(`/equipment/update/${equipment.equipmentId}`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
+                const res = await api.put(
+                    `/equipment/update/${equipment.equipmentId}`,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
                     }
-                });
+                );
                 if (res.status == 200) {
-                    setOpenEditEquipment(false)
-                    fetchData()
+                    setOpenEditEquipment(false);
+                    fetchData();
                     setResponseAlert({
                         status: true,
-                        message: "El equipo se actualizo correctamente."
-                    })
+                        message: "El equipo se actualizo correctamente.",
+                    });
                 }
             } catch (error) {
-
                 if (error.response) {
                     const backendError = error.response.data;
 
-
                     if (backendError.errors) {
-                        setErrorMessageCreate(prev => ({
+                        setErrorMessageCreate((prev) => ({
                             ...prev,
-                            ...backendError.errors
+                            ...backendError.errors,
                         }));
                     }
-
                 }
-
             } finally {
-                setIsLoanding(false)
+                setIsLoanding(false);
             }
+        };
 
-        }
-
-        edit()
-
+        edit();
     }
-
-
 
     function getByParam() {
         const fetchDataByName = async () => {
             try {
-                const res = await api.get(`/equipment/get-all-by-name/${search}`)
+                const res = await api.get(
+                    `/equipment/get-all-by-name/${search}`
+                );
                 if (res.status == 200) {
                     setDataEquipments(res.data);
                 }
             } catch (error) {
-
                 if (error.response) {
                     const backendError = error.response.data;
-
 
                     if (backendError.errors.general) {
                         setErrorMessageCreate(backendError.errors.general);
                     }
-
                 }
-
             }
-        }
+        };
 
         const fetchDataByInternalCode = async () => {
             try {
-                const res = await api.get(`/equipment/get-all-by-internal-code/${search}`)
+                const res = await api.get(
+                    `/equipment/get-all-by-internal-code/${search}`
+                );
                 if (res.status == 200) {
                     setDataEquipments(res.data);
                 }
             } catch (error) {
-
                 if (error.response) {
                     const backendError = error.response.data;
-
 
                     if (backendError.errors.general) {
                         setErrorMessageCreate(backendError.errors.general);
                     }
-
                 }
-
             }
-        }
+        };
 
         const fetchDataBySerialNumber = async () => {
-            alert("La funcion de buscar un equipo por su numero serial no esta disponible.")
-        }
+            alert(
+                "La funcion de buscar un equipo por su numero serial no esta disponible."
+            );
+        };
 
         switch (searchBy) {
             case "name":
-                fetchDataByName()
+                fetchDataByName();
                 break;
             case "serialNumber":
-                fetchDataBySerialNumber()
+                fetchDataBySerialNumber();
                 break;
             case "internalCode":
-                fetchDataByInternalCode()
+                fetchDataByInternalCode();
                 break;
 
             default:
                 break;
         }
-
-
-
-
     }
 
-
     function saveEquipment(dto, imageFile) {
-
-        setIsLoanding(true)
+        setIsLoanding(true);
 
         const save = async () => {
             try {
                 const formData = new FormData();
-                formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+                formData.append(
+                    "dto",
+                    new Blob([JSON.stringify(dto)], {
+                        type: "application/json",
+                    })
+                );
                 if (imageFile != null) {
                     formData.append("image", imageFile);
                 }
 
                 const res = await api.post("/equipment/save", formData, {
                     headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
+                        "Content-Type": "multipart/form-data",
+                    },
                 });
 
                 if (res.status === 201) {
@@ -207,10 +238,9 @@ const EquipmentPage = () => {
                     setOpenCreatedEquipment(false);
                     setResponseAlert({
                         status: true,
-                        message: "Equipo agregado exitosamente."
+                        message: "Equipo agregado exitosamente.",
                     });
-                    setRefreshSummary(prev => prev + 1);
-
+                    setRefreshSummary((prev) => prev + 1);
                 }
             } catch (error) {
                 console.log(error);
@@ -219,36 +249,33 @@ const EquipmentPage = () => {
                     const backendError = error.response.data;
                     if (backendError.errors) {
                         setErrorMessageCreate({
-                            ...backendError.errors
+                            ...backendError.errors,
                         });
                     }
                 }
             } finally {
-                setIsLoanding(false)
+                setIsLoanding(false);
             }
         };
 
         save();
     }
 
-
     const fetchData = async () => {
-        setIsLoanding(true)
+        setIsLoanding(true);
 
         try {
-            const res = await api.get(`/equipment/page?page=${page}`)
+            const res = await api.get(`/equipment/page?page=${page}`);
             if (res.status == 200) {
-                setDataEquipments(res.data.content)
-                setTotalPages(res.data.totalPages)
+                setDataEquipments(res.data.content);
+                setTotalPages(res.data.totalPages);
             }
         } catch (error) {
             console.error(error);
-
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
-
-    }
+    };
 
     const getMaintenanceStatus = (maintenanceDate) => {
         if (!maintenanceDate) {
@@ -290,33 +317,71 @@ const EquipmentPage = () => {
 
     useEffect(() => {
         if (search) {
-            getByParam()
+            getByParam();
         } else {
-            fetchData()
+            fetchData();
         }
-
-
-    }, [page, search])
-
+    }, [page, search]);
 
     useEffect(() => {
         fetchData();
     }, [refreshSummary]);
 
-
-
-
     return (
-        <Box sx={{
-            width: "100%",
-            height: "auto"
-        }}>
-
+        <Box
+            sx={{
+                width: "100%",
+                height: "auto",
+            }}
+        >
             {/** Modals */}
-            <GenericModal open={openCreatedEquipment} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} onClose={() => { setOpenCreatedEquipment(false), setErrorMessageCreate({}) }} method={(dto, image) => saveEquipment(dto, image)} isEdit={false} />} />
-            <GenericModal open={openEditEquipment} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} compo={<EquipmentForm errors={errorMessageCreate} data={equipmentToEdit} onClose={() => { setOpenEditEquipment(false), setErrorMessageCreate({}) }} method={(dto, image) => editEquipment(dto, image)} isEdit={true} />} />
-            <GenericModal open={openModalDelete} onClose={() => setOpenModalDelete(false)} compo={<EquipmentConfirmationDelete openLoanging={isLoanding} equipmentToDeleteId={equipmentToDeleteId} onClose={() => setOpenModalDelete(false)} method={() => deleteEquipment()} />} />
-
+            <GenericModal
+                open={openCreatedEquipment}
+                onClose={() => {
+                    setOpenCreatedEquipment(false), setErrorMessageCreate({});
+                }}
+                compo={
+                    <EquipmentForm
+                        errors={errorMessageCreate}
+                        onClose={() => {
+                            setOpenCreatedEquipment(false),
+                                setErrorMessageCreate({});
+                        }}
+                        method={(dto, image) => saveEquipment(dto, image)}
+                        isEdit={false}
+                    />
+                }
+            />
+            <GenericModal
+                open={openEditEquipment}
+                onClose={() => {
+                    setOpenEditEquipment(false), setErrorMessageCreate({});
+                }}
+                compo={
+                    <EquipmentForm
+                        errors={errorMessageCreate}
+                        data={equipmentToEdit}
+                        onClose={() => {
+                            setOpenEditEquipment(false),
+                                setErrorMessageCreate({});
+                        }}
+                        method={(dto, image) => editEquipment(dto, image)}
+                        isEdit={true}
+                    />
+                }
+            />
+            <GenericModal
+                open={openModalDelete}
+                onClose={() => setOpenModalDelete(false)}
+                compo={
+                    <EquipmentConfirmationDelete
+                        openLoanging={isLoanding}
+                        equipmentToDeleteId={equipmentToDeleteId}
+                        onClose={() => setOpenModalDelete(false)}
+                        method={() => deleteEquipment()}
+                    />
+                }
+            />
 
             <SimpleBackdrop open={isLoanding} />
 
@@ -328,21 +393,23 @@ const EquipmentPage = () => {
                     onClose={() => {
                         setResponseAlert({
                             ...responseAlert,
-                            "status": false
+                            status: false,
                         });
                         setResponseAlert({
-                            "status": false,
-                            "message": ""
-                        })
+                            status: false,
+                            message: "",
+                        });
                     }}
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
                     <Alert
                         severity="success"
-                        onClose={() => setResponseAlert({
-                            "status": false,
-                            "message": ""
-                        })}
+                        onClose={() =>
+                            setResponseAlert({
+                                status: false,
+                                message: "",
+                            })
+                        }
                         sx={{ width: "100%" }}
                     >
                         {responseAlert.message}
@@ -355,45 +422,59 @@ const EquipmentPage = () => {
                 sx={{
                     width: "100%",
                     display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    flexDirection: "column",
+                    justifyContent: "start  ",
+                    alignItems: "start",
                     flexWrap: "wrap",
-                    gap: 2,
-                    mb: "40px"
+
+                    mb: "40px",
                 }}
             >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography variant="h2" component={"h2"}>Inventorio de equipos</Typography>
+                    <Typography variant="h2" component={"h2"}>
+                        Inventorio de equipos
+                    </Typography>
                     <BuildCircle sx={{ ml: "10px", color: "primary.main" }} />
                 </Box>
-
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-                    <Button
-                        variant="contained"
-                        startIcon={<FileDownloadOutlined />}
-                    >
-                        Descargar Excel
-                    </Button>
-
-                    <Button variant="outlined" endIcon={<ChecklistOutlined />} onClick={() => navigate("/system/inventory/check/equipment")}>
-                        Chequeo de inventario
-                    </Button>
-                    <Button variant="outlined" endIcon={<Report />} onClick={() => navigate("/system/inventory/equipment/report")}>
-                        Equipos reportados
-                    </Button>
+                <Box>
+                    <Typography variant="body2" color="text.secondary">
+                        Control, verificación y reporte de los equipos
+                        registrados en el sistema, facilitando la gestión de su
+                        estado operativo y disponibilidad.
+                    </Typography>
                 </Box>
             </Box>
+
             <CardsSummaryEquipment refresh={refreshSummary} />
+
+            <OptionCheckInvAndReportEquipments navigate={navigate} />
 
             <Divider sx={{ mt: "20px" }} />
 
             <Box>
                 {/** table content header */}
-                <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", flexWrap: "wrap", alignItems: "center", mt: "40px" }}>
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        mt: "40px",
+                    }}
+                >
                     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                         <SearchBar onSearch={(value) => setSearch(value)} />
-                        <FormControl sx={{ width: "120px", borderRadius: "20px", ml: "20px" }}>
-                            <InputLabel id="demo-simple-select-label">Buscar por:</InputLabel>
+                        <FormControl
+                            sx={{
+                                width: "120px",
+                                borderRadius: "20px",
+                                ml: "20px",
+                            }}
+                        >
+                            <InputLabel id="demo-simple-select-label">
+                                Buscar por:
+                            </InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
@@ -402,198 +483,71 @@ const EquipmentPage = () => {
                                 onChange={handleChangeSelect}
                             >
                                 <MenuItem value={"name"}>Nombre</MenuItem>
-                                <MenuItem value={"serialNumber"}>Numero serial</MenuItem>
-                                <MenuItem value={"internalCode"}>Codigo interno</MenuItem>
+                                <MenuItem value={"serialNumber"}>
+                                    Numero serial
+                                </MenuItem>
+                                <MenuItem value={"internalCode"}>
+                                    Codigo interno
+                                </MenuItem>
                             </Select>
                         </FormControl>
-
                     </Box>
                     <Box>
-                        <Button variant='contained' onClick={() => setOpenCreatedEquipment(true)}> <Add /> Agregar un nuevo equipo</Button>
+                        <Button
+                            variant="outlined"
+                            startIcon={<FileDownloadOutlined />}
+                            sx={{ mr: "10px" }}
+                        >
+                            Descargar inventario
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            onClick={() => setOpenCreatedEquipment(true)}
+                        >
+                            {" "}
+                            <Add /> Agregar un nuevo equipo
+                        </Button>
                     </Box>
                 </Box>
 
-
                 {/** equipment table */}
-                {dataEquipments.length < 1 ? (
-                    <Typography sx={{ textAlign: "center" }}>No hay equipos</Typography>
-                ) : (
-                    <TableContainer
-                        component={Paper}
-                        sx={{
-                            width: "100%", 
-                            mt: "20px",
-                            overflowX: "auto", 
-                            overflowY: "hidden",
-                            borderRadius: "12px",
-                            boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                <TableEquipments
+                    isMobile={isMobile}
+                    dataEquipments={dataEquipments}
+                    getMaintenanceStatus={(date) => getMaintenanceStatus(date)}
+                    setOpenEditEquipment={(boolean) =>
+                        setOpenEditEquipment(boolean)
+                    }
+                    setEquipmentToEdit={(equipment) =>
+                        setEquipmentToEdit(equipment)
+                    }
+                    setEquipmentToDeleteId={(id) => setEquipmentToDeleteId(id)}
+                    setOpenModalDelete={(boolean) =>
+                        setOpenModalDelete(boolean)
+                    }
+                    navigate={navigate}
+                />
 
-                            // 👇 scroll bar elegante
-                            "&::-webkit-scrollbar": {
-                                height: "8px",
-                            },
-                            "&::-webkit-scrollbar-thumb": {
-                                backgroundColor: "#bfbfbf",
-                                borderRadius: "10px",
-                            },
-                            "&::-webkit-scrollbar-thumb:hover": {
-                                backgroundColor: "#9a9a9a",
-                            },
-                        }}
-                    >
-                        <Table
-                            stickyHeader
-                            sx={{
-                                width: "100%", 
-                              
-                            }}
-                            aria-label="tabla de equipos"
-                        >
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{ fontWeight: "700" }}>ID</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Código interno</TableCell>
-                                    <TableCell sx={{ fontWeight: "700" }}>Nombre</TableCell>
-                                    {!isMobile && (<>
-                                        <TableCell sx={{ fontWeight: "700" }}>Mantenimiento</TableCell>
-                                        <TableCell sx={{ fontWeight: "700" }}>Modelo</TableCell>
-                                        <TableCell sx={{ fontWeight: "700" }}>Ubicación</TableCell>
-                                        <TableCell sx={{ fontWeight: "700" }}>Estado</TableCell>
-                                        <TableCell sx={{ fontWeight: "700" }}>Creado</TableCell>
-                                        <TableCell sx={{ fontWeight: "700" }} align="right">Acciones</TableCell>
-                                    </>)}
-                                </TableRow>
-                            </TableHead>
-
-                            <TableBody>
-                                {dataEquipments.map((equipment) => (
-                                    <TableRow key={equipment.equipmentId} hover>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment?.equipmentId ?? "NaN"}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment?.internalCode?.trim() || "NaN"}</TableCell>
-                                        <TableCell sx={{ opacity: "0.70" }}>{equipment?.equipmentName?.trim() || "NaN"}</TableCell>
-
-                                        {!isMobile && (
-
-                                            <>
-                                                <TableCell sx={{ opacity: "0.70" }}>
-                                                    {(() => {
-                                                        const status = getMaintenanceStatus(equipment?.maintenanceDate);
-                                                        return (
-                                                            <Box
-                                                                sx={{
-                                                                    width: "110px",
-                                                                    bgcolor: status.color,
-                                                                    border: status.border,
-                                                                    borderRadius: "15px",
-                                                                    textAlign: "center",
-                                                                    p: "8px",
-                                                                    fontSize: "0.85rem",
-                                                                }}
-                                                            >
-                                                                {status.label || "NaN"}
-                                                            </Box>
-                                                        );
-                                                    })()}
-                                                </TableCell>
-
-                                                <TableCell sx={{ opacity: "0.70" }}>{equipment?.model?.trim() || "NaN"}</TableCell>
-                                                <TableCell sx={{ opacity: "0.70" }}>{equipment?.locationName?.trim() || "NaN"}</TableCell>
-
-                                                <TableCell sx={{ opacity: "0.70" }}>
-                                                    {equipment?.available !== undefined ? (
-                                                        equipment.available ? (
-                                                            <Box
-                                                                sx={{
-                                                                    width: "100px",
-                                                                    bgcolor: "#07f60f30",
-                                                                    border: "2px solid green",
-                                                                    borderRadius: "15px",
-                                                                    textAlign: "center",
-                                                                    p: "8px",
-                                                                    fontSize: "0.85rem",
-                                                                }}
-                                                            >
-                                                                Disponible
-                                                            </Box>
-                                                        ) : (
-                                                            <Box
-                                                                sx={{
-                                                                    width: "100px",
-                                                                    bgcolor: "#f6070730",
-                                                                    border: "2px solid red",
-                                                                    borderRadius: "15px",
-                                                                    textAlign: "center",
-                                                                    p: "8px",
-                                                                    fontSize: "0.85rem",
-                                                                }}
-                                                            >
-                                                                No Disponible
-                                                            </Box>
-                                                        )
-                                                    ) : (
-                                                        "NaN"
-                                                    )}
-                                                </TableCell>
-
-                                                <TableCell sx={{ opacity: "0.70" }}>
-                                                    {equipment?.createAt
-                                                        ? new Date(equipment.createAt).toLocaleDateString("es-CO")
-                                                        : "NaN"}
-                                                </TableCell>
-                                            </>
-                                        )}
-
-                                        <TableCell align="right">
-                                            <IconButton
-                                                size="small"
-                                                color="primary"
-                                                onClick={() => {
-                                                    setEquipmentToEdit(equipment);
-                                                    setOpenEditEquipment(true);
-                                                }}
-                                            >
-                                                <Edit fontSize="small" />
-                                            </IconButton>
-                                            <IconButton
-                                                size="small"
-                                                color="primary"
-                                                onClick={() => {
-                                                    setEquipmentToDeleteId(equipment.equipmentId);
-                                                    setOpenModalDelete(true);
-                                                }}
-                                            >
-                                                <Delete fontSize="small" />
-                                            </IconButton>
-                                            <IconButton
-                                                size="small"
-                                                color="primary"
-                                                onClick={() =>
-                                                    navigate(`/system/inventory/equipments/info/${equipment.equipmentId}`)
-                                                }
-                                            >
-                                                <Info fontSize="small" />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                )}
-                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mb: "20px", mt: "20px" }}>
-
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        mb: "20px",
+                        mt: "20px",
+                    }}
+                >
                     <Stack spacing={2}>
-                        <Pagination count={totalPages} page={page + 1} onChange={handleChange} />
+                        <Pagination
+                            count={totalPages}
+                            page={page + 1}
+                            onChange={handleChange}
+                        />
                     </Stack>
                 </Box>
-
             </Box>
-
-
-
-
-        </Box >
+        </Box>
     );
 };
 

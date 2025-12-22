@@ -1,19 +1,32 @@
-import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import api from '../../../service/axiosService';
-import { useAuth } from '../../../context/AuthContext';
-import SimpleBackdrop from '../../SimpleBackDrop';
+import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import api from "../../../service/axiosService";
+import { useAuth } from "../../../context/AuthContext";
+import SimpleBackdrop from "../../SimpleBackDrop";
 
 const unitOfMeasure = [
-    "ML", "L", "UL",
-    "MG", "G", "KG", "UG",
-    "MM", "CM", "M",
-    "MOL", "MMOL_L", "UMOL_L",
-    "UNIT", "PPM", "PPB",
-    "S", "MIN", "H",
-    "C", "K"
+    "ML",
+    "L",
+    "UL",
+    "MG",
+    "G",
+    "KG",
+    "UG",
+    "MM",
+    "CM",
+    "M",
+    "MOL",
+    "MMOL_L",
+    "UMOL_L",
+    "UNIT",
+    "PPM",
+    "PPB",
+    "S",
+    "MIN",
+    "H",
+    "C",
+    "K",
 ];
-
 
 const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
     const { authObject } = useAuth();
@@ -35,13 +48,11 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
         locationId: "",
         usageId: "",
         description: "",
-      
     });
     const [imageFile, setImageFile] = useState(null);
     const [errorFetchMessage, setErrorFetchMessage] = useState("");
     const [errorFetch, setErrorFetch] = useState(false);
     const [isLoanding, setIsLoanding] = useState(false);
-
 
     const handleImageChange = (e) => {
         setImageFile(e.target.files[0]);
@@ -50,20 +61,15 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
     const handleInput = (e) => {
         setDataForm({
             ...dataForm,
-            [e.target.name]: e.target.value
-        })
-    }
-
-
-
-
-
+            [e.target.name]: e.target.value,
+        });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (isEdit) {
-            setIsLoanding(true)
+            setIsLoanding(true);
 
             try {
                 const formData = new FormData();
@@ -83,25 +89,24 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                 );
                 console.log(dataForm);
 
-
                 if (res.status == 200) {
-                    setDataForm({})
-                    refreshData()
-                    onClose()
+                    setDataForm({});
+                    refreshData();
+                    onClose();
                 }
 
                 console.log(res);
-
             } catch (error) {
-                setErrorFetchMessage("Ocurrio un error al guardar el reactivo: " + error.data.message)
-                setErrorFetch(true)
-
+                setErrorFetchMessage(
+                    "Ocurrio un error al guardar el reactivo: " +
+                        error.data.message
+                );
+                setErrorFetch(true);
             } finally {
-                setIsLoanding(false)
+                setIsLoanding(false);
             }
-
         } else {
-            setIsLoanding(true)
+            setIsLoanding(true);
             try {
                 const formData = new FormData();
 
@@ -120,150 +125,165 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                 );
                 console.log(dataForm);
 
-
                 if (res.status == 201) {
-                    setDataForm({})
-                    refreshData()
-                    onClose()
+                    setDataForm({});
+                    refreshData();
+                    onClose();
                 }
 
                 console.log(res);
-
             } catch (error) {
-                setErrorFetchMessage("Ocurrio un error al guardar el reactivo: " + error.data.message)
-                setErrorFetch(true)
-
+                setErrorFetchMessage(
+                    "Ocurrio un error al guardar el reactivo: " +
+                        error.data.message
+                );
+                setErrorFetch(true);
             } finally {
-                setIsLoanding(false)
+                setIsLoanding(false);
             }
         }
-    }
+    };
 
     const fetchUsages = async () => {
         try {
             const res = await api.get("/usage/getAll");
-            setUsages(res.data)
+            setUsages(res.data);
         } catch (error) {
-            setErrorFetchMessage("Ocurrio un error al traer la informacion de los usos: " + error.data.message)
-            setErrorFetch(true)
-
+            setErrorFetchMessage(
+                "Ocurrio un error al traer la informacion de los usos: " +
+                    error.data.message
+            );
+            setErrorFetch(true);
         }
-    }
+    };
     const fetchUsers = async () => {
         try {
             const res = await api.get("/users/getAllAvailable");
-            setUsers(res.data)
+            setUsers(res.data);
         } catch (error) {
-            setErrorFetchMessage("Ocurrio un error al traer los usuarios disponibles: " + error.data.message)
-            setErrorFetch(true)
-
+            setErrorFetchMessage(
+                "Ocurrio un error al traer los usuarios disponibles: " +
+                    error.data.message
+            );
+            setErrorFetch(true);
         }
-    }
+    };
     const fetchLocations = async () => {
         try {
             const res = await api.get("/location/getAll");
-            setLocations(res.data)
+            setLocations(res.data);
         } catch (error) {
-            setErrorFetchMessage("Ocurrio un error al traer la informacion de las ubicaciones: " + error.data.message)
-            setErrorFetch(true)
-
+            setErrorFetchMessage(
+                "Ocurrio un error al traer la informacion de las ubicaciones: " +
+                    error.data.message
+            );
+            setErrorFetch(true);
         }
-    }
+    };
 
     useEffect(() => {
-
-        setIsLoanding(true)
+        setIsLoanding(true);
         setErrorFetch(false);
-        setErrorFetchMessage("")
+        setErrorFetchMessage("");
 
         if (data) {
             setDataForm({
                 ...data,
-                reagentsId: data.reagentsId
-            })
+                reagentsId: data.reagentsId,
+            });
             console.log(data);
-
         }
 
         const init = async () => {
-            await fetchLocations()
+            await fetchLocations();
             await fetchUsages();
             await fetchUsers();
-        }
+        };
 
-        init()
-        setIsLoanding(false)
-
-    }, [])
-
-
+        init();
+        setIsLoanding(false);
+    }, []);
 
     return (
-        <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", p: "40px" }}>
+        <Box
+            component={"form"}
+            onSubmit={handleSubmit}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                p: "40px",
+            }}
+        >
             <SimpleBackdrop open={isLoanding} />
-            <Typography sx={{ pb: "30px" }}>{isEdit ? ("Editar reactivo.") : ("Agregar reactivo.")}</Typography>
+            <Typography sx={{ pb: "30px" }}>
+                {isEdit ? "Editar reactivo." : "Agregar reactivo."}
+            </Typography>
 
-            <Box sx={{ display: "grid", gridTemplateColumns: {xs: "250px",mb: "250px 250px"}, gap: "20px" }}>
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "250px", md: "250px 250px" },
+                    gap: "20px",
+                }}
+            >
                 <TextField
-                    name='reagentName'
+                    name="reagentName"
                     label="Nombre"
-                    placeholder='Nombre del reactivo'
+                    placeholder="Nombre del reactivo"
                     onChange={handleInput}
                     value={dataForm.reagentName || ""}
                     required
-
                 />
                 <TextField
                     label="Placa SENA"
-                    type='number'
-                    name='senaInventoryTag'
-                    placeholder='Placa sena'
+                    type="number"
+                    name="senaInventoryTag"
+                    placeholder="Placa sena"
                     onChange={handleInput}
                     value={dataForm.senaInventoryTag || ""}
                     required
-
                 />
 
                 <TextField
                     label="Marca"
-                    name='brand'
-                    placeholder='Marca'
+                    name="brand"
+                    placeholder="Marca"
                     onChange={handleInput}
                     value={dataForm.brand || ""}
                 />
 
                 <TextField
                     label="Pureza"
-                    name='purity'
-                    placeholder='Pureza (No mayor a 100%)'
+                    name="purity"
+                    placeholder="Pureza (No mayor a 100%)"
                     onChange={handleInput}
                     value={dataForm.purity || ""}
-                    type='number'
+                    type="number"
                     inputProps={{ min: 0, max: 100 }}
                 />
 
                 <TextField
                     label="Unidades"
-                    name='units'
-                    placeholder='Escribe las unidades'
+                    name="units"
+                    placeholder="Escribe las unidades"
                     onChange={handleInput}
                     value={dataForm.units || ""}
-                    type='number'
+                    type="number"
                 />
-
 
                 <TextField
                     label="Cantidad"
-                    name='quantity'
-                    placeholder='Cantidad del reactivo'
+                    name="quantity"
+                    placeholder="Cantidad del reactivo"
                     onChange={handleInput}
                     value={dataForm.quantity ?? ""}
                     required
-                    type='number'
+                    type="number"
                 />
 
                 <TextField
-
                     label="Fecha de expiración"
                     name="expirationDate"
                     type="date"
@@ -273,7 +293,6 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                     InputLabelProps={{ shrink: true }}
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 />
-
 
                 <TextField
                     select
@@ -299,10 +318,20 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                     onChange={handleInput}
                     required
                 >
-                    {location.length < 1 && (<Typography>No hay ubicaciones agregadas, agrega una.</Typography>)}
+                    {location.length < 1 && (
+                        <Typography>
+                            No hay ubicaciones agregadas, agrega una.
+                        </Typography>
+                    )}
                     {location.map((location) => {
-                        return <MenuItem key={location.equipmentLocationId} value={location.equipmentLocationId}>{location.locationName}</MenuItem>
-
+                        return (
+                            <MenuItem
+                                key={location.equipmentLocationId}
+                                value={location.equipmentLocationId}
+                            >
+                                {location.locationName}
+                            </MenuItem>
+                        );
                     })}
                 </TextField>
 
@@ -314,11 +343,21 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                     onChange={handleInput}
                     required
                 >
-                    {usages.length < 1 && (<Typography>No hay ubicaciones agregadas, agrega una.</Typography>)}
+                    {usages.length < 1 && (
+                        <Typography>
+                            No hay ubicaciones agregadas, agrega una.
+                        </Typography>
+                    )}
                     {usages.map((usage) => {
-                        return <MenuItem key={usage.equipmentUsageId} value={usage.equipmentUsageId}>{usage.usageName}</MenuItem>
+                        return (
+                            <MenuItem
+                                key={usage.equipmentUsageId}
+                                value={usage.equipmentUsageId}
+                            >
+                                {usage.usageName}
+                            </MenuItem>
+                        );
                     })}
-
                 </TextField>
 
                 <TextField
@@ -329,21 +368,27 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                     onChange={handleInput}
                     required
                 >
-                    {users.length < 1 && (<Typography>No hay usuarios agregadas, agrega un0.</Typography>)}
+                    {users.length < 1 && (
+                        <Typography>
+                            No hay usuarios agregadas, agrega un0.
+                        </Typography>
+                    )}
                     {users.map((user) => {
-                        return <MenuItem key={user.userId} value={user.userId}>{user.name}</MenuItem>
-
+                        return (
+                            <MenuItem key={user.userId} value={user.userId}>
+                                {user.name}
+                            </MenuItem>
+                        );
                     })}
                 </TextField>
 
-
                 <TextField
-                    name='batch'
+                    name="batch"
                     label="Lote"
-                    placeholder='Lote '
+                    placeholder="Lote "
                     onChange={handleInput}
                     value={dataForm.batch || ""}
-                    type='number'
+                    type="number"
                 />
 
                 <TextField
@@ -366,13 +411,18 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                 {dataForm.imageUrl !== null && (
                     <Box>
                         <Typography>Imagen actual: </Typography>
-                        <img src={dataForm.imageUrl} width={"200px"} alt="imagenDeUnReactivo" />
+                        <img
+                            src={dataForm.imageUrl}
+                            width={"200px"}
+                            alt="imagenDeUnReactivo"
+                        />
                     </Box>
                 )}
-
             </Box>
-            {errorFetch && (<Typography>{errorFetchMessage}</Typography>)}
-            <Button sx={{ mt: "20px" }} variant='outlined' type='submit'>Enviar data</Button>
+            {errorFetch && <Typography>{errorFetchMessage}</Typography>}
+            <Button sx={{ mt: "20px" }} variant="outlined" type="submit">
+                Enviar data
+            </Button>
         </Box>
     );
 };
