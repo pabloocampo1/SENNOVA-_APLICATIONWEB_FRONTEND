@@ -38,8 +38,10 @@ const MembersOfTestRequest = ({ toggleDrawer, team = [], removeMember }) => {
                 {team.length < 1 ? (
                     <Box
                         sx={{
+                            width: "100%",
                             height: "100%",
                             display: "flex",
+
                             flexDirection: "column",
                             alignItems: "center",
                             justifyContent: "center",
@@ -48,6 +50,7 @@ const MembersOfTestRequest = ({ toggleDrawer, team = [], removeMember }) => {
                         <Typography
                             sx={{
                                 mt: "20px",
+                                mb: "20px",
                             }}
                         >
                             No hay integrantes para este ensayo

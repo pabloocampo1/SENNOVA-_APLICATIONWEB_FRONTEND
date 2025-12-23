@@ -186,6 +186,8 @@ const TestRequestInfo = () => {
         getTheTeam();
     }, []);
 
+    console.log(team);
+
     if (isLoanding) {
         return <SimpleBackdrop text="Cargando informacion del ensayo" open />;
     }

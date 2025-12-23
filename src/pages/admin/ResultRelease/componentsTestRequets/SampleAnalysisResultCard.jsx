@@ -269,14 +269,18 @@ const SampleAnalysisResultCard = ({
                             placeholder="Digite el resultado final"
                         />
                         <TextField
-                            label={"Unidad"}
+                            placeholder="Unidad"
                             onChange={(e) => handleChangeInput(e)}
                             required
+                            label="Unidad"
                             name="unit"
                             disabled={!isAdminEdit && dataToUse.stateResult}
-                            value={dataToUse.unit}
+                            value={
+                                dataToUse.unit == null
+                                    ? dataToUse.product.units
+                                    : dataToUse.unit
+                            }
                             type="text"
-                            placeholder="Unidad"
                         />
 
                         <TextField
@@ -341,6 +345,7 @@ const SampleAnalysisResultCard = ({
                         Una vez registrados los resultados, no podrán ser
                         modificados, salvo que lo realice el superadministrador.
                     </Typography>
+
                     {/* FILES UPLOAD BY THE USER */}
                     <Box
                         sx={{

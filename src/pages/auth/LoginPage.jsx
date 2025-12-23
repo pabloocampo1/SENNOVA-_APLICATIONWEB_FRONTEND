@@ -87,6 +87,33 @@ const LoginPage = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
+                    "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        width: "120px",
+                        height: "120px",
+                        background:
+                            "linear-gradient(90deg, #72ef4cff, #4cafef)",
+                        opacity: 0.25,
+                        filter: "blur(40px)",
+                        zIndex: 0,
+                    },
+
+                    "&::after": {
+                        content: '""',
+                        position: "absolute",
+                        top: "50%",
+                        left: 0,
+                        width: "160px",
+                        height: "160px",
+                        background:
+                            "linear-gradient(90deg, #72ef4cff, #4cafef)",
+                        opacity: 0.18,
+                        filter: "blur(30px)",
+                        zIndex: 0,
+                    },
                 }}
             >
                 <Typography
