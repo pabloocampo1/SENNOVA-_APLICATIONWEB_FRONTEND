@@ -1,9 +1,10 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit } from "@mui/icons-material";
 import {
     Avatar,
     Box,
     Button,
     Divider,
+    Tooltip,
     Typography,
     useTheme,
 } from "@mui/material";
@@ -114,12 +115,22 @@ const Users = ({ users = [], updateList, refresh }) => {
                     mb: "40px",
                 }}
             >
-                <Typography>Todos los usuarios del sistema:</Typography>
+                <Box>
+                    <Typography variant="h6">
+                        Administración de usuarios
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Control centralizado de accesos, roles y estado de los
+                        usuarios del sistema.
+                    </Typography>
+                </Box>
+
                 <Button
+                    startIcon={<Add />}
                     variant="contained"
                     onClick={() => setOpenModalForm(true)}
                 >
-                    Registrar un nuevo usuario
+                    Nuevo usuario
                 </Button>
             </Box>
 
@@ -127,7 +138,7 @@ const Users = ({ users = [], updateList, refresh }) => {
                 sx={{
                     display: "grid",
                     gridTemplateColumns:
-                        "repeat(auto-fill, minmax(400px, 1fr))",
+                        "repeat(auto-fill, minmax(300px, 1fr))",
                     gap: "20px",
                 }}
             >
@@ -137,83 +148,64 @@ const Users = ({ users = [], updateList, refresh }) => {
                             <Box
                                 key={user.userId}
                                 sx={{
-                                    minHeight: "300px",
-                                    p: "20px",
-                                    border: `2px solid ${theme.palette.border.primary}`,
+                                    minHeight: "200px",
+                                    p: "10px",
+
                                     borderRadius: "15px",
+                                    bgcolor: "background.paper",
+                                    position: "relative",
                                 }}
                             >
                                 <Box
                                     sx={{
                                         display: "flex",
-                                        position: "relative",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
                                     }}
                                 >
-                                    <Box sx={{ mr: "10px" }}>
-                                        <Avatar src={user.imageProfile} />
-                                    </Box>
-                                    <Box>
-                                        <Typography sx={{ opacity: "0.90" }}>
-                                            {user.name}
-                                        </Typography>
-                                        <Typography sx={{ opacity: "0.60" }}>
-                                            {user.email}
-                                        </Typography>
-                                        {authObject.username == user.username
-                                            ? "Tu"
-                                            : ""}
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            position: "absolute",
-                                            right: "0",
-                                            gap: "10px",
-                                        }}
-                                    >
-                                        {authObject.username ==
-                                        user.username ? (
-                                            ""
+                                    <Box sx={{}}>
+                                        {authObject.email == user.email ? (
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    p: "5px",
+                                                    color: "primary.main",
+                                                    bgcolor:
+                                                        "background.default",
+                                                    border: `1px solid ${theme.palette.border.primary}`,
+                                                    borderRadius: "20px",
+                                                }}
+                                            >
+                                                Tu
+                                            </Typography>
                                         ) : (
-                                            <Delete
-                                                onClick={() =>
-                                                    handleDelete(user)
-                                                }
-                                                sx={{ color: "primary.main" }}
-                                            />
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    p: "5px",
+                                                    bgcolor: `${theme.palette.primary.main}20`,
+                                                    borderRadius: "20px",
+                                                    border: `1px solid ${theme.palette.primary.main}`,
+                                                    color: "text.secondary",
+                                                }}
+                                            >
+                                                {user.role}
+                                            </Typography>
                                         )}
-                                        <Edit
-                                            onClick={() => handleUpdate(user)}
-                                            sx={{ color: "primary.main" }}
-                                        />
                                     </Box>
-                                </Box>
-                                <Box sx={{ pt: "50px" }}>
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            justifyContent: "space-around",
-                                            pb: "20px",
-                                        }}
-                                    >
-                                        <Typography>
-                                            {user.phoneNumber}
-                                        </Typography>
-                                        <Typography>{user.position}</Typography>
-                                    </Box>
-                                    <Divider />
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            justifyContent: "space-around",
-                                            pt: "20px",
-                                        }}
-                                    >
-                                        <Typography>
-                                            creado: {user.createAt}
-                                        </Typography>
-                                        <Typography>
+                                    <Box sx={{}}>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                p: "5px",
+                                                bgcolor: "background.default",
+                                                border: `1px solid ${theme.palette.border.primary}`,
+                                                borderRadius: "20px",
+                                                color: user.available
+                                                    ? "text.primary"
+                                                    : "red",
+                                            }}
+                                        >
                                             {user.available
                                                 ? "Cuenta activa"
                                                 : "cuenta inactiva"}
@@ -225,17 +217,71 @@ const Users = ({ users = [], updateList, refresh }) => {
                                     sx={{
                                         display: "flex",
                                         justifyContent: "center",
-                                        mt: "40px",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        mt: "10px",
                                     }}
                                 >
-                                    <Button
-                                        onClick={() =>
-                                            alert("En construccion.")
-                                        }
-                                        variant="outlined"
+                                    <Avatar
+                                        src={user.imageProfile}
+                                        sx={{ width: "100px", height: "100px" }}
+                                    />
+                                    <Typography variant="body1">
+                                        {user.name}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            p: "3px",
+                                            bgcolor: "background.default",
+                                            border: `1px solid ${theme.palette.border.primary}`,
+                                            borderRadius: "20px",
+                                            color: "text.secondary",
+                                        }}
                                     >
-                                        Consultar mas informacion
-                                    </Button>
+                                        {user.position}
+                                    </Typography>
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        mt: "40px",
+                                        gap: "10px",
+                                        mb: "10px",
+                                    }}
+                                >
+                                    {authObject.email == user.email ? (
+                                        ""
+                                    ) : (
+                                        <Tooltip title="Eliminar usuario">
+                                            <Button
+                                                variant="outlined"
+                                                onClick={() =>
+                                                    handleDelete(user)
+                                                }
+                                                fullWidth
+                                            >
+                                                <Delete
+                                                    sx={{
+                                                        color: "primary.main",
+                                                    }}
+                                                />
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                    <Tooltip title="Editar usuario">
+                                        <Button
+                                            variant="outlined"
+                                            onClick={() => handleUpdate(user)}
+                                            fullWidth
+                                        >
+                                            <Edit
+                                                sx={{ color: "primary.main" }}
+                                            />
+                                        </Button>
+                                    </Tooltip>
                                 </Box>
                             </Box>
                         </>

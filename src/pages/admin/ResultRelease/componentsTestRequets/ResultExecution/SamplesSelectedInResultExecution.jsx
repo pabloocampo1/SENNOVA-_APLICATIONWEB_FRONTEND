@@ -37,7 +37,6 @@ const SamplesSelectedInResultExecution = ({
         setIsLoanding(true);
         try {
             const ids = samplesSelected.join(",");
-            console.log(ids);
 
             const res = await api.get(
                 "/sample/get-sample-info-execution",
@@ -83,8 +82,6 @@ const SamplesSelectedInResultExecution = ({
     useEffect(() => {
         getSamplesInfoExecution();
     }, []);
-
-    console.log(samples);
 
     if (isLoanding) {
         return (

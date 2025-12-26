@@ -70,16 +70,15 @@ const CustomersAndUsersPage = () => {
     useEffect(() => {}, [usersData]);
 
     return (
-        <Box sx={{ width: "100%" }}>
+        <Box
+            sx={{
+                width: "100%",
+                bgcolor: "background.default",
+                p: "20px",
+                borderRadius: "20px",
+            }}
+        >
             <SimpleBackdrop open={isLoanding} />
-
-            <Typography
-                component={"h2"}
-                variant="h2"
-                sx={{ pb: "20px", color: "text.primary", fontWeight: "bold" }}
-            >
-                Manejo de usuarios y clientes
-            </Typography>
 
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs

@@ -1,11 +1,22 @@
-import { Box, Button, MenuItem, Switch, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import api from '../../../service/axiosService';
-import SimpleBackdrop from '../../SimpleBackDrop';
+import {
+    Box,
+    Button,
+    MenuItem,
+    Switch,
+    TextField,
+    Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import api from "../../../service/axiosService";
+import SimpleBackdrop from "../../SimpleBackDrop";
 
-
-
-const UserForm = ({ data = null, onClose, update, success, emailCurrentUser }) => {
+const UserForm = ({
+    data = null,
+    onClose,
+    update,
+    success,
+    emailCurrentUser,
+}) => {
     const [formData, setFormData] = useState({
         userId: null,
         name: "",
@@ -14,58 +25,54 @@ const UserForm = ({ data = null, onClose, update, success, emailCurrentUser }) =
         email: "",
         position: "",
         available: true,
-        roleName: "",
-    })
+        role: "",
+    });
     const [isLoanding, setIsLoanding] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
 
     const [roleList, setRoleList] = useState([]);
-    const [errorsList, setErrorList] = useState({})
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [errorsList, setErrorList] = useState({});
+    const [errorMessage, setErrorMessage] = useState(null);
     const [imageFile, setImageFile] = useState(null);
 
     const handleImageChange = (e) => {
         setImageFile(e.target.files[0]);
     };
 
-
+    console.log(formData);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-
         if (formData.userId == null) {
-
-            saveUser(formData)
+            saveUser(formData);
         } else {
-
-            updateUser(formData)
+            updateUser(formData);
         }
-
-
-    }
+    };
 
     const saveUser = async (dto) => {
-
-        setIsLoanding(true)
+        setIsLoanding(true);
         try {
             const formData = new FormData();
-            formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+            formData.append(
+                "dto",
+                new Blob([JSON.stringify(dto)], { type: "application/json" })
+            );
             if (imageFile != null) {
                 formData.append("image", imageFile);
             }
 
             const res = await api.post("/users/save", formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data"
-                }
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
             if (res.status == 201) {
-                update(res.data)
-                onClose()
+                update(res.data);
+                onClose();
             }
-
         } catch (error) {
             console.error(error);
 
@@ -73,97 +80,86 @@ const UserForm = ({ data = null, onClose, update, success, emailCurrentUser }) =
                 const backendError = error.response.data;
                 if (backendError.errors) {
                     setErrorList({
-                        ...backendError.errors
+                        ...backendError.errors,
                     });
                 }
             }
 
-
             if (error.response) {
                 const backendError = error.response.data;
-                setErrorMessage(backendError.message)
+                setErrorMessage(backendError.message);
             }
-
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
-    }
-
+    };
 
     const updateUser = async (dto) => {
-
-        setIsLoanding(true)
+        setIsLoanding(true);
         try {
             const formData = new FormData();
-            formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json" }));
+            formData.append(
+                "dto",
+                new Blob([JSON.stringify(dto)], { type: "application/json" })
+            );
             if (imageFile != null) {
                 formData.append("image", imageFile);
             }
 
             const res = await api.put(`/users/update/${dto.userId}`, formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data"
-                }
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
             console.log(res);
 
-
             if (res.status == 200) {
-                onClose()
-                success()
-
+                onClose();
+                success();
             }
-
-
-
         } catch (error) {
-
             if (error.response) {
                 const backendError = error.response.data;
                 if (backendError.errors) {
                     setErrorList({
-                        ...backendError.errors
+                        ...backendError.errors,
                     });
                 }
             }
 
-
             if (error.response) {
                 const backendError = error.response.data;
-                setErrorMessage(backendError.message)
+                setErrorMessage(backendError.message);
             }
-
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
-    }
+    };
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
-        })
-    }
+            [e.target.name]: e.target.value,
+        });
+    };
 
     const getRole = async () => {
-        setIsLoanding(true)
+        setIsLoanding(true);
         try {
-            const res = await api.get("/role/getAll")
+            const res = await api.get("/role/getAll");
             if (res.status == 200) {
-                setRoleList(res.data)
+                setRoleList(res.data);
             }
         } catch (error) {
             console.error(error);
-
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
-    }
+    };
 
     useEffect(() => {
-
-        getRole()
+        getRole();
 
         if (data && Object.keys(data).length > 0) {
             setIsEdit(true);
@@ -171,16 +167,34 @@ const UserForm = ({ data = null, onClose, update, success, emailCurrentUser }) =
         } else {
             setIsEdit(false);
         }
-
-    }, [])
+    }, []);
 
     return (
-        <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+        <Box
+            component={"form"}
+            onSubmit={handleSubmit}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
             <SimpleBackdrop open={isLoanding} />
-            <Typography variant='h3' sx={{ minWidth: "300px", pb: "20px", textAlign: "center" }}>{isEdit ? "Editar usuario" : "Agregar un nuevo usuario."}</Typography>
-            <Box sx={{ display: "grid", gridTemplateColumns: "200px 200px", gap: "20px", mb: "40px" }}>
-
-
+            <Typography
+                variant="h3"
+                sx={{ minWidth: "300px", pb: "20px", textAlign: "center" }}
+            >
+                {isEdit ? "Editar usuario" : "Agregar un nuevo usuario."}
+            </Typography>
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: "200px 200px",
+                    gap: "20px",
+                    mb: "40px",
+                }}
+            >
                 <TextField
                     label="Nombre"
                     name="name"
@@ -199,7 +213,6 @@ const UserForm = ({ data = null, onClose, update, success, emailCurrentUser }) =
                     error={!!errorsList?.dni}
                     helperText={errorsList?.dni}
                     required
-
                     fullWidth
                 />
 
@@ -242,46 +255,79 @@ const UserForm = ({ data = null, onClose, update, success, emailCurrentUser }) =
                     sx={{ flex: "1 1 100%" }}
                 />
 
-
-
                 <TextField
                     select
                     label="Rol en el sistema"
-                    name="roleName"
-                    value={formData.roleName || ""}
+                    name="role"
+                    value={formData.role || ""}
                     onChange={handleChange}
                     required
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 >
-                    {roleList.length < 1 && (<Typography>no hay roles para mostrar.</Typography>)}
-                    {roleList.map(role => {
-                        return <MenuItem key={role.roleId} value={role.nameRole}>{role.nameRole}</MenuItem>
+                    {roleList.length < 1 && (
+                        <Typography>no hay roles para mostrar.</Typography>
+                    )}
+                    {roleList.map((role) => {
+                        return (
+                            <MenuItem key={role.roleId} value={role.nameRole}>
+                                {role.nameRole}
+                            </MenuItem>
+                        );
                     })}
                 </TextField>
 
-
-
-                {emailCurrentUser == formData.email ? "" : (<Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
-                    <Typography sx={{ textAlign: "center" }}>Activar o desactivar cuenta</Typography>
-                    <Switch
-                        name="available"
-                        checked={formData.available}
-                        onChange={(e) => setFormData({
-                            ...formData,
-                            available: e.target.checked
-                        })}
-                    />
-                </Box>)}
-
-
+                {emailCurrentUser == formData.email ? (
+                    ""
+                ) : (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Typography sx={{ textAlign: "center" }}>
+                            Activar o desactivar cuenta
+                        </Typography>
+                        <Switch
+                            name="available"
+                            checked={formData.available}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    available: e.target.checked,
+                                })
+                            }
+                        />
+                    </Box>
+                )}
             </Box>
 
+            {errorMessage && (
+                <Typography sx={{ color: "red" }}>{errorMessage}</Typography>
+            )}
+            <Button variant="outlined" type="submit">
+                {isEdit ? "Editar usuario" : "Registrar usuario."}
+            </Button>
 
-            {errorMessage && (<Typography sx={{ color: "red" }}>{errorMessage}</Typography>)}
-            <Button variant='outlined' type='submit'>{isEdit ? "Editar usuario" : "Registrar usuario."}</Button>
-
-
-            {!isEdit && (<Typography sx={{ textAlign: "center", fontSize: "0.90rem", opacity: "0.50", p: "30px" }}>** Una vez creado el usuario, podra ingresar al sistema mediante nombre de usuario y contraseña <br /> o el email que registre. <br /> El nombre de usuario y contraeña por defecto una vez creado sera su numero de identificacion <br /> el usuario podra cambiar estos datos dentro del sistema***</Typography>)}
+            {!isEdit && (
+                <Typography
+                    sx={{
+                        textAlign: "center",
+                        fontSize: "0.90rem",
+                        opacity: "0.50",
+                        p: "30px",
+                    }}
+                >
+                    ** Una vez creado el usuario, podra ingresar al sistema
+                    mediante nombre de usuario y contraseña <br /> o el email
+                    que registre. <br /> El nombre de usuario y contraeña por
+                    defecto una vez creado sera su numero de identificacion{" "}
+                    <br /> el usuario podra cambiar estos datos dentro del
+                    sistema***
+                </Typography>
+            )}
         </Box>
     );
 };

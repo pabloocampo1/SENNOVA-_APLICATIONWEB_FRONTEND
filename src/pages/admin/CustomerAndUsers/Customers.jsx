@@ -88,12 +88,20 @@ const Customers = () => {
     return (
         <Box>
             <SimpleBackdrop open={isLoanding} text="Cargando clientes" />
+            <Box>
+                <Typography variant="h6">Clientes</Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Todos los clientes registrados
+                </Typography>
+            </Box>
+
             <Box
                 sx={{
                     width: "100%",
                     display: "grid",
                     gridTemplateColumns: "49% 49%",
                     gap: "10px",
+                    mt: "20px",
                 }}
             >
                 {customersData.map((customer, index) => {
@@ -103,7 +111,7 @@ const Customers = () => {
                                 key={index}
                                 sx={{
                                     height: "300px",
-                                    bgcolor: "background.default",
+                                    bgcolor: "background.paper",
                                     border: `1px solid ${theme.palette.border.primary}`,
                                     borderRadius: "10px",
                                     mb: "30px",

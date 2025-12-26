@@ -76,8 +76,6 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 const res = await api.get(
                     `/testRequest/get-samples-by-testRequestId/${data.testRequestId}`
                 );
-                console.log("res");
-                console.log(res);
 
                 setSamplesInfo(res.data);
             } catch (error) {

@@ -84,6 +84,8 @@ const QuotesPage = () => {
         }
     }, [search]);
 
+    console.log(quotationData);
+
     useEffect(() => {}, [quotationData]);
 
     return (

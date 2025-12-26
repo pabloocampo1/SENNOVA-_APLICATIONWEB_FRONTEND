@@ -26,7 +26,9 @@ import {
     InputLabel,
     LinearProgress,
     MenuItem,
+    Pagination,
     Select,
+    Stack,
     Tooltip,
     Typography,
     useTheme,
@@ -48,12 +50,21 @@ const ResultsRelease = () => {
     const [search, setSearch] = useState("");
     const [optionSelectedFilterBy, setOptionSelectedFilterBy] = useState("ALL");
     const { authObject } = useAuth();
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+
+    const handleChangePage = (event, value) => {
+        setPage(value - 1);
+    };
 
     const getTestRequestAccepted = async () => {
         setIsLoanding(true);
         try {
-            const res = await api.get("/testRequest/get-all-info-summary");
-            setTestRequest(res.data);
+            const res = await api.get(
+                `/testRequest/get-all-info-summary?page=${page}`
+            );
+            setTestRequest(res.data.content);
+            setTotalPages(res.data.totalPages);
         } catch (error) {
             console.error(error);
         } finally {
@@ -80,7 +91,7 @@ const ResultsRelease = () => {
             const res = await api.get(
                 `/testRequest/get-all-info-summary-by-code/${e}`
             );
-            console.log(res);
+
             setTestRequest(res.data);
         } catch (error) {
             console.error(error);
@@ -90,8 +101,6 @@ const ResultsRelease = () => {
     };
 
     const getDataByState = async (state) => {
-        console.log(state);
-
         if (state == "ALL") {
             getTestRequestAccepted();
         }
@@ -167,7 +176,7 @@ const ResultsRelease = () => {
         if (search == "") {
             getTestRequestAccepted();
         }
-    }, [search]);
+    }, [search, page]);
 
     return (
         <Box
@@ -568,6 +577,16 @@ const ResultsRelease = () => {
                         </Box>
                     );
                 })}
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: "40px" }}>
+                <Stack spacing={2}>
+                    <Pagination
+                        count={totalPages}
+                        page={page + 1}
+                        onChange={handleChangePage}
+                        color="primary"
+                    />
+                </Stack>
             </Box>
         </Box>
     );
