@@ -23,7 +23,6 @@ const SampleReception = ({ data }) => {
     const theme = useTheme();
 
     const EMPTY_MESSAGE = "Campo vacío";
-    console.log(data);
 
     const checkValue = (value) => (value ? value : EMPTY_MESSAGE);
 

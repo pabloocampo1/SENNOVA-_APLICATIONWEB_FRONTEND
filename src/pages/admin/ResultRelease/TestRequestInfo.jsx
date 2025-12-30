@@ -40,6 +40,8 @@ import TestRequestNotFound from "./componentsTestRequets/TestRequestNotFound";
 
 import InfoSummaryTestRequest from "./componentsTestRequets/InfoSummaryTestRequest";
 import { useAuth } from "../../../context/AuthContext";
+import SamplesSelectedInResultExecution from "./componentsTestRequets/ResultExecution/SamplesSelectedInResultExecution";
+import ModalFinishTestReQuest from "./componentsTestRequets/ResultExecution/ModalFinishTestReQuest";
 
 /*
     PAGE WITH ALL THE INFORMATION ABOUT A TEST REQUEST
@@ -59,6 +61,7 @@ const TestRequestInfo = () => {
     const [open, setOpen] = useState(false);
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
     const { authObject } = useAuth();
+    const [finishTestRequest, setFinishTestRequest] = useState(false);
 
     const getInformationAboutTestRequest = async () => {
         setIsLoanding(true);
@@ -186,8 +189,6 @@ const TestRequestInfo = () => {
         getTheTeam();
     }, []);
 
-    console.log(team);
-
     if (isLoanding) {
         return <SimpleBackdrop text="Cargando informacion del ensayo" open />;
     }
@@ -231,6 +232,19 @@ const TestRequestInfo = () => {
                 }
             />
 
+            <GenericModal
+                open={finishTestRequest}
+                onClose={() => setFinishTestRequest(false)}
+                compo={
+                    <ModalFinishTestReQuest
+                        samples={testRequest.samples}
+                        requestCode={testRequest.requestCode}
+                        customerEmail={testRequest.customer.email}
+                        customerName={testRequest.customer.customerName}
+                    />
+                }
+            />
+
             <Box
                 sx={{
                     display: "flex",
@@ -269,6 +283,7 @@ const TestRequestInfo = () => {
                         <Button
                             variant="outlined"
                             startIcon={<CheckCircle />}
+                            onClick={() => setFinishTestRequest(true)}
                             sx={{
                                 borderRadius: 2,
                                 textTransform: "none",

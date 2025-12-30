@@ -5,7 +5,9 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
+    Pagination,
     Select,
+    Stack,
     Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -26,18 +28,26 @@ const QuotesPage = () => {
     const [optionSelectedFilterBy, setOptionSelectedFilterBy] = useState("all");
     const [searchBy, setSearchBy] = useState("code");
     const [search, setSearch] = useState("");
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
+    };
+
+    const handleChangePage = (event, value) => {
+        setPage(value - 1);
     };
 
     const getData = async () => {
         setIsLoanding(true);
 
         try {
-            const res = await api.get("/testRequest/get-all/quotation");
-
-            setQuotationData(res.data);
+            const res = await api.get(
+                `/testRequest/get-all/quotation?page=${page}`
+            );
+            setTotalPages(res.data.totalPages);
+            setQuotationData(res.data.content);
         } catch (error) {
             console.error(error);
         } finally {
@@ -82,7 +92,7 @@ const QuotesPage = () => {
         if (search == "") {
             getData();
         }
-    }, [search]);
+    }, [search, page]);
 
     console.log(quotationData);
 
@@ -266,6 +276,23 @@ const QuotesPage = () => {
                                 }
                             />
                         ))}
+                    </Box>
+
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mt: "40px",
+                        }}
+                    >
+                        <Stack spacing={2}>
+                            <Pagination
+                                count={totalPages}
+                                page={page + 1}
+                                onChange={handleChangePage}
+                                color="primary"
+                            />
+                        </Stack>
                     </Box>
 
                     <Drawer
