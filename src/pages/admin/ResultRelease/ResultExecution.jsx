@@ -4,8 +4,8 @@ import ButtonBack from "../../../components/ButtonBack";
 import { Try } from "@mui/icons-material";
 import api from "../../../service/axiosService";
 import PropTypes from "prop-types";
-import ResultExecutionSamplesAvailable from "./componentsTestRequets/ResultExecutionSamplesAvailable";
-import SamplesExpired from "./componentsTestRequets/ResultExecution/SamplesExpired";
+import ResultExecutionSamplesAvailable from "./componentsTestRequets/ResultExecution/ResultExecutionSamplesAvailable";
+
 import SamplesDelivered from "./componentsTestRequets/ResultExecution/SamplesDelivered";
 import SamplesWithoutReception from "./componentsTestRequets/ResultExecution/SamplesWithoutReception";
 

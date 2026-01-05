@@ -27,6 +27,7 @@ const SamplesExpired = ({
     setSampleSelected,
     setOpen,
     data,
+    fetchPdf,
 }) => {
     const theme = useTheme();
 
@@ -119,9 +120,7 @@ const SamplesExpired = ({
                                     <TableCell>
                                         <PictureAsPdf
                                             onClick={() =>
-                                                alert(
-                                                    "funcionalidad en progreso"
-                                                )
+                                                fetchPdf(sample.sampleId)
                                             }
                                         />
                                     </TableCell>

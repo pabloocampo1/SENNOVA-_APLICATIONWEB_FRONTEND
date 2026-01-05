@@ -18,25 +18,20 @@ import {
     useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import api from "../../../../service/axiosService";
-import SimpleBackdrop from "../../../../components/SimpleBackDrop";
-import { getDays } from "../../../../Utils/DateUtils";
+import api from "../../../../../service/axiosService";
+import SimpleBackdrop from "../../../../../components/SimpleBackDrop";
+import { getDays } from "../../../../../Utils/DateUtils";
 import {
-    CheckBox,
-    Delete,
-    DeleteOutline,
     DeleteOutlineTwoTone,
-    Looks,
     PictureAsPdf,
     Visibility,
-    Watch,
-    WatchLaterOutlined,
 } from "@mui/icons-material";
-import GenericModal from "../../../../components/modals/GenericModal";
-import DeleteSamplesModalConfirmation from "./DeleteSamplesModalConfirmation";
-import InfoSamplesResultExecution from "./InfoSamplesResultExecution";
-import SamplesSelectedInResultExecution from "./ResultExecution/SamplesSelectedInResultExecution";
-import SamplesExpired from "./ResultExecution/SamplesExpired";
+import GenericModal from "../../../../../components/modals/GenericModal";
+import DeleteSamplesModalConfirmation from "../DeleteSamplesModalConfirmation";
+import InfoSamplesResultExecution from "../InfoSamplesResultExecution";
+import SamplesSelectedInResultExecution from "./SamplesSelectedInResultExecution";
+import SamplesExpired from "./SamplesExpired";
+import PreviuwReleaseResultModalCompo from "./PreviuwReleaseResultModalCompo";
 
 const getLenght = (analisys = []) => {
     return analisys.length;
@@ -46,7 +41,7 @@ const ResultExecutionSamplesAvailable = () => {
     const [open, setOpen] = React.useState(false);
     const [openShowDrawerSamplesToExecute, setOpenShowDrawerSamplesToExecute] =
         React.useState(false);
-    const [isLoanding, setIsLoanding] = useState(false);
+
     const [data, setData] = useState([]);
     const [dataSamplesExpired, setDataSampleExpired] = useState([]);
     const [originalData, setOriginalData] = useState([]);
@@ -60,6 +55,13 @@ const ResultExecutionSamplesAvailable = () => {
         message: "",
     });
     const theme = useTheme();
+    const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
+    const [openModalPreviuwReleaseResult, setOpenModalPreviuwReleaseResult] =
+        useState(false);
+    const [isLoandingState, setIsLoandingState] = useState({
+        state: false,
+        text: "",
+    });
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -68,8 +70,56 @@ const ResultExecutionSamplesAvailable = () => {
         setOpenShowDrawerSamplesToExecute(newOpen);
     };
 
+    const fetchPdf = async (sampleId) => {
+        setIsLoandingState({
+            state: true,
+            text: "Generando documento final",
+        });
+        try {
+            const responsibleReleaseResultDto = {
+                name: "Juan Pablo Ocampo Leon",
+                role: "desarrollador de software",
+                signature: null,
+            };
+
+            const response = await api.post(
+                `/testRequest/pdf/preview/${sampleId}`,
+                responsibleReleaseResultDto,
+                {
+                    responseType: "blob",
+                }
+            );
+            if (response.status == 200) {
+                console.log(response);
+
+                const file = new Blob([response.data], {
+                    type: "application/pdf",
+                });
+                const fileURL = URL.createObjectURL(file);
+
+                setPdfPreviewUrl(fileURL);
+
+                setIsLoandingState({
+                    state: false,
+                    text: "",
+                });
+                setOpenModalPreviuwReleaseResult(true);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoandingState({
+                state: false,
+                text: "",
+            });
+        }
+    };
+
     const getData = async () => {
-        setIsLoanding(true);
+        setIsLoandingState({
+            state: true,
+            text: "Cargando muestras",
+        });
 
         try {
             const res = await api.get("/sample/get-all-status-process");
@@ -79,12 +129,18 @@ const ResultExecutionSamplesAvailable = () => {
         } catch (error) {
             console.error(error);
         } finally {
-            setIsLoanding(false);
+            setIsLoandingState({
+                state: false,
+                text: "",
+            });
         }
     };
 
     const getDataSamplesExpired = async () => {
-        setIsLoanding(true);
+        setIsLoandingState({
+            state: true,
+            text: "Cargando muestraas vencidas",
+        });
 
         try {
             const res = await api.get("/sample/get-all-status-expired");
@@ -92,7 +148,10 @@ const ResultExecutionSamplesAvailable = () => {
         } catch (error) {
             console.error(error);
         } finally {
-            setIsLoanding(false);
+            setIsLoandingState({
+                state: false,
+                text: "",
+            });
         }
     };
 
@@ -283,7 +342,10 @@ const ResultExecutionSamplesAvailable = () => {
 
     return (
         <Box>
-            <SimpleBackdrop open={isLoanding} />
+            <SimpleBackdrop
+                open={isLoandingState.state}
+                text={isLoandingState.text}
+            />
 
             <GenericModal
                 compo={
@@ -293,6 +355,16 @@ const ResultExecutionSamplesAvailable = () => {
                 }
                 open={openModalToDeleteSamples}
                 onClose={() => setOpenModalToDeleteSamples(false)}
+            />
+
+            <GenericModal
+                compo={
+                    <PreviuwReleaseResultModalCompo
+                        pdfPreviewUrl={pdfPreviewUrl}
+                    />
+                }
+                open={openModalPreviuwReleaseResult}
+                onClose={() => setOpenModalPreviuwReleaseResult(false)}
             />
 
             {responseAlert.status && (
@@ -543,9 +615,7 @@ const ResultExecutionSamplesAvailable = () => {
                                         <TableCell>
                                             <PictureAsPdf
                                                 onClick={() =>
-                                                    alert(
-                                                        "funcionalidad en progreso"
-                                                    )
+                                                    fetchPdf(sample.sampleId)
                                                 }
                                             />
                                         </TableCell>
@@ -605,6 +675,7 @@ const ResultExecutionSamplesAvailable = () => {
                 setSampleSelected={(sample) => setSampleSelected(sample)}
                 setOpen={(boolean) => setOpen(boolean)}
                 data={dataSamplesExpired}
+                fetchPdf={(sampleId) => fetchPdf(sampleId)}
             />
 
             {/* THIS DRAWER IS FOR SHOW THE RESULTS OF ONE SAMPLE */}

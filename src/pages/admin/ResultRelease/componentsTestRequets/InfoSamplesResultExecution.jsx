@@ -1,7 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
-import ReagentForm from "../../../../components/forms/Reagent/ReagentForm";
-import ResultExecutionSamplesAvailable from "./ResultExecutionSamplesAvailable";
+
 import SampleAnalysisResultCard from "./SampleAnalysisResultCard";
 
 // this module show all results of analysis of one sample into result execution

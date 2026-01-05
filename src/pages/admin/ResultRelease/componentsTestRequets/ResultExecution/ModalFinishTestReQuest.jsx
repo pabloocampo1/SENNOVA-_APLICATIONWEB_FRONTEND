@@ -2,7 +2,9 @@ import {
     Add,
     BlockOutlined,
     DoneOutline,
+    Error,
     PictureAsPdf,
+    Preview,
     Remove,
     Warning,
 } from "@mui/icons-material";
@@ -43,6 +45,8 @@ const ModalFinishTestReQuest = ({
     const [responsibleTestRequestResult, setResponsibleTestRequestResult] =
         useState(authObject.name);
 
+    const [error, setError] = useState(false);
+
     const fetchPdf = async () => {
         setIsLoandingState({
             state: true,
@@ -50,13 +54,15 @@ const ModalFinishTestReQuest = ({
         });
         try {
             const response = await api.get("/testRequest/pdf/preview", {
-                responseType: "blob", // muy importante
+                responseType: "blob",
             });
 
             const file = new Blob([response.data], { type: "application/pdf" });
             const fileURL = URL.createObjectURL(file);
             setPdfPreviewUrl(fileURL);
+            setError(false);
         } catch (error) {
+            setError(true);
             console.error("Error al obtener PDF:", error);
         } finally {
             setIsLoandingState({
@@ -229,8 +235,44 @@ const ModalFinishTestReQuest = ({
                 </Typography>
 
                 <Box sx={{ mt: 4 }}>
-                    <Button variant="outlined" onClick={fetchPdf}>
-                        Ver vista previa del documento final
+                    <Typography
+                        sx={{
+                            color: "primary.main",
+                            mt: "50px",
+                        }}
+                    >
+                        Ver vista previa del documento final de entrega
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary", mb: "20px" }}
+                    >
+                        Este PDF se generará automáticamente al enviar el correo
+                        al cliente, por lo que no necesitas descargarlo ni
+                        adjuntarlo manualmente. El sistema se encarga de
+                        incluirlo en el mensaje al enviar el resultado final.
+                    </Typography>
+                    {error && (
+                        <Typography
+                            variant="body2"
+                            color="error"
+                            sx={{
+                                mb: "20px",
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Error /> Hubo un error en el servidor al generar el
+                            documento final
+                        </Typography>
+                    )}
+
+                    <Button
+                        startIcon={<Preview />}
+                        variant="outlined"
+                        onClick={fetchPdf}
+                    >
+                        Generar documento
                     </Button>
 
                     {pdfPreviewUrl && (
@@ -243,41 +285,55 @@ const ModalFinishTestReQuest = ({
                             />
                         </Box>
                     )}
-                    <Typography
-                        variant="body2"
-                        sx={{ color: "text.secondary", mt: 1 }}
-                    >
-                        Este PDF se generará automáticamente al enviar el correo
-                        al cliente, por lo que no necesitas descargarlo ni
-                        adjuntarlo manualmente. El sistema se encarga de
-                        incluirlo en el mensaje al enviar el resultado final.
-                    </Typography>
                 </Box>
 
-                <Box sx={{ mt: 4, display: "flex", flexWrap: "wrap", gap: 1 }}>
-                    {files.length > 0 ? (
-                        files.map((f) => (
-                            <Chip
-                                sx={{
-                                    mr: "20px",
-                                    mb: "20px",
-                                }}
-                                key={f.name}
-                                label={
-                                    f.name.length > 20
-                                        ? f.name.slice(0, 20) + "..."
-                                        : f.name
-                                }
-                                onDelete={() => removeFile(f.name)}
-                                color="primary"
-                                variant="outlined"
-                            />
-                        ))
-                    ) : (
-                        <Typography variant="body2" color="text.secondary">
-                            No hay archivos seleccionados.
-                        </Typography>
-                    )}
+                <Box>
+                    <Typography
+                        sx={{
+                            color: "primary.main",
+                            mt: "50px",
+                        }}
+                    >
+                        Adjuntar archivos adicionales
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}
+                    >
+                        Se permite adjuntar un máximo de <b>2 archivos PDF</b>.
+                    </Typography>
+                    <Box
+                        sx={{
+                            mt: 4,
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: 1,
+                        }}
+                    >
+                        {files.length > 0 ? (
+                            files.map((f) => (
+                                <Chip
+                                    sx={{
+                                        mr: "20px",
+                                        mb: "20px",
+                                    }}
+                                    key={f.name}
+                                    label={
+                                        f.name.length > 20
+                                            ? f.name.slice(0, 20) + "..."
+                                            : f.name
+                                    }
+                                    onDelete={() => removeFile(f.name)}
+                                    color="primary"
+                                    variant="outlined"
+                                />
+                            ))
+                        ) : (
+                            <Typography variant="body2" color="text.secondary">
+                                No hay archivos seleccionados.
+                            </Typography>
+                        )}
+                    </Box>
                 </Box>
 
                 <Button
@@ -297,101 +353,48 @@ const ModalFinishTestReQuest = ({
                         accept="application/pdf"
                     />
                 </Button>
-
-                <Typography
-                    variant="body2"
-                    sx={{ color: "text.secondary", mt: 1 }}
-                >
-                    Se permite adjuntar un máximo de <b>2 archivos PDF</b>.
-                </Typography>
             </Box>
 
-            <Box
-                sx={{
-                    mt: "100px",
-                    mb: "20px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "column",
-                }}
-            >
+            <Box sx={{ mt: 4, mb: "100px" }}>
                 <Typography
-                    onClick={() => setAddSignatures(true)}
                     sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        textDecoration: "underline",
-                        color: "text.secondary",
+                        color: "primary.main",
+                        mb: "20px",
+                        mt: "50px",
                     }}
                 >
-                    {" "}
-                    <Add /> Agregar firma y nombre
+                    Informacion del responsable de envio
                 </Typography>
+                <Box
+                    component="form"
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                        mb: 2,
+                    }}
+                >
+                    <TextField
+                        label="Nombre del responsable de la emisión"
+                        value={responsibleTestRequestResult}
+                        onChange={(e) =>
+                            setResponsibleTestRequestResult(e.target.value)
+                        }
+                        fullWidth
+                    />
 
-                {addSignatures && (
-                    <Box sx={{ mt: 4 }}>
-                        <Box
-                            component="form"
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 2,
-                                mb: 2,
-                            }}
-                        >
-                            <TextField
-                                label="Nombre del responsable de la emisión"
-                                value={responsibleTestRequestResult}
-                                onChange={(e) =>
-                                    setResponsibleTestRequestResult(
-                                        e.target.value
-                                    )
-                                }
-                                fullWidth
-                            />
-
-                            <Button
-                                variant="outlined"
-                                component="label"
-                                sx={{ alignSelf: "flex-start" }}
-                            >
-                                Subir firma digital
-                                <input type="file" hidden accept="image/*" />
-                            </Button>
-                            <Typography
-                                variant="caption"
-                                color="text.secondary"
-                            >
-                                Solo se puede agregar firma digital en formato
-                                de imagen
-                            </Typography>
-
-                            <Typography
-                                variant="caption"
-                                color="text.secondary"
-                            >
-                                Si no guardas esta información se mostrará el
-                                nombre y firma predeterminado por el sistema.
-                                <br />A nombre de: <b>Jhonatan Henao</b>
-                            </Typography>
-                        </Box>
-
-                        <Typography
-                            onClick={() => setAddSignatures(false)}
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                textDecoration: "underline",
-                                cursor: "pointer",
-                                color: "text.secondary",
-                                mt: 1,
-                            }}
-                        >
-                            <Remove sx={{ mr: 0.5 }} /> No agregar
-                        </Typography>
-                    </Box>
-                )}
+                    <Button
+                        variant="outlined"
+                        component="label"
+                        sx={{ alignSelf: "flex-start" }}
+                    >
+                        Subir firma digital
+                        <input type="file" hidden accept="image/*" />
+                    </Button>
+                    <Typography variant="caption" color="text.secondary">
+                        Solo se puede agregar firma digital en formato de imagen
+                    </Typography>
+                </Box>
             </Box>
 
             <Box
