@@ -159,6 +159,11 @@ const ResultsRelease = () => {
                 color: "success",
                 icon: <CheckCircle sx={{ fontSize: 16 }} />,
             },
+            COMPLETADO_Y_ENTREGADO: {
+                label: "COMPLETADO Y ENTREGADO",
+                color: "success",
+                icon: <CheckCircle sx={{ fontSize: 16 }} />,
+            },
             Vencida: {
                 label: "Vencida",
                 color: "error",

@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../../../../service/axiosService";
 import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../../../../../components/SimpleBackDrop";
+import { formatDateTime } from "../../../../../Utils/DateUtils";
 
 const SamplesDelivered = () => {
     const [data, setData] = useState([]);
@@ -148,7 +149,9 @@ const SamplesDelivered = () => {
                                             <Typography
                                                 sx={{ opacity: "0.80" }}
                                             >
-                                                {sample.deliveryDate}
+                                                {formatDateTime(
+                                                    sample.deliveryDate
+                                                )}
                                             </Typography>
                                         </TableCell>
                                         <TableCell>

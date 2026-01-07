@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import api from "../../../../../service/axiosService";
 import SimpleBackdrop from "../../../../../components/SimpleBackDrop";
-import MessageSamplesSelectedExecution from "../MessageSamplesSelectedExecution";
+import MessageSamplesSelectedExecution from "./MessageSamplesSelectedExecution";
 
 // THIS COMPONENT SHOW THE SAMPLES SELECTED IN RESULT EXECUTION TO EXECUTE
 
@@ -19,11 +19,11 @@ const SamplesSelectedInResultExecution = ({
     samplesSelected = [],
     cleanData,
     onClose,
+    fetchPdf,
+    openModalMessage,
 }) => {
     const [isLoanding, setIsLoanding] = useState(false);
-
     const [samples, setSamples] = useState([]);
-
     const theme = useTheme();
 
     const removeSampleToExecute = (id) => {
@@ -135,7 +135,7 @@ const SamplesSelectedInResultExecution = ({
                     width: "100%",
                     display: "flex",
 
-                    mt: "40px",
+                    mt: "20px",
                 }}
             >
                 <MessageSamplesSelectedExecution
@@ -143,6 +143,7 @@ const SamplesSelectedInResultExecution = ({
                     onClose={() => onClose()}
                     cleanData={() => cleanData()}
                     isAllSamplesAlReady={checkIfAllSamplesAreReady()}
+                    openModalMessage={() => openModalMessage()}
                 />
                 <Box
                     sx={{
@@ -352,6 +353,17 @@ const SamplesSelectedInResultExecution = ({
                                     >
                                         <Button fullWidth>
                                             Ver resultados
+                                        </Button>
+                                    </Tooltip>
+
+                                    <Tooltip>
+                                        <Button
+                                            onClick={() =>
+                                                fetchPdf(sample.sampleId)
+                                            }
+                                        >
+                                            Generar vista previa de documento
+                                            final
                                         </Button>
                                     </Tooltip>
                                 </Box>

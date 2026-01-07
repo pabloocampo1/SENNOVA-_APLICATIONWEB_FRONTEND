@@ -4,7 +4,6 @@ import {
     Button,
     Checkbox,
     Drawer,
-    FormControlLabel,
     MenuItem,
     Snackbar,
     Table,
@@ -32,6 +31,11 @@ import InfoSamplesResultExecution from "../InfoSamplesResultExecution";
 import SamplesSelectedInResultExecution from "./SamplesSelectedInResultExecution";
 import SamplesExpired from "./SamplesExpired";
 import PreviuwReleaseResultModalCompo from "./PreviuwReleaseResultModalCompo";
+import {
+    getPriority,
+    styleBackgroundColorByRestDays,
+} from "../../../../../Utils/ResultExecutionSamplesAvailableUtils";
+import ModalMessageSendSamples from "./ModalMessageSendSamples";
 
 const getLenght = (analisys = []) => {
     return analisys.length;
@@ -63,6 +67,12 @@ const ResultExecutionSamplesAvailable = () => {
         text: "",
     });
 
+    const [isSendTheSamples, setIsSendTheSamples] = useState(false);
+
+    const openModalMessage = () => {
+        setIsSendTheSamples(true);
+    };
+
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
@@ -76,22 +86,19 @@ const ResultExecutionSamplesAvailable = () => {
             text: "Generando documento final",
         });
         try {
-            const responsibleReleaseResultDto = {
-                name: "Juan Pablo Ocampo Leon",
-                role: "desarrollador de software",
+            const infoResponsiblePersonReleaseResult = {
+                name: "Sin especificar - vista previa",
+                role: "Sin especificar - vista previa",
                 signature: null,
             };
-
             const response = await api.post(
                 `/testRequest/pdf/preview/${sampleId}`,
-                responsibleReleaseResultDto,
+                infoResponsiblePersonReleaseResult,
                 {
                     responseType: "blob",
                 }
             );
             if (response.status == 200) {
-                console.log(response);
-
                 const file = new Blob([response.data], {
                     type: "application/pdf",
                 });
@@ -122,7 +129,7 @@ const ResultExecutionSamplesAvailable = () => {
         });
 
         try {
-            const res = await api.get("/sample/get-all-status-process");
+            const res = await api.get("/sample/pending-delivery");
             setData(res.data);
 
             setOriginalData(res.data);
@@ -155,112 +162,8 @@ const ResultExecutionSamplesAvailable = () => {
         }
     };
 
-    const styleBackgroundColorByRestDays = (dueDate) => {
-        const days = getDays(dueDate);
-
-        if (days >= 1 && days <= 5) {
-            return " #E53935";
-        } else if (days >= 6 && days <= 10) {
-            return " #FB8C00";
-        } else if (days >= 11 && days <= 15) {
-            return "#1E88E5";
-        } else {
-            return "ya se acabo manito";
-        }
-    };
-
     const countAnalysisCompleteBySample = (analysis = []) => {
         return analysis.reduce((c, a) => c + a.stateResult, 0);
-    };
-
-    const getPriority = (dueDate) => {
-        const days = getDays(dueDate);
-
-        if (days >= 1 && days <= 5) {
-            return (
-                <Box
-                    sx={{
-                        color: "white",
-                        p: "10px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        borderRadius: "20px",
-                        bgcolor: "#E53935",
-                    }}
-                >
-                    Prioridad Alta
-                </Box>
-            );
-        } else if (days >= 6 && days <= 10) {
-            return (
-                <Box
-                    sx={{
-                        color: "white",
-                        p: "10px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        borderRadius: "20px",
-                        bgcolor: "#FB8C00",
-                    }}
-                >
-                    Pri. Intermedia
-                </Box>
-            );
-        } else if (days >= 11 && days <= 15) {
-            return (
-                <Box
-                    sx={{
-                        color: "white",
-                        p: "10px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        borderRadius: "20px",
-                        bgcolor: "#1E88E5",
-                    }}
-                >
-                    Prioridad baja
-                </Box>
-            );
-        } else if (days === 0) {
-            return (
-                <Box
-                    sx={{
-                        color: "white",
-                        p: "10px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        borderRadius: "20px",
-                        bgcolor: "#8E24AA",
-                    }}
-                >
-                    Para hoy
-                </Box>
-            );
-        } else {
-            return (
-                <Box
-                    sx={{
-                        color: "#E53935",
-                        p: "10px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        borderRadius: "20px",
-                    }}
-                >
-                    Fecha vencida
-                </Box>
-            );
-        }
     };
 
     const handleFilterPriorityList = (key) => {
@@ -365,6 +268,17 @@ const ResultExecutionSamplesAvailable = () => {
                 }
                 open={openModalPreviuwReleaseResult}
                 onClose={() => setOpenModalPreviuwReleaseResult(false)}
+            />
+
+            {/* This modal displays a message when the user selects samples and executes them for final report generation and delivery. */}
+            <GenericModal
+                compo={
+                    <ModalMessageSendSamples
+                        onClose={() => setIsSendTheSamples(false)}
+                    />
+                }
+                open={isSendTheSamples}
+                onClose={() => setIsSendTheSamples(false)}
             />
 
             {responseAlert.status && (
@@ -693,6 +607,8 @@ const ResultExecutionSamplesAvailable = () => {
                     samplesSelected={dataSelected}
                     onClose={toggleDrawerShowSamplesSelected(false)}
                     cleanData={() => setDataSelected([])}
+                    fetchPdf={(sampleId) => fetchPdf(sampleId)}
+                    openModalMessage={() => openModalMessage()}
                 />
             </Drawer>
         </Box>
