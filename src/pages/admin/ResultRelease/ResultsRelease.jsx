@@ -155,12 +155,12 @@ const ResultsRelease = () => {
                 icon: <AccessTime sx={{ fontSize: 16 }} />,
             },
             Terminada: {
-                label: "Completado",
+                label: "Terminada (pendiente envío)",
                 color: "success",
                 icon: <CheckCircle sx={{ fontSize: 16 }} />,
             },
-            COMPLETADO_Y_ENTREGADO: {
-                label: "COMPLETADO Y ENTREGADO",
+            "COMPLETADO Y ENTREGADO": {
+                label: "ENTREGADO",
                 color: "success",
                 icon: <CheckCircle sx={{ fontSize: 16 }} />,
             },
@@ -170,7 +170,7 @@ const ResultsRelease = () => {
                 icon: <InfoOutline sx={{ fontSize: 16 }} />,
             },
             "Espera de recepción": {
-                label: "Pendiente",
+                label: "Pendiente, Espera de recepción",
                 color: "warning",
                 icon: <Biotech sx={{ fontSize: 16 }} />,
             },
@@ -313,13 +313,40 @@ const ResultsRelease = () => {
                         <Box
                             key={index}
                             sx={{
+                                position: "relative",
                                 bgcolor: "background.paper",
                                 border: `1px solid ${theme.palette.border.primary}`,
                                 minHeight: "450px",
                                 p: "20px",
                                 borderRadius: "15px",
+                                opacity:
+                                    test.deliveryStatus ===
+                                    "COMPLETADO Y ENTREGADO"
+                                        ? 0.55
+                                        : 1,
+                                transition: "opacity 0.3s ease",
+                                borderLeft:
+                                    test.deliveryStatus ===
+                                    "COMPLETADO Y ENTREGADO"
+                                        ? `5px solid ${theme.palette.success.main}`
+                                        : `1px solid ${theme.palette.border.primary}`,
                             }}
                         >
+                            {test.deliveryStatus ===
+                                "COMPLETADO Y ENTREGADO" && (
+                                <Chip
+                                    icon={<CheckCircle />}
+                                    label="ENTREGADO"
+                                    color="success"
+                                    size="small"
+                                    sx={{
+                                        position: "absolute",
+                                        top: 16,
+                                        right: 16,
+                                        fontWeight: "bold",
+                                    }}
+                                />
+                            )}
                             <Typography
                                 sx={{
                                     fontWeight: "bold",
@@ -340,12 +367,23 @@ const ResultsRelease = () => {
                                 <Chip
                                     sx={{
                                         mt: "10px",
-                                        maxWidth: "150px",
+                                        minWidth: "150px",
                                     }}
                                     icon={configStatus.icon}
                                     color={configStatus.color}
                                     label={configStatus.label}
                                 />
+
+                                {test.deliveryStatus ===
+                                    "COMPLETADO Y ENTREGADO" && (
+                                    <Chip
+                                        size="small"
+                                        variant="outlined"
+                                        color="success"
+                                        label="Ensayo finalizado"
+                                        sx={{ mt: 1, opacity: 0.8 }}
+                                    />
+                                )}
 
                                 <Chip
                                     sx={{
@@ -410,7 +448,7 @@ const ResultsRelease = () => {
                                         variant="body2"
                                         sx={{ color: "text.secondary" }}
                                     >
-                                        Fecha de entrega:{" "}
+                                        Fecha fin del ensayo:{" "}
                                         {test.dueDate == null
                                             ? "Sin fecha"
                                             : formattDate(test.dueDate)}

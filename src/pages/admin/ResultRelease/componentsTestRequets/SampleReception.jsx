@@ -1,34 +1,24 @@
 import {
     Box,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
+    Card,
+    CardContent,
+    Divider,
     Typography,
+    Grid,
+    Chip,
     useTheme,
 } from "@mui/material";
-import React from "react";
-import notImage from "../../../../assets/images/notImageAvailable.jpg";
-
-/*
-COMPONENT : INFORMATION OF RECEPCION OF THE ONE SAMPLE
-
-this component only show reception information
-*/
+import ImageNotSupportedOutlined from "@mui/icons-material/ImageNotSupportedOutlined";
 
 const SampleReception = ({ data }) => {
     const theme = useTheme();
 
     const EMPTY_MESSAGE = "Campo vacío";
-
     const checkValue = (value) => (value ? value : EMPTY_MESSAGE);
 
     if (!data) {
         return (
-            <Box sx={{ p: "20px", textAlign: "center" }}>
+            <Box sx={{ p: 4, textAlign: "center" }}>
                 <Typography variant="h6" color="error">
                     No se han cargado los datos de recepción.
                 </Typography>
@@ -37,217 +27,155 @@ const SampleReception = ({ data }) => {
     }
 
     return (
-        <Box
+        <Card
             sx={{
-                mt: "20px",
+                mt: 4,
+                maxWidth: 1000,
+                mx: "auto",
+                borderRadius: "20px",
+                border: `1px solid ${theme.palette.border.primary}`,
             }}
         >
-            <Box
-                sx={{
-                    mt: "40px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "column",
-                }}
-            >
-                <Typography variant="body1" sx={{ color: "primary.main" }}>
-                    Informacion de recepcion de la muestra
-                </Typography>
-                <Typography variant="body2">{data.matrix}</Typography>
-            </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                }}
-            >
-                <TableContainer
-                    component={Paper}
-                    sx={{
-                        maxWidth: 900,
-                        margin: "20px auto",
-                        border: `1px solid ${theme.palette.border.primary}`,
-                        borderRadius: "20px",
-                    }}
-                >
-                    <Table aria-label="explanatory notes table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                        width: 60,
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    #
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Description
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
+            <CardContent>
+                {/* HEADER */}
+                <Box sx={{ mb: 3 }}>
+                    <Typography
+                        variant="h2"
+                        sx={{ fontSize: "1.4rem", mb: 0.5 }}
+                    >
+                        Recepción de la muestra
+                    </Typography>
+                    <Chip
+                        label={data.matrix}
+                        color="primary"
+                        size="small"
+                        sx={{ fontWeight: "bold" }}
+                    />
+                </Box>
 
-                        <TableBody>
-                            <TableRow
-                                sx={{
-                                    bgcolor: "background.default",
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
+                <Divider sx={{ mb: 3 }} />
+
+                {/* INFO GRID */}
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                        <InfoItem
+                            label="Identificación de la muestra"
+                            value={checkValue(data.identificationSample)}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <InfoItem
+                            label="Fecha de ingreso"
+                            value={checkValue(data.sampleEntryDate)}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <InfoItem
+                            label="Fecha de recepción"
+                            value={checkValue(data.sampleReceptionDate)}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <InfoItem
+                            label="Peso bruto"
+                            value={
+                                data.gross_weight
+                                    ? `${data.gross_weight} g`
+                                    : EMPTY_MESSAGE
+                            }
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <InfoItem
+                            label="Condición de almacenamiento"
+                            value={checkValue(data.storageConditions)}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <InfoItem
+                            label="Descripción del empaque"
+                            value={checkValue(data.packageDescription)}
+                        />
+                    </Grid>
+
+                    {/* IMAGE */}
+                    <Grid item xs={12}>
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ mb: 1, display: "block" }}
+                        >
+                            Imagen de la muestra
+                        </Typography>
+
+                        <Box
+                            sx={{
+                                mt: 1,
+                                borderRadius: "12px",
+                                overflow: "hidden",
+                                border: `1px dashed ${theme.palette.border.primary}`,
+                                display: "flex",
+                                justifyContent: "center",
+                                p: 2,
+                            }}
+                        >
+                            {data.sampleImage ? (
+                                <img
+                                    src={data.sampleImage}
+                                    alt="sample"
+                                    style={{
+                                        maxWidth: "100%",
+                                        maxHeight: 280,
+                                        borderRadius: 12,
+                                    }}
+                                />
+                            ) : (
+                                <Box
                                     sx={{
-                                        verticalAlign: "top",
-                                        fontWeight: "bold",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        opacity: 0.6,
                                     }}
                                 >
-                                    Identificacion de la muestra
-                                </TableCell>
-                                <TableCell sx={{ whiteSpace: "normal" }}>
-                                    {checkValue(data.identificationSample)}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                sx={{
-                                    bgcolor: "background.paper",
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                    sx={{
-                                        verticalAlign: "top",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Fecha de ingreso muestra
-                                </TableCell>
-                                <TableCell sx={{ whiteSpace: "normal" }}>
-                                    {checkValue(data.sampleEntryDate)}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                sx={{
-                                    bgcolor: "background.default",
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                    sx={{
-                                        verticalAlign: "top",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Fecha de recepción
-                                </TableCell>
-                                <TableCell sx={{ whiteSpace: "normal" }}>
-                                    {checkValue(data.sampleReceptionDate)}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                sx={{
-                                    bgcolor: "background.paper",
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                    sx={{
-                                        verticalAlign: "top",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Peso bruto
-                                </TableCell>
-                                <TableCell sx={{ whiteSpace: "normal" }}>
-                                    {checkValue(data.gross_weight)} {"(g)"}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                sx={{
-                                    bgcolor: "background.default",
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                    sx={{
-                                        verticalAlign: "top",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Condicion de almacenamiento
-                                </TableCell>
-                                <TableCell sx={{ whiteSpace: "normal" }}>
-                                    {checkValue(data.storageConditions)}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                sx={{
-                                    bgcolor: "background.paper",
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                    sx={{
-                                        verticalAlign: "top",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Des. empaque
-                                </TableCell>
-                                <TableCell sx={{ whiteSpace: "normal" }}>
-                                    {checkValue(data.packageDescription)}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                sx={{
-                                    bgcolor: "background.default",
-                                }}
-                            >
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                    sx={{
-                                        verticalAlign: "top",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Imagen
-                                </TableCell>
-                                <TableCell sx={{ whiteSpace: "normal" }}>
-                                    <img
-                                        src={
-                                            data.sampleImage
-                                                ? data.sampleImage
-                                                : notImage
-                                        }
-                                        alt="imageSampleReception"
-                                        width={"200px"}
-                                    />
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-        </Box>
+                                    <ImageNotSupportedOutlined />
+                                    <Typography variant="body2">
+                                        Sin imagen
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    </Grid>
+                </Grid>
+            </CardContent>
+        </Card>
     );
 };
+
+const InfoItem = ({ label, value }) => (
+    <Box>
+        <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "block", mb: 0.5 }}
+        >
+            {label}
+        </Typography>
+        <Typography
+            variant="body1"
+            sx={{
+                fontWeight: value === "Campo vacío" ? 400 : 500,
+                opacity: value === "Campo vacío" ? 0.6 : 1,
+            }}
+        >
+            {value}
+        </Typography>
+    </Box>
+);
 
 export default SampleReception;

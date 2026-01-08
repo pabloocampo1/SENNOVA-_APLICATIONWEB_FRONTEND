@@ -38,10 +38,12 @@ import GenericModal from "../../../components/modals/GenericModal";
 import ModalToDeleteTestRequest from "../quotes/quotesCompo/ModalToDeleteTestRequest";
 import TestRequestNotFound from "./componentsTestRequets/TestRequestNotFound";
 
-import InfoSummaryTestRequest from "./componentsTestRequets/InfoSummaryTestRequest";
+import InfoSummaryTestRequest from "./componentsTestRequets/InfoOverviewTestRequest";
 import { useAuth } from "../../../context/AuthContext";
 import SamplesSelectedInResultExecution from "./componentsTestRequets/ResultExecution/SamplesSelectedInResultExecution";
 import ModalFinishTestReQuest from "./componentsTestRequets/ResultExecution/ModalFinishTestReQuest";
+import InfoOverviewTestRequest from "./componentsTestRequets/InfoOverviewTestRequest";
+import HistoryReportDeliveredSampleCompo from "./componentsTestRequets/HistoryReportDeliveredSampleCompo";
 
 /*
     PAGE WITH ALL THE INFORMATION ABOUT A TEST REQUEST
@@ -494,30 +496,23 @@ const TestRequestInfo = () => {
             />
 
             <Box sx={{ display: "flex", gap: "20px", mb: "30px", mt: "20px" }}>
-                <InfoSummaryTestRequest
+                <InfoOverviewTestRequest
                     testRequest={testRequest}
                     getToTalAnalysis={() => getToTalAnalysis()}
                     iconByStatus={(param) => iconByStatus(param)}
-                    getTotalSamplesFinished={() => getTotalSamplesFinished()}
+                    compo={
+                        <MembersOfTestRequest
+                            toggleDrawer={toggleDrawer}
+                            team={team}
+                            removeMember={(userId) => removeMember(userId)}
+                        />
+                    }
                 />
             </Box>
 
-            {/* USER ASSIGNED */}
-
-            <Divider sx={{ mt: "30px", mb: "20px" }} />
-            <Box
-                sx={{
-                    display: "flex",
-                }}
-            >
-                <Box>
-                    <MembersOfTestRequest
-                        toggleDrawer={toggleDrawer}
-                        team={team}
-                        removeMember={(userId) => removeMember(userId)}
-                    />
-                </Box>
-            </Box>
+            <HistoryReportDeliveredSampleCompo
+                requestCode={testRequest.requestCode}
+            />
 
             {/* ASSIGN MEMBER MODAl*/}
 

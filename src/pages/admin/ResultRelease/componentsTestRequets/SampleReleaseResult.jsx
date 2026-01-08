@@ -15,7 +15,7 @@ import SampleAnalysisResultCard from "./SampleAnalysisResultCard";
     It also provides a form to submit the results.
 */
 
-const SampleInfo = () => {
+const SampleReleaseResult = () => {
     const { sampleId, requestCode } = useParams();
     const [isLoanding, setIsLoanding] = useState(false);
     const [sampleData, setSampleData] = useState({});
@@ -125,7 +125,7 @@ const SampleInfo = () => {
                 </Box>
             </Box>
 
-            {/* SAMPLES */}
+            {/* SAMPLES reception*/}
             <SampleReception data={sampleReceptionDto} />
 
             <Typography
@@ -163,4 +163,4 @@ const SampleInfo = () => {
     );
 };
 
-export default SampleInfo;
+export default SampleReleaseResult;

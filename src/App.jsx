@@ -15,7 +15,6 @@ import SettingPage from "./pages/admin/SettingPage";
 import ProfilePage from "./pages/admin/ProfilePage";
 import QuotesPage from "./pages/admin/quotes/QuotesPage";
 import ResultsRelease from "./pages/admin/ResultRelease/ResultsRelease";
-
 import EquipmentInfo from "./pages/admin/inventoryEquipment/EquipmentInfo";
 import SelectOptionToCheckInventoryPage from "./pages/admin/inventoryEquipment/SelectOptionToCheckInventoryPage";
 import SearchOptionCheckInv from "./pages/admin/inventoryEquipment/SearchOptionCheckInv";
@@ -26,10 +25,10 @@ import ReportEquipments from "./pages/admin/inventoryEquipment/ReportEquipments"
 import PublicLayout from "./layouts/PublicLayout";
 import QuotationCustomer from "./pages/public/QuotationCustomer";
 import TestRequestInfo from "./pages/admin/ResultRelease/TestRequestInfo";
-import SampleInfo from "./pages/admin/ResultRelease/componentsTestRequets/SampleInfo";
 import SampleReceptionPage from "./pages/admin/ResultRelease/componentsTestRequets/SampleReceptionPage";
 import ResultExecution from "./pages/admin/ResultRelease/ResultExecution";
 import ProductsCompo from "./pages/admin/ProductsPage";
+import SampleReleaseResult from "./pages/admin/ResultRelease/componentsTestRequets/SampleReleaseResult";
 
 function App() {
     return (
@@ -133,7 +132,7 @@ function App() {
                                         />
                                         <Route
                                             path="result/test-request/:requestCode/:sampleId"
-                                            element={<SampleInfo />}
+                                            element={<SampleReleaseResult />}
                                         />
                                         <Route
                                             path="result/test-request/:testRequestId/recepcion-muestras"

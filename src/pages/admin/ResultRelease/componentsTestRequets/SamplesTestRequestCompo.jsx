@@ -1,4 +1,5 @@
-import { Box, Tooltip, Typography } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
+import { Box, Chip, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +14,8 @@ const SamplesTestRequestCompo = ({
         const total = list.reduce((acc, a) => acc + (a.stateResult ? 1 : 0), 0);
         return total;
     };
+
+    console.log(samples);
 
     return (
         <Box
@@ -45,6 +48,7 @@ const SamplesTestRequestCompo = ({
                         <Box
                             key={index}
                             sx={{
+                                position: "relative",
                                 width: "350px",
                                 height: "150px",
                                 display: "flex",
@@ -58,7 +62,7 @@ const SamplesTestRequestCompo = ({
                                         ? "5px solid #FFA500"
                                         : "5px solid #1E90FF",
                                 borderRadius: "10px",
-                                p: "10px 20px",
+                                p: "5px 10px",
                                 ":hover": {
                                     transform: "scale(1.03)",
                                     boxShadow: 5,
@@ -70,6 +74,32 @@ const SamplesTestRequestCompo = ({
                                 )
                             }
                         >
+                            {sample.isDelivered ? (
+                                <Chip
+                                    icon={<CheckCircle />}
+                                    label="ENTREGADO"
+                                    color="success"
+                                    size="small"
+                                    sx={{
+                                        position: "absolute",
+                                        top: 16,
+                                        right: 16,
+                                        fontWeight: "bold",
+                                    }}
+                                />
+                            ) : (
+                                <Chip
+                                    icon={<CheckCircle />}
+                                    label="SIN ENTREGAR"
+                                    size="small"
+                                    sx={{
+                                        position: "absolute",
+                                        top: 16,
+                                        right: 16,
+                                        fontWeight: "bold",
+                                    }}
+                                />
+                            )}
                             <Box
                                 sx={{
                                     display: "flex",
@@ -88,7 +118,7 @@ const SamplesTestRequestCompo = ({
                                         borderRadius: "20px",
                                         mt: "10px",
                                         color: sample.statusReception
-                                            ? "primary.main"
+                                            ? "text.secondary"
                                             : "red",
                                     }}
                                 >

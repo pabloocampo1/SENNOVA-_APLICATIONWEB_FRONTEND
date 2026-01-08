@@ -1,9 +1,14 @@
+import { CloseOutlined, PersonAddAlt1Outlined } from "@mui/icons-material";
 import {
-    CloseOutlined,
-    PersonAddAlt1Outlined,
-    RemoveCircle,
-} from "@mui/icons-material";
-import { Avatar, Box, Tooltip, Typography, useTheme } from "@mui/material";
+    Avatar,
+    Box,
+    Card,
+    CardContent,
+    IconButton,
+    Tooltip,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import React from "react";
 
 const UserUIMiniCard = ({
@@ -15,45 +20,69 @@ const UserUIMiniCard = ({
     const theme = useTheme();
 
     return (
-        <Box
+        <Card
             sx={{
-                width: "250px",
-                bgcolor: "background.default",
-                borderRadius: "20px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                height: "100%",
+                borderRadius: "16px",
                 border: `1px solid ${theme.palette.border.primary}`,
-                p: "20px",
-                ":hover": {
-                    bgcolor: `${theme.palette.primary.main + 10} `,
-                    border: `1px solid ${theme.palette.primary.main} `,
+                transition: "all 0.2s ease",
+                "&:hover": {
+                    borderColor: theme.palette.primary.main,
+                    boxShadow: theme.shadows[3],
                 },
             }}
         >
-            <Avatar src={user.imageProfile} />
-            <Typography variant="body2" sx={{ m: "10px" }}>
-                {user.name}
-            </Typography>
+            <CardContent
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 1,
+                }}
+            >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Avatar
+                        src={user.imageProfile}
+                        alt={user.name}
+                        sx={{ width: 40, height: 40 }}
+                    />
+                </Box>
 
-            {isToAdd ? (
-                <>
-                    <Tooltip title="Agregarlo al ensayo">
-                        <PersonAddAlt1Outlined
+                <Typography
+                    variant="caption"
+                    sx={{
+                        fontWeight: 500,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: 80,
+                        color: "text.secondary",
+                    }}
+                >
+                    {user.name}
+                </Typography>
+
+                {isToAdd ? (
+                    <Tooltip title="Agregar al ensayo">
+                        <IconButton
+                            color="primary"
                             onClick={() => addMember(user.userId)}
-                        />
+                        >
+                            <PersonAddAlt1Outlined />
+                        </IconButton>
                     </Tooltip>
-                </>
-            ) : (
-                <>
-                    <Tooltip title="Sacarlo del ensayo">
-                        <CloseOutlined
+                ) : (
+                    <Tooltip title="Eliminar del ensayo">
+                        <IconButton
+                            color="error"
                             onClick={() => onDeleteMember(user.userId)}
-                        />
+                        >
+                            <CloseOutlined />
+                        </IconButton>
                     </Tooltip>
-                </>
-            )}
-        </Box>
+                )}
+            </CardContent>
+        </Card>
     );
 };
 

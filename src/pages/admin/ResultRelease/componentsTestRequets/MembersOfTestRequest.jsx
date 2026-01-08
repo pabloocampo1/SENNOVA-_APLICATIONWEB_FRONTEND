@@ -1,103 +1,113 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    Divider,
+    Grid,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import React from "react";
 import UserUIMiniCard from "../../CustomerAndUsers/UserUIMiniCard";
 import { Groups2Outlined, PersonAdd } from "@mui/icons-material";
 
 const MembersOfTestRequest = ({ toggleDrawer, team = [], removeMember }) => {
-    return (
-        <Box
-            sx={{
-                mb: "100px",
+    const theme = useTheme();
 
-                p: "20px",
+    return (
+        <Card
+            sx={{
+                mb: 8,
+                borderRadius: "20px",
+                border: `1px solid ${theme.palette.border.primary}`,
             }}
         >
-            <Box
-                sx={{
-                    pb: "20px",
-                }}
-            >
-                <Typography
-                    variant={"h3"}
-                    component={"h3"}
+            <CardContent>
+                <Box
                     sx={{
                         display: "flex",
+                        justifyContent: "space-between",
                         alignItems: "center",
+                        mb: 2,
                     }}
                 >
-                    {" "}
-                    <Groups2Outlined sx={{ mr: "10px" }} /> Equipo asignado
-                </Typography>
-                <Typography variant="body2">
-                    Total de usuarios en este ensayo:{" "}
-                    <strong>{team.length}</strong> miembros
-                </Typography>
-            </Box>
-
-            <Box>
-                {team.length < 1 ? (
-                    <Box
-                        sx={{
-                            width: "100%",
-                            height: "100%",
-                            display: "flex",
-
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Groups2Outlined sx={{ mr: 1 }} />
                         <Typography
-                            sx={{
-                                mt: "20px",
-                                mb: "20px",
-                            }}
+                            variant="h3"
+                            sx={{ color: "text.secondary" }}
                         >
-                            No hay integrantes para este ensayo
+                            Equipo asignado
                         </Typography>
-
-                        <Button
-                            variant="outlined"
-                            startIcon={<PersonAdd />}
-                            onClick={toggleDrawer(true)}
-                        >
-                            Agregar integrante
-                        </Button>
                     </Box>
-                ) : (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: "15px",
-                        }}
-                    >
-                        {team.map((user) => {
-                            return (
-                                <UserUIMiniCard
-                                    user={user}
-                                    onDeleteMember={(userId) =>
-                                        removeMember(userId)
-                                    }
-                                />
-                            );
-                        })}
 
-                        <Button
-                            variant="outlined"
-                            startIcon={<PersonAdd />}
-                            onClick={toggleDrawer(true)}
+                    <Chip
+                        label={`${team.length} miembros`}
+                        color="primary"
+                        size="small"
+                    />
+                </Box>
+
+                <Divider sx={{ mb: 3 }} />
+
+                {team.length === 0 ? (
+                    <EmptyTeamState onAdd={toggleDrawer(true)} />
+                ) : (
+                    <>
+                        <Grid container spacing={2}>
+                            {team.map((user) => (
+                                <Grid item xs={12} sm={6} md={4} key={user.id}>
+                                    <UserUIMiniCard
+                                        user={user}
+                                        onDeleteMember={(userId) =>
+                                            removeMember(userId)
+                                        }
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+
+                        <Box
                             sx={{
-                                borderRadius: "20px",
+                                mt: 3,
+                                display: "flex",
+                                justifyContent: "center",
                             }}
                         >
-                            Agregar un miembro
-                        </Button>
-                    </Box>
+                            <Button
+                                variant="outlined"
+                                startIcon={<PersonAdd />}
+                                onClick={toggleDrawer(true)}
+                                sx={{ borderRadius: "20px" }}
+                            >
+                                Agregar miembro
+                            </Button>
+                        </Box>
+                    </>
                 )}
-            </Box>
-        </Box>
+            </CardContent>
+        </Card>
     );
 };
+
+const EmptyTeamState = ({ onAdd }) => (
+    <Box
+        sx={{
+            textAlign: "center",
+            py: 6,
+            opacity: 0.85,
+        }}
+    >
+        <Typography variant="body1" sx={{ mb: 2 }}>
+            No hay integrantes asignados a este ensayo
+        </Typography>
+
+        <Button variant="contained" startIcon={<PersonAdd />} onClick={onAdd}>
+            Agregar primer integrante
+        </Button>
+    </Box>
+);
 
 export default MembersOfTestRequest;
