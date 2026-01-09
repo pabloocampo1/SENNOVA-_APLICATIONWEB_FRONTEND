@@ -8,12 +8,13 @@ export default function SimpleBackdrop({ open, text = "Cargando" }) {
     return (
         <div>
             <Backdrop
-                sx={(theme) => ({
+                sx={{
                     color: "#fff",
-                    zIndex: theme.zIndex.drawer + 1,
+                    zIndex: 1000,
                     display: "flex",
+                    position: "absolute",
                     flexDirection: "column",
-                })}
+                }}
                 open={open}
             >
                 <CircularProgress color="inherit" sx={{ mb: "20px" }} />

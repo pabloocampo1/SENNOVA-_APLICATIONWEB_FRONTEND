@@ -1,4 +1,4 @@
-import { Delete } from "@mui/icons-material";
+import { Delete, FindInPage } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
@@ -19,10 +19,10 @@ const TestRequestNotFound = ({ backTo = "/system/results" }) => {
                 p: 2,
             }}
         >
-            <Delete color="error" sx={{ fontSize: 70 }} />
+            <FindInPage color="error" sx={{ fontSize: 70 }} />
 
             <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                Este ensayo ha sido eliminado o no existe
+                No se encontro el ensayo
             </Typography>
 
             <Typography
@@ -30,7 +30,8 @@ const TestRequestNotFound = ({ backTo = "/system/results" }) => {
                 color="text.secondary"
                 sx={{ maxWidth: 500 }}
             >
-                El ensayo que intentas ver ya no existe o fue eliminado.
+                El ensayo que intentas ver ya no existe, fue eliminado o hubo un
+                error en el servidor.
             </Typography>
 
             <Button

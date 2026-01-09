@@ -33,17 +33,24 @@ const ModalFinishTestReQuest = ({
     customerName,
     customerEmail,
 }) => {
-    console.log(samples);
     const [files, setFiles] = useState([]);
     const [isLoandingState, setIsLoandingState] = useState({
         state: false,
         text: "",
     });
-    const [addSignatures, setAddSignatures] = useState(false);
+    const [previewSignature, setPreviewSignature] = useState(null);
+
     const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
     const { authObject } = useContext(AuthContext);
-    const [responsibleTestRequestResult, setResponsibleTestRequestResult] =
-        useState(authObject.name);
+    const [notes, setNotes] = useState("");
+    const [
+        infoResponsiblePersonReleaseResult,
+        setInfoResponsiblePersonReleaseResult,
+    ] = useState({
+        name: authObject.name,
+        role: authObject.position,
+        signature: null,
+    });
 
     const [error, setError] = useState(false);
 
@@ -64,6 +71,50 @@ const ModalFinishTestReQuest = ({
         } catch (error) {
             setError(true);
             console.error("Error al obtener PDF:", error);
+        } finally {
+            setIsLoandingState({
+                state: false,
+                text: "",
+            });
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        setIsLoandingState({
+            state: true,
+            text: "Estamos generando tu informe final. Esto puede tardar unos segundos, gracias por tu paciencia.",
+        });
+        e.preventDefault();
+        if (infoResponsiblePersonReleaseResult.signature == null) {
+            alert(
+                "Debes agregar una firma difital para continuar con el proceso de finalizacion."
+            );
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("requestCode", requestCode);
+        formData.append("notes", notes);
+        files.forEach((f) => formData.append("documents", f));
+        formData.append(
+            "responsibleName",
+            infoResponsiblePersonReleaseResult.name
+        );
+        formData.append(
+            "signature",
+            infoResponsiblePersonReleaseResult.signature
+        );
+        formData.append("role", infoResponsiblePersonReleaseResult.role);
+
+        try {
+            const res = await api.post(
+                "/testRequest/finish-test-request",
+                formData
+            );
+
+            console.log(res);
+        } catch (error) {
+            console.error(error);
         } finally {
             setIsLoandingState({
                 state: false,
@@ -107,7 +158,7 @@ const ModalFinishTestReQuest = ({
         <Box
             sx={{
                 width: "900px",
-                height: "auto",
+                position: "relative",
                 p: "0px 40px",
             }}
         >
@@ -222,9 +273,13 @@ const ModalFinishTestReQuest = ({
                 <TextField
                     multiline
                     rows={3}
+                    value={notes || ""}
+                    onChange={(e) => setNotes(e.target.value)}
                     fullWidth
                     label="Notas adicionales"
                     placeholder="Escribe aquí cualquier observación relevante sobre el resultado final"
+                    inputProps={{ maxLength: 300 }}
+                    helperText={`${notes?.length || 0}/300 caracteres`}
                 />
 
                 <Typography
@@ -367,6 +422,7 @@ const ModalFinishTestReQuest = ({
                 </Typography>
                 <Box
                     component="form"
+                    onSubmit={handleSubmit}
                     sx={{
                         display: "flex",
                         flexDirection: "column",
@@ -376,9 +432,27 @@ const ModalFinishTestReQuest = ({
                 >
                     <TextField
                         label="Nombre del responsable de la emisión"
-                        value={responsibleTestRequestResult}
+                        name="name"
+                        required
+                        value={infoResponsiblePersonReleaseResult.name}
                         onChange={(e) =>
-                            setResponsibleTestRequestResult(e.target.value)
+                            setInfoResponsiblePersonReleaseResult({
+                                ...infoResponsiblePersonReleaseResult,
+                                [e.target.name]: e.target.value,
+                            })
+                        }
+                        fullWidth
+                    />
+                    <TextField
+                        label="Cargo del responsable"
+                        name="role"
+                        required
+                        value={infoResponsiblePersonReleaseResult.role || ""}
+                        onChange={(e) =>
+                            setInfoResponsiblePersonReleaseResult({
+                                ...infoResponsiblePersonReleaseResult,
+                                [e.target.name]: e.target.value,
+                            })
                         }
                         fullWidth
                     />
@@ -389,35 +463,82 @@ const ModalFinishTestReQuest = ({
                         sx={{ alignSelf: "flex-start" }}
                     >
                         Subir firma digital
-                        <input type="file" hidden accept="image/*" />
+                        <input
+                            type="file"
+                            name="signature"
+                            hidden
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    setInfoResponsiblePersonReleaseResult(
+                                        (prev) => ({
+                                            ...prev,
+                                            signature: file,
+                                        })
+                                    );
+
+                                    const previewUrl =
+                                        URL.createObjectURL(file);
+                                    setPreviewSignature(previewUrl);
+                                }
+                            }}
+                        />
                     </Button>
                     <Typography variant="caption" color="text.secondary">
                         Solo se puede agregar firma digital en formato de imagen
                     </Typography>
-                </Box>
-            </Box>
+                    {previewSignature && (
+                        <Box
+                            sx={{
+                                mb: 2,
+                                display: "flex",
+                                flexDirection: "column",
+                            }}
+                        >
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                            >
+                                Vista previa de la firma:
+                            </Typography>
+                            <Box
+                                component="img"
+                                src={previewSignature}
+                                alt="Preview firma"
+                                sx={{
+                                    mt: 1,
+                                    width: 50,
+                                    height: "auto",
+                                    border: "1px solid #ccc",
+                                }}
+                            />
+                        </Box>
+                    )}
 
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mb: "50px",
-                }}
-            >
-                {checkIfAllSamplesAreReady() ? (
-                    <Button variant="contained">
-                        Confirmar y enviar resultado final
-                    </Button>
-                ) : (
-                    <Button
-                        variant="contained"
-                        color="info"
-                        startIcon={<BlockOutlined />}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            mb: "50px",
+                        }}
                     >
-                        No se puede emitir resultado hasta que se completen
-                        todos los analisis
-                    </Button>
-                )}
+                        {checkIfAllSamplesAreReady() ? (
+                            <Button variant="contained" type="submit">
+                                Confirmar y enviar resultado final
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                color="info"
+                                startIcon={<BlockOutlined />}
+                            >
+                                No se puede emitir resultado hasta que se
+                                completen todos los analisis
+                            </Button>
+                        )}
+                    </Box>
+                </Box>
             </Box>
         </Box>
     );

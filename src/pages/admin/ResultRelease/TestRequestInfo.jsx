@@ -55,7 +55,10 @@ import HistoryReportDeliveredSampleCompo from "./componentsTestRequets/HistoryRe
 
 const TestRequestInfo = () => {
     const { testRequestId } = useParams();
-    const [isLoanding, setIsLoanding] = useState(true);
+    const [isLoandingState, setIsLoandingState] = useState({
+        state: false,
+        text: "",
+    });
     const [testRequest, setTestRequest] = useState({});
     const theme = useTheme();
     const [team, setTeam] = useState([]);
@@ -66,7 +69,10 @@ const TestRequestInfo = () => {
     const [finishTestRequest, setFinishTestRequest] = useState(false);
 
     const getInformationAboutTestRequest = async () => {
-        setIsLoanding(true);
+        setIsLoandingState({
+            state: true,
+            text: "Cargando datos",
+        });
         try {
             const res = await api.get(
                 `/testRequest/get-by-id/${testRequestId}`
@@ -77,7 +83,10 @@ const TestRequestInfo = () => {
         } catch (error) {
             console.error(error);
         } finally {
-            setIsLoanding(false);
+            setIsLoandingState({
+                state: false,
+                text: "",
+            });
         }
     };
 
@@ -132,14 +141,20 @@ const TestRequestInfo = () => {
     };
 
     const getTheTeam = async () => {
-        setIsLoanding(true);
+        setIsLoandingState({
+            state: true,
+            text: "Cargando datos de equipo",
+        });
         try {
             const res = await api.get(`/testRequest/members/${testRequestId}`);
             setTeam(res.data);
         } catch (error) {
             console.error(error);
         } finally {
-            setIsLoanding(false);
+            setIsLoandingState({
+                state: false,
+                text: "",
+            });
         }
     };
 
@@ -191,7 +206,7 @@ const TestRequestInfo = () => {
         getTheTeam();
     }, []);
 
-    if (isLoanding) {
+    if (isLoandingState.state) {
         return <SimpleBackdrop text="Cargando informacion del ensayo" open />;
     }
 
@@ -212,27 +227,29 @@ const TestRequestInfo = () => {
             }}
         >
             <SimpleBackdrop
-                text="Cargando informacion del ensayo"
-                open={isLoanding}
+                text={isLoandingState.state}
+                open={isLoandingState.text}
             />
 
-            <GenericModal
-                open={openModalToDelete}
-                onClose={() => setOpenModalToDelete(false)}
-                compo={
-                    <ModalToDeleteTestRequest
-                        onClose={() => setOpenModalToDelete(false)}
-                        onCloseDeleted={() => {
-                            setOpenModalToDelete(false);
-                            setTestRequest(null);
-                        }}
-                        requestCode={testRequest.requestCode}
-                        // here put yes becase we need the modal show the option to delete, but this test request was accepted
-                        isAccepted={false}
-                        testRequestId={testRequest.testRequestId}
-                    />
-                }
-            />
+            <Box>
+                <GenericModal
+                    open={openModalToDelete}
+                    onClose={() => setOpenModalToDelete(false)}
+                    compo={
+                        <ModalToDeleteTestRequest
+                            onClose={() => setOpenModalToDelete(false)}
+                            onCloseDeleted={() => {
+                                setOpenModalToDelete(false);
+                                setTestRequest(null);
+                            }}
+                            requestCode={testRequest.requestCode}
+                            // here put yes becase we need the modal show the option to delete, but this test request was accepted
+                            isAccepted={false}
+                            testRequestId={testRequest.testRequestId}
+                        />
+                    }
+                />
+            </Box>
 
             <GenericModal
                 open={finishTestRequest}
@@ -243,6 +260,7 @@ const TestRequestInfo = () => {
                         requestCode={testRequest.requestCode}
                         customerEmail={testRequest.customer.email}
                         customerName={testRequest.customer.customerName}
+                        setIsLoandingState={setFinishTestRequest}
                     />
                 }
             />
