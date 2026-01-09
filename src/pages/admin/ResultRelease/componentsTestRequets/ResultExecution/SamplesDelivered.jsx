@@ -74,7 +74,7 @@ const SamplesDelivered = () => {
                         ensayos
                     </Typography>
                     <Typography sx={{ mt: "20px" }}>
-                        Total de muestras :{" "}
+                        Total de muestras enviadas:{" "}
                         <span style={{ fontWeight: "bold" }}>
                             {totalElements}
                         </span>
@@ -100,8 +100,9 @@ const SamplesDelivered = () => {
                             <TableCell>Matrix</TableCell>
                             <TableCell>Codigo de ensayo</TableCell>
                             <TableCell>Fecha de envio</TableCell>
-                            <TableCell>Cliente</TableCell>
                             <TableCell>Emial cliente</TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -109,11 +110,6 @@ const SamplesDelivered = () => {
                             return (
                                 <Tooltip
                                     title={`Click para ver ensayo de la muestra ${sample.sampleCode} ${sample.matrix}`}
-                                    onClick={() =>
-                                        navigate(
-                                            `/system/result/test-request/${sample.testRequestId}`
-                                        )
-                                    }
                                 >
                                     <TableRow
                                         key={index}
@@ -126,7 +122,15 @@ const SamplesDelivered = () => {
                                     >
                                         <TableCell>
                                             <Typography
-                                                sx={{ fontWeight: "bold" }}
+                                                variant="caption"
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    maxWidth: 290,
+                                                    color: "text.secondary",
+                                                }}
                                             >
                                                 {sample.sampleCode}
                                             </Typography>
@@ -147,19 +151,47 @@ const SamplesDelivered = () => {
                                         </TableCell>
                                         <TableCell>
                                             <Typography
-                                                sx={{ opacity: "0.80" }}
+                                                variant="caption"
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    maxWidth: 290,
+                                                    color: "text.secondary",
+                                                }}
                                             >
                                                 {formatDateTime(
                                                     sample.deliveryDate
                                                 )}
                                             </Typography>
                                         </TableCell>
+
                                         <TableCell>
                                             <Typography
-                                                sx={{ opacity: "0.80" }}
+                                                variant="caption"
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    maxWidth: 290,
+                                                    color: "text.secondary",
+                                                }}
                                             >
-                                                {sample.customerName}
+                                                {sample.customerEmail}
                                             </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/system/result/test-request/${sample.testRequestId}`
+                                                    )
+                                                }
+                                            >
+                                                Ensayo
+                                            </Button>
                                         </TableCell>
                                         <TableCell>
                                             <Typography
@@ -167,7 +199,9 @@ const SamplesDelivered = () => {
                                                     fontWeight: "bold",
                                                 }}
                                             >
-                                                {sample.customerEmail}
+                                                <Button>
+                                                    Detalles de envio
+                                                </Button>
                                             </Typography>
                                         </TableCell>
                                     </TableRow>

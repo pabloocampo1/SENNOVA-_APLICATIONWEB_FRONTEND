@@ -1,55 +1,24 @@
+import React, { useEffect } from "react";
 import { Box, Tab, Tabs, Typography, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import ButtonBack from "../../../components/ButtonBack";
-import { Try } from "@mui/icons-material";
-import api from "../../../service/axiosService";
-import PropTypes from "prop-types";
-import ResultExecutionSamplesAvailable from "./componentsTestRequets/ResultExecution/ResultExecutionSamplesAvailable";
-
-import SamplesDelivered from "./componentsTestRequets/ResultExecution/SamplesDelivered";
-import SamplesWithoutReception from "./componentsTestRequets/ResultExecution/SamplesWithoutReception";
-
-function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-        </div>
-    );
-}
-
-CustomTabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        "aria-controls": `simple-tabpanel-${index}`,
-    };
-}
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 const ResultExecution = () => {
-    const [value, setValue] = useState(0);
     const theme = useTheme();
+    const location = useLocation();
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    // Determinar la pestaña actual según URL
+    const currentTab = location.pathname.includes("delivered")
+        ? 1
+        : location.pathname.includes("without-reception")
+        ? 2
+        : 0;
 
+    // Función para obtener datos (simples console logs, puedes adaptar)
     const getData = async () => {
         try {
-            const res = await api.get();
-            console.log(res);
+            // Aquí tu llamada API, ejemplo:
+            // const res = await api.get();
+            // console.log(res);
         } catch (error) {
             console.error(error);
         }
@@ -60,62 +29,65 @@ const ResultExecution = () => {
     }, []);
 
     return (
-        <Box
-            sx={{
-                width: "100%",
-            }}
-        >
+        <Box sx={{ width: "100%", p: 3 }}>
+            {/* Título */}
             <Typography
-                variant="h3"
+                variant="h4"
                 sx={{
-                    mt: "20px",
-                    color: "primary.main",
+                    color: "green",
+                    fontWeight: "bold",
+                    mb: 1,
                     textAlign: "center",
                 }}
             >
-                Gestion de muestras
+                Gestión de muestras
             </Typography>
 
-            <Box sx={{ borderBottom: 1, borderColor: "divider", mt: "20px" }}>
+            {/* Descripción corta */}
+            <Typography
+                variant="body1"
+                sx={{ color: "text.secondary", mb: 4, textAlign: "center" }}
+            >
+                Aquí puedes gestionar y revisar el estado de las muestras para
+                su ejecución, entregadas o sin recepción.
+            </Typography>
+
+            {/* Tabs para navegar entre secciones */}
+            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
                 <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="styled tabs"
+                    value={currentTab}
+                    aria-label="tabs de gestión de muestras"
                     sx={{
-                        backgroundColor: "background.paper",
+                        backgroundColor: theme.palette.background.paper,
                         borderRadius: 2,
                         boxShadow: 1,
                         "& .MuiTab-root": {
                             textTransform: "none",
-                            fontWeight: "500",
-
+                            fontWeight: 500,
+                            color: "text.primary",
                             "&.Mui-selected": {
-                                color: "primary.main",
-                                backgroundColor: "background.default",
+                                color: theme.palette.success.main,
+                                backgroundColor: theme.palette.action.selected,
                                 borderRadius: 2,
-                                border: `1px solid ${theme.palette.border.primary}`,
+                                border: `1px solid ${theme.palette.success.main}`,
                             },
                         },
                     }}
                 >
-                    <Tab label="Disponibles" {...a11yProps(0)} />
-
-                    <Tab label="Entregadas" {...a11yProps(1)} />
-                    <Tab label="Sin recepcion" {...a11yProps(2)} />
+                    <Tab label="Disponibles" component={Link} to="available" />
+                    <Tab label="Entregadas" component={Link} to="delivered" />
+                    <Tab
+                        label="Sin recepción"
+                        component={Link}
+                        to="without-reception"
+                    />
                 </Tabs>
             </Box>
 
-            <CustomTabPanel value={value} index={0}>
-                <ResultExecutionSamplesAvailable />
-            </CustomTabPanel>
-
-            <CustomTabPanel value={value} index={1}>
-                <SamplesDelivered />
-            </CustomTabPanel>
-
-            <CustomTabPanel value={value} index={2}>
-                <SamplesWithoutReception />
-            </CustomTabPanel>
+            {/* Aquí se renderiza la sección activa */}
+            <Box sx={{ mt: 2 }}>
+                <Outlet />
+            </Box>
         </Box>
     );
 };

@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    Navigate,
+} from "react-router-dom";
 import AuthLayaout from "./layouts/AuthLayaout";
 import LoginPage from "./pages/auth/LoginPage";
 import SystemLayaout from "./layouts/SystemLayaout";
@@ -29,6 +34,9 @@ import SampleReceptionPage from "./pages/admin/ResultRelease/componentsTestReque
 import ResultExecution from "./pages/admin/ResultRelease/ResultExecution";
 import ProductsCompo from "./pages/admin/ProductsPage";
 import SampleReleaseResult from "./pages/admin/ResultRelease/componentsTestRequets/SampleReleaseResult";
+import SamplesWithoutReception from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/SamplesWithoutReception";
+import ResultExecutionSamplesAvailable from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/ResultExecutionSamplesAvailable";
+import SamplesDelivered from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/SamplesDelivered";
 
 function App() {
     return (
@@ -138,10 +146,38 @@ function App() {
                                             path="result/test-request/:testRequestId/recepcion-muestras"
                                             element={<SampleReceptionPage />}
                                         />
+
                                         <Route
                                             path="result/execution-test"
                                             element={<ResultExecution />}
-                                        />
+                                        >
+                                            <Route
+                                                index
+                                                element={
+                                                    <Navigate
+                                                        to="available"
+                                                        replace
+                                                    />
+                                                }
+                                            />
+                                            <Route
+                                                path="available"
+                                                element={
+                                                    <ResultExecutionSamplesAvailable />
+                                                }
+                                            />
+                                            <Route
+                                                path="delivered"
+                                                element={<SamplesDelivered />}
+                                            />
+                                            <Route
+                                                path="without-reception"
+                                                element={
+                                                    <SamplesWithoutReception />
+                                                }
+                                            />
+                                        </Route>
+
                                         <Route
                                             path="users"
                                             element={<CustomersAndUsersPage />}

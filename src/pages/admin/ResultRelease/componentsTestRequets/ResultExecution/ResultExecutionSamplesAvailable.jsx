@@ -86,14 +86,9 @@ const ResultExecutionSamplesAvailable = () => {
             text: "Generando documento final",
         });
         try {
-            const infoResponsiblePersonReleaseResult = {
-                name: "Sin especificar - vista previa",
-                role: "Sin especificar - vista previa",
-                signature: null,
-            };
             const response = await api.post(
                 `/testRequest/pdf/preview/${sampleId}`,
-                infoResponsiblePersonReleaseResult,
+                null,
                 {
                     responseType: "blob",
                 }
@@ -260,15 +255,17 @@ const ResultExecutionSamplesAvailable = () => {
                 onClose={() => setOpenModalToDeleteSamples(false)}
             />
 
-            <GenericModal
-                compo={
-                    <PreviuwReleaseResultModalCompo
-                        pdfPreviewUrl={pdfPreviewUrl}
-                    />
-                }
-                open={openModalPreviuwReleaseResult}
-                onClose={() => setOpenModalPreviuwReleaseResult(false)}
-            />
+            {pdfPreviewUrl != null && (
+                <GenericModal
+                    compo={
+                        <PreviuwReleaseResultModalCompo
+                            pdfPreviewUrl={pdfPreviewUrl}
+                        />
+                    }
+                    open={openModalPreviuwReleaseResult}
+                    onClose={() => setOpenModalPreviuwReleaseResult(false)}
+                />
+            )}
 
             {/* This modal displays a message when the user selects samples and executes them for final report generation and delivery. */}
             <GenericModal

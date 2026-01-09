@@ -351,19 +351,26 @@ const SamplesSelectedInResultExecution = ({
                                             </span>
                                         }
                                     >
-                                        <Button fullWidth>
+                                        <Button
+                                            fullWidth
+                                            variant="outlined"
+                                            sx={{
+                                                mb: "20px",
+                                            }}
+                                        >
                                             Ver resultados
                                         </Button>
                                     </Tooltip>
 
                                     <Tooltip>
                                         <Button
+                                            variant="contained"
+                                            fullWidth
                                             onClick={() =>
                                                 fetchPdf(sample.sampleId)
                                             }
                                         >
-                                            Generar vista previa de documento
-                                            final
+                                            Generar vista previa - reporte
                                         </Button>
                                     </Tooltip>
                                 </Box>
