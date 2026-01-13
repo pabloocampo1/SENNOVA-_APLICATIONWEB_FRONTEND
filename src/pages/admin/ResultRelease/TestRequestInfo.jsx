@@ -201,9 +201,13 @@ const TestRequestInfo = () => {
         return total;
     };
 
-    useEffect(() => {
+    const init = () => {
         getInformationAboutTestRequest();
         getTheTeam();
+    };
+
+    useEffect(() => {
+        init();
     }, []);
 
     if (isLoandingState.state) {
@@ -256,6 +260,8 @@ const TestRequestInfo = () => {
                 onClose={() => setFinishTestRequest(false)}
                 compo={
                     <ModalFinishTestReQuest
+                        init={() => init()}
+                        onClose={() => setFinishTestRequest(false)}
                         samples={testRequest.samples}
                         requestCode={testRequest.requestCode}
                         customerEmail={testRequest.customer.email}

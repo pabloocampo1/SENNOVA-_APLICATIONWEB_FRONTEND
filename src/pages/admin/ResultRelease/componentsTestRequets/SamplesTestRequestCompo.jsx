@@ -15,8 +15,6 @@ const SamplesTestRequestCompo = ({
         return total;
     };
 
-    console.log(samples);
-
     return (
         <Box
             sx={{

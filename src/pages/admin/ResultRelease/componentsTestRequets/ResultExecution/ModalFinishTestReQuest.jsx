@@ -32,6 +32,8 @@ const ModalFinishTestReQuest = ({
     requestCode,
     customerName,
     customerEmail,
+    init,
+    onClose,
 }) => {
     const [files, setFiles] = useState([]);
     const [isLoandingState, setIsLoandingState] = useState({
@@ -54,23 +56,34 @@ const ModalFinishTestReQuest = ({
 
     const [error, setError] = useState(false);
 
-    const fetchPdf = async () => {
+    const fetchPdf = async (sampleId) => {
         setIsLoandingState({
             state: true,
             text: "Generando documento final",
         });
         try {
-            const response = await api.get("/testRequest/pdf/preview", {
-                responseType: "blob",
-            });
+            const response = await api.post(
+                `/testRequest/pdf/preview/${sampleId}`,
+                null,
+                {
+                    responseType: "blob",
+                }
+            );
+            if (response.status == 200) {
+                const file = new Blob([response.data], {
+                    type: "application/pdf",
+                });
+                const fileURL = URL.createObjectURL(file);
 
-            const file = new Blob([response.data], { type: "application/pdf" });
-            const fileURL = URL.createObjectURL(file);
-            setPdfPreviewUrl(fileURL);
-            setError(false);
+                setPdfPreviewUrl(fileURL);
+
+                setIsLoandingState({
+                    state: false,
+                    text: "",
+                });
+            }
         } catch (error) {
-            setError(true);
-            console.error("Error al obtener PDF:", error);
+            console.error(error);
         } finally {
             setIsLoandingState({
                 state: false,
@@ -89,6 +102,10 @@ const ModalFinishTestReQuest = ({
             alert(
                 "Debes agregar una firma difital para continuar con el proceso de finalizacion."
             );
+            setIsLoandingState({
+                state: false,
+                text: "",
+            });
             return;
         }
 
@@ -112,7 +129,10 @@ const ModalFinishTestReQuest = ({
                 formData
             );
 
-            console.log(res);
+            if (res.status == 200) {
+                init();
+                onClose();
+            }
         } catch (error) {
             console.error(error);
         } finally {
@@ -240,7 +260,13 @@ const ModalFinishTestReQuest = ({
                                     <>
                                         {s.analysisEntities.map((a, i) => {
                                             return (
-                                                <TableRow key={index + i}>
+                                                <TableRow
+                                                    key={
+                                                        index +
+                                                        i +
+                                                        a.sampleProductAnalysisId
+                                                    }
+                                                >
                                                     <TableCell>
                                                         {s.sampleCode}
                                                     </TableCell>
@@ -322,13 +348,24 @@ const ModalFinishTestReQuest = ({
                         </Typography>
                     )}
 
-                    <Button
-                        startIcon={<Preview />}
-                        variant="outlined"
-                        onClick={fetchPdf}
-                    >
-                        Generar documento
-                    </Button>
+                    {samples.map((s, index) => {
+                        return (
+                            <Tooltip key={index} title="Generar vista previa">
+                                <Button
+                                    startIcon={<Preview />}
+                                    variant="outlined"
+                                    onClick={() => fetchPdf(s.sampleId)}
+                                    sx={{
+                                        color: "text.secondary",
+                                        mr: "20px",
+                                        mt: "20px",
+                                    }}
+                                >
+                                    preview/ {s.matrix}
+                                </Button>
+                            </Tooltip>
+                        );
+                    })}
 
                     {pdfPreviewUrl && (
                         <Box sx={{ mt: 2 }}>
