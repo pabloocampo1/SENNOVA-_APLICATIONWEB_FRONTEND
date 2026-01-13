@@ -102,7 +102,7 @@ const QuotationCard = ({ data = {}, openInfo, setQuotateSelected }) => {
     };
 
     return (
-        <Tooltip title={`Ensayo : ` + data.requestCode}>
+        <Tooltip key={data.requestCode} title={`Ensayo : ` + data.requestCode}>
             <Box
                 onClick={() => {
                     setQuotateSelected(data);

@@ -211,7 +211,6 @@ const ResultExecutionSamplesAvailable = () => {
     const handleSelectAll = (checked) => {
         if (checked) {
             const selectedList = data.map((s) => s.sampleId);
-            console.log(selectedList);
 
             setDataSelected(selectedList);
         } else {
@@ -231,6 +230,30 @@ const ResultExecutionSamplesAvailable = () => {
 
         // open the modal I think
         setOpenShowDrawerSamplesToExecute(true);
+    };
+
+    // This method is executed when the user submits the results of the selected samples
+    // in order to refresh the pending samples delivery list
+
+    const updatePendingSamplesDeliveryList = (listSamplesExecuted = []) => {
+        // first do it with samples pending to delivery
+        const samplesIdSet = new Set(listSamplesExecuted);
+
+        const filteredData = originalData.filter(
+            (s) => !samplesIdSet.has(s.sampleId)
+        );
+
+        setOriginalData(filteredData);
+
+        setData(filteredData);
+
+        // second with samples expired
+
+        const filteredDataSamplesExpired = dataSamplesExpired.filter(
+            (s) => !samplesIdSet.has(s.sampleId)
+        );
+
+        setDataSampleExpired(filteredDataSamplesExpired);
     };
 
     useEffect(() => {
@@ -441,16 +464,6 @@ const ResultExecutionSamplesAvailable = () => {
             >
                 <Typography variant="h6">Muestras para ejecucion</Typography>
 
-                <Typography
-                    sx={{
-                        textAlign: "center",
-                        mb: "20px",
-                        color: "primary.main",
-                    }}
-                >
-                    {data.length <= 0 &&
-                        "No hay muestras vencidas disponibles para mostrar"}
-                </Typography>
                 <TableContainer>
                     <Table
                         sx={{
@@ -570,6 +583,17 @@ const ResultExecutionSamplesAvailable = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Typography
+                    sx={{
+                        textAlign: "center",
+                        mb: "20px",
+                        mt: "40px",
+                        color: "primary.main",
+                    }}
+                >
+                    {data.length <= 0 &&
+                        "No hay muestras vencidas disponibles para mostrar"}
+                </Typography>
             </Box>
 
             {/* ` Reusing the same handlers to avoid duplicating logic` */}
@@ -603,8 +627,13 @@ const ResultExecutionSamplesAvailable = () => {
                 <SamplesSelectedInResultExecution
                     samplesSelected={dataSelected}
                     onClose={toggleDrawerShowSamplesSelected(false)}
+                    // Reloads data when the user submits a sample
+                    updatePendingSamplesDeliveryList={(listSamplesExecuted) =>
+                        updatePendingSamplesDeliveryList(listSamplesExecuted)
+                    }
                     cleanData={() => setDataSelected([])}
                     fetchPdf={(sampleId) => fetchPdf(sampleId)}
+                    loandingPdf={isLoandingState.state}
                     openModalMessage={() => openModalMessage()}
                 />
             </Drawer>

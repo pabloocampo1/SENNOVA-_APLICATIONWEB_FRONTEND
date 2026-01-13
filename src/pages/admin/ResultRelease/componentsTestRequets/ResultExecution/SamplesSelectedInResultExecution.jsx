@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../../../../service/axiosService";
 import SimpleBackdrop from "../../../../../components/SimpleBackDrop";
 import MessageSamplesSelectedExecution from "./MessageSamplesSelectedExecution";
+import { AuthContext } from "../../../../../context/AuthContext";
 
 // THIS COMPONENT SHOW THE SAMPLES SELECTED IN RESULT EXECUTION TO EXECUTE
 
@@ -20,7 +21,9 @@ const SamplesSelectedInResultExecution = ({
     cleanData,
     onClose,
     fetchPdf,
+    loandingPdf,
     openModalMessage,
+    updatePendingSamplesDeliveryList,
 }) => {
     const [isLoanding, setIsLoanding] = useState(false);
     const [samples, setSamples] = useState([]);
@@ -31,6 +34,12 @@ const SamplesSelectedInResultExecution = ({
             (sample) => sample.sampleId !== id
         );
         setSamples(samplesSelectedUpdate);
+    };
+
+    const fetchGeneratePdfPreview = (sampleId) => {
+        setIsLoanding(true);
+
+        fetchPdf(sampleId);
     };
 
     const getSamplesInfoExecution = async () => {
@@ -83,15 +92,6 @@ const SamplesSelectedInResultExecution = ({
         getSamplesInfoExecution();
     }, []);
 
-    if (isLoanding) {
-        return (
-            <SimpleBackdrop
-                text="Cargando informacion de la muestra"
-                open={isLoanding}
-            />
-        );
-    }
-
     return (
         <Box
             sx={{
@@ -102,6 +102,10 @@ const SamplesSelectedInResultExecution = ({
                 p: "20px",
             }}
         >
+            <SimpleBackdrop
+                text="Cargando informacion de la muestra"
+                open={loandingPdf}
+            />
             <Box
                 onClick={() => onClose()}
                 sx={{
@@ -140,6 +144,10 @@ const SamplesSelectedInResultExecution = ({
             >
                 <MessageSamplesSelectedExecution
                     samples={samples}
+                    // Reloads data when the user submits a sample
+                    updatePendingSamplesDeliveryList={(listSamples) =>
+                        updatePendingSamplesDeliveryList(listSamples)
+                    }
                     onClose={() => onClose()}
                     cleanData={() => cleanData()}
                     isAllSamplesAlReady={checkIfAllSamplesAreReady()}
@@ -366,9 +374,11 @@ const SamplesSelectedInResultExecution = ({
                                         <Button
                                             variant="contained"
                                             fullWidth
-                                            onClick={() =>
-                                                fetchPdf(sample.sampleId)
-                                            }
+                                            onClick={() => {
+                                                fetchGeneratePdfPreview(
+                                                    sample.sampleId
+                                                );
+                                            }}
                                         >
                                             Generar vista previa - reporte
                                         </Button>

@@ -14,6 +14,7 @@ const MessageSamplesSelectedExecution = ({
     samples = [],
     infoResponsible,
     openModalMessage,
+    updatePendingSamplesDeliveryList,
 }) => {
     const { authObject } = useContext(AuthContext);
     const [previewSignature, setPreviewSignature] = useState(null);
@@ -25,7 +26,7 @@ const MessageSamplesSelectedExecution = ({
         setInfoResponsiblePersonReleaseResult,
     ] = useState({
         name: authObject.name,
-        role: "",
+        role: authObject.position,
         signature: null,
     });
     let title;
@@ -38,6 +39,7 @@ const MessageSamplesSelectedExecution = ({
         e.preventDefault();
         if (!infoResponsiblePersonReleaseResult.signature) {
             alert("Debes subir la firma digital");
+            setIsLoading(false);
             return;
         }
 
@@ -62,6 +64,9 @@ const MessageSamplesSelectedExecution = ({
             );
 
             if (res.status == 200) {
+                // Reloads data when the user submits a sample
+                // update the list of samples pending to delivery and expired
+                updatePendingSamplesDeliveryList(samplesId);
                 setErrorMessage("");
                 onClose();
                 cleanData();
@@ -266,6 +271,7 @@ const MessageSamplesSelectedExecution = ({
                         </Button>
                     )}
                     <Typography color="error">{errorMessage}</Typography>
+
                     <Button
                         variant="contained"
                         sx={{ width: 300 }}
