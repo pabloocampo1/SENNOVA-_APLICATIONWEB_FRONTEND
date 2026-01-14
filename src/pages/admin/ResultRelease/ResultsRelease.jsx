@@ -319,33 +319,30 @@ const ResultsRelease = () => {
                                 minHeight: "450px",
                                 p: "20px",
                                 borderRadius: "15px",
-                                opacity:
-                                    test.deliveryStatus ===
-                                    "COMPLETADO Y ENTREGADO"
-                                        ? 0.55
-                                        : 1,
+                                mb: "40px",
                                 transition: "opacity 0.3s ease",
-                                borderLeft:
-                                    test.deliveryStatus ===
-                                    "COMPLETADO Y ENTREGADO"
-                                        ? `5px solid ${theme.palette.success.main}`
-                                        : `1px solid ${theme.palette.border.primary}`,
                             }}
                         >
                             {test.deliveryStatus ===
                                 "COMPLETADO Y ENTREGADO" && (
-                                <Chip
-                                    icon={<CheckCircle />}
-                                    label="ENTREGADO"
-                                    color="success"
-                                    size="small"
+                                <Box
                                     sx={{
-                                        position: "absolute",
-                                        top: 16,
-                                        right: 16,
-                                        fontWeight: "bold",
+                                        width: "100%",
+                                        height: "50px",
+                                        border: `1px solid ${theme.palette.text.secondary}`,
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderRadius: "16px",
                                     }}
-                                />
+                                >
+                                    <Typography
+                                        color="text.secondary"
+                                        sx={{ fontWeight: "bold" }}
+                                    >
+                                        COMPLETADO Y ENTREGADO
+                                    </Typography>
+                                </Box>
                             )}
                             <Typography
                                 sx={{

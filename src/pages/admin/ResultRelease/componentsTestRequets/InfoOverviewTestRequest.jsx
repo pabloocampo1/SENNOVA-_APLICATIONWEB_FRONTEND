@@ -23,10 +23,13 @@ import CustomerCardTestRequest from "../../CustomerAndUsers/CustomerCardTestRequ
 const InfoOverviewTestRequest = ({
     testRequest = {},
     iconByStatus,
+    updateCustomerData,
     getToTalAnalysis,
     compo,
 }) => {
     const theme = useTheme();
+
+    //
 
     return (
         <Box
@@ -115,6 +118,9 @@ const InfoOverviewTestRequest = ({
                     <Divider />
                     <CustomerCardTestRequest
                         objectData={testRequest.customer}
+                        updateCustomerData={(customerUpdated) =>
+                            updateCustomerData(customerUpdated)
+                        }
                     />
                 </Box>
             </Card>

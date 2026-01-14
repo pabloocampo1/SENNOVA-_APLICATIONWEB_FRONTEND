@@ -85,9 +85,6 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
 
         const testRequest = samplesSelectByTheUser.map((sample) => {
             const currentSample = { ...sample };
-            console.log("hahha");
-
-            console.log(currentSample);
 
             const products = [...currentSample.analysis];
             const listAnalysisModify = products.map((analysis) => {

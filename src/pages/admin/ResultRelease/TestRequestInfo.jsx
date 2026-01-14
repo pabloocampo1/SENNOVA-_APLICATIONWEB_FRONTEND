@@ -440,13 +440,22 @@ const TestRequestInfo = () => {
                         </Typography>
                     </Box>
 
-                    <Typography sx={{ ml: "35px" }} variant="body2">
-                        {testRequest.dueDate == null
-                            ? "No se ah generado una fecha de entrega para este ensayo"
-                            : `Quedan ${getDays(
-                                  testRequest.dueDate
-                              )} dias para la entrega de la muestra`}
-                    </Typography>
+                    {testRequest.deliveryStatus == "COMPLETADO Y ENTREGADO" ? (
+                        <Typography
+                            sx={{ ml: "35px", color: "text.secondary" }}
+                            variant="body2"
+                        >
+                            Ensayo enviado y entregado
+                        </Typography>
+                    ) : (
+                        <Typography sx={{ ml: "35px" }} variant="body2">
+                            {testRequest.dueDate == null
+                                ? "No se ah generado una fecha de entrega para este ensayo"
+                                : `Quedan ${getDays(
+                                      testRequest.dueDate
+                                  )} dias para la entrega de la muestra`}
+                        </Typography>
+                    )}
                 </Box>
             </Box>
             {/* INFO BASIC */}
@@ -521,6 +530,9 @@ const TestRequestInfo = () => {
 
             <Box sx={{ display: "flex", gap: "20px", mb: "30px", mt: "20px" }}>
                 <InfoOverviewTestRequest
+                    updateCustomerData={(customerUpdated) =>
+                        (testRequest.customer = customerUpdated)
+                    }
                     testRequest={testRequest}
                     getToTalAnalysis={() => getToTalAnalysis()}
                     iconByStatus={(param) => iconByStatus(param)}
