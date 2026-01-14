@@ -21,6 +21,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../../../context/AuthContext";
 import api from "../../../../service/axiosService";
 import SimpleBackdrop from "../../../../components/SimpleBackDrop";
+import { formatDateTime } from "../../../../Utils/DateUtils";
 
 const SampleAnalysisResultCard = ({
     data = {},
@@ -557,14 +558,14 @@ const SampleAnalysisResultCard = ({
                                     {" "}
                                     Resultado emitido el :{" "}
                                     <span style={{ fontWeight: "bold" }}>
-                                        {dataToUse.resultDate}
+                                        {formatDateTime(dataToUse.createAt)}
                                     </span>
                                 </Typography>
                                 <Typography variant="body2">
                                     {" "}
                                     Editado :{" "}
                                     <span style={{ fontWeight: "bold" }}>
-                                        {dataToUse.updateAt}
+                                        {formatDateTime(dataToUse.updateAt)}
                                     </span>
                                 </Typography>
                                 <Typography variant="body2">

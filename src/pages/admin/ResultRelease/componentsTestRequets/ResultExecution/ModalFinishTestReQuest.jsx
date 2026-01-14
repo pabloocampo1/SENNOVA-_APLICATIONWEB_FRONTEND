@@ -59,7 +59,7 @@ const ModalFinishTestReQuest = ({
     const fetchPdf = async (sampleId) => {
         setIsLoandingState({
             state: true,
-            text: "Generando documento final",
+            text: "Generando vista previa de la muestra",
         });
         try {
             const response = await api.post(
@@ -83,6 +83,7 @@ const ModalFinishTestReQuest = ({
                 });
             }
         } catch (error) {
+            setError(true);
             console.error(error);
         } finally {
             setIsLoandingState({
