@@ -6,6 +6,7 @@ import {
     Stack,
     TextField,
     Typography,
+    useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 import logoSennova from "../../assets/images/sennova_logo_sin_fondo.png";
@@ -20,9 +21,14 @@ import TitleSoftware from "../../components/TitleSoftware";
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(false);
+    const [error, setError] = useState({
+        state: false,
+        text: "",
+    });
+    const theme = useTheme();
+
     const [isLoanding, setIsLoanding] = useState(false);
-    const [messageErrorSignIn, setMessageErrorSignIn] = useState(false);
+
     const { signIn, signInWithGoogle } = useAuth();
 
     const handleSuccess = async (credentialResponse) => {
@@ -33,49 +39,54 @@ const LoginPage = () => {
 
             signInWithGoogle(res.data);
         } catch (err) {
-            console.error("Error Google login:", err);
+            setError({
+                state: true,
+                text: `Error Google login : ${err}`,
+            });
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoanding(true);
+        setError({ state: false, text: "" });
 
-        const fetchAuth = async (username, password) => {
-            try {
-                const response = await signIn(username, password);
+        try {
+            const response = await signIn(username, password);
 
-                if (!response.status) {
-                    setError(true);
-                    setMessageErrorSignIn(response.message);
-                }
-            } catch (error) {
-                console.error(error);
-
-                setError(true);
+            if (!response?.status) {
+                setError({
+                    state: true,
+                    text: "Credenciales inválidas",
+                });
             }
-        };
-
-        fetchAuth(username, password);
-
-        setIsLoanding(false);
+        } catch (error) {
+            console.error(error);
+            setError({
+                state: true,
+                text: `Error de conexión o servidor`,
+            });
+        } finally {
+            setIsLoanding(false);
+        }
     };
 
     return (
         <Box
             sx={{
-                width: { xs: "85%", md: "60%", lg: "30%" },
-                height: { xs: "80%", md: "70%", lg: "65%" },
+                width: { xs: "100%", md: "90%", lg: "30%" },
+                height: { xs: "100%", md: "80%", lg: "70%" },
                 bgcolor: "white",
                 borderRadius: "15px",
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "center",
                 flexDirection: "column",
                 pl: "50px",
                 pr: "50px",
+                border: `1px solid ${theme.palette.primary.main}`,
             }}
         >
-            {isLoanding && <SimpleBackdrop open={isLoanding} />}
             <Box sx={{ mt: "20px" }}>
                 <img src={logoSennova} width={300} alt="logo sennova" />
             </Box>
@@ -87,33 +98,6 @@ const LoginPage = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    "&::before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        width: "120px",
-                        height: "120px",
-                        background:
-                            "linear-gradient(90deg, #72ef4cff, #4cafef)",
-                        opacity: 0.25,
-                        filter: "blur(40px)",
-                        zIndex: 0,
-                    },
-
-                    "&::after": {
-                        content: '""',
-                        position: "absolute",
-                        top: "50%",
-                        left: 0,
-                        width: "160px",
-                        height: "160px",
-                        background:
-                            "linear-gradient(90deg, #72ef4cff, #4cafef)",
-                        opacity: 0.18,
-                        filter: "blur(30px)",
-                        zIndex: 0,
-                    },
                 }}
             >
                 <Typography
@@ -133,7 +117,7 @@ const LoginPage = () => {
                         textAlign: "center",
                         opacity: "0.70",
                         pt: "2px",
-                        mb: "10px",
+
                         color: "black",
                     }}
                 >
@@ -141,7 +125,7 @@ const LoginPage = () => {
                 </Typography>
                 <TitleSoftware />
 
-                <Stack spacing={2} sx={{ width: "100%", mt: { xs: 6, md: 8 } }}>
+                <Stack spacing={2} sx={{ width: "100%", mt: { xs: 4, md: 5 } }}>
                     <TextField
                         fullWidth
                         id="username"
@@ -229,18 +213,22 @@ const LoginPage = () => {
                         Olvide mi contraseña
                     </Link>
                 </Box>
-                {error && (
-                    <Typography sx={{ color: "red" }}>
-                        {messageErrorSignIn}
-                    </Typography>
+                {error.state && (
+                    <Typography sx={{ color: "red" }}>{error.text}</Typography>
                 )}
 
                 <Button
+                    disabled={isLoanding}
                     type="submit"
-                    sx={{ width: "100%", mt: "40px" }}
-                    variant="outlined"
+                    variant="contained" // El "contained" suele verse mejor para la acción principal
+                    sx={{
+                        width: "100%",
+                        mt: "40px",
+                        bgcolor: "#39A900", // Color verde SENA
+                        "&:hover": { bgcolor: "#2e8600" },
+                    }}
                 >
-                    Iniciar sesion
+                    {isLoanding ? "Cargando..." : "Iniciar sesión"}
                 </Button>
 
                 <Typography
@@ -249,7 +237,7 @@ const LoginPage = () => {
                     O tambien puedes:
                 </Typography>
 
-                <Box sx={{ mt: "10px" }}>
+                <Box sx={{ mt: "10px", mb: "30px" }}>
                     <GoogleLogin
                         onSuccess={handleSuccess}
                         onError={() =>
