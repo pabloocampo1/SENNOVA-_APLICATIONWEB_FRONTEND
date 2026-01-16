@@ -16,6 +16,11 @@ const api = axios.create({
     withCredentials: true,
 });
 
+export const publicApi = axios.create({
+    baseURL: "http://localhost:8080/api/v1",
+    withCredentials: false,
+});
+
 api.interceptors.request.use(
     (config) => {
         if (getTokenFn) {

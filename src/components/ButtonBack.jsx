@@ -3,7 +3,7 @@ import { Backdrop, Box, Button, Tooltip } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ButtonBack = () => {
+const ButtonBack = ({ text = "Atrás" }) => {
     const navigate = useNavigate();
     return (
         <Box sx={{}}>
@@ -23,7 +23,7 @@ const ButtonBack = () => {
                         },
                     }}
                 >
-                    Atrás
+                    {text}
                 </Button>
             </Tooltip>
         </Box>

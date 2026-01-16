@@ -5,7 +5,7 @@ import {
     Navigate,
 } from "react-router-dom";
 import AuthLayaout from "./layouts/AuthLayaout";
-import LoginPage from "./pages/auth/LoginPage";
+import LoginPage from "./pages/auth/LoginCompo";
 import SystemLayaout from "./layouts/SystemLayaout";
 import DashboardPage from "./pages/admin/dashboard/dashboardPage";
 import { ThemeContextProvider } from "./context/ThemeContextProvider";
@@ -37,6 +37,10 @@ import SampleReleaseResult from "./pages/admin/ResultRelease/componentsTestReque
 import SamplesWithoutReception from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/SamplesWithoutReception";
 import ResultExecutionSamplesAvailable from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/ResultExecutionSamplesAvailable";
 import SamplesDelivered from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/SamplesDelivered";
+import ForgotPasswordCompo from "./pages/auth/ForgotPasswordCompo";
+import ChangePasswordCompo from "./pages/auth/ChangePasswordPage";
+import ChangePasswordPage from "./pages/auth/ChangePasswordPage";
+import TokenExpiredPage from "./pages/auth/TokenExpiredPage";
 
 function App() {
     return (
@@ -51,6 +55,18 @@ function App() {
                                     <Route
                                         path="noAccess"
                                         element={<NoAccessModal />}
+                                    />
+                                    <Route
+                                        path="forgot-password"
+                                        element={<ForgotPasswordCompo />}
+                                    />
+                                    <Route
+                                        path="change-password/:token"
+                                        element={<ChangePasswordPage />}
+                                    />
+                                    <Route
+                                        path="token-expired"
+                                        element={<TokenExpiredPage />}
                                     />
                                 </Route>
 

@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { Google } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
-import SimpleBackdrop from "../../components/SimpleBackDrop";
+
 import api from "../../service/axiosService";
 import TitleSoftware from "../../components/TitleSoftware";
 
@@ -209,7 +209,10 @@ const LoginPage = () => {
                         label="Guardar sesion"
                     />
 
-                    <Link to={"/"} style={{ color: "black", opacity: "0.70" }}>
+                    <Link
+                        to={"forgot-password"}
+                        style={{ color: "black", opacity: "0.70" }}
+                    >
                         Olvide mi contraseña
                     </Link>
                 </Box>

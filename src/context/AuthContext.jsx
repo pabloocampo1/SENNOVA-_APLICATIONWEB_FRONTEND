@@ -35,12 +35,10 @@ export const AuthContextProvider = ({ children }) => {
 
         try {
             const authRequest = { username: username, password: password };
-            console.log(authRequest);
+
             const response = await api.post("/auth/signIn", authRequest);
 
             const data = response.data;
-
-            console.log(data);
 
             setAuthObject({
                 username: data.username,
