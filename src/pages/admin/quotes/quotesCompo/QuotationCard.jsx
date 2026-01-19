@@ -133,9 +133,7 @@ const QuotationCard = ({ data = {}, openInfo, setQuotateSelected }) => {
                         {asignedIcon(data.state)}
                     </Typography>
                 </Box>
-                <Typography>
-                    cliente - {data.customerModel.customerName}
-                </Typography>
+                <Typography>cliente - {data.customer.customerName}</Typography>
 
                 <Box
                     sx={{

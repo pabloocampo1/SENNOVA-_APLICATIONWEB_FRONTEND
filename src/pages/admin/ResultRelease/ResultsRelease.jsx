@@ -264,7 +264,10 @@ const ResultsRelease = () => {
                         </MenuItem>
                         <MenuItem value={"En proceso"}>En Proceso</MenuItem>
                         <MenuItem value={"Terminada"}>
-                            Entregadas {"(TERMINADAS)"}
+                            Terminadas al 100%
+                        </MenuItem>
+                        <MenuItem value={"COMPLETADO Y ENTREGADO"}>
+                            Terminadas y enviadas
                         </MenuItem>
                         <MenuItem value={"Vencida"}>
                             Vencidas {"(Tiempo finalizado)"}

@@ -468,7 +468,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 >
                     <Typography variant="body2">Nombre</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {dataTestRequest.customerModel?.customerName ||
+                        {dataTestRequest.customer?.customerName ||
                             "Sin información"}
                     </Typography>
                 </Box>
@@ -481,8 +481,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 >
                     <Typography variant="body2">Correo</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {dataTestRequest.customerModel?.email ||
-                            "Sin información"}
+                        {dataTestRequest.customer?.email || "Sin información"}
                     </Typography>
                 </Box>
                 <Box
@@ -494,7 +493,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 >
                     <Typography variant="body2">Teléfono</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {dataTestRequest.customerModel?.phoneNumber ||
+                        {dataTestRequest.customer?.phoneNumber ||
                             "Sin información"}
                     </Typography>
                 </Box>
@@ -507,8 +506,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 >
                     <Typography variant="body2">Direccion</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {dataTestRequest.customerModel?.address ||
-                            "Sin información"}
+                        {dataTestRequest.customer?.address || "Sin información"}
                     </Typography>
                 </Box>
                 <Box
@@ -520,8 +518,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 >
                     <Typography variant="body2">Ciudad</Typography>
                     <Typography variant="body2" sx={{ fontWeight: "700" }}>
-                        {dataTestRequest.customerModel?.city ||
-                            "Sin información"}
+                        {dataTestRequest.customer?.city || "Sin información"}
                     </Typography>
                 </Box>
             </Box>
