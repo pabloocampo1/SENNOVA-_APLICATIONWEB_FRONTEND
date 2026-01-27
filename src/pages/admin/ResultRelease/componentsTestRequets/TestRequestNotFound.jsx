@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
 
-const TestRequestNotFound = ({ backTo = "/system/results" }) => {
+const TestRequestNotFound = () => {
     const navigate = useNavigate();
 
     return (
@@ -37,7 +37,7 @@ const TestRequestNotFound = ({ backTo = "/system/results" }) => {
             <Button
                 variant="contained"
                 sx={{ mt: 3 }}
-                onClick={() => navigate(backTo)}
+                onClick={() => navigate(-1)}
             >
                 Volver
             </Button>

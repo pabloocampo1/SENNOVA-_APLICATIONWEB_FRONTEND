@@ -33,7 +33,7 @@ export function ThemeContextProvider({ children }) {
                         secondary: darkMode ? "#d2e4d2ff" : "#426640",
                     },
                     border: {
-                        primary: darkMode ? "#c3c3c330" : "#00000030",
+                        primary: darkMode ? "#c3c3c320" : "#00000030",
                     },
                 },
                 components: {
@@ -84,7 +84,7 @@ export function ThemeContextProvider({ children }) {
                     },
                 },
             }),
-        [darkMode]
+        [darkMode],
     );
 
     return (

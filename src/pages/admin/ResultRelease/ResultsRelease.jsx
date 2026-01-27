@@ -61,7 +61,7 @@ const ResultsRelease = () => {
         setIsLoanding(true);
         try {
             const res = await api.get(
-                `/testRequest/get-all-info-summary?page=${page}`
+                `/testRequest/get-all-info-summary?page=${page}`,
             );
             setTestRequest(res.data.content);
             setTotalPages(res.data.totalPages);
@@ -73,13 +73,13 @@ const ResultsRelease = () => {
     };
 
     const checkIfAreAssignedToTestRequet = (
-        usersAssignedToTestRequest = []
+        usersAssignedToTestRequest = [],
     ) => {
         if (authObject.role == "ROLE_SUPERADMIN") {
             return true;
         }
         return usersAssignedToTestRequest.some(
-            (user) => user.email == authObject.email
+            (user) => user.email == authObject.email,
         );
     };
 
@@ -89,7 +89,7 @@ const ResultsRelease = () => {
 
         try {
             const res = await api.get(
-                `/testRequest/get-all-info-summary-by-code/${e}`
+                `/testRequest/get-all-info-summary-by-code/${e}`,
             );
 
             setTestRequest(res.data);
@@ -109,7 +109,7 @@ const ResultsRelease = () => {
         setOptionSelectedFilterBy(state);
         try {
             const res = await api.get(
-                `/testRequest/get-all-info-summary-by-status/${state}`
+                `/testRequest/get-all-info-summary-by-status/${state}`,
             );
             setTestRequest(res.data);
         } catch (error) {
@@ -393,10 +393,10 @@ const ResultsRelease = () => {
                                         test.dueDate == null
                                             ? `Sin fecha generada`
                                             : getDays(test.dueDate) <= 0
-                                            ? `fecha vencida`
-                                            : `Quedan ${getDays(
-                                                  test.dueDate
-                                              )} dias para la entrega`
+                                              ? `fecha vencida`
+                                              : `Quedan ${getDays(
+                                                    test.dueDate,
+                                                )} dias para la entrega`
                                     }
                                 />
                             </Box>
@@ -482,7 +482,7 @@ const ResultsRelease = () => {
                                             variant="body2"
                                             color="text.secondary"
                                         >{`${Math.round(
-                                            test.progress
+                                            test.progress,
                                         )}%`}</Typography>
                                     </Box>
                                     <Box sx={{ width: "100%", mr: 1 }}>
@@ -557,7 +557,7 @@ const ResultsRelease = () => {
                                                                     }
                                                                 />
                                                             </Tooltip>
-                                                        )
+                                                        ),
                                                     )
                                                 ) : (
                                                     <Typography
@@ -577,7 +577,7 @@ const ResultsRelease = () => {
 
                                 <Box sx={{ display: "flex", gap: 1 }}>
                                     {checkIfAreAssignedToTestRequet(
-                                        test.teamAssigned
+                                        test.teamAssigned,
                                     ) ? (
                                         <Button
                                             fullWidth
@@ -586,7 +586,7 @@ const ResultsRelease = () => {
                                             startIcon={<TrendingUp />}
                                             onClick={() =>
                                                 navigate(
-                                                    `/system/result/test-request/${test.testRequestId}`
+                                                    `/system/result/test-request/${test.testRequestId}`,
                                                 )
                                             }
                                         >

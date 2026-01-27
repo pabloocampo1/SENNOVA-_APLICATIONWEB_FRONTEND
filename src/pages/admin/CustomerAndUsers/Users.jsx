@@ -224,7 +224,14 @@ const Users = ({ users = [], updateList, refresh }) => {
                                 >
                                     <Avatar
                                         src={user.imageProfile}
-                                        sx={{ width: "100px", height: "100px" }}
+                                        sx={{
+                                            width: "100px",
+                                            height: "100px",
+                                            border: "3px solid",
+                                            borderColor: "primary.main",
+                                            boxShadow:
+                                                "0px 4px 10px rgba(0,0,0,0.1)",
+                                        }}
                                     />
                                     <Typography variant="body1">
                                         {user.name}

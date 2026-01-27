@@ -11,7 +11,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import SimpleBackdrop from "../../../../../components/SimpleBackDrop";
+
 import { PictureAsPdf, Visibility } from "@mui/icons-material";
 
 const getLenght = (analisys = []) => {
@@ -19,7 +19,6 @@ const getLenght = (analisys = []) => {
 };
 
 const SamplesExpired = ({
-    styleBackgroundColorByRestDays,
     handleDataSelected,
     dataSelected,
     getDays,
@@ -81,31 +80,21 @@ const SamplesExpired = ({
                                         width: "100%",
                                         height: "50px",
                                         borderBottom: "1px solid blue",
-                                        borderLeft: `10px solid ${styleBackgroundColorByRestDays(
-                                            sample.dueDate
-                                        )}`,
-                                        bgcolor: ` ${styleBackgroundColorByRestDays(
-                                            sample.dueDate
-                                        )}10`,
+                                        bgcolor: "#e7151520",
                                     }}
                                 >
                                     <TableCell>
                                         <Checkbox
                                             label="Seleccionar"
                                             checked={dataSelected.includes(
-                                                sample.sampleId
+                                                sample.sampleId,
                                             )}
                                             onChange={(e) =>
                                                 handleDataSelected(
                                                     sample.sampleId,
-                                                    e.target.checked
+                                                    e.target.checked,
                                                 )
                                             }
-                                            // onClick={() =>
-                                            //     handleDataSelected(
-                                            //         sample.sampleId
-                                            //     )
-                                            // }
                                         />
                                     </TableCell>
                                     <TableCell>{sample.matrix}</TableCell>
@@ -113,7 +102,7 @@ const SamplesExpired = ({
 
                                     <TableCell>
                                         {countAnalysisCompleteBySample(
-                                            sample.analysisEntities
+                                            sample.analysisEntities,
                                         )}{" "}
                                         / {getLenght(sample.analysisEntities)}
                                     </TableCell>
@@ -133,8 +122,8 @@ const SamplesExpired = ({
 
                                     <TableCell
                                         onClick={() => {
-                                            setOpen(true),
-                                                setSampleSelected(sample);
+                                            (setOpen(true),
+                                                setSampleSelected(sample));
                                         }}
                                         sx={{
                                             cursor: "pointer",

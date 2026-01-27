@@ -6,27 +6,11 @@ const ResultExecution = () => {
     const theme = useTheme();
     const location = useLocation();
 
-    // Determinar la pestaña actual según URL
     const currentTab = location.pathname.includes("delivered")
         ? 1
         : location.pathname.includes("without-reception")
-        ? 2
-        : 0;
-
-    // Función para obtener datos (simples console logs, puedes adaptar)
-    const getData = async () => {
-        try {
-            // Aquí tu llamada API, ejemplo:
-            // const res = await api.get();
-            // console.log(res);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        getData();
-    }, []);
+          ? 2
+          : 0;
 
     return (
         <Box sx={{ width: "100%", p: 3 }}>
@@ -84,7 +68,6 @@ const ResultExecution = () => {
                 </Tabs>
             </Box>
 
-            {/* Aquí se renderiza la sección activa */}
             <Box sx={{ mt: 2 }}>
                 <Outlet />
             </Box>
