@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Box, Card, CardContent, Typography, Button } from "@mui/material";
+import {
+    Box,
+    Card,
+    CardContent,
+    Typography,
+    Button,
+    Chip,
+} from "@mui/material";
 import {
     BiotechOutlined,
     Download,
@@ -7,51 +14,62 @@ import {
     ScienceOutlined,
 } from "@mui/icons-material";
 import YearSelect from "../../../components/YearSelect";
-
-const modules = [
-    {
-        key: "equipments",
-        title: "Equipos",
-        description: "Descargar todo el inventario general de equipos",
-        icon: (
-            <Inventory2Outlined
-                sx={{ color: "primary.main" }}
-                fontSize="large"
-            />
-        ),
-        onExport: () => {
-            console.log("Exportar equipos");
-        },
-    },
-    {
-        key: "reactives",
-        title: "Reactivos",
-        description: "Descargar todo el inventario de reactivos",
-        icon: (
-            <ScienceOutlined sx={{ color: "primary.main" }} fontSize="large" />
-        ),
-        onExport: () => {
-            console.log("Exportar reactivos");
-        },
-    },
-    {
-        key: "assays",
-        title: "Ensayos",
-        description: "Descargar toda la información de ensayos",
-        icon: (
-            <BiotechOutlined sx={{ color: "primary.main" }} fontSize="large" />
-        ),
-        onExport: (year = "") => {
-            if (year == "" || year == null) {
-                year = new Date().getFullYear();
-            }
-            console.log("Exportar ensayos" + year);
-        },
-    },
-];
+import downloadExcel from "../../../service/ExportDataExcel";
 
 const ExportModuleCards = () => {
     const [year, setYear] = useState("");
+
+    const modules = [
+        {
+            key: "equipments",
+            title: "Equipos",
+            description: "Descargar todo el inventario general de equipos",
+            icon: (
+                <Inventory2Outlined
+                    sx={{ color: "primary.main" }}
+                    fontSize="large"
+                />
+            ),
+            onExport: () => {
+                const today = new Date();
+                const filename = `inventario_equipos_${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}.xlsx`;
+                downloadExcel("/export/equipment/excel", filename);
+            },
+        },
+        {
+            key: "reactives",
+            title: "Reactivos",
+            description: "Descargar todo el inventario de reactivos",
+            icon: (
+                <ScienceOutlined
+                    sx={{ color: "primary.main" }}
+                    fontSize="large"
+                />
+            ),
+            onExport: () => {
+                const today = new Date();
+                const filename = `inventario_reactivos_${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}.xlsx`;
+                downloadExcel("/export/reagent/excel", filename);
+            },
+        },
+        {
+            key: "assays",
+            title: "Ensayos",
+            description: "Descargar toda la información de ensayos por año",
+            icon: (
+                <BiotechOutlined
+                    sx={{ color: "primary.main" }}
+                    fontSize="large"
+                />
+            ),
+            onExport: (year = "") => {
+                if (!year) year = new Date().getFullYear();
+
+                const filename = `ensayos-${year}.xlsx`;
+                downloadExcel(`/export/testRequest/${year}`, filename);
+            },
+        },
+    ];
 
     return (
         <Box
@@ -81,7 +99,7 @@ const ExportModuleCards = () => {
                     }}
                 >
                     <CardContent>
-                        {module.key == "assays" && (
+                        {module.key === "assays" && (
                             <Box
                                 sx={{
                                     width: "100%",
@@ -94,6 +112,7 @@ const ExportModuleCards = () => {
                                 />
                             </Box>
                         )}
+
                         <Box
                             sx={{
                                 display: "flex",
@@ -113,15 +132,18 @@ const ExportModuleCards = () => {
                         </Typography>
                     </CardContent>
 
-                    <Box sx={{ p: 2, pt: 0 }}>
+                    <Box sx={{ p: 2, pt: 1 }}>
                         <Button
                             fullWidth
                             variant="contained"
                             startIcon={<Download />}
                             onClick={() => module.onExport(year)}
                         >
-                            Descargar Excel
+                            Exportar datos
                         </Button>
+                        <Typography variant="body2" color="text.secondary">
+                            El proceso de descarga puede demorar unos segundos
+                        </Typography>
                     </Box>
                 </Card>
             ))}
