@@ -1,13 +1,23 @@
-import { Box, Typography } from "@mui/material";
+import {
+    Box,
+    Divider,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    useTheme,
+} from "@mui/material";
 
-import NavBarOptions from "./navBarOptions";
-import { Help, InfoOutline, Settings } from "@mui/icons-material";
-import ProfileUI from "./ProfileUI";
-import TitleSoftware from "./TitleSoftware";
+import { Help, InfoOutlined, Settings } from "@mui/icons-material";
+
+import TitleSoftware from "./LogoSoftware";
 import { useNavigate } from "react-router-dom";
+import NavBarOptions from "./NavBarOptions";
 
 const Sidebar = () => {
     const navigate = useNavigate();
+    const theme = useTheme();
 
     return (
         <Box
@@ -30,7 +40,7 @@ const Sidebar = () => {
                     right: 0,
                     width: "120px",
                     height: "120px",
-                    background: "linear-gradient(90deg, #72ef4cff, #4cafef)",
+                    background: "linear-gradient(90deg, #72ef4cff, #0b92ed)",
                     opacity: 0.25,
                     filter: "blur(40px)",
                     zIndex: 0,
@@ -65,55 +75,109 @@ const Sidebar = () => {
                     width: "80%",
                 }}
             >
-                <NavBarOptions />
+                <NavBarOptions theme={theme} navigate={navigate} />
             </Box>
 
-            <Box
-                sx={{
-                    width: "80%",
-                }}
-            >
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mt: "20px",
-                        cursor: "pointer",
-                    }}
-                    onClick={() => navigate("/system/settings")}
-                >
-                    <Settings sx={{ color: "text.secondary" }} />{" "}
-                    <Typography sx={{ pl: "10px", color: "text.secondary" }}>
-                        Config / elementos del sistema
-                    </Typography>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mt: "20px",
-                        cursor: "pointer",
-                    }}
-                >
-                    <Help sx={{ color: "text.secondary" }} />{" "}
-                    <Typography sx={{ pl: "10px", color: "text.secondary" }}>
-                        Ayuda
-                    </Typography>
-                </Box>
+            <Box sx={{ width: "80%" }}>
+                <Divider sx={{ mx: 2, mb: 2, borderStyle: "" }} />
 
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mt: "20px",
-                        cursor: "pointer",
-                    }}
-                >
-                    <InfoOutline sx={{ color: "text.secondary" }} />{" "}
-                    <Typography sx={{ pl: "10px", color: "text.secondary" }}>
-                        Acerca del sistema
-                    </Typography>
-                </Box>
+                <List sx={{ px: 1 }}>
+                    <ListItem disablePadding>
+                        <ListItemButton
+                            onClick={() => navigate("/system/settings")}
+                            selected={location.pathname === "/system/settings"}
+                            sx={{
+                                borderRadius: "12px",
+                                minHeight: "48px",
+                                transition: "all 0.2s",
+                                "&.Mui-selected": {
+                                    bgcolor: "#39A90020",
+                                    borderLeft: `4px solid ${theme.palette.primary.main}`,
+                                },
+                                "&:hover": {
+                                    bgcolor: "action.hover",
+                                    transform: "translateX(4px)",
+                                },
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: "40px",
+                                    color: "text.secondary",
+                                }}
+                            >
+                                <Settings fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="Config / elementos"
+                                primaryTypographyProps={{
+                                    fontSize: "0.85rem",
+                                    color: "text.secondary",
+                                }}
+                            />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding>
+                        <ListItemButton
+                            sx={{
+                                borderRadius: "12px",
+                                minHeight: "48px",
+                                transition: "all 0.2s",
+                                "&:hover": {
+                                    bgcolor: "action.hover",
+                                    transform: "translateX(4px)",
+                                },
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: "40px",
+                                    color: "text.secondary",
+                                }}
+                            >
+                                <Help fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="Ayuda"
+                                primaryTypographyProps={{
+                                    fontSize: "0.85rem",
+                                    color: "text.secondary",
+                                }}
+                            />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding>
+                        <ListItemButton
+                            sx={{
+                                borderRadius: "12px",
+                                minHeight: "48px",
+                                transition: "all 0.2s",
+                                "&:hover": {
+                                    bgcolor: "action.hover",
+                                    transform: "translateX(4px)",
+                                },
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: "40px",
+                                    color: "text.secondary",
+                                }}
+                            >
+                                <InfoOutlined fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="Acerca del sistema"
+                                primaryTypographyProps={{
+                                    fontSize: "0.85rem",
+                                    color: "text.secondary",
+                                }}
+                            />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
             </Box>
         </Box>
     );

@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Box, Typography, useTheme } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
 import {
-    HomeWorkOutlined,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from "@mui/material";
+import { useLocation } from "react-router-dom";
+import {
+    AnalyticsOutlined,
     EqualizerRounded,
     DashboardCustomizeRounded,
     RequestPageOutlined,
-    TaskAltOutlined,
-    SupervisedUserCircleOutlined,
-    Settings,
-    Science,
     DocumentScanner,
-    AnalyticsSharp,
-    AnalyticsOutlined,
+    Science,
     Category,
+    SupervisedUserCircleOutlined,
 } from "@mui/icons-material";
 
-const NavBarOptions = ({ onCloseMenu }) => {
+const NavBarOptions = ({ onCloseMenu, theme, navigate }) => {
     const { authObject } = useAuth();
     const [modules, setModules] = useState([]);
-    const navigate = useNavigate();
     const location = useLocation();
-    const [active, setActive] = useState("");
-    const theme = useTheme();
 
     useEffect(() => {
         if (
@@ -34,54 +33,42 @@ const NavBarOptions = ({ onCloseMenu }) => {
                 {
                     url: "/system",
                     name: "Dashboard",
-                    icon: (
-                        <AnalyticsOutlined sx={{ color: "text.secondary" }} />
-                    ),
+                    icon: <AnalyticsOutlined />,
                 },
                 {
                     url: "/system/inventory/equipments",
                     name: "Inventario equipos",
-                    icon: <EqualizerRounded sx={{ color: "text.secondary" }} />,
+                    icon: <EqualizerRounded />,
                 },
                 {
                     url: "/system/inventory/reagents",
                     name: "Inventario reactivos",
-                    icon: (
-                        <DashboardCustomizeRounded
-                            sx={{ color: "text.secondary" }}
-                        />
-                    ),
+                    icon: <DashboardCustomizeRounded />,
                 },
                 {
                     url: "/system/quotes",
                     name: "Cotizaciones de ensayo",
-                    icon: (
-                        <RequestPageOutlined sx={{ color: "text.secondary" }} />
-                    ),
+                    icon: <RequestPageOutlined />,
                 },
                 {
                     url: "/system/results",
                     name: "Gestión de ensayos",
-                    icon: <DocumentScanner sx={{ color: "text.secondary" }} />,
+                    icon: <DocumentScanner />,
                 },
                 {
                     url: "/system/result/execution-test",
                     name: "Gestión de muestras",
-                    icon: <Science sx={{ color: "text.secondary" }} />,
+                    icon: <Science />,
                 },
                 {
                     url: "/system/products",
                     name: "Productos",
-                    icon: <Category sx={{ color: "text.secondary" }} />,
+                    icon: <Category />,
                 },
                 {
                     url: "/system/users",
                     name: "Gestión clientes y usuarios",
-                    icon: (
-                        <SupervisedUserCircleOutlined
-                            sx={{ color: "text.secondary" }}
-                        />
-                    ),
+                    icon: <SupervisedUserCircleOutlined />,
                 },
             ]);
         } else {
@@ -89,59 +76,66 @@ const NavBarOptions = ({ onCloseMenu }) => {
         }
     }, [authObject.role]);
 
-    useEffect(() => {
-        const current = modules.find((m) => m.url === location.pathname);
-        if (current) {
-            setActive(current.name);
-        }
-    }, [location.pathname, modules]);
-
-    const handleClick = (module) => {
-        navigate(module.url);
+    const handleNavigation = (url) => {
+        navigate(url);
+        if (onCloseMenu) onCloseMenu();
     };
 
     return (
-        <Box>
-            {modules.map((module) => (
-                <Box
-                    key={module.name}
-                    sx={{
-                        width: "100%",
-                        height: "50px",
-                        bgcolor:
-                            active === module.name
-                                ? "#39A90040"
-                                : "transparent",
-                        p: "8px",
-                        borderRadius: "8px",
-                        cursor: "pointer",
-                        mb: { xs: "10px", sm: "5px" },
-                        display: "flex",
-                        alignItems: "center",
-                        fontWeight: active === module.name ? 600 : 0,
-                        ":hover": {
-                            bgcolor: "background.paper",
-                            border: `1px solid ${theme.palette.border.primary}`,
-                        },
-                    }}
-                    onClick={() => {
-                        handleClick(module);
-                        if (onCloseMenu) onCloseMenu();
-                    }}
-                >
-                    <Box>{module.icon}</Box>
-                    <Typography
-                        sx={{
-                            textDecoration: "none",
-                            color: "text.secondary",
-                            ml: "15px",
-                        }}
-                    >
-                        {module.name}
-                    </Typography>
-                </Box>
-            ))}
-        </Box>
+        <List sx={{ width: "100%", px: 1 }}>
+            {modules.map((module) => {
+                const isSelected = location.pathname === module.url;
+
+                return (
+                    <ListItem disablePadding key={module.url} sx={{ mb: 0.5 }}>
+                        <ListItemButton
+                            selected={isSelected}
+                            onClick={() => handleNavigation(module.url)}
+                            sx={{
+                                borderRadius: "12px",
+                                minHeight: "48px",
+                                transition: "all 0.2s ease",
+
+                                "&.Mui-selected": {
+                                    bgcolor: "#39A90020",
+                                    borderLeft: `2px solid ${theme.palette.primary.main}`,
+                                    "&:hover": {
+                                        bgcolor: "#39A90030",
+                                    },
+                                },
+
+                                "&:hover": {
+                                    bgcolor: "action.hover",
+                                    transform: "translateX(4px)",
+                                },
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: "40px",
+                                    color: isSelected
+                                        ? "primary.main"
+                                        : "text.secondary",
+                                }}
+                            >
+                                {React.cloneElement(module.icon, {
+                                    fontSize: "small",
+                                })}
+                            </ListItemIcon>
+
+                            <ListItemText
+                                primary={module.name}
+                                primaryTypographyProps={{
+                                    fontSize: "0.9rem",
+                                    fontWeight: isSelected ? 700 : 400,
+                                    color: "text.secondary",
+                                }}
+                            />
+                        </ListItemButton>
+                    </ListItem>
+                );
+            })}
+        </List>
     );
 };
 
