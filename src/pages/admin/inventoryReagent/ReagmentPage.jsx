@@ -34,11 +34,12 @@ import {
 import SearchBar from "../../../components/SearchBar";
 import GenericModal from "../../../components/modals/GenericModal";
 import ReagentForm from "../../../components/forms/Reagent/ReagentForm";
-import CardsSummaryEquipment from "../inventoryEquipment/componentsEquipment/CardsSummaryEquipment";
+
 import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import ModalToDelete from "./reagentCompo/ModalToDelete";
 import CardsSummaryReagent from "./reagentCompo/CardsSummaryReagent";
+import downloadExcel from "../../../service/ExportDataExcel";
 
 const ReagentPage = () => {
     const [reagents, setReagents] = useState([]);
@@ -88,12 +89,12 @@ const ReagentPage = () => {
         setIsLoanding(true);
         try {
             const res = await api.delete(
-                `/reagent/delete/${reagentIdToDelete}`
+                `/reagent/delete/${reagentIdToDelete}`,
             );
             if (res.status == 200) {
                 const currentData = reagents;
                 const newData = currentData.filter(
-                    (data) => data.reagentsId !== reagentIdToDelete
+                    (data) => data.reagentsId !== reagentIdToDelete,
                 );
                 setReagents(newData);
                 setOpenModalToDelete(false);
@@ -113,7 +114,7 @@ const ReagentPage = () => {
 
                 try {
                     const res = await api.get(
-                        `/reagent/getAllByName/${search}`
+                        `/reagent/getAllByName/${search}`,
                     );
                     setReagents(res.data);
 
@@ -129,7 +130,7 @@ const ReagentPage = () => {
                 setIsLoanding(true);
                 try {
                     const res = await api.get(
-                        `/reagent/getByInteralCode/${search}`
+                        `/reagent/getByInteralCode/${search}`,
                     );
                     console.log(res);
                 } catch (error) {
@@ -158,6 +159,9 @@ const ReagentPage = () => {
             sx={{
                 width: "100%",
                 height: "auto",
+                bgcolor: "background.default",
+                borderRadius: "20px",
+                p: "20px",
             }}
         >
             <GenericModal
@@ -202,10 +206,8 @@ const ReagentPage = () => {
             <Box
                 sx={{
                     width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
+
                     mb: "40px",
-                    flexWrap: "wrap",
                 }}
             >
                 <Box
@@ -222,22 +224,60 @@ const ReagentPage = () => {
                         </Typography>
                         <Science sx={{ ml: "10px", color: "primary.main" }} />
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
-                        Modulo donde podras gestionar el stock y caducidad de
-                        los reactivos
+                    <Typography
+                        sx={{ pr: "40%" }}
+                        variant="body2"
+                        color="text.secondary"
+                    >
+                        Gestiona aquí el inventario y la caducidad de tus
+                        reactivos. Mantener el stock actualizado y registrar
+                        cada uso es fundamental para garantizar un control
+                        preciso, evitar vencimientos imprevistos y recibir
+                        alertas oportunas sobre el estado de tus insumos.
                     </Typography>
                 </Box>
 
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
                     <Button
-                        variant="contained"
+                        variant="outlined"
                         startIcon={<FileDownloadOutlined />}
+                        sx={{
+                            borderRadius: "8px",
+                            bgcolor: "background.paper",
+                            textTransform: "none",
+                            fontWeight: 600,
+                            px: 3,
+                            borderColor: "divider",
+                            color: "text.secondary",
+                            "&:hover": {
+                                backgroundColor: "action.hover",
+                                borderColor: "primary.main",
+                            },
+                        }}
+                        onClick={() => {
+                            const today = new Date();
+                            const filename = `inventario_reactivos_${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}.xlsx`;
+                            downloadExcel("/export/reagent/excel", filename);
+                        }}
                     >
-                        Descargar Excel
+                        Export excel
                     </Button>
 
                     <Button
                         variant="outlined"
+                        sx={{
+                            borderRadius: "8px",
+                            bgcolor: "background.paper",
+                            textTransform: "none",
+                            fontWeight: 600,
+                            px: 3,
+                            borderColor: "divider",
+                            color: "text.secondary",
+                            "&:hover": {
+                                backgroundColor: "action.hover",
+                                borderColor: "primary.main",
+                            },
+                        }}
                         endIcon={<ChecklistOutlined />}
                         onClick={() => {
                             navigate("/system/inventory/check/reagent");
@@ -294,7 +334,7 @@ const ReagentPage = () => {
                     variant="outlined"
                     startIcon={<Add />}
                     sx={{
-                        mt: { xs: "40px" },
+                        mt: { xs: "40px", textTransform: "none" },
                     }}
                 >
                     Agregar nuevo reactivo
@@ -306,7 +346,13 @@ const ReagentPage = () => {
                 <Table sx={{}} aria-label="tabla de reactivos">
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{ fontWeight: "700" }}>Id</TableCell>
+                            <TableCell
+                                sx={{
+                                    fontWeight: "700",
+                                }}
+                            >
+                                Id
+                            </TableCell>
                             <TableCell sx={{ fontWeight: "700" }}>
                                 Nombre
                             </TableCell>
@@ -401,7 +447,7 @@ const ReagentPage = () => {
                                         color="primary"
                                         onClick={() => {
                                             setReagentIdToDelete(
-                                                reagent.reagentsId
+                                                reagent.reagentsId,
                                             );
                                             setOpenModalToDelete(true);
                                         }}
@@ -415,7 +461,7 @@ const ReagentPage = () => {
                                         size="small"
                                         onClick={() =>
                                             navigate(
-                                                `/system/inventory/reagents/info/${reagent.reagentsId}`
+                                                `/system/inventory/reagents/info/${reagent.reagentsId}`,
                                             )
                                         }
                                     >

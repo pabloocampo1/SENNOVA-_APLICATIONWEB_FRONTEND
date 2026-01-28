@@ -1,80 +1,132 @@
-import { Box, Card, Typography } from '@mui/material';
-import React from 'react';
+import React from "react";
+import { Box, Card, Typography, Divider, Stack, Chip } from "@mui/material";
+import {
+    HistoryOutlined,
+    ScienceOutlined,
+    PersonOutline,
+    EventNoteOutlined,
+} from "@mui/icons-material";
 
-const CardUsageReagent = ({usage = {}, dataReagent}) => {
+const CardUsageReagent = ({ usage = {}, dataReagent = {} }) => {
+    const {
+        usedBy,
+        reagentUsageRecordsId,
+        createAt,
+        previousQuantity,
+        quantity_used,
+        notes,
+    } = usage;
+
+    const unit = dataReagent.unitOfMeasure || "";
+
     return (
         <Card
-            key={usage.reagentUsageRecordsId}
             sx={{
-                p: 3,
-                borderRadius: 3,
-                boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
-
+                p: 2.5,
+                borderRadius: 4,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                border: "1px solid",
+                borderColor: "divider",
+                transition: "transform 0.2s",
+                "&:hover": { transform: "translateY(-4px)" },
             }}
         >
-           
             <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 2,
-                }}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="flex-start"
+                mb={2}
             >
-                <Typography variant="subtitle1" fontWeight="bold">
-                    {usage.usedBy}
-                </Typography>
-                <Typography
-                    variant="caption"
-                    sx={{
-                        color: "text.secondary",
-                        backgroundColor: "action.hover",
-                        px: 1.2,
-                        py: 0.3,
-                        borderRadius: 1,
-                    }}
-                >
-                    ID: {usage.reagentUsageRecordsId}
-                </Typography>
+                <Stack direction="row" spacing={1} alignItems="center">
+                    <PersonOutline color="primary" fontSize="small" />
+                    <Typography
+                        variant="subtitle1"
+                        fontWeight="700"
+                        lineHeight={1}
+                    >
+                        {usedBy}
+                    </Typography>
+                </Stack>
+                <Chip
+                    label={`ID: ${reagentUsageRecordsId}`}
+                    size="small"
+                    variant="outlined"
+                    sx={{ fontSize: "0.65rem", height: 20 }}
+                />
             </Box>
 
-           
-            <Typography
-                variant="body2"
-                sx={{ color: "text.secondary", mb: 1 }}
-            >
-                {new Date(usage.createAt).toLocaleDateString()}
-            </Typography>
+            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+                <HistoryOutlined
+                    sx={{ fontSize: 16, color: "text.disabled" }}
+                />
+                <Typography variant="caption" color="text.secondary">
+                    {new Date(createAt).toLocaleDateString(undefined, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })}
+                </Typography>
+            </Stack>
 
-          
-            <Typography sx={{ mb: 1 }}>
-                Cantidad antes del uso:{" "}
-                <Box component="span" fontWeight="600">
-                    {usage.previousQuantity} {dataReagent.unitOfMeasure}
+            <Divider sx={{ mb: 2, borderStyle: "dashed" }} />
+
+            <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={2}>
+                <Box>
+                    <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        display="block"
+                    >
+                        Previo
+                    </Typography>
+                    <Typography variant="body2" fontWeight="600">
+                        {previousQuantity} {unit}
+                    </Typography>
                 </Box>
-            </Typography>
-
-            <Typography sx={{ mb: 1 }}>
-                Cantidad usada:{" "}
-                <Box component="span" fontWeight="600">
-                    {usage.quantity_used} {dataReagent.unitOfMeasure}
+                <Box>
+                    <Typography
+                        variant="caption"
+                        color="primary"
+                        display="block"
+                        fontWeight="600"
+                    >
+                        Consumido
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        fontWeight="700"
+                        color="primary"
+                    >
+                        - {quantity_used} {unit}
+                    </Typography>
                 </Box>
-            </Typography>
+            </Box>
 
-            
-            <Typography variant="subtitle2" fontWeight="600">
-                Notas:
-            </Typography>
-            <Typography
-                variant="body2"
-                sx={{
-                    opacity: 0.8,
-                    whiteSpace: "pre-wrap",
-                    mt: 0.5,
-                }}
-            >
-                {usage.notes || "Sin notas."}
-            </Typography>
+            <Box sx={{ bgcolor: "action.hover", p: 1.5, borderRadius: 2 }}>
+                <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
+                    <EventNoteOutlined
+                        sx={{ fontSize: 16, color: "text.secondary" }}
+                    />
+                    <Typography
+                        variant="subtitle2"
+                        fontWeight="600"
+                        color="text.secondary"
+                    >
+                        Notas
+                    </Typography>
+                </Stack>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: "text.primary",
+                        fontStyle: notes ? "normal" : "italic",
+                        opacity: notes ? 1 : 0.6,
+                        whiteSpace: "pre-wrap",
+                    }}
+                >
+                    {notes || "Sin observaciones registradas."}
+                </Typography>
+            </Box>
         </Card>
     );
 };

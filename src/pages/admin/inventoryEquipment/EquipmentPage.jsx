@@ -47,6 +47,7 @@ import { useNavigate } from "react-router-dom";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import TableEquipments from "./componentsEquipment/TableEquipments";
 import OptionCheckInvAndReportEquipments from "./componentsEquipment/OptionCheckInvAndReportEquipments";
+import downloadExcel from "../../../service/ExportDataExcel";
 
 const EquipmentPage = () => {
     const [dataEquipments, setDataEquipments] = useState([]);
@@ -83,7 +84,7 @@ const EquipmentPage = () => {
         const fetchDelete = async () => {
             try {
                 const res = await api.delete(
-                    `/equipment/delete/${equipmentToDeleteId}`
+                    `/equipment/delete/${equipmentToDeleteId}`,
                 );
                 if (res.status == 200) {
                     setOpenModalDelete(false);
@@ -110,7 +111,7 @@ const EquipmentPage = () => {
                     "dto",
                     new Blob([JSON.stringify(equipment)], {
                         type: "application/json",
-                    })
+                    }),
                 );
                 formData.append("image", image);
 
@@ -121,7 +122,7 @@ const EquipmentPage = () => {
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },
-                    }
+                    },
                 );
                 if (res.status == 200) {
                     setOpenEditEquipment(false);
@@ -154,7 +155,7 @@ const EquipmentPage = () => {
         const fetchDataByName = async () => {
             try {
                 const res = await api.get(
-                    `/equipment/get-all-by-name/${search}`
+                    `/equipment/get-all-by-name/${search}`,
                 );
                 if (res.status == 200) {
                     setDataEquipments(res.data);
@@ -173,7 +174,7 @@ const EquipmentPage = () => {
         const fetchDataByInternalCode = async () => {
             try {
                 const res = await api.get(
-                    `/equipment/get-all-by-internal-code/${search}`
+                    `/equipment/get-all-by-internal-code/${search}`,
                 );
                 if (res.status == 200) {
                     setDataEquipments(res.data);
@@ -191,7 +192,7 @@ const EquipmentPage = () => {
 
         const fetchDataBySerialNumber = async () => {
             alert(
-                "La funcion de buscar un equipo por su numero serial no esta disponible."
+                "La funcion de buscar un equipo por su numero serial no esta disponible.",
             );
         };
 
@@ -221,7 +222,7 @@ const EquipmentPage = () => {
                     "dto",
                     new Blob([JSON.stringify(dto)], {
                         type: "application/json",
-                    })
+                    }),
                 );
                 if (imageFile != null) {
                     formData.append("image", imageFile);
@@ -332,20 +333,23 @@ const EquipmentPage = () => {
             sx={{
                 width: "100%",
                 height: "auto",
+                bgcolor: "background.default",
+                borderRadius: "20px",
+                p: "20px",
             }}
         >
             {/** Modals */}
             <GenericModal
                 open={openCreatedEquipment}
                 onClose={() => {
-                    setOpenCreatedEquipment(false), setErrorMessageCreate({});
+                    (setOpenCreatedEquipment(false), setErrorMessageCreate({}));
                 }}
                 compo={
                     <EquipmentForm
                         errors={errorMessageCreate}
                         onClose={() => {
-                            setOpenCreatedEquipment(false),
-                                setErrorMessageCreate({});
+                            (setOpenCreatedEquipment(false),
+                                setErrorMessageCreate({}));
                         }}
                         method={(dto, image) => saveEquipment(dto, image)}
                         isEdit={false}
@@ -355,15 +359,15 @@ const EquipmentPage = () => {
             <GenericModal
                 open={openEditEquipment}
                 onClose={() => {
-                    setOpenEditEquipment(false), setErrorMessageCreate({});
+                    (setOpenEditEquipment(false), setErrorMessageCreate({}));
                 }}
                 compo={
                     <EquipmentForm
                         errors={errorMessageCreate}
                         data={equipmentToEdit}
                         onClose={() => {
-                            setOpenEditEquipment(false),
-                                setErrorMessageCreate({});
+                            (setOpenEditEquipment(false),
+                                setErrorMessageCreate({}));
                         }}
                         method={(dto, image) => editEquipment(dto, image)}
                         isEdit={true}
@@ -445,9 +449,8 @@ const EquipmentPage = () => {
                 </Box>
             </Box>
 
-            <CardsSummaryEquipment refresh={refreshSummary} />
-
             <OptionCheckInvAndReportEquipments navigate={navigate} />
+            <CardsSummaryEquipment refresh={refreshSummary} />
 
             <Divider sx={{ mt: "20px" }} />
 
@@ -496,14 +499,23 @@ const EquipmentPage = () => {
                         <Button
                             variant="outlined"
                             startIcon={<FileDownloadOutlined />}
-                            sx={{ mr: "10px" }}
+                            sx={{ mr: "10px", textTransform: "none" }}
+                            onClick={() => {
+                                const today = new Date();
+                                const filename = `inventario_equipos_${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}.xlsx`;
+                                downloadExcel(
+                                    "/export/equipment/excel",
+                                    filename,
+                                );
+                            }}
                         >
-                            Descargar inventario
+                            Export excel
                         </Button>
 
                         <Button
                             variant="contained"
                             onClick={() => setOpenCreatedEquipment(true)}
+                            sx={{ textTransform: "none" }}
                         >
                             {" "}
                             <Add /> Agregar un nuevo equipo

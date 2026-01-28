@@ -85,7 +85,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
 
                 const res = await api.put(
                     `/reagent/update/${dataForm.reagentsId}`,
-                    formData
+                    formData,
                 );
                 console.log(dataForm);
 
@@ -99,7 +99,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
             } catch (error) {
                 setErrorFetchMessage(
                     "Ocurrio un error al guardar el reactivo: " +
-                        error.data.message
+                        error.data.message,
                 );
                 setErrorFetch(true);
             } finally {
@@ -121,7 +121,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
 
                 const res = await api.post(
                     `/reagent/save/${authObject.username}`,
-                    formData
+                    formData,
                 );
                 console.log(dataForm);
 
@@ -135,7 +135,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
             } catch (error) {
                 setErrorFetchMessage(
                     "Ocurrio un error al guardar el reactivo: " +
-                        error.data.message
+                        error.data.message,
                 );
                 setErrorFetch(true);
             } finally {
@@ -151,7 +151,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
         } catch (error) {
             setErrorFetchMessage(
                 "Ocurrio un error al traer la informacion de los usos: " +
-                    error.data.message
+                    error.data.message,
             );
             setErrorFetch(true);
         }
@@ -163,7 +163,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
         } catch (error) {
             setErrorFetchMessage(
                 "Ocurrio un error al traer los usuarios disponibles: " +
-                    error.data.message
+                    error.data.message,
             );
             setErrorFetch(true);
         }
@@ -175,7 +175,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
         } catch (error) {
             setErrorFetchMessage(
                 "Ocurrio un error al traer la informacion de las ubicaciones: " +
-                    error.data.message
+                    error.data.message,
             );
             setErrorFetch(true);
         }
@@ -420,8 +420,12 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                 )}
             </Box>
             {errorFetch && <Typography>{errorFetchMessage}</Typography>}
-            <Button sx={{ mt: "20px" }} variant="outlined" type="submit">
-                Enviar data
+            <Button
+                sx={{ mt: "20px", textTransform: "none" }}
+                variant="outlined"
+                type="submit"
+            >
+                guardar
             </Button>
         </Box>
     );

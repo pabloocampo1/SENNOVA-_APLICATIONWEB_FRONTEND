@@ -37,7 +37,7 @@ const OptionCheckInvAndReportEquipments = ({ navigate }) => {
                         "&:hover": {
                             bgcolor: "action.hover",
                         },
-                        border: `1px solid ${theme.palette.primary.main}`,
+                        border: `1px solid ${theme.palette.border.primary}`,
                     }}
                 >
                     <Inventory2Outlined
@@ -82,7 +82,7 @@ const OptionCheckInvAndReportEquipments = ({ navigate }) => {
                         "&:hover": {
                             bgcolor: "action.hover",
                         },
-                        border: `1px solid ${theme.palette.primary.main}`,
+                        border: `1px solid ${theme.palette.border.primary}`,
                     }}
                 >
                     <ReportProblemOutlined

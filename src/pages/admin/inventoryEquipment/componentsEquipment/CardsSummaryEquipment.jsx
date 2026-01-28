@@ -160,7 +160,7 @@ const CardsSummaryEquipment = () => {
                             <Box>
                                 <Typography
                                     sx={{
-                                        color: "white",
+                                        color: "text.secondary",
                                         fontSize: "0.875rem",
                                         fontWeight: 600,
                                         mb: 0.5,

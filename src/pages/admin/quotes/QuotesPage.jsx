@@ -44,7 +44,7 @@ const QuotesPage = () => {
 
         try {
             const res = await api.get(
-                `/testRequest/get-all/quotation?page=${page}`
+                `/testRequest/get-all/quotation?page=${page}`,
             );
             setTotalPages(res.data.totalPages);
             setQuotationData(res.data.content);
@@ -77,7 +77,7 @@ const QuotesPage = () => {
         setIsLoanding(true);
         try {
             const res = await api.get(
-                `/testRequest/get-by-option-search/${searchBy}/${e}`
+                `/testRequest/get-by-option-search/${searchBy}/${e}`,
             );
             console.log(res);
             setQuotationData(res.data);
@@ -223,6 +223,9 @@ const QuotesPage = () => {
                         <Button
                             startIcon={<Add />}
                             variant="contained"
+                            sx={{
+                                textTransform: "none",
+                            }}
                             onClick={() => setShowQuotation(true)}
                         >
                             Crear ensayo

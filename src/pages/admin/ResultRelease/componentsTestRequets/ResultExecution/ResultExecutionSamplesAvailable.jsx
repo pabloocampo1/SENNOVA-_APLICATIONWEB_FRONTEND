@@ -26,7 +26,7 @@ import {
     Visibility,
 } from "@mui/icons-material";
 import GenericModal from "../../../../../components/modals/GenericModal";
-import DeleteSamplesModalConfirmation from "../DeleteSamplesModalConfirmation";
+
 import InfoSamplesResultExecution from "../InfoSamplesResultExecution";
 import SamplesSelectedInResultExecution from "./SamplesSelectedInResultExecution";
 import SamplesExpired from "./SamplesExpired";
@@ -51,8 +51,7 @@ const ResultExecutionSamplesAvailable = () => {
     const [originalData, setOriginalData] = useState([]);
     const [dataSelected, setDataSelected] = useState([]);
     const [order, setOrder] = useState("all");
-    const [openModalToDeleteSamples, setOpenModalToDeleteSamples] =
-        useState(false);
+
     const [sampleSelected, setSampleSelected] = useState({});
     const [responseAlert, setResponseAlert] = useState({
         status: false,
@@ -91,7 +90,7 @@ const ResultExecutionSamplesAvailable = () => {
                 null,
                 {
                     responseType: "blob",
-                }
+                },
             );
             if (response.status == 200) {
                 const file = new Blob([response.data], {
@@ -240,7 +239,7 @@ const ResultExecutionSamplesAvailable = () => {
         const samplesIdSet = new Set(listSamplesExecuted);
 
         const filteredData = originalData.filter(
-            (s) => !samplesIdSet.has(s.sampleId)
+            (s) => !samplesIdSet.has(s.sampleId),
         );
 
         setOriginalData(filteredData);
@@ -250,7 +249,7 @@ const ResultExecutionSamplesAvailable = () => {
         // second with samples expired
 
         const filteredDataSamplesExpired = dataSamplesExpired.filter(
-            (s) => !samplesIdSet.has(s.sampleId)
+            (s) => !samplesIdSet.has(s.sampleId),
         );
 
         setDataSampleExpired(filteredDataSamplesExpired);
@@ -266,16 +265,6 @@ const ResultExecutionSamplesAvailable = () => {
             <SimpleBackdrop
                 open={isLoandingState.state}
                 text={isLoandingState.text}
-            />
-
-            <GenericModal
-                compo={
-                    <DeleteSamplesModalConfirmation
-                        onClose={() => setOpenModalToDeleteSamples(false)}
-                    />
-                }
-                open={openModalToDeleteSamples}
-                onClose={() => setOpenModalToDeleteSamples(false)}
             />
 
             {pdfPreviewUrl != null && (
@@ -372,25 +361,6 @@ const ResultExecutionSamplesAvailable = () => {
                     </Typography>
                 </Box>
             </Box>
-
-            {dataSelected.length >= 1 && (
-                <Box
-                    sx={{
-                        mt: "10px",
-                        mb: "20px",
-                        display: "flex",
-                        justifyContent: "end",
-                    }}
-                >
-                    <Button
-                        variant="outlined"
-                        startIcon={<DeleteOutlineTwoTone />}
-                        onClick={() => setOpenModalToDeleteSamples(true)}
-                    >
-                        Eliminar muestras
-                    </Button>
-                </Box>
-            )}
 
             <Box
                 sx={{
@@ -497,10 +467,10 @@ const ResultExecutionSamplesAvailable = () => {
                                             height: "50px",
                                             borderBottom: "1px solid blue",
                                             borderLeft: `10px solid ${styleBackgroundColorByRestDays(
-                                                sample.dueDate
+                                                sample.dueDate,
                                             )}`,
                                             bgcolor: ` ${styleBackgroundColorByRestDays(
-                                                sample.dueDate
+                                                sample.dueDate,
                                             )}10`,
                                         }}
                                     >
@@ -508,12 +478,12 @@ const ResultExecutionSamplesAvailable = () => {
                                             <Checkbox
                                                 label="Seleccionar"
                                                 checked={dataSelected.includes(
-                                                    sample.sampleId
+                                                    sample.sampleId,
                                                 )}
                                                 onChange={(e) =>
                                                     handleDataSelected(
                                                         sample.sampleId,
-                                                        e.target.checked
+                                                        e.target.checked,
                                                     )
                                                 }
                                                 // onClick={() =>
@@ -531,7 +501,7 @@ const ResultExecutionSamplesAvailable = () => {
 
                                         <TableCell>
                                             {countAnalysisCompleteBySample(
-                                                sample.analysisEntities
+                                                sample.analysisEntities,
                                             )}{" "}
                                             /{" "}
                                             {getLenght(sample.analysisEntities)}
@@ -552,8 +522,8 @@ const ResultExecutionSamplesAvailable = () => {
 
                                         <TableCell
                                             onClick={() => {
-                                                setOpen(true),
-                                                    setSampleSelected(sample);
+                                                (setOpen(true),
+                                                    setSampleSelected(sample));
                                             }}
                                             sx={{
                                                 cursor: "pointer",
