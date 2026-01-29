@@ -27,6 +27,7 @@ const SampleAnalysisResultCard = ({
     data = {},
     requestCode,
     isAdminEdit = false,
+    stateSampleReception,
 }) => {
     const theme = useTheme();
     const [listFiles, setListFiles] = useState([]);
@@ -37,6 +38,7 @@ const SampleAnalysisResultCard = ({
         status: false,
         message: "",
     });
+    const canEmitResult = stateSampleReception === true;
 
     const handleFiles = (e) => {
         setListFiles((prev) => [...prev, ...Array.from(e.target.files)]);
@@ -44,6 +46,15 @@ const SampleAnalysisResultCard = ({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!canEmitResult) {
+            setResponseAlert({
+                status: true,
+                message:
+                    "No es posible emitir resultados porque la muestra no ha sido recepcionada.",
+            });
+            return;
+        }
+
         setIsLoanding(true);
         const data = {
             data: dataToUse,
@@ -59,7 +70,7 @@ const SampleAnalysisResultCard = ({
             "dto",
             new Blob([JSON.stringify(analysisRequestDto)], {
                 type: "application/json",
-            })
+            }),
         );
         formData.append("testRequestId", requestCode);
 
@@ -90,7 +101,7 @@ const SampleAnalysisResultCard = ({
         try {
             const res = await api.post(
                 "/sample/save-document-analysis",
-                formData
+                formData,
             );
 
             if (res.status == 201) {
@@ -124,7 +135,7 @@ const SampleAnalysisResultCard = ({
         const listDpcsUpdate = dataToUse.sampleProductDocumentResult.filter(
             (doc) =>
                 doc.sampleProductDocumentResultId !==
-                sampleProductDocumentResultId
+                sampleProductDocumentResultId,
         );
 
         setDataToUse({
@@ -139,7 +150,7 @@ const SampleAnalysisResultCard = ({
 
         try {
             const res = await api.delete(
-                `/sample/delete-file-result/${sampleProductDocumentResultId}`
+                `/sample/delete-file-result/${sampleProductDocumentResultId}`,
             );
             console.log(res);
         } catch (error) {
@@ -254,7 +265,10 @@ const SampleAnalysisResultCard = ({
                             label={"Resultado final"}
                             type="text"
                             name="resultFinal"
-                            disabled={!isAdminEdit && dataToUse.stateResult}
+                            disabled={
+                                !canEmitResult ||
+                                (!isAdminEdit && dataToUse.stateResult)
+                            }
                             value={dataToUse.resultFinal}
                             onChange={(e) => handleChangeInput(e)}
                             required
@@ -263,7 +277,10 @@ const SampleAnalysisResultCard = ({
                         <TextField
                             type="date"
                             required
-                            disabled={!isAdminEdit && dataToUse.stateResult}
+                            disabled={
+                                !canEmitResult ||
+                                (!isAdminEdit && dataToUse.stateResult)
+                            }
                             name="resultDate"
                             onChange={(e) => handleChangeInput(e)}
                             value={dataToUse.resultDate}
@@ -275,7 +292,10 @@ const SampleAnalysisResultCard = ({
                             required
                             label="Unidad"
                             name="unit"
-                            disabled={!isAdminEdit && dataToUse.stateResult}
+                            disabled={
+                                !canEmitResult ||
+                                (!isAdminEdit && dataToUse.stateResult)
+                            }
                             value={
                                 dataToUse.unit == null
                                     ? dataToUse.product.units
@@ -290,7 +310,10 @@ const SampleAnalysisResultCard = ({
                             value={dataToUse.accreditationStatus || ""}
                             name="accreditationStatus"
                             label="Estado"
-                            disabled={!isAdminEdit && dataToUse.stateResult}
+                            disabled={
+                                !canEmitResult ||
+                                (!isAdminEdit && dataToUse.stateResult)
+                            }
                             onChange={(e) => handleChangeInput(e)}
                             sx={{
                                 width: "200px",
@@ -310,7 +333,10 @@ const SampleAnalysisResultCard = ({
                             value={dataToUse.passStatus || ""}
                             name="passStatus"
                             required
-                            disabled={!isAdminEdit && dataToUse.stateResult}
+                            disabled={
+                                !canEmitResult ||
+                                (!isAdminEdit && dataToUse.stateResult)
+                            }
                             label="Cumple"
                             onChange={(e) => handleChangeInput(e)}
                             sx={{
@@ -323,7 +349,10 @@ const SampleAnalysisResultCard = ({
                         <TextField
                             label={"Normatividad"}
                             required
-                            disabled={!isAdminEdit && dataToUse.stateResult}
+                            disabled={
+                                !canEmitResult ||
+                                (!isAdminEdit && dataToUse.stateResult)
+                            }
                             value={dataToUse.standards || ""}
                             name="standards"
                             onChange={(e) => handleChangeInput(e)}
@@ -451,7 +480,7 @@ const SampleAnalysisResultCard = ({
                                                                 onClick={() =>
                                                                     deleteFile(
                                                                         doc.sampleProductDocumentResultId,
-                                                                        doc.nameFile
+                                                                        doc.nameFile,
                                                                     )
                                                                 }
                                                             >
@@ -461,7 +490,7 @@ const SampleAnalysisResultCard = ({
                                                     </Box>
                                                 </Box>
                                             );
-                                        }
+                                        },
                                     )}
                                 </Box>
                             ) : (
@@ -583,9 +612,8 @@ const SampleAnalysisResultCard = ({
                             <Button
                                 type="submit"
                                 variant="contained"
-                                sx={{
-                                    width: "100%",
-                                }}
+                                disabled={!canEmitResult}
+                                sx={{ width: "100%" }}
                                 startIcon={<Add />}
                             >
                                 Guardar resultado

@@ -1,4 +1,11 @@
-import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    MenuItem,
+    TextField,
+    Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ButtonBack from "../../../../components/ButtonBack";
@@ -124,6 +131,12 @@ const SampleReleaseResult = () => {
                     </Typography>
                 </Box>
             </Box>
+            {!sampleData.statusReception && (
+                <Alert severity="warning" sx={{ mb: 2, mt: "40px" }}>
+                    No se pueden emitir resultados hasta que la muestra haya
+                    sido recepcionada correctamente.
+                </Alert>
+            )}
 
             {/* SAMPLES reception*/}
             <SampleReception data={sampleReceptionDto} />
@@ -153,6 +166,9 @@ const SampleReleaseResult = () => {
                         <Box key={index}>
                             <SampleAnalysisResultCard
                                 data={a}
+                                stateSampleReception={
+                                    sampleData.statusReception
+                                }
                                 requestCode={requestCode}
                             />
                         </Box>

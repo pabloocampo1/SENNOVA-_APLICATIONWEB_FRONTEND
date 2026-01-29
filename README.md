@@ -1,5 +1,5 @@
 ====================================================
-🧪 LABSYS ONE SOFTWARE
+🧪 LABSYS ONE SOFTWARE V.1.0
 ====================================================
 
 Labsys One es un LIMS (Laboratory Information Management System) de alto
