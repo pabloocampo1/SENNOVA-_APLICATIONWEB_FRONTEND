@@ -1,11 +1,26 @@
-import { Box, Drawer, IconButton, Tooltip, Typography } from "@mui/material";
+import {
+    Box,
+    Divider,
+    Drawer,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Tooltip,
+    Typography,
+    useTheme,
+} from "@mui/material";
 
 import {
     DarkMode,
     Help,
     InfoOutline,
+    InfoOutlined,
     Logout,
     MenuRounded,
+    Settings,
     Sunny,
 } from "@mui/icons-material";
 
@@ -13,15 +28,19 @@ import { useContext, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import NotificationPopover from "./NotificationPopover";
 import imageLogoSennova from "../assets/images/sennova_logo_sin_fondo.png";
-import NavBarOptions from "./navBarOptions";
+
 import { useAuth } from "../context/AuthContext";
 
 import ProfileUI from "./ProfileUI";
+import NavBarOptions from "./NavBarOptions";
+import { useNavigate } from "react-router-dom";
 
 const TopBar = () => {
     const { darkMode, toggleDarkMode } = useContext(ThemeContext);
     const [menuMobile, setMenuMobile] = useState(false);
     const { logout } = useAuth();
+    const theme = useTheme();
+    const navigate = useNavigate();
 
     return (
         <Box
@@ -140,53 +159,141 @@ const TopBar = () => {
                                 }}
                             >
                                 <NavBarOptions
+                                    theme={theme}
                                     onCloseMenu={() => setMenuMobile(false)}
+                                    navigate={navigate}
                                 />
                             </Box>
 
-                            <Box
-                                sx={{
-                                    width: "80%",
-                                    mb: "50px",
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        mt: "20px",
-                                    }}
-                                >
-                                    <Help sx={{ color: "text.secondary" }} />{" "}
-                                    <Typography
-                                        sx={{
-                                            pl: "10px",
-                                            color: "text.secondary",
-                                        }}
-                                    >
-                                        Ayuda
-                                    </Typography>
-                                </Box>
+                            <Box sx={{ width: "80%" }}>
+                                <Divider
+                                    sx={{ mx: 2, mb: 2, borderStyle: "" }}
+                                />
 
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        mt: "20px",
-                                    }}
-                                >
-                                    <InfoOutline
-                                        sx={{ color: "text.secondary" }}
-                                    />{" "}
-                                    <Typography
-                                        sx={{
-                                            pl: "10px",
-                                            color: "text.secondary",
-                                        }}
-                                    >
-                                        Acerca del sistema
-                                    </Typography>
-                                </Box>
+                                <List sx={{ px: 1 }}>
+                                    <ListItem disablePadding>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                (navigate("/system/settings"),
+                                                    setMenuMobile(false));
+                                            }}
+                                            selected={
+                                                location.pathname ===
+                                                "/system/settings"
+                                            }
+                                            sx={{
+                                                borderRadius: "12px",
+                                                minHeight: "48px",
+                                                transition: "all 0.2s",
+                                                "&.Mui-selected": {
+                                                    bgcolor: "#39A90020",
+                                                    borderLeft: `4px solid ${theme.palette.primary.main}`,
+                                                },
+                                                "&:hover": {
+                                                    bgcolor: "action.hover",
+                                                    transform:
+                                                        "translateX(4px)",
+                                                },
+                                            }}
+                                        >
+                                            <ListItemIcon
+                                                sx={{
+                                                    minWidth: "40px",
+                                                    color: "text.secondary",
+                                                }}
+                                            >
+                                                <Settings fontSize="small" />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary="Config / elementos"
+                                                primaryTypographyProps={{
+                                                    fontSize: "0.85rem",
+                                                    color: "text.secondary",
+                                                }}
+                                            />
+                                        </ListItemButton>
+                                    </ListItem>
+
+                                    <ListItem disablePadding>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                navigate("/system/user-guide");
+                                                setMenuMobile(false);
+                                            }}
+                                            selected={
+                                                location.pathname ===
+                                                "/system/user-guide"
+                                            }
+                                            sx={{
+                                                borderRadius: "12px",
+                                                minHeight: "48px",
+                                                transition: "all 0.2s",
+                                                "&:hover": {
+                                                    bgcolor: "action.hover",
+                                                    transform:
+                                                        "translateX(4px)",
+                                                },
+                                            }}
+                                        >
+                                            <ListItemIcon
+                                                sx={{
+                                                    minWidth: "40px",
+                                                    color: "text.secondary",
+                                                }}
+                                            >
+                                                <Help fontSize="small" />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary="Ayuda"
+                                                primaryTypographyProps={{
+                                                    fontSize: "0.85rem",
+                                                    color: "text.secondary",
+                                                }}
+                                            />
+                                        </ListItemButton>
+                                    </ListItem>
+
+                                    <ListItem disablePadding>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                navigate(
+                                                    "/system/about-system",
+                                                );
+                                                setMenuMobile(false);
+                                            }}
+                                            selected={
+                                                location.pathname ===
+                                                "/system/about-system"
+                                            }
+                                            sx={{
+                                                borderRadius: "12px",
+                                                minHeight: "48px",
+                                                transition: "all 0.2s",
+                                                "&:hover": {
+                                                    bgcolor: "action.hover",
+                                                    transform:
+                                                        "translateX(4px)",
+                                                },
+                                            }}
+                                        >
+                                            <ListItemIcon
+                                                sx={{
+                                                    minWidth: "40px",
+                                                    color: "text.secondary",
+                                                }}
+                                            >
+                                                <InfoOutlined fontSize="small" />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primary="Acerca del sistema"
+                                                primaryTypographyProps={{
+                                                    fontSize: "0.85rem",
+                                                    color: "text.secondary",
+                                                }}
+                                            />
+                                        </ListItemButton>
+                                    </ListItem>
+                                </List>
                             </Box>
                         </Box>
                     </Box>

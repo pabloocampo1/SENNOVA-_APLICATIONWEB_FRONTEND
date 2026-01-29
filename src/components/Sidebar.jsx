@@ -120,6 +120,10 @@ const Sidebar = () => {
 
                     <ListItem disablePadding>
                         <ListItemButton
+                            onClick={() => navigate("/system/user-guide")}
+                            selected={
+                                location.pathname === "/system/user-guide"
+                            }
                             sx={{
                                 borderRadius: "12px",
                                 minHeight: "48px",
@@ -150,6 +154,10 @@ const Sidebar = () => {
 
                     <ListItem disablePadding>
                         <ListItemButton
+                            onClick={() => navigate("/system/about-system")}
+                            selected={
+                                location.pathname === "/system/about-system"
+                            }
                             sx={{
                                 borderRadius: "12px",
                                 minHeight: "48px",

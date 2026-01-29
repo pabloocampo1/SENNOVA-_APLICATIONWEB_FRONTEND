@@ -41,6 +41,8 @@ import ForgotPasswordCompo from "./pages/auth/ForgotPasswordCompo";
 import ChangePasswordCompo from "./pages/auth/ChangePasswordPage";
 import ChangePasswordPage from "./pages/auth/ChangePasswordPage";
 import TokenExpiredPage from "./pages/auth/TokenExpiredPage";
+import AboutSystem from "./pages/admin/AboutSystemPage";
+import UserManual from "./pages/admin/UserManual";
 
 function App() {
     return (
@@ -201,6 +203,14 @@ function App() {
                                         <Route
                                             path="products"
                                             element={<ProductsCompo />}
+                                        />
+                                        <Route
+                                            path="about-system"
+                                            element={<AboutSystem />}
+                                        />
+                                        <Route
+                                            path="user-guide"
+                                            element={<UserManual />}
                                         />
 
                                         {/* <Route/> */}

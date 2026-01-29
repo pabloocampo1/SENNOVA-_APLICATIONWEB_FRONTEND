@@ -9,14 +9,14 @@ import {
     useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
-import logoSennova from "../../assets/images/sennova_logo_sin_fondo.png";
+import logoSennova from "../../assets/images/LogoSystem.png";
 import { Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { Google } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
 
 import api from "../../service/axiosService";
-import TitleSoftware from "../../components/TitleSoftware";
+import TitleSoftware from "../../components/LogoSoftware";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
