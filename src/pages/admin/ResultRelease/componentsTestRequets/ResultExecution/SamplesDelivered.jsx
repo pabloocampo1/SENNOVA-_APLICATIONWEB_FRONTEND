@@ -102,7 +102,6 @@ const SamplesDelivered = () => {
                             <TableCell>Fecha de envio</TableCell>
                             <TableCell>Emial cliente</TableCell>
                             <TableCell></TableCell>
-                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -162,7 +161,7 @@ const SamplesDelivered = () => {
                                                 }}
                                             >
                                                 {formatDateTime(
-                                                    sample.deliveryDate
+                                                    sample.deliveryDate,
                                                 )}
                                             </Typography>
                                         </TableCell>
@@ -186,23 +185,12 @@ const SamplesDelivered = () => {
                                             <Button
                                                 onClick={() =>
                                                     navigate(
-                                                        `/system/result/test-request/${sample.testRequestId}`
+                                                        `/system/result/test-request/${sample.testRequestId}`,
                                                     )
                                                 }
                                             >
                                                 Ensayo
                                             </Button>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: "bold",
-                                                }}
-                                            >
-                                                <Button>
-                                                    Detalles de envio
-                                                </Button>
-                                            </Typography>
                                         </TableCell>
                                     </TableRow>
                                 </Tooltip>

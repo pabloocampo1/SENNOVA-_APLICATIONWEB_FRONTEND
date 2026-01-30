@@ -43,6 +43,7 @@ import ChangePasswordPage from "./pages/auth/ChangePasswordPage";
 import TokenExpiredPage from "./pages/auth/TokenExpiredPage";
 import AboutSystem from "./pages/admin/AboutSystemPage";
 import UserManual from "./pages/admin/UserManual";
+import Home from "./pages/public/Home";
 
 function App() {
     return (
@@ -72,12 +73,10 @@ function App() {
                                     />
                                 </Route>
 
-                                <Route
-                                    path="/public"
-                                    element={<PublicLayout />}
-                                >
+                                <Route path="/" element={<PublicLayout />}>
+                                    <Route index element={<Home />} />
                                     <Route
-                                        path="cotizacion/ensayo"
+                                        path="/cotizacion"
                                         element={<QuotationCustomer />}
                                     />
                                 </Route>

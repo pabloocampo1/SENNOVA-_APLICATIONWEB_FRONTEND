@@ -107,7 +107,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
         try {
             const res = await api.post(
                 "/testRequest/quotation",
-                quoteRequetsDto
+                quoteRequetsDto,
             );
             if (res.status == 201) {
                 setIsSend(true);
@@ -124,7 +124,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
 
     const deleteSampleOfTheList = (indexObject) => {
         setSampleSelectByTheUser((prev) =>
-            prev.filter((_, index) => index !== indexObject)
+            prev.filter((_, index) => index !== indexObject),
         );
     };
 
@@ -218,7 +218,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                         <Box
                             sx={{
                                 width: { xs: "100%", md: "40%" },
-                                height: { xs: "85vh", md: "80vh" },
+                                height: "auto",
                             }}
                         >
                             <CustomerInfoQuote
@@ -315,7 +315,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                     <Button
                         variant="outlined"
                         onClick={() => {
-                            cleanQoute(), setIsSend(false);
+                            (cleanQoute(), setIsSend(false));
                         }}
                     >
                         Crear nueva cotizacion.

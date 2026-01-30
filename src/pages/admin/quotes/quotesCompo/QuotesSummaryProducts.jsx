@@ -1,4 +1,4 @@
-import { Add, Delete, Info } from "@mui/icons-material";
+import { Add, Delete, ShoppingCart, Science } from "@mui/icons-material";
 import {
     Box,
     Button,
@@ -12,9 +12,14 @@ import {
     TableRow,
     Typography,
     useTheme,
+    Chip,
+    Divider,
+    Fade,
 } from "@mui/material";
 import React from "react";
 import imageAdd from "../../../../assets/images/add_image.svg";
+
+// this component show all samples with analysis selected by the user
 
 const QuotesSummaryProducts = ({
     samples = [],
@@ -27,7 +32,7 @@ const QuotesSummaryProducts = ({
         new Intl.NumberFormat("es-CO", {
             style: "currency",
             currency: "COP",
-            minimumFractionDigits: 2,
+            minimumFractionDigits: 0,
         }).format(value);
 
     const totalGeneral = samples.reduce((accSample, sample) => {
@@ -39,167 +44,308 @@ const QuotesSummaryProducts = ({
         return accSample + totalSample;
     }, 0);
 
+    const totalAnalysis = samples.reduce(
+        (acc, sample) => acc + sample.analysis.length,
+        0,
+    );
+
     return (
         <Box
             sx={{
                 width: "100%",
                 height: "100%",
                 bgcolor: "background.paper",
-                border: "1px solid #00000020",
-                borderRadius: "15px",
-                p: "20px",
-                position: "relative",
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: "16px",
+                p: 3,
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
             }}
         >
-            <Typography sx={{ textAlign: "center", fontWeight: "700" }}>
-                Resumen de la cotizacion.
-            </Typography>
+            {/* Header */}
+            <Box sx={{ mb: 2 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        mb: 1,
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <ShoppingCart color="primary" />
+                        <Typography variant="h6" sx={{ fontWeight: "700" }}>
+                            Resumen de Cotización
+                        </Typography>
+                    </Box>
+                    {samples.length > 0 && (
+                        <Chip
+                            label={`${samples.length} ${
+                                samples.length === 1 ? "muestra" : "muestras"
+                            }`}
+                            color="primary"
+                            size="small"
+                            sx={{ fontWeight: 600 }}
+                        />
+                    )}
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                    {samples.length > 0
+                        ? `${totalAnalysis} análisis seleccionados`
+                        : "Agrega muestras y análisis para tu cotización"}
+                </Typography>
+            </Box>
 
+            <Divider sx={{ mb: 2 }} />
+
+            {/* Contenido scrolleable */}
             <Box
                 sx={{
-                    width: "100%",
-                    height: "80%",
                     flex: 1,
                     overflowY: "auto",
-                    mt: 2,
-                    "&::-webkit-scrollbar": { width: "8px" },
+                    overflowX: "hidden",
+                    pr: 1,
+                    "&::-webkit-scrollbar": { width: "6px" },
+                    "&::-webkit-scrollbar-track": {
+                        backgroundColor: "transparent",
+                    },
                     "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: "#ccc",
+                        backgroundColor: theme.palette.divider,
                         borderRadius: "8px",
+                        "&:hover": {
+                            backgroundColor: theme.palette.action.hover,
+                        },
                     },
                 }}
             >
+                {/* Estado vacío */}
                 {samples.length <= 0 && (
-                    <Box
-                        sx={{
-                            width: "100%",
-                            height: "100%",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <Typography variant="body1" sx={{ fontWeight: "500" }}>
-                            No hay productos/analisis agregados aun.
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{ opacity: "0.70", mb: "20px" }}
-                        >
-                            Debes de agregar productos/analisis para la
-                            realizacion de la cotizacion.
-                        </Typography>
-                        <img width={"100px"} src={imageAdd} alt="image_add" />
-                        <Button
-                            onClick={() => handleOpenModalToSelectAnalisys()}
-                            startIcon={<Add />}
-                            sx={{ mt: "20px" }}
-                            variant="outlined"
-                        >
-                            Agregar.
-                        </Button>
-                    </Box>
-                )}
-
-                {samples.map((sample, index) => (
-                    <Box
-                        key={index}
-                        sx={{
-                            width: "100%",
-                            height: "auto",
-                            bgcolor: "background.default",
-                            border: `1px solid ${theme.palette.border.primary}`,
-                            borderRadius: "15px",
-                            p: "10px",
-                            mb: "20px",
-                            mr: "10px",
-                            position: "relative",
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                position: "absolute",
-                                top: "10",
-                                right: "1%",
-                            }}
-                            onClick={() => deleteSample(index)}
-                        >
-                            <Delete />
-                        </Box>
-
-                        <Box sx={{ display: "flex" }}>
-                            <Typography
-                                variant="body1"
-                                sx={{ mr: "20px", fontWeight: "bold" }}
-                            >
-                                {index + 1} |
-                            </Typography>
-                            <Box>
-                                <Typography variant="body1">Muestra</Typography>
-                                <Typography variant="body2">
-                                    {" "}
-                                    {sample.matrix}
-                                </Typography>
-                            </Box>
-                        </Box>
-                        {/* table of analysys of the sample */}
-
+                    <Fade in timeout={300}>
                         <Box
                             sx={{
                                 width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flexDirection: "column",
+                                py: 4,
                             }}
                         >
-                            <TableContainer
-                                component={Paper}
+                            <Box
                                 sx={{
-                                    width: "100%",
-                                    mt: "20px",
-                                    overflowX: "auto",
-                                    overflowY: "hidden",
-                                    borderRadius: "12px",
-                                    boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                                    width: "120px",
+                                    height: "120px",
+                                    borderRadius: "50%",
+                                    bgcolor: "action.hover",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    mb: 3,
+                                }}
+                            >
+                                <img
+                                    width="80px"
+                                    src={imageAdd}
+                                    alt="image_add"
+                                />
+                            </Box>
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: "600", mb: 1 }}
+                            >
+                                No hay análisis agregados
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ mb: 3, textAlign: "center", px: 2 }}
+                            >
+                                Comienza agregando productos y análisis para
+                                generar tu cotización
+                            </Typography>
+                            <Button
+                                onClick={() =>
+                                    handleOpenModalToSelectAnalisys()
+                                }
+                                startIcon={<Add />}
+                                variant="contained"
+                                size="large"
+                                sx={{
+                                    borderRadius: "10px",
+                                    px: 4,
+                                    textTransform: "none",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Agregar Análisis
+                            </Button>
+                        </Box>
+                    </Fade>
+                )}
 
-                                    "&::-webkit-scrollbar": {
-                                        height: "8px",
-                                    },
-                                    "&::-webkit-scrollbar-thumb": {
-                                        backgroundColor: "#bfbfbf",
-                                        borderRadius: "10px",
-                                    },
-                                    "&::-webkit-scrollbar-thumb:hover": {
-                                        backgroundColor: "#9a9a9a",
+                {/* Lista de muestras */}
+                {samples.map((sample, index) => (
+                    <Fade in timeout={300} key={index}>
+                        <Box
+                            sx={{
+                                width: "100%",
+                                bgcolor: "background.default",
+                                border: "1px solid",
+                                borderColor: "divider",
+                                borderRadius: "12px",
+                                p: 2,
+                                mb: 2,
+                                position: "relative",
+                                transition: "all 0.3s ease",
+                                "&:hover": {
+                                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                                    borderColor: "primary.main",
+                                },
+                            }}
+                        >
+                            {/* Botón eliminar */}
+                            <IconButton
+                                onClick={() => deleteSample(index)}
+                                size="small"
+                                sx={{
+                                    position: "absolute",
+                                    top: 8,
+                                    right: 8,
+                                    color: "error.main",
+                                    bgcolor: "background.paper",
+                                    "&:hover": {
+                                        bgcolor: "error.light",
+                                        color: "error.contrastText",
                                     },
                                 }}
                             >
-                                <Table
-                                    stickyHeader
+                                <Delete fontSize="small" />
+                            </IconButton>
+
+                            {/* Header de la muestra */}
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 2,
+                                    mb: 2,
+                                }}
+                            >
+                                <Box
                                     sx={{
-                                        width: "100%",
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: "10px",
+                                        bgcolor: "primary.main",
+                                        color: "primary.contrastText",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        fontWeight: "bold",
+                                        fontSize: "1.2rem",
                                     }}
-                                    aria-label="tabla de equipos"
                                 >
+                                    {index + 1}
+                                </Box>
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                        sx={{ fontSize: "0.75rem", mb: 0.5 }}
+                                    >
+                                        MUESTRA
+                                    </Typography>
+                                    <Typography
+                                        variant="body1"
+                                        sx={{ fontWeight: 600 }}
+                                    >
+                                        {sample.matrix}
+                                    </Typography>
+                                </Box>
+                                <Chip
+                                    icon={<Science sx={{ fontSize: "16px" }} />}
+                                    label={`${sample.analysis.length} análisis`}
+                                    size="small"
+                                    variant="outlined"
+                                    color="primary"
+                                />
+                            </Box>
+
+                            {/* Tabla de análisis */}
+                            <TableContainer
+                                component={Paper}
+                                elevation={0}
+                                sx={{
+                                    width: "100%",
+                                    overflowX: "auto",
+                                    borderRadius: "10px",
+                                    border: "1px solid",
+                                    borderColor: "divider",
+                                    "&::-webkit-scrollbar": {
+                                        height: "6px",
+                                    },
+                                    "&::-webkit-scrollbar-thumb": {
+                                        backgroundColor: theme.palette.divider,
+                                        borderRadius: "10px",
+                                        "&:hover": {
+                                            backgroundColor:
+                                                theme.palette.action.hover,
+                                        },
+                                    },
+                                }}
+                            >
+                                <Table size="small">
                                     <TableHead>
-                                        <TableRow>
+                                        <TableRow
+                                            sx={{
+                                                bgcolor: "action.hover",
+                                            }}
+                                        >
                                             <TableCell
-                                                sx={{ fontWeight: "700" }}
+                                                sx={{
+                                                    fontWeight: "700",
+                                                    fontSize: "0.75rem",
+                                                    textTransform: "uppercase",
+                                                    color: "text.secondary",
+                                                }}
                                             >
-                                                Analisis
+                                                Análisis
                                             </TableCell>
                                             <TableCell
-                                                sx={{ fontWeight: "700" }}
+                                                align="right"
+                                                sx={{
+                                                    fontWeight: "700",
+                                                    fontSize: "0.75rem",
+                                                    textTransform: "uppercase",
+                                                    color: "text.secondary",
+                                                }}
                                             >
-                                                Precio unitario
+                                                Precio
                                             </TableCell>
                                             <TableCell
-                                                sx={{ fontWeight: "700" }}
+                                                align="center"
+                                                sx={{
+                                                    fontWeight: "700",
+                                                    fontSize: "0.75rem",
+                                                    textTransform: "uppercase",
+                                                    color: "text.secondary",
+                                                }}
                                             >
-                                                cantidad
+                                                Cant.
                                             </TableCell>
                                             <TableCell
-                                                sx={{ fontWeight: "700" }}
+                                                align="right"
+                                                sx={{
+                                                    fontWeight: "700",
+                                                    fontSize: "0.75rem",
+                                                    textTransform: "uppercase",
+                                                    color: "text.secondary",
+                                                }}
                                             >
-                                                total
+                                                Total
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -219,39 +365,60 @@ const QuotesSummaryProducts = ({
                                                         object.product.productId
                                                     }
                                                     hover
+                                                    sx={{
+                                                        "&:last-child td": {
+                                                            borderBottom: 0,
+                                                        },
+                                                    }}
                                                 >
-                                                    <TableCell
-                                                        sx={{ opacity: 0.85 }}
-                                                    >
-                                                        {
-                                                            object.product
-                                                                .analysis
-                                                        }
+                                                    <TableCell>
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                fontWeight: 500,
+                                                            }}
+                                                        >
+                                                            {
+                                                                object.product
+                                                                    .analysis
+                                                            }
+                                                        </Typography>
                                                     </TableCell>
-                                                    <TableCell
-                                                        sx={{
-                                                            opacity: 0.85,
-                                                            textAlign: "right",
-                                                        }}
-                                                    >
-                                                        {formatCurrency(price)}
+                                                    <TableCell align="right">
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="text.secondary"
+                                                        >
+                                                            {formatCurrency(
+                                                                price,
+                                                            )}
+                                                        </Typography>
                                                     </TableCell>
-                                                    <TableCell
-                                                        sx={{
-                                                            opacity: 0.85,
-                                                            textAlign: "center",
-                                                        }}
-                                                    >
-                                                        {qty}
+                                                    <TableCell align="center">
+                                                        <Chip
+                                                            label={qty}
+                                                            size="small"
+                                                            sx={{
+                                                                minWidth:
+                                                                    "32px",
+                                                                height: "24px",
+                                                                fontSize:
+                                                                    "0.75rem",
+                                                            }}
+                                                        />
                                                     </TableCell>
-                                                    <TableCell
-                                                        sx={{
-                                                            opacity: 0.85,
-                                                            textAlign: "right",
-                                                            fontWeight: "bold",
-                                                        }}
-                                                    >
-                                                        {formatCurrency(total)}
+                                                    <TableCell align="right">
+                                                        <Typography
+                                                            variant="body2"
+                                                            sx={{
+                                                                fontWeight: 600,
+                                                                color: "primary.main",
+                                                            }}
+                                                        >
+                                                            {formatCurrency(
+                                                                total,
+                                                            )}
+                                                        </Typography>
                                                     </TableCell>
                                                 </TableRow>
                                             );
@@ -260,8 +427,11 @@ const QuotesSummaryProducts = ({
                                         {/* Total por muestra */}
                                         <TableRow
                                             sx={{
-                                                backgroundColor:
-                                                    theme.palette.action.hover,
+                                                bgcolor: "primary.main",
+                                                "&:hover": {
+                                                    bgcolor:
+                                                        "primary.main !important",
+                                                },
                                             }}
                                         >
                                             <TableCell
@@ -269,14 +439,19 @@ const QuotesSummaryProducts = ({
                                                 sx={{
                                                     fontWeight: "bold",
                                                     textAlign: "right",
+                                                    color: "primary.contrastText",
+                                                    borderBottom: 0,
                                                 }}
                                             >
-                                                Total muestra:
+                                                Subtotal:
                                             </TableCell>
                                             <TableCell
+                                                align="right"
                                                 sx={{
                                                     fontWeight: "bold",
-                                                    textAlign: "right",
+                                                    fontSize: "1rem",
+                                                    color: "primary.contrastText",
+                                                    borderBottom: 0,
                                                 }}
                                             >
                                                 {formatCurrency(
@@ -285,8 +460,8 @@ const QuotesSummaryProducts = ({
                                                             acc +
                                                             item.product.price *
                                                                 item.quantity,
-                                                        0
-                                                    )
+                                                        0,
+                                                    ),
                                                 )}
                                             </TableCell>
                                         </TableRow>
@@ -294,44 +469,74 @@ const QuotesSummaryProducts = ({
                                 </Table>
                             </TableContainer>
                         </Box>
-                    </Box>
+                    </Fade>
                 ))}
             </Box>
 
+            {/* Footer con total y botón */}
             <Box
                 sx={{
-                    width: "100%",
-                    mt: "auto",
+                    mt: 2,
                     pt: 2,
-                    borderTop: `1px solid ${theme.palette.divider}`,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "end",
+                    borderTop: "2px solid",
+                    borderColor: "divider",
                 }}
             >
-                <Box>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 2,
+                        flexWrap: "wrap",
+                    }}
+                >
                     <Button
                         onClick={() => handleOpenModalToSelectAnalisys()}
                         startIcon={<Add />}
                         variant="outlined"
-                    >
-                        Agregar un producto {"(Analisis)"}.
-                    </Button>
-                </Box>
-
-                <Box>
-                    <Typography sx={{ fontWeight: "500" }}>
-                        Precio final
-                    </Typography>
-                    <Typography
-                        variant="h6"
                         sx={{
-                            fontWeight: "bold",
-                            color: theme.palette.primary.main,
+                            borderRadius: "10px",
+                            textTransform: "none",
+                            fontWeight: 600,
+                            px: 3,
                         }}
                     >
-                        {formatCurrency(totalGeneral)}
-                    </Typography>
+                        Agregar Análisis
+                    </Button>
+
+                    <Box
+                        sx={{
+                            textAlign: "right",
+                            bgcolor: "action.hover",
+                            px: 3,
+                            py: 1.5,
+                            borderRadius: "10px",
+                            minWidth: "200px",
+                        }}
+                    >
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{
+                                fontWeight: 600,
+                                textTransform: "uppercase",
+                                display: "block",
+                                mb: 0.5,
+                            }}
+                        >
+                            Total General
+                        </Typography>
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                fontWeight: "bold",
+                                color: "primary.main",
+                            }}
+                        >
+                            {formatCurrency(totalGeneral)}
+                        </Typography>
+                    </Box>
                 </Box>
             </Box>
         </Box>
