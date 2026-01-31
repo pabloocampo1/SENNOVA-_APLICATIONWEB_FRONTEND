@@ -44,126 +44,163 @@ import TokenExpiredPage from "./pages/auth/TokenExpiredPage";
 import AboutSystem from "./pages/admin/AboutSystemPage";
 import UserManual from "./pages/admin/UserManual";
 import Home from "./pages/public/Home";
+import NoAccessPage from "./pages/public/NoAccessPage";
 
 function App() {
     return (
-        <>
-            <GoogleOAuthProvider clientId="205317144145-dntssvrb84osb754okeetq2349hua44f.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId="205317144145-dntssvrb84osb754okeetq2349hua44f.apps.googleusercontent.com">
+            <ThemeContextProvider>
                 <Router>
                     <AuthContextProvider>
-                        <ThemeContextProvider>
-                            <Routes>
-                                <Route path="/signIn" element={<AuthLayaout />}>
-                                    <Route index element={<LoginPage />} />
-                                    <Route
-                                        path="noAccess"
-                                        element={<NoAccessModal />}
-                                    />
-                                    <Route
-                                        path="forgot-password"
-                                        element={<ForgotPasswordCompo />}
-                                    />
-                                    <Route
-                                        path="change-password/:token"
-                                        element={<ChangePasswordPage />}
-                                    />
-                                    <Route
-                                        path="token-expired"
-                                        element={<TokenExpiredPage />}
-                                    />
-                                </Route>
-
-                                <Route path="/" element={<PublicLayout />}>
-                                    <Route index element={<Home />} />
-                                    <Route
-                                        path="/cotizacion"
-                                        element={<QuotationCustomer />}
-                                    />
-                                </Route>
-
+                        <Routes>
+                            <Route path="/" element={<PublicLayout />}>
+                                <Route index element={<Home />} />
                                 <Route
-                                    element={
-                                        <PrivateRoute
-                                            allowedRoles={[
-                                                "ROLE_ADMIN",
-                                                "ROLE_SUPERADMIN",
-                                            ]}
-                                        />
-                                    }
+                                    path="cotizacion"
+                                    element={<QuotationCustomer />}
+                                />
+                                <Route
+                                    path="no-access-role"
+                                    element={<NoAccessPage />}
+                                />
+                            </Route>
+
+                            <Route path="/signIn" element={<AuthLayaout />}>
+                                <Route index element={<LoginPage />} />
+                                <Route
+                                    path="noAccess"
+                                    element={<NoAccessModal />}
+                                />
+                                <Route
+                                    path="forgot-password"
+                                    element={<ForgotPasswordCompo />}
+                                />
+                                <Route
+                                    path="change-password/:token"
+                                    element={<ChangePasswordPage />}
+                                />
+                                <Route
+                                    path="token-expired"
+                                    element={<TokenExpiredPage />}
+                                />
+                            </Route>
+
+                            <Route
+                                element={
+                                    <PrivateRoute
+                                        allowedRoles={[
+                                            "ROLE_ADMIN",
+                                            "ROLE_SUPERADMIN",
+                                            "ROLE_ANALYST",
+                                        ]}
+                                    />
+                                }
+                            >
+                                <Route
+                                    path="/system"
+                                    element={<SystemLayaout />}
                                 >
+                                    {/* . RUTAS DE SISTEMA (ACCESO GENERAL) y RUTAS PARA ROLE_ANALYST*/}
+                                    <Route index element={<DashboardPage />} />
                                     <Route
-                                        path="/system"
-                                        element={<SystemLayaout />}
+                                        path="settings"
+                                        element={<SettingPage />}
+                                    />
+                                    <Route
+                                        path="profile"
+                                        element={<ProfilePage />}
+                                    />
+                                    <Route
+                                        path="inventory/equipments"
+                                        element={<EquipmentPage />}
+                                    />
+                                    <Route
+                                        path="inventory/equipments/info/:idEquipment"
+                                        element={<EquipmentInfo />}
+                                    />
+                                    <Route
+                                        path="inventory/equipment/report"
+                                        element={<ReportEquipments />}
+                                    />
+
+                                    <Route
+                                        path="inventory/check/:typeInventory"
+                                        element={
+                                            <SelectOptionToCheckInventoryPage />
+                                        }
+                                    />
+                                    <Route
+                                        path="inventory/check/search/:typeInventory"
+                                        element={<SearchOptionCheckInv />}
+                                    />
+                                    <Route
+                                        path="inventory/check/location/:typeInventory"
+                                        element={<LocationOptionCheckInv />}
+                                    />
+                                    <Route
+                                        path="inventory/reagents"
+                                        element={<ReagmentPage />}
+                                    />
+                                    <Route
+                                        path="inventory/reagents/info/:reagentId"
+                                        element={<ReagentInfo />}
+                                    />
+                                    <Route
+                                        path="about-system"
+                                        element={<AboutSystem />}
+                                    />
+                                    <Route
+                                        path="user-guide"
+                                        element={<UserManual />}
+                                    />
+                                    <Route
+                                        path="results"
+                                        element={<ResultsRelease />}
+                                    />
+                                    <Route
+                                        path="result/test-request/:testRequestId"
+                                        element={<TestRequestInfo />}
+                                    />
+                                    <Route
+                                        path="result/test-request/:requestCode/:sampleId"
+                                        element={<SampleReleaseResult />}
+                                    />
+                                    <Route
+                                        path="result/test-request/:testRequestId/recepcion-muestras"
+                                        element={<SampleReceptionPage />}
+                                    />
+
+                                    {/* . RUTAS SOLO PARA ADMIN Y SUPERADMIN  */}
+
+                                    <Route
+                                        element={
+                                            <PrivateRoute
+                                                allowedRoles={[
+                                                    "ROLE_ADMIN",
+                                                    "ROLE_SUPERADMIN",
+                                                ]}
+                                            />
+                                        }
                                     >
-                                        <Route
-                                            index
-                                            element={<DashboardPage />}
-                                        />
-                                        <Route
-                                            path="settings"
-                                            element={<SettingPage />}
-                                        />
-                                        <Route
-                                            path="profile"
-                                            element={<ProfilePage />}
-                                        />
-
-                                        <Route
-                                            path="inventory/equipments"
-                                            element={<EquipmentPage />}
-                                        />
-                                        <Route
-                                            path="inventory/equipments/info/:idEquipment"
-                                            element={<EquipmentInfo />}
-                                        />
-                                        <Route
-                                            path="inventory/equipment/report"
-                                            element={<ReportEquipments />}
-                                        />
-                                        <Route
-                                            path="inventory/check/:typeInventory"
-                                            element={
-                                                <SelectOptionToCheckInventoryPage />
-                                            }
-                                        />
-                                        <Route
-                                            path="inventory/check/search/:typeInventory"
-                                            element={<SearchOptionCheckInv />}
-                                        />
-                                        <Route
-                                            path="inventory/check/location/:typeInventory"
-                                            element={<LocationOptionCheckInv />}
-                                        />
-
-                                        <Route
-                                            path="inventory/reagents"
-                                            element={<ReagmentPage />}
-                                        />
-                                        <Route
-                                            path="inventory/reagents/info/:reagentId"
-                                            element={<ReagentInfo />}
-                                        />
                                         <Route
                                             path="quotes"
                                             element={<QuotesPage />}
                                         />
                                         <Route
-                                            path="results"
-                                            element={<ResultsRelease />}
+                                            path="products"
+                                            element={<ProductsCompo />}
                                         />
-                                        <Route
-                                            path="result/test-request/:testRequestId"
-                                            element={<TestRequestInfo />}
-                                        />
-                                        <Route
-                                            path="result/test-request/:requestCode/:sampleId"
-                                            element={<SampleReleaseResult />}
-                                        />
-                                        <Route
-                                            path="result/test-request/:testRequestId/recepcion-muestras"
-                                            element={<SampleReceptionPage />}
-                                        />
+                                    </Route>
 
+                                    <Route
+                                        element={
+                                            <PrivateRoute
+                                                allowedRoles={[
+                                                    "ROLE_SUPERADMIN",
+                                                ]}
+                                            />
+                                        }
+                                    >
                                         <Route
                                             path="result/execution-test"
                                             element={<ResultExecution />}
@@ -199,28 +236,14 @@ function App() {
                                             path="users"
                                             element={<CustomersAndUsersPage />}
                                         />
-                                        <Route
-                                            path="products"
-                                            element={<ProductsCompo />}
-                                        />
-                                        <Route
-                                            path="about-system"
-                                            element={<AboutSystem />}
-                                        />
-                                        <Route
-                                            path="user-guide"
-                                            element={<UserManual />}
-                                        />
-
-                                        {/* <Route/> */}
                                     </Route>
                                 </Route>
-                            </Routes>
-                        </ThemeContextProvider>
+                            </Route>
+                        </Routes>
                     </AuthContextProvider>
                 </Router>
-            </GoogleOAuthProvider>
-        </>
+            </ThemeContextProvider>
+        </GoogleOAuthProvider>
     );
 }
 

@@ -32,7 +32,6 @@ const MonthlyTestRequestsChart = ({ theme }) => {
         try {
             const res = await api.get("/dashboard/metrics/testRequest/monthly");
             setChartData(res.data);
-            console.log(res);
         } catch (error) {
             console.error(error);
         } finally {

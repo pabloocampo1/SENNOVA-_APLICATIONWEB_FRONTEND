@@ -60,8 +60,6 @@ const ResultsByUserBarChart = ({ theme }) => {
     const series = buildChartData(dataSet);
 
     const getData = async (year = "") => {
-        console.log(year);
-
         setYearSelected(year);
         setLoading(true);
 
@@ -71,7 +69,6 @@ const ResultsByUserBarChart = ({ theme }) => {
             });
 
             setDataSet(res.data);
-            console.log(res);
         } catch (error) {
             console.error(error);
         } finally {

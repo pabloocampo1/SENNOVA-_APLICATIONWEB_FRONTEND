@@ -6,7 +6,13 @@ import api, {
 } from "../service/axiosService";
 import { useNavigate } from "react-router-dom";
 
+// loggedOut is for block the access to refresh token, if the user logout so, not do the refresh token
+
+// regresh token is for auto login if the refresh token is valid and the user not do logout
+
 export const AuthContext = createContext();
+
+console;
 
 export const AuthContextProvider = ({ children }) => {
     const [token, setToken] = useState("");
@@ -30,6 +36,8 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const signIn = async (username, password) => {
+        localStorage.removeItem("loggedOut");
+
         localStorage.removeItem("SectionName");
         localStorage.removeItem("PathName");
 
@@ -66,6 +74,8 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const signInWithGoogle = (objectResponse) => {
+        localStorage.removeItem("loggedOut");
+
         if (objectResponse.status) {
             if (objectResponse.accessToken) {
                 setAuthObject({
@@ -82,7 +92,6 @@ export const AuthContextProvider = ({ children }) => {
                     available: objectResponse.available,
                 });
                 setToken(objectResponse.accessToken);
-                console.log(objectResponse);
 
                 navigate("/system");
             }
@@ -90,48 +99,40 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        const fetchLogout = async () => {
-            try {
-                const username = authObject.username;
-                const response = await api.post("/auth/logout", null, {
-                    params: { username: username },
-                });
+        try {
+            await api.post("/auth/logout", null, {
+                params: { username: authObject.username },
+            });
+        } catch (e) {
+            console.warn("Error logout backend", e);
+        } finally {
+            setToken("");
+            setAuthObject({
+                username: "",
+                name: "",
+                isAuthenticate: false,
+                position: "",
+                imageProfile: "",
+                role: "",
+                preferencesNotification: null,
+                email: "",
+                lastSession: "",
+                available: false,
+            });
 
-                if (response.status !== 200) {
-                    alert(
-                        "Ocurrio un error al intentar cerrar sesion, por favor, notificar este error."
-                    );
-                } else {
-                    localStorage.removeItem("token");
-                    setAuthObject({
-                        username: "",
-                        name: "",
-                        isAuthenticate: false,
-                        imageProfile: "",
-                        position: "",
-                        role: "",
-                        preferencesNotification: null,
-                        email: null,
-                        lastSession: "",
-                        available: false,
-                    });
-                    setToken("");
-                    localStorage.removeItem("SectionName");
-                    localStorage.removeItem("PathName");
-                }
-            } catch (error) {
-                alert(
-                    "Ocurrio un error al intentar cerrar sesion, por favor, notificar este error."
-                );
-            } finally {
-                navigate("/signIn");
-            }
-        };
+            //  Flag anti-refresh
+            localStorage.setItem("loggedOut", "true");
 
-        fetchLogout();
+            navigate("/signIn", { replace: true });
+        }
     };
 
     const tryRefresh = async () => {
+        if (localStorage.getItem("loggedOut") === "true") {
+            setLoading(false);
+            return;
+        }
+
         try {
             const res = await api.post("/auth/refresh/token");
             setToken(res.data.accessToken);
@@ -147,8 +148,7 @@ export const AuthContextProvider = ({ children }) => {
                 lastSession: res.data.lastSession,
                 available: res.data.available,
             });
-        } catch (err) {
-            console.log("No se pudo refrescar el token", err);
+        } catch {
             setToken("");
         } finally {
             setLoading(false);
@@ -166,9 +166,9 @@ export const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
         if (!loading && token === "") {
-            const publicPaths = ["/signIn", "/public"];
+            const publicPaths = ["/signIn", "/public", "/"];
             const isPublic = publicPaths.some((path) =>
-                window.location.pathname.startsWith(path)
+                window.location.pathname.startsWith(path),
             );
 
             if (!isPublic) {

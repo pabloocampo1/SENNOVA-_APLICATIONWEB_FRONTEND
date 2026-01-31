@@ -1,26 +1,23 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import NoAccessModal from "../components/NoAccessModal";
 
 const PrivateRoute = ({ allowedRoles = [] }) => {
     const { authObject, loading } = useAuth();
     const role = authObject.role;
     const isAuthenticated = authObject.isAuthenticate;
 
-    if (loading) {
-        return <div>Cargando...</div>;
+    if (loading) return <div>Cargando...</div>;
+    if (!isAuthenticated) return <Navigate to="/signIn" replace />;
+
+    const isSuperAdmin = role === "ROLE_SUPERADMIN";
+    const hasAccess = allowedRoles.length === 0 || allowedRoles.includes(role);
+
+    if (isSuperAdmin || hasAccess) {
+        return <Outlet />;
     }
 
-    if (!isAuthenticated) {
-        return <Navigate to="/signIn" replace />;
-    }
-
-    if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-        return <Navigate to="/signIn/noAccess" replace />;
-    }
-
-    return <Outlet />;
+    return <Navigate to="/no-access-role" replace />;
 };
 
 export default PrivateRoute;

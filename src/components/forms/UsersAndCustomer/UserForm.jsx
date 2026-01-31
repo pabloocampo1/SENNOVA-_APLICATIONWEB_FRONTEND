@@ -1,14 +1,19 @@
 import {
     Box,
     Button,
+    IconButton,
+    InputAdornment,
     MenuItem,
     Switch,
     TextField,
+    Tooltip,
     Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import api from "../../../service/axiosService";
 import SimpleBackdrop from "../../SimpleBackDrop";
+import { AuthContext } from "../../../context/AuthContext";
+import { InfoOutlined } from "@mui/icons-material";
 
 const UserForm = ({
     data = null,
@@ -29,7 +34,7 @@ const UserForm = ({
     });
     const [isLoanding, setIsLoanding] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-
+    const { authObject, logout } = useContext(AuthContext);
     const [roleList, setRoleList] = useState([]);
     const [errorsList, setErrorList] = useState({});
     const [errorMessage, setErrorMessage] = useState(null);
@@ -38,8 +43,6 @@ const UserForm = ({
     const handleImageChange = (e) => {
         setImageFile(e.target.files[0]);
     };
-
-    console.log(formData);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -57,7 +60,7 @@ const UserForm = ({
             const formData = new FormData();
             formData.append(
                 "dto",
-                new Blob([JSON.stringify(dto)], { type: "application/json" })
+                new Blob([JSON.stringify(dto)], { type: "application/json" }),
             );
             if (imageFile != null) {
                 formData.append("image", imageFile);
@@ -70,6 +73,9 @@ const UserForm = ({
             });
 
             if (res.status == 201) {
+                console.log(res);
+                console.log(authObject);
+
                 update(res.data);
                 onClose();
             }
@@ -100,7 +106,7 @@ const UserForm = ({
             const formData = new FormData();
             formData.append(
                 "dto",
-                new Blob([JSON.stringify(dto)], { type: "application/json" })
+                new Blob([JSON.stringify(dto)], { type: "application/json" }),
             );
             if (imageFile != null) {
                 formData.append("image", imageFile);
@@ -117,6 +123,15 @@ const UserForm = ({
             if (res.status == 200) {
                 onClose();
                 success();
+
+                update(res.data);
+                if (
+                    res.data.email === authObject.email &&
+                    `ROLE_${res.data.roleName}` !== authObject.role
+                ) {
+                    await logout();
+                }
+                onClose();
             }
         } catch (error) {
             if (error.response) {
@@ -262,6 +277,24 @@ const UserForm = ({
                     value={formData.role || ""}
                     onChange={handleChange}
                     required
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <Tooltip
+                                    title="Si cambias tu rol deberas de iniciar sesion nuevamente"
+                                    arrow
+                                    placement="top"
+                                >
+                                    <IconButton size="small" edge="end">
+                                        <InfoOutlined
+                                            fontSize="small"
+                                            color="primary"
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            </InputAdornment>
+                        ),
+                    }}
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 >
                     {roleList.length < 1 && (
@@ -275,6 +308,19 @@ const UserForm = ({
                         );
                     })}
                 </TextField>
+
+                <Typography
+                    sx={{
+                        gridColumn: "1 / -1",
+                        color: "#d32f2f",
+                        fontSize: "0.85rem",
+                        textAlign: "center",
+                        mt: 1,
+                    }}
+                >
+                    ⚠️ Si cambias tu rol, tu sesión se cerrará automáticamente y
+                    deberás iniciar sesión nuevamente.
+                </Typography>
 
                 {emailCurrentUser == formData.email ? (
                     ""

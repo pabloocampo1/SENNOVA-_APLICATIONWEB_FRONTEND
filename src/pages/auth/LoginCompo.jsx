@@ -8,9 +8,9 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logoSennova from "../../assets/images/sennova_logo_sin_fondo.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { Google } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
@@ -26,16 +26,16 @@ const LoginPage = () => {
         text: "",
     });
     const theme = useTheme();
+    const navigate = useNavigate();
 
     const [isLoanding, setIsLoanding] = useState(false);
 
-    const { signIn, signInWithGoogle } = useAuth();
+    const { signIn, signInWithGoogle, authObject, loading } = useAuth();
 
     const handleSuccess = async (credentialResponse) => {
         try {
             const token = credentialResponse.credential;
             const res = await api.post("/auth/signIn/google", { token });
-            console.log(res);
 
             signInWithGoogle(res.data);
         } catch (err) {
@@ -70,6 +70,12 @@ const LoginPage = () => {
             setIsLoanding(false);
         }
     };
+
+    useEffect(() => {
+        if (!loading && authObject.isAuthenticate) {
+            navigate("/system", { replace: true });
+        }
+    }, [authObject.isAuthenticate, loading, navigate]);
 
     return (
         <Box

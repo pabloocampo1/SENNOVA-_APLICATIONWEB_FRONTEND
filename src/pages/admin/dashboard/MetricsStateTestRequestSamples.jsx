@@ -89,7 +89,6 @@ const TestRequestCreatedYear = ({ theme }) => {
                     label: "Rechazadas",
                 },
             ]);
-            console.log(res);
         } catch (error) {
             console.error(error);
         } finally {
