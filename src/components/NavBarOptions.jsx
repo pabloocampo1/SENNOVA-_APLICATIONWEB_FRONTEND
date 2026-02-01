@@ -8,7 +8,7 @@ import {
     ListItemText,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { ALL_MODULES } from "../consts/Modules";
+import { ALL_MODULES } from "../consts/ModulesSideBar";
 
 const NavBarOptions = ({ onCloseMenu, theme, navigate }) => {
     const { authObject } = useAuth();

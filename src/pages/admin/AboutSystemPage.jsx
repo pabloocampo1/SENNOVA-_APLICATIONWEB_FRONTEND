@@ -1,4 +1,3 @@
-import React from "react";
 import {
     Container,
     Typography,
@@ -18,79 +17,21 @@ import {
     ListItemText,
 } from "@mui/material";
 import {
-    Inventory,
-    Science,
-    RequestQuote,
-    AssignmentTurnedIn,
     AdminPanelSettings,
     GitHub,
     Code,
     Update,
     Storage,
     CheckCircleOutline,
+    ModeOutlined,
+    SystemSecurityUpdate,
+    SystemUpdateOutlined,
 } from "@mui/icons-material";
 import imageArchitecture from "../../assets/images/arquitecturaaSoftware.jpeg";
+import { whatDoMainModules } from "../../consts/WhatDoEachModule";
+import { rolesInfo } from "../../consts/RolesInfo";
 
 const AboutSystem = () => {
-    const mainModules = [
-        {
-            title: "Gestión de Equipos",
-            icon: <Inventory color="primary" />,
-            desc: "Control total del inventario de equipos.",
-            details: [
-                "Registro, edición y eliminación de equipos con perfiles detallados.",
-                "Gestión de documentos (Facturas, Manuales) e imágenes por equipo.",
-                "Control de mantenimientos preventivos con alertas vía email y sistema.",
-                "Préstamos, historial de uso y gestión dinámica de estados (Fuera de servicio, Dado de baja, etc).",
-                "Búsqueda por código de barras (Manual/Escáner) y ubicación.",
-                "Exportación completa del inventario a formato Excel.",
-            ],
-        },
-        {
-            title: "Reactivos y Stock",
-            icon: <Science color="secondary" />,
-            desc: "Seguimiento del inventario de reactivos.",
-            details: [
-                "Control de stock en tiempo real y registro de uso.",
-                "Monitoreo de fechas de vencimiento con notificaciones automáticas.",
-                "Alertas de stock crítico (cantidad cero o mínima).",
-                "Almacenamiento de archivos relacionados y hojas de seguridad.",
-                "Búsqueda avanzada con filtrado inteligente y paginación.",
-                "Descarga de inventario detallado en Excel.",
-            ],
-        },
-        {
-            title: "Muestras y Ensayos",
-            icon: <AssignmentTurnedIn color="success" />,
-            desc: "Flujo operativo desde la recepción hasta el informe final.",
-            details: [
-                "Lista de todos los ensayos aceptados",
-                "Consultar de manera eficiente la informacion de cada ensayo",
-                "Registro de recepción de muestras (datos e imagen).",
-                "Validación de análisis",
-                "Emisión de resultado de cada analisis con proteccion de edicíon",
-                "Vista previa de reporte final de cada muestra.",
-                "Emisíon de ensayo, con vista previa de reportes de cada muestra, informacion de cada muestra y envio directo al cliente con firma digital y archivos pdf adicionales.",
-                "Historial de envíos y trazabilidad de usuarios responsables.",
-                "Emisíon de muestras independientes al cliente",
-                "Ver muestras por entregar, vencidas, entregadas y  sin recepcion de muestra",
-            ],
-        },
-        {
-            title: "Cotizaciones",
-            icon: <RequestQuote color="warning" />,
-            desc: "Gestión comercial y conversión automática a ensayos.",
-            details: [
-                "Módulo para clientes: creación de cotizaciones y solicitud de análisis.",
-                "Cálculo automático de precios y gestión de estados.",
-                "Aceptación/Rechazo con envío de plantillas PDF vía email.",
-                "Conversión directa de cotización aceptada a ensayo operativo.",
-                "Consultar informacion de cotizacion",
-                "Filtrar cotizaciones",
-            ],
-        },
-    ];
-
     return (
         <Container
             maxWidth="xl"
@@ -127,74 +68,218 @@ const AboutSystem = () => {
                     resultados.
                 </Typography>
             </Box>
-            <Grid container spacing={4} mb={6}>
-                {mainModules.map((mod, index) => (
-                    <Grid item xs={12} lg={6} key={index}>
-                        <Card
-                            sx={{
-                                height: "100%",
-                                borderRadius: 4,
-                                boxShadow: "0px 10px 30px rgba(0,0,0,0.05)",
-                                border: "1px solid",
-                                borderColor: "divider",
-                                transition: "transform 0.2s",
-                                "&:hover": { transform: "translateY(-5px)" },
-                            }}
-                        >
-                            <CardContent>
-                                <Box display="flex" alignItems="center" mb={2}>
-                                    <Avatar
-                                        sx={{
-                                            bgcolor: "action.hover",
-                                            mr: 2,
-                                            width: 50,
-                                            height: 50,
-                                        }}
+            <Paper
+                elevation={0}
+                sx={{
+                    p: 4,
+                    borderRadius: 4,
+                    bgcolor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    mb: 6,
+                }}
+            >
+                <Box display="flex" alignItems="center" mb={3}>
+                    <SystemUpdateOutlined
+                        sx={{ mr: 2, color: "primary.main" }}
+                    />
+                    <Typography variant="h5" fontWeight="700">
+                        Modulos del sistema
+                    </Typography>
+                </Box>
+
+                <Grid container spacing={3}>
+                    {whatDoMainModules.map((item, i) => (
+                        <Grid item xs={12} md={4} key={i}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    height: "100%",
+                                    borderRadius: 3,
+                                    transition: "0.3s",
+                                    "&:hover": {
+                                        boxShadow:
+                                            "0 4px 20px rgba(0,0,0,0.08)",
+                                    },
+                                }}
+                            >
+                                <CardContent>
+                                    <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        mb={1}
                                     >
-                                        {mod.icon}
-                                    </Avatar>
-                                    <Box>
+                                        <Box
+                                            sx={{
+                                                width: 12,
+                                                height: 12,
+                                                borderRadius: "50%",
+
+                                                mr: 1,
+                                            }}
+                                        />
                                         <Typography
-                                            variant="h5"
+                                            variant="subtitle1"
                                             fontWeight="700"
                                         >
-                                            {mod.title}
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                        >
-                                            {mod.desc}
+                                            {item.title}
                                         </Typography>
                                     </Box>
-                                </Box>
-                                <Divider sx={{ my: 2 }} />
-                                <List dense>
-                                    {mod.details.map((detail, i) => (
-                                        <ListItem key={i} disableGutters>
-                                            <ListItemIcon sx={{ minWidth: 30 }}>
-                                                <CheckCircleOutline
-                                                    sx={{
-                                                        fontSize: 18,
-                                                        color: "primary.main",
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        sx={{ mb: 2 }}
+                                    >
+                                        {item.desc}
+                                    </Typography>
+                                    <Divider sx={{ mb: 2 }} />
+                                    <List dense disablePadding>
+                                        {item.details.map((action, idx) => (
+                                            <ListItem
+                                                key={idx}
+                                                sx={{ py: 0.5 }}
+                                            >
+                                                <ListItemIcon
+                                                    sx={{ minWidth: 25 }}
+                                                >
+                                                    <CheckCircleOutline
+                                                        sx={{
+                                                            fontSize: 16,
+                                                            color: item.color,
+                                                        }}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={action}
+                                                    primaryTypographyProps={{
+                                                        variant: "caption",
+                                                        fontWeight: 300,
                                                     }}
                                                 />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={detail}
-                                                primaryTypographyProps={{
-                                                    variant: "body2",
-                                                    fontWeight: 500,
-                                                }}
-                                            />
-                                        </ListItem>
-                                    ))}
-                                </List>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Paper>
+
+            {/* --- SECTION ROLES   --- */}
+            <Paper
+                elevation={0}
+                sx={{
+                    p: 4,
+                    borderRadius: 4,
+                    bgcolor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    mb: 6,
+                }}
+            >
+                <Box display="flex" alignItems="center" mb={3}>
+                    <AdminPanelSettings sx={{ mr: 2, color: "primary.main" }} />
+                    <Typography variant="h5" fontWeight="700">
+                        Control de Acceso Basado en Roles (RBAC)
+                    </Typography>
+                </Box>
+
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                >
+                    El sistema implementa una capa de seguridad{" "}
+                    <strong>RBAC</strong> que asegura la integridad de los datos
+                    científicos. Ciertas acciones críticas como la eliminación
+                    de registros o la finalización de ensayos están reservadas
+                    exclusivamente para niveles jerárquicos superiores. Además,
+                    el servidor cuenta con rutas protegidas, lo que impide el
+                    acceso a recursos no autorizados.
+                </Typography>
+
+                <Grid container spacing={3}>
+                    {rolesInfo.map((item, i) => (
+                        <Grid item xs={12} md={4} key={i}>
+                            <Card
+                                variant="outlined"
+                                sx={{
+                                    height: "100%",
+                                    borderRadius: 3,
+                                    transition: "0.3s",
+                                    "&:hover": {
+                                        boxShadow:
+                                            "0 4px 20px rgba(0,0,0,0.08)",
+                                    },
+                                }}
+                            >
+                                <CardContent>
+                                    <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        mb={1}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 12,
+                                                height: 12,
+                                                borderRadius: "50%",
+                                                bgcolor: item.color,
+                                                mr: 1,
+                                            }}
+                                        />
+                                        <Typography
+                                            variant="subtitle1"
+                                            fontWeight="700"
+                                        >
+                                            {item.role}
+                                        </Typography>
+                                    </Box>
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        sx={{ mb: 2 }}
+                                    >
+                                        {item.desc}
+                                    </Typography>
+                                    <Divider sx={{ mb: 2 }} />
+                                    <List dense disablePadding>
+                                        {item.actions.map((action, idx) => (
+                                            <ListItem
+                                                key={idx}
+                                                disableGutters
+                                                sx={{ py: 0.5 }}
+                                            >
+                                                <ListItemIcon
+                                                    sx={{ minWidth: 25 }}
+                                                >
+                                                    <CheckCircleOutline
+                                                        sx={{
+                                                            fontSize: 14,
+                                                            color: item.color,
+                                                        }}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={action}
+                                                    primaryTypographyProps={{
+                                                        variant: "caption",
+                                                        fontWeight: 500,
+                                                    }}
+                                                />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Paper>
+
             <Paper
                 elevation={0}
                 sx={{
@@ -263,7 +348,7 @@ const AboutSystem = () => {
                             fontFamily="monospace"
                             color="primary"
                         >
-                            v1.2.5-stable
+                            v1.0.0-stable
                         </Typography>
                     </Grid>
 
