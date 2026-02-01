@@ -75,7 +75,7 @@ const TestRequestInfo = () => {
         });
         try {
             const res = await api.get(
-                `/testRequest/get-by-id/${testRequestId}`
+                `/testRequest/get-by-id/${testRequestId}`,
             );
             if (res.status == 200) {
                 setTestRequest(res.data);
@@ -117,12 +117,12 @@ const TestRequestInfo = () => {
                 acc +
                 sample.analysisEntities.filter((a) => a.stateResult == true)
                     .length,
-            0
+            0,
         );
 
         const totalAnalisis = testRequest.samples.reduce(
             (acc, sample) => acc + sample.analysisEntities.length,
-            0
+            0,
         );
 
         const progressPercent = (totalAnalysisfinished / totalAnalisis) * 100;
@@ -180,7 +180,7 @@ const TestRequestInfo = () => {
     const removeMember = async (userId) => {
         try {
             const res = await api.put(
-                `/testRequest/remove-member/${testRequestId}/${userId}`
+                `/testRequest/remove-member/${testRequestId}/${userId}`,
             );
 
             const newListTeam = team.filter((user) => user.userId !== userId);
@@ -196,7 +196,7 @@ const TestRequestInfo = () => {
     const getToTalAnalysis = () => {
         const total = [...testRequest.samples].reduce(
             (acc, sample) => acc + sample.analysisEntities.length,
-            0
+            0,
         );
         return total;
     };
@@ -306,26 +306,50 @@ const TestRequestInfo = () => {
                         arrow
                         placement="bottom"
                     >
-                        <Button
-                            variant="outlined"
-                            startIcon={<CheckCircle />}
-                            onClick={() => setFinishTestRequest(true)}
-                            sx={{
-                                borderRadius: 2,
-                                textTransform: "none",
-                                fontWeight: 600,
-                                px: 2.5,
-                                color: "success.main",
-                                borderColor: "success.main",
-                                "&:hover": {
-                                    borderColor: "success.dark",
-                                    bgcolor: "success.main",
-                                    color: "white",
-                                },
-                            }}
-                        >
-                            Finalizar ensayo
-                        </Button>
+                        {authObject.role == "ROLE_SUPERADMIN" ? (
+                            <Button
+                                variant="outlined"
+                                startIcon={<CheckCircle />}
+                                onClick={() => setFinishTestRequest(true)}
+                                sx={{
+                                    borderRadius: 2,
+                                    textTransform: "none",
+                                    fontWeight: 600,
+                                    px: 2.5,
+                                    color: "success.main",
+                                    borderColor: "success.main",
+                                    "&:hover": {
+                                        borderColor: "success.dark",
+                                        bgcolor: "success.main",
+                                        color: "white",
+                                    },
+                                }}
+                            >
+                                Finalizar ensayo
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="outlined"
+                                startIcon={<CheckCircle />}
+                                onClick={() => setFinishTestRequest(true)}
+                                sx={{
+                                    borderRadius: 2,
+                                    textTransform: "none",
+                                    fontWeight: 600,
+                                    px: 2.5,
+                                    color: "success.main",
+                                    borderColor: "success.main",
+                                    "&:hover": {
+                                        borderColor: "success.dark",
+                                        bgcolor: "success.main",
+                                        color: "white",
+                                    },
+                                }}
+                                disabled
+                            >
+                                Finalizar ensayo {"(Sin acceso)"}
+                            </Button>
+                        )}
                     </Tooltip>
 
                     {/* Botón Recepción de muestras */}
@@ -339,7 +363,7 @@ const TestRequestInfo = () => {
                             startIcon={<Inventory2 />}
                             onClick={() =>
                                 navigate(
-                                    `/system/result/test-request/${testRequest.testRequestId}/recepcion-muestras`
+                                    `/system/result/test-request/${testRequest.testRequestId}/recepcion-muestras`,
                                 )
                             }
                             sx={{
@@ -452,7 +476,7 @@ const TestRequestInfo = () => {
                             {testRequest.dueDate == null
                                 ? "No se ah generado una fecha de entrega para este ensayo"
                                 : `Quedan ${getDays(
-                                      testRequest.dueDate
+                                      testRequest.dueDate,
                                   )} dias para la entrega de la muestra`}
                         </Typography>
                     )}
@@ -530,6 +554,7 @@ const TestRequestInfo = () => {
 
             <Box sx={{ display: "flex", gap: "20px", mb: "30px", mt: "20px" }}>
                 <InfoOverviewTestRequest
+                    authObject={authObject}
                     updateCustomerData={(customerUpdated) =>
                         (testRequest.customer = customerUpdated)
                     }
@@ -538,6 +563,7 @@ const TestRequestInfo = () => {
                     iconByStatus={(param) => iconByStatus(param)}
                     compo={
                         <MembersOfTestRequest
+                            authObject={authObject}
                             toggleDrawer={toggleDrawer}
                             team={team}
                             removeMember={(userId) => removeMember(userId)}

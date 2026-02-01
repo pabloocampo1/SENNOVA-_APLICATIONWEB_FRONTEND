@@ -27,7 +27,7 @@ const SampleAnalysisResultCard = ({
     data = {},
     requestCode,
     isAdminEdit = false,
-    stateSampleReception,
+    stateSampleReception = true,
 }) => {
     const theme = useTheme();
     const [listFiles, setListFiles] = useState([]);
@@ -130,7 +130,6 @@ const SampleAnalysisResultCard = ({
 
     const deleteFile = async (sampleProductDocumentResultId, nameFile) => {
         // delete in this method the cod with that link
-        console.log(dataToUse);
 
         const listDpcsUpdate = dataToUse.sampleProductDocumentResult.filter(
             (doc) =>
@@ -152,11 +151,13 @@ const SampleAnalysisResultCard = ({
             const res = await api.delete(
                 `/sample/delete-file-result/${sampleProductDocumentResultId}`,
             );
-            console.log(res);
         } catch (error) {
             console.error(error);
         }
     };
+
+    const isFieldDisabled =
+        !canEmitResult || (dataToUse.stateResult && !isAdminEdit);
 
     return (
         <Box
@@ -265,10 +266,7 @@ const SampleAnalysisResultCard = ({
                             label={"Resultado final"}
                             type="text"
                             name="resultFinal"
-                            disabled={
-                                !canEmitResult ||
-                                (!isAdminEdit && dataToUse.stateResult)
-                            }
+                            disabled={isFieldDisabled}
                             value={dataToUse.resultFinal}
                             onChange={(e) => handleChangeInput(e)}
                             required
@@ -277,10 +275,7 @@ const SampleAnalysisResultCard = ({
                         <TextField
                             type="date"
                             required
-                            disabled={
-                                !canEmitResult ||
-                                (!isAdminEdit && dataToUse.stateResult)
-                            }
+                            disabled={isFieldDisabled}
                             name="resultDate"
                             onChange={(e) => handleChangeInput(e)}
                             value={dataToUse.resultDate}
@@ -292,10 +287,7 @@ const SampleAnalysisResultCard = ({
                             required
                             label="Unidad"
                             name="unit"
-                            disabled={
-                                !canEmitResult ||
-                                (!isAdminEdit && dataToUse.stateResult)
-                            }
+                            disabled={isFieldDisabled}
                             value={
                                 dataToUse.unit == null
                                     ? dataToUse.product.units
@@ -310,10 +302,7 @@ const SampleAnalysisResultCard = ({
                             value={dataToUse.accreditationStatus || ""}
                             name="accreditationStatus"
                             label="Estado"
-                            disabled={
-                                !canEmitResult ||
-                                (!isAdminEdit && dataToUse.stateResult)
-                            }
+                            disabled={isFieldDisabled}
                             onChange={(e) => handleChangeInput(e)}
                             sx={{
                                 width: "200px",
@@ -333,10 +322,7 @@ const SampleAnalysisResultCard = ({
                             value={dataToUse.passStatus || ""}
                             name="passStatus"
                             required
-                            disabled={
-                                !canEmitResult ||
-                                (!isAdminEdit && dataToUse.stateResult)
-                            }
+                            disabled={isFieldDisabled}
                             label="Cumple"
                             onChange={(e) => handleChangeInput(e)}
                             sx={{
@@ -349,10 +335,7 @@ const SampleAnalysisResultCard = ({
                         <TextField
                             label={"Normatividad"}
                             required
-                            disabled={
-                                !canEmitResult ||
-                                (!isAdminEdit && dataToUse.stateResult)
-                            }
+                            disabled={isFieldDisabled}
                             value={dataToUse.standards || ""}
                             name="standards"
                             onChange={(e) => handleChangeInput(e)}

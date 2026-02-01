@@ -13,7 +13,11 @@ import CustomerInfoQuote from "../quotes/quotesCompo/CustomerInfoQuote";
 import api from "../../../service/axiosService";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
 
-const CustomerCardTestRequest = ({ objectData = {}, updateCustomerData }) => {
+const CustomerCardTestRequest = ({
+    objectData = {},
+    updateCustomerData,
+    authObject,
+}) => {
     //
     const customerInfoRef = useRef();
     const [customerData, setCustomerData] = useState(objectData);
@@ -26,7 +30,7 @@ const CustomerCardTestRequest = ({ objectData = {}, updateCustomerData }) => {
         try {
             const res = await api.put(
                 `/customers/edit/${objectData.customerId}`,
-                customerDto
+                customerDto,
             );
             if (res.status == 200) {
                 setCustomerData(res.data);
@@ -66,10 +70,18 @@ const CustomerCardTestRequest = ({ objectData = {}, updateCustomerData }) => {
             <Box sx={{ width: "100%", display: "flex", justifyContent: "end" }}>
                 <Tooltip title="Editar datos del cliente">
                     <Chip
+                        disabled={
+                            authObject.role == "ROLE_SUPERADMIN" ? false : true
+                        }
                         icon={<Edit />}
-                        label="Edit"
+                        label={
+                            authObject.role == "ROLE_SUPERADMIN"
+                                ? "editar"
+                                : "editar (sin acceso)"
+                        }
                         sx={{
                             cursor: "pointer",
+                            textTransform: "none",
                         }}
                         onClick={() => setOpenModal(true)}
                     />

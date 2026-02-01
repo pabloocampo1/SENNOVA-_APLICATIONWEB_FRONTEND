@@ -18,7 +18,7 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../../../service/axiosService";
 import {
     Add,
@@ -40,6 +40,7 @@ import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import ModalToDelete from "./reagentCompo/ModalToDelete";
 import CardsSummaryReagent from "./reagentCompo/CardsSummaryReagent";
 import downloadExcel from "../../../service/ExportDataExcel";
+import { AuthContext } from "../../../context/AuthContext";
 
 const ReagentPage = () => {
     const [reagents, setReagents] = useState([]);
@@ -55,6 +56,7 @@ const ReagentPage = () => {
     const [openModalToDelete, setOpenModalToDelete] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const { authObject } = useContext(AuthContext);
 
     const [openModalReagentForm, setOpenModalReagentForm] = useState(false);
 
@@ -445,6 +447,10 @@ const ReagentPage = () => {
                                     <IconButton
                                         size="small"
                                         color="primary"
+                                        disabled={
+                                            authObject.role !==
+                                            "ROLE_SUPERADMIN"
+                                        }
                                         onClick={() => {
                                             setReagentIdToDelete(
                                                 reagent.reagentsId,

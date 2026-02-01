@@ -73,7 +73,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
 
             try {
                 const res = await api.get(
-                    `/testRequest/get-samples-by-testRequestId/${data.testRequestId}`
+                    `/testRequest/get-samples-by-testRequestId/${data.testRequestId}`,
                 );
 
                 setSamplesInfo(res.data);
@@ -183,6 +183,10 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 }}
             >
                 <InfoOutline /> Detalles sobre esta cotizacion
+            </Typography>
+            <Typography variant="caption" sx={{ textAlign: "center" }}>
+                Solo el un super administrador puede aceptar o rechazar las
+                cotizaciones
             </Typography>
             <Box
                 sx={{
@@ -296,8 +300,8 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                                 ? "Sin fecha de aprovacion"
                                 : dataTestRequest.approvalDate
                             : dataTestRequest.discardDate == null
-                            ? "Sin fecha de rechazo"
-                            : dataTestRequest.discardDate}
+                              ? "Sin fecha de rechazo"
+                              : dataTestRequest.discardDate}
                     </Typography>
                 </Box>
                 <Box
@@ -442,7 +446,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                                                             }}
                                                         >
                                                             {formatCurrency(
-                                                                s.total
+                                                                s.total,
                                                             )}
                                                         </Typography>
                                                     </TableCell>
@@ -540,42 +544,53 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                 </Typography>
             ) : (
                 <>
-                    <Box
-                        sx={{
-                            mt: "20px",
-                            mb: "10px",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            p: "20px",
-                        }}
-                    >
-                        <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() =>
-                                setOpenModalToRejectTestRequest(true)
-                            }
-                        >
-                            Rechazar
-                        </Button>
-                        <Button
-                            startIcon={<CheckCircleOutlineOutlined />}
-                            variant="outlined"
-                            onClick={() => setOpenModalToSendEmail(true)}
-                        >
-                            Aceptar cotizacion
-                        </Button>
-                    </Box>
-                    <Typography
-                        variant="body2"
-                        sx={{ p: "40px", textAlign: "center", display: "flex" }}
-                    >
-                        <InfoOutline /> Si acepta la cotizacion, se notificará
-                        al cliente por correo electrónico con las indicaciones
-                        para enviar sus muestras y la información necesaria para
-                        realizar el pago de la cotización. Ademas esta
-                        cotizacion pasara a ser un ensayo
-                    </Typography>
+                    {authObject.role == "ROLE_SUPERADMIN" && (
+                        <>
+                            <Box
+                                sx={{
+                                    mt: "20px",
+                                    mb: "10px",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    p: "20px",
+                                }}
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() =>
+                                        setOpenModalToRejectTestRequest(true)
+                                    }
+                                >
+                                    Rechazar
+                                </Button>
+                                <Button
+                                    startIcon={<CheckCircleOutlineOutlined />}
+                                    variant="outlined"
+                                    onClick={() =>
+                                        setOpenModalToSendEmail(true)
+                                    }
+                                >
+                                    Aceptar cotizacion
+                                </Button>
+                            </Box>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    p: "40px",
+                                    textAlign: "center",
+                                    display: "flex",
+                                }}
+                            >
+                                <InfoOutline /> Si acepta la cotizacion, se
+                                notificará al cliente por correo electrónico con
+                                las indicaciones para enviar sus muestras y la
+                                información necesaria para realizar el pago de
+                                la cotización. Ademas esta cotizacion pasara a
+                                ser un ensayo
+                            </Typography>
+                        </>
+                    )}
                 </>
             )}
         </Box>

@@ -16,6 +16,7 @@ const UserUIMiniCard = ({
     onDeleteMember,
     addMember,
     isToAdd = false,
+    authObject,
 }) => {
     const theme = useTheme();
 
@@ -74,6 +75,7 @@ const UserUIMiniCard = ({
                 ) : (
                     <Tooltip title="Eliminar del ensayo">
                         <IconButton
+                            disabled={authObject.role !== "ROLE_SUPERADMIN"}
                             color="error"
                             onClick={() => onDeleteMember(user.userId)}
                         >

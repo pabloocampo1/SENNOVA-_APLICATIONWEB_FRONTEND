@@ -26,6 +26,7 @@ const InfoOverviewTestRequest = ({
     updateCustomerData,
     getToTalAnalysis,
     compo,
+    authObject,
 }) => {
     const theme = useTheme();
 
@@ -117,6 +118,7 @@ const InfoOverviewTestRequest = ({
                 <Box sx={{ mt: 4 }}>
                     <Divider />
                     <CustomerCardTestRequest
+                        authObject={authObject}
                         objectData={testRequest.customer}
                         updateCustomerData={(customerUpdated) =>
                             updateCustomerData(customerUpdated)

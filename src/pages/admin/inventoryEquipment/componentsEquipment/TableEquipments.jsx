@@ -11,6 +11,8 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
+import { useContext } from "react";
+import { AuthContext } from "../../../../context/AuthContext";
 
 const TableEquipments = ({
     dataEquipments = [],
@@ -22,6 +24,8 @@ const TableEquipments = ({
     setOpenModalDelete,
     navigate,
 }) => {
+    const { authObject } = useContext(AuthContext);
+
     return (
         <>
             {dataEquipments.length < 1 ? (
@@ -118,7 +122,7 @@ const TableEquipments = ({
                                                 {(() => {
                                                     const status =
                                                         getMaintenanceStatus(
-                                                            equipment?.maintenanceDate
+                                                            equipment?.maintenanceDate,
                                                         );
                                                     return (
                                                         <Box
@@ -200,9 +204,9 @@ const TableEquipments = ({
                                             <TableCell sx={{ opacity: "0.70" }}>
                                                 {equipment?.createAt
                                                     ? new Date(
-                                                          equipment.createAt
+                                                          equipment.createAt,
                                                       ).toLocaleDateString(
-                                                          "es-CO"
+                                                          "es-CO",
                                                       )
                                                     : "NaN"}
                                             </TableCell>
@@ -221,11 +225,15 @@ const TableEquipments = ({
                                             <Edit fontSize="small" />
                                         </IconButton>
                                         <IconButton
+                                            disabled={
+                                                authObject.role !==
+                                                "ROLE_SUPERADMIN"
+                                            }
                                             size="small"
                                             color="primary"
                                             onClick={() => {
                                                 setEquipmentToDeleteId(
-                                                    equipment.equipmentId
+                                                    equipment.equipmentId,
                                                 );
                                                 setOpenModalDelete(true);
                                             }}
@@ -237,7 +245,7 @@ const TableEquipments = ({
                                             color="primary"
                                             onClick={() =>
                                                 navigate(
-                                                    `/system/inventory/equipments/info/${equipment.equipmentId}`
+                                                    `/system/inventory/equipments/info/${equipment.equipmentId}`,
                                                 )
                                             }
                                         >

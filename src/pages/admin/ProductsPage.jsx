@@ -4,18 +4,20 @@ import {
     Button,
     Card,
     CardContent,
+    IconButton,
     Pagination,
     Snackbar,
     Stack,
     Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import api from "../../service/axiosService";
 import { Add, Delete, Edit, Search } from "@mui/icons-material";
 import GenericModal from "../../components/modals/GenericModal";
 import CreateProductForm from "../../components/forms/Product/ProductForm";
 import ProductForm from "../../components/forms/Product/ProductForm";
 import SearchBar from "../../components/SearchBar";
+import { AuthContext } from "../../context/AuthContext";
 
 const ProductsCompo = () => {
     const [productData, setProductData] = useState([]);
@@ -36,6 +38,7 @@ const ProductsCompo = () => {
     const [errorsCreate, setErrorCreated] = useState([]);
     const [productToEdit, setProductToEdit] = useState(null);
     const [search, setSearch] = useState("");
+    const { authObject } = useContext(AuthContext);
 
     const handleChange = (event, value) => {
         setPage(value - 1);
@@ -418,7 +421,7 @@ const ProductsCompo = () => {
                                                 mt: 1,
                                             }}
                                         >
-                                            <Edit
+                                            <IconButton
                                                 fontSize="small"
                                                 sx={{
                                                     cursor: "pointer",
@@ -427,8 +430,21 @@ const ProductsCompo = () => {
                                                 onClick={() =>
                                                     setProductToEdit(prod)
                                                 }
-                                            />
-                                            <Delete
+                                            >
+                                                <Edit
+                                                    sx={{
+                                                        color: "primary.main ",
+                                                    }}
+                                                    fontSize="small"
+                                                />
+                                            </IconButton>
+                                            <IconButton
+                                                size="small"
+                                                color="primary"
+                                                disabled={
+                                                    authObject.role !==
+                                                    "ROLE_SUPERADMIN"
+                                                }
                                                 fontSize="small"
                                                 sx={{
                                                     cursor: "pointer",
@@ -437,10 +453,17 @@ const ProductsCompo = () => {
                                                 onClick={() =>
                                                     deleteProduct(
                                                         prod.productId,
-                                                        prod.analysis
+                                                        prod.analysis,
                                                     )
                                                 }
-                                            />
+                                            >
+                                                <Delete
+                                                    sx={{
+                                                        color: "primary.main ",
+                                                    }}
+                                                    fontSize="small"
+                                                />
+                                            </IconButton>
                                         </Box>
                                     </CardContent>
                                 </Card>

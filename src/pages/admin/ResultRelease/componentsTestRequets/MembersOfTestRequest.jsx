@@ -13,7 +13,12 @@ import React from "react";
 import UserUIMiniCard from "../../CustomerAndUsers/UserUIMiniCard";
 import { Groups2Outlined, PersonAdd } from "@mui/icons-material";
 
-const MembersOfTestRequest = ({ toggleDrawer, team = [], removeMember }) => {
+const MembersOfTestRequest = ({
+    toggleDrawer,
+    team = [],
+    removeMember,
+    authObject,
+}) => {
     const theme = useTheme();
 
     return (
@@ -60,6 +65,7 @@ const MembersOfTestRequest = ({ toggleDrawer, team = [], removeMember }) => {
                             {team.map((user) => (
                                 <Grid item xs={12} sm={6} md={4} key={user.id}>
                                     <UserUIMiniCard
+                                        authObject={authObject}
                                         user={user}
                                         onDeleteMember={(userId) =>
                                             removeMember(userId)
@@ -77,12 +83,22 @@ const MembersOfTestRequest = ({ toggleDrawer, team = [], removeMember }) => {
                             }}
                         >
                             <Button
+                                disabled={
+                                    authObject.role == "ROLE_ANALYST"
+                                        ? true
+                                        : false
+                                }
                                 variant="outlined"
                                 startIcon={<PersonAdd />}
                                 onClick={toggleDrawer(true)}
-                                sx={{ borderRadius: "20px" }}
+                                sx={{
+                                    borderRadius: "20px0",
+                                    textTransform: "none",
+                                }}
                             >
-                                Agregar miembro
+                                {authObject.role == "ROLE_ANALYST"
+                                    ? "agregar miembro (sin acceso)"
+                                    : "agregar miembro"}
                             </Button>
                         </Box>
                     </>

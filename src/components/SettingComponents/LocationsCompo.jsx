@@ -1,32 +1,48 @@
-import { Alert, Box, Button, IconButton, Pagination, Paper, Snackbar, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import api from '../../service/axiosService';
-import { Add, Delete, Edit } from '@mui/icons-material';
-import GenericModal from '../modals/GenericModal';
-import SearchBar from '../SearchBar';
-import LocationForm from '../forms/Location/LocationForm';
+import {
+    Alert,
+    Box,
+    Button,
+    IconButton,
+    Pagination,
+    Paper,
+    Snackbar,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography,
+} from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import api from "../../service/axiosService";
+import { Add, Delete, Edit } from "@mui/icons-material";
+import GenericModal from "../modals/GenericModal";
+import SearchBar from "../SearchBar";
+import LocationForm from "../forms/Location/LocationForm";
+import { AuthContext } from "../../context/AuthContext";
 
 const LocationsCompo = ({ isMobile }) => {
     const [locationData, setLocationData] = useState([]);
     const [errorFetch, setErrorFetch] = useState(false);
     const [errorDelete, setErrorDelete] = useState({
-        "status": false,
-        "location": "",
-        "message": ""
+        status: false,
+        location: "",
+        message: "",
     });
     const [success, setSuccess] = useState({
-        "status": false,
-        "location": "",
-        "message": "",
+        status: false,
+        location: "",
+        message: "",
     });
     const [page, setPage] = useState(0);
     const [createLocationState, setCreateLocationState] = useState(false);
     const [totalPages, setTotalPages] = useState();
     const [open, setOpen] = useState(false);
-    const [errorsCreate, setErrorCreated] = useState([])
-    const [locationToEdit, setLocationToEdit] = useState(null)
+    const [errorsCreate, setErrorCreated] = useState([]);
+    const [locationToEdit, setLocationToEdit] = useState(null);
     const [search, setSearch] = useState("");
-
+    const { authObject } = useContext(AuthContext);
 
     const handleChange = (event, value) => {
         setPage(value - 1);
@@ -37,150 +53,133 @@ const LocationsCompo = ({ isMobile }) => {
             const response = await api.get(`/location/getAllPage?page=${page}`);
 
             if (response.status !== 200) {
-                setErrorFetch(true)
+                setErrorFetch(true);
             } else {
-
                 let totalPagesResponse = response.data.totalPages;
-                setLocationData(response.data.content)
-                setTotalPages(totalPagesResponse)
+                setLocationData(response.data.content);
+                setTotalPages(totalPagesResponse);
             }
-
         } catch (error) {
-
             console.error(error);
 
-
-            setErrorFetch(true)
+            setErrorFetch(true);
         }
-    }
+    };
 
     const deleteLocation = async (id, locationName) => {
-
         try {
             const response = await api.delete(`/location/delete/${id}`);
             if (response.status == 200) {
-                fetchData()
+                fetchData();
                 setErrorDelete({
                     ...errorDelete,
-                    "status": false,
-                    "location": ""
-                })
+                    status: false,
+                    location: "",
+                });
                 setSuccess({
                     ...success,
-                    "message": "Se Elimino la ubicacion existosamente.",
-                    "location": locationName,
-                    "status": true
-                })
-                setOpen(true)
-
+                    message: "Se Elimino la ubicacion existosamente.",
+                    location: locationName,
+                    status: true,
+                });
+                setOpen(true);
             } else {
                 setErrorDelete({
                     ...errorDelete,
-                    "status": true,
-                    "location": locationName,
-                    "message": " ocurrio un error"
-                })
-                setOpen(true)
+                    status: true,
+                    location: locationName,
+                    message: " ocurrio un error",
+                });
+                setOpen(true);
             }
         } catch (error) {
             if (error.response && error.response.data) {
                 const backendError = error.response.data;
-                setErrorCreated(backendError.errors)
+                setErrorCreated(backendError.errors);
                 setErrorDelete({
                     ...errorDelete,
-                    "status": true,
-                    "location": locationName,
-                    "message": "No se puede eliminar este elemento porque esta relacionado a otro elemento"
-                })
-                setOpen(true)
+                    status: true,
+                    location: locationName,
+                    message:
+                        "No se puede eliminar este elemento porque esta relacionado a otro elemento",
+                });
+                setOpen(true);
             }
-
-
         }
-    }
-
+    };
 
     const saveLocation = async (product) => {
         try {
             const response = await api.post("/location/save", product);
             console.log(response);
             if (response.status == 201) {
-                fetchData()
-                setCreateLocationState(false)
+                fetchData();
+                setCreateLocationState(false);
                 setSuccess({
                     ...success,
-                    "message": "Se agrego la ubicacion exitosamente.",
-                    "location": response.data.locationName,
-                    "status": true
-                })
+                    message: "Se agrego la ubicacion exitosamente.",
+                    location: response.data.locationName,
+                    status: true,
+                });
 
-                setOpen(true)
-
+                setOpen(true);
             }
-
         } catch (error) {
             console.error(error);
             if (error.response && error.response.data) {
                 const backendError = error.response.data;
-                setErrorCreated(backendError.errors)
+                setErrorCreated(backendError.errors);
             }
         }
-    }
+    };
 
     const editLocation = async (product, id) => {
         try {
             const response = await api.put(`/location/update/${id}`, product);
             console.log(response);
             if (response.status == 200) {
-                fetchData()
+                fetchData();
                 setSuccess({
                     ...success,
-                    "message": "Se edito la ubicacion exitosamente.",
-                    "location": response.data.locationName,
-                    "status": true
-                })
+                    message: "Se edito la ubicacion exitosamente.",
+                    location: response.data.locationName,
+                    status: true,
+                });
 
-                setLocationToEdit(null)
-                setOpen(true)
-
+                setLocationToEdit(null);
+                setOpen(true);
             }
-
         } catch (error) {
             console.error(error);
             if (error.response && error.response.data) {
                 const backendError = error.response.data;
-                setErrorCreated(backendError.errors)
+                setErrorCreated(backendError.errors);
             }
         }
-    }
-
+    };
 
     const searchLocationByName = async () => {
         try {
             const response = await api.get(`/location/getByName/${search}`);
 
             if (response.status !== 200) {
-                setErrorFetch(true)
+                setErrorFetch(true);
             } else {
-                setLocationData(response.data)
+                setLocationData(response.data);
             }
-
         } catch (error) {
             console.error(error);
-            setErrorFetch(true)
+            setErrorFetch(true);
         }
-    }
-
-
+    };
 
     useEffect(() => {
         if (search) {
-            searchLocationByName()
+            searchLocationByName();
         } else {
-            fetchData()
+            fetchData();
         }
-    }, [page, search])
-
+    }, [page, search]);
 
     if (errorFetch) {
         return (
@@ -190,47 +189,85 @@ const LocationsCompo = ({ isMobile }) => {
                         Hubo un error al obtener las ubicaciones
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                        Por favor, inténtalo más tarde o notifica este error al soporte.
+                        Por favor, inténtalo más tarde o notifica este error al
+                        soporte.
                     </Typography>
                 </Alert>
             </Box>
         );
     }
 
-
     return (
-        <Box sx={{
-            width: "100%",
-            height: "auto",
-        }}>
-
-            <Typography component={"h3"} variant='h3' sx={{ pt: "40px", fontSize: "24px" }}>
-                Elementos del sistema - <span style={{ color: "#39A900" }}>Ubicaciones</span>
+        <Box
+            sx={{
+                width: "100%",
+                height: "auto",
+            }}
+        >
+            <Typography
+                component={"h3"}
+                variant="h3"
+                sx={{ pt: "40px", fontSize: "24px" }}
+            >
+                Elementos del sistema -{" "}
+                <span style={{ color: "#39A900" }}>Ubicaciones</span>
             </Typography>
 
-
             {/* modal to create one location*/}
-            <GenericModal open={createLocationState} compo={<LocationForm isEdit={false} data={null} errors={errorsCreate} method={(location) => saveLocation(location)
-            } />} onClose={() => setCreateLocationState(false)} />
+            <GenericModal
+                open={createLocationState}
+                compo={
+                    <LocationForm
+                        isEdit={false}
+                        data={null}
+                        errors={errorsCreate}
+                        method={(location) => saveLocation(location)}
+                    />
+                }
+                onClose={() => setCreateLocationState(false)}
+            />
 
             {/* modal to edit one location*/}
-            <GenericModal open={locationToEdit} compo={<LocationForm isEdit={true} data={locationToEdit} errors={errorsCreate} method={(location, id) => editLocation(location, id)
-            } />} onClose={() => setLocationToEdit(null)} />
+            <GenericModal
+                open={locationToEdit}
+                compo={
+                    <LocationForm
+                        isEdit={true}
+                        data={locationToEdit}
+                        errors={errorsCreate}
+                        method={(location, id) => editLocation(location, id)}
+                    />
+                }
+                onClose={() => setLocationToEdit(null)}
+            />
 
-
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                }}
+            >
                 <Box>
                     <SearchBar onSearch={(value) => setSearch(value)} />
                 </Box>
                 <Box>
-                    <Button variant='outlined' onClick={() => setCreateLocationState(true)}> <Add /> Agregar una nueva ubicacion</Button>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setCreateLocationState(true)}
+                    >
+                        {" "}
+                        <Add /> Agregar una nueva ubicacion
+                    </Button>
                 </Box>
             </Box>
 
             <Box>
-
-
-                {locationData.length < 1 && (<Typography sx={{ textAlign: "center", pt: "100px" }}>No hay ubicaciones para mostrar, agrega uno.</Typography>)}
+                {locationData.length < 1 && (
+                    <Typography sx={{ textAlign: "center", pt: "100px" }}>
+                        No hay ubicaciones para mostrar, agrega uno.
+                    </Typography>
+                )}
                 {errorDelete.status && (
                     <Snackbar
                         open={open}
@@ -239,7 +276,10 @@ const LocationsCompo = ({ isMobile }) => {
                             setOpen(false);
                             setErrorDelete({ status: false, location: null });
                         }}
-                        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                        }}
                     >
                         <Alert
                             severity="error"
@@ -251,7 +291,6 @@ const LocationsCompo = ({ isMobile }) => {
                     </Snackbar>
                 )}
 
-
                 {success.status && (
                     <Snackbar
                         open={open}
@@ -260,12 +299,15 @@ const LocationsCompo = ({ isMobile }) => {
                             setOpen(false);
                             setSuccess({
                                 ...success,
-                                "message": "",
-                                "location": "",
-                                "status": false
-                            })
+                                message: "",
+                                location: "",
+                                status: false,
+                            });
                         }}
-                        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                        }}
                     >
                         <Alert
                             severity="success"
@@ -291,33 +333,56 @@ const LocationsCompo = ({ isMobile }) => {
                             No hay registros para mostrar, agrega uno.
                         </Typography>
                     ) : (
-                        <Paper sx={{ width: "100%", overflow: "hidden", bgcolor: "background.paper" }}>
+                        <Paper
+                            sx={{
+                                width: "100%",
+                                overflow: "hidden",
+                                bgcolor: "background.paper",
+                            }}
+                        >
                             <Table>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
-                                        <TableCell>Nombre de Ubicación</TableCell>
+                                        <TableCell>
+                                            Nombre de Ubicación
+                                        </TableCell>
                                         {!isMobile && (
                                             <>
                                                 <TableCell>Creado</TableCell>
-                                                <TableCell>Actualizado</TableCell>
+                                                <TableCell>
+                                                    Actualizado
+                                                </TableCell>
                                             </>
                                         )}
-                                        <TableCell align="right">Acciones</TableCell>
+                                        <TableCell align="right">
+                                            Acciones
+                                        </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {locationData.map((location) => (
-                                        <TableRow key={location.equipmentLocationId} hover>
-                                            <TableCell>{location.equipmentLocationId}</TableCell>
-                                            <TableCell>{location.locationName}</TableCell>
+                                        <TableRow
+                                            key={location.equipmentLocationId}
+                                            hover
+                                        >
+                                            <TableCell>
+                                                {location.equipmentLocationId}
+                                            </TableCell>
+                                            <TableCell>
+                                                {location.locationName}
+                                            </TableCell>
                                             {!isMobile && (
                                                 <>
                                                     <TableCell>
-                                                        {new Date(location.createAt).toLocaleDateString()}
+                                                        {new Date(
+                                                            location.createAt,
+                                                        ).toLocaleDateString()}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {new Date(location.updateAt).toLocaleDateString()}
+                                                        {new Date(
+                                                            location.updateAt,
+                                                        ).toLocaleDateString()}
                                                     </TableCell>
                                                 </>
                                             )}
@@ -325,15 +390,26 @@ const LocationsCompo = ({ isMobile }) => {
                                                 <IconButton
                                                     size="small"
                                                     color="primary"
-                                                    onClick={() => setLocationToEdit(location)}
+                                                    onClick={() =>
+                                                        setLocationToEdit(
+                                                            location,
+                                                        )
+                                                    }
                                                 >
                                                     <Edit fontSize="small" />
                                                 </IconButton>
                                                 <IconButton
                                                     size="small"
+                                                    disabled={
+                                                        authObject.role !==
+                                                        "ROLE_SUPERADMIN"
+                                                    }
                                                     color="primary"
                                                     onClick={() =>
-                                                        deleteLocation(location.equipmentLocationId, location.locationName)
+                                                        deleteLocation(
+                                                            location.equipmentLocationId,
+                                                            location.locationName,
+                                                        )
                                                     }
                                                 >
                                                     <Delete fontSize="small" />
@@ -344,20 +420,27 @@ const LocationsCompo = ({ isMobile }) => {
                                 </TableBody>
                             </Table>
                         </Paper>
-
                     )}
                 </Box>
 
-                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mb: "20px", mt: "20px" }}>
-
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        mb: "20px",
+                        mt: "20px",
+                    }}
+                >
                     <Stack spacing={2}>
-                        <Pagination count={totalPages} page={page + 1} onChange={handleChange} />
+                        <Pagination
+                            count={totalPages}
+                            page={page + 1}
+                            onChange={handleChange}
+                        />
                     </Stack>
                 </Box>
-
-
             </Box>
-
         </Box>
     );
 };

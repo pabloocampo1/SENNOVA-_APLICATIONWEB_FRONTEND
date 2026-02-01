@@ -14,7 +14,6 @@ const ResultExecution = () => {
 
     return (
         <Box sx={{ width: "100%", p: 3 }}>
-            {/* Título */}
             <Typography
                 variant="h4"
                 sx={{
@@ -27,7 +26,6 @@ const ResultExecution = () => {
                 Gestión de muestras
             </Typography>
 
-            {/* Descripción corta */}
             <Typography
                 variant="body1"
                 sx={{ color: "text.secondary", mb: 4, textAlign: "center" }}
@@ -36,7 +34,6 @@ const ResultExecution = () => {
                 su ejecución, entregadas o sin recepción.
             </Typography>
 
-            {/* Tabs para navegar entre secciones */}
             <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
                 <Tabs
                     value={currentTab}
