@@ -86,7 +86,7 @@ const KPIs = ({ data = {} }) => {
         },
         {
             key: "testRequestActive",
-            label: "Ensayos finalizados y enviados",
+            label: "Ensayos enviados",
             isComparative: true,
         },
         {

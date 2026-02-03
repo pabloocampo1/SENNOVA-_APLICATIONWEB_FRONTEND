@@ -130,26 +130,27 @@ const DashboardPage = () => {
                             alignItems: "center",
                         }}
                     >
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 4,
-                            }}
-                        >
-                            <KpiItem
-                                label="Cotizaciones pendientes"
-                                theme={theme}
-                                link="/system/quotes"
-                                value={data?.kpisDto?.quotationPending || 0}
-                            />
+                        <KpiItem
+                            label="Cotizaciones pendientes"
+                            theme={theme}
+                            link="/system/quotes"
+                            value={data?.kpisDto?.quotationPending || 0}
+                        />
 
-                            <KpiItem
-                                theme={theme}
-                                label="Muestras para ejecutar"
-                                link="/system/result/execution-test/available"
-                                value={data?.kpisDto?.samplesToExecute || 0}
-                            />
-                        </Box>
+                        <KpiItem
+                            theme={theme}
+                            label="Muestras para ejecutar"
+                            link="/system/result/execution-test/available"
+                            value={data?.kpisDto?.samplesToExecute || 0}
+                        />
+                        <KpiItem
+                            theme={theme}
+                            label="Ensayos en proceso"
+                            link="/system/results"
+                            value={
+                                data?.kpisDto?.countTestRequestInProcess || 0
+                            }
+                        />
                     </Box>
                 </Box>
 

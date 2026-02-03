@@ -1,28 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import api from '../../../service/axiosService';
-import { Alert, Box, Button, Divider, Card, Snackbar, Typography } from '@mui/material';
-import SimpleBackdrop from '../../../components/SimpleBackDrop';
-import ButtonBack from '../../../components/ButtonBack';
-import { Download, HandymanOutlined } from '@mui/icons-material';
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import api from "../../../service/axiosService";
+import {
+    Alert,
+    Box,
+    Button,
+    Divider,
+    Card,
+    Snackbar,
+    Typography,
+    Tooltip,
+} from "@mui/material";
+import SimpleBackdrop from "../../../components/SimpleBackDrop";
+import ButtonBack from "../../../components/ButtonBack";
+import { Download, HandymanOutlined, IosShare } from "@mui/icons-material";
 import notImage from "../../../assets/images/notImageAvailable.jpg";
-import notFiles from "../../../assets/images/undraw_files-uploading_qf8u.svg"
-import FileCard from '../../../components/FileCard';
-import GenericModal from '../../../components/modals/GenericModal';
-import ModalUsageReagent from './reagentCompo/ModalUsageReagent';
-import CardUsageReagent from './reagentCompo/CardUsageReagent';
-import StatusBoxExpirationDate from './reagentCompo/StatusBoxExpirationDate';
-
-
+import notFiles from "../../../assets/images/undraw_files-uploading_qf8u.svg";
+import FileCard from "../../../components/FileCard";
+import GenericModal from "../../../components/modals/GenericModal";
+import ModalUsageReagent from "./reagentCompo/ModalUsageReagent";
+import CardUsageReagent from "./reagentCompo/CardUsageReagent";
+import StatusBoxExpirationDate from "./reagentCompo/StatusBoxExpirationDate";
+import { downloaReagentdPdf } from "../../../service/ExportDataExcel";
+import { AuthContext } from "../../../context/AuthContext";
 
 const styleSubtitleInfo = {
-    fontWeight: "500", opacity: "0.90", backgroundColor: "action.hover", px: 1.2,
+    fontWeight: "500",
+    opacity: "0.90",
+    backgroundColor: "action.hover",
+    px: 1.2,
     py: 0.3,
     borderRadius: 1,
-}
-
-
-
+};
 
 const ReagentInfo = () => {
     const [usagesReagent, setUsagesReagent] = useState([]);
@@ -30,37 +39,36 @@ const ReagentInfo = () => {
     const [dataReagent, setDataReagent] = useState({});
     const [errorFetch, setErrorFetch] = useState({
         status: false,
-        message: ""
-    })
+        message: "",
+    });
     const [isLoanding, setIsLoanding] = useState(false);
     const filesInputRef = useRef(null);
     const [files, setFiles] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [openModalUsage, setOpenModalUsage] = useState(false);
     const [responseAlert, setResponseAlert] = useState({
-        "status": false,
-        "message": ""
-    })
+        status: false,
+        message: "",
+    });
+    const { authObject } = useContext(AuthContext);
 
     const handleFilesChange = (event) => {
         setFiles(event.target.files);
     };
 
-    const getFiles = async () => {
+    console.log(authObject);
 
-        setIsLoanding(true)
+    const getFiles = async () => {
+        setIsLoanding(true);
         try {
             const res = await api.get(`/reagent/get-files/${reagentId}`);
             setUploadedFiles(res.data);
         } catch (error) {
             console.error(error);
-
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
-
-    }
-
+    };
 
     const uploadFiles = async () => {
         if (!files || files.length === 0) return;
@@ -75,17 +83,13 @@ const ReagentInfo = () => {
             const res = await api.post(
                 `/reagent/upload-files/${reagentId}`,
                 formData,
-                { headers: { "Content-Type": "multipart/form-data" } }
+                { headers: { "Content-Type": "multipart/form-data" } },
             );
 
             if (res.status === 201) {
-                setUploadedFiles((prev) => [
-                    ...prev,
-                    ...res.data
-                ]);
+                setUploadedFiles((prev) => [...prev, ...res.data]);
                 setFiles([]);
-                getFiles()
-
+                getFiles();
             }
         } catch (error) {
             console.error("Error subiendo archivos", error);
@@ -94,84 +98,72 @@ const ReagentInfo = () => {
         }
     };
 
-
-
     const deleteFile = async (publicId) => {
-        setIsLoanding(true)
+        setIsLoanding(true);
         try {
             const res = await api.delete(`/reagent/delete-file/${publicId}`);
 
             if (res.status == 200) {
-                getFiles()
+                getFiles();
             }
         } catch (error) {
             console.error(error);
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
     };
-
 
     const getUsages = async () => {
         try {
             const res = await api.get(`/reagent/get-usages/${reagentId}`);
             if (res.status == 200) {
-                setUsagesReagent(res.data)
+                setUsagesReagent(res.data);
             }
-
         } catch (error) {
             console.error(error);
         }
     };
 
-
-
-
     const fetchDataById = async () => {
-        setIsLoanding(true)
+        setIsLoanding(true);
         try {
             const res = await api.get(`/reagent/getById/${reagentId}`);
             if (res.status == 200) {
-                setDataReagent(res.data)
+                setDataReagent(res.data);
             }
-
-
-
         } catch (error) {
             console.error(error);
             if (error.status !== 200) {
                 setErrorFetch({
                     status: true,
-                    message: "Ocurrio un error al intentar buscar la infomacion del reactivo con id: " + reagentId
-                })
+                    message:
+                        "Ocurrio un error al intentar buscar la infomacion del reactivo con id: " +
+                        reagentId,
+                });
             }
         } finally {
-            setIsLoanding(false)
+            setIsLoanding(false);
         }
-    }
+    };
 
     const handleUsageSaved = async () => {
         await fetchDataById();
         await getFiles();
-        await getUsages()
+        await getUsages();
     };
 
     useEffect(() => {
-
         const init = async () => {
             await fetchDataById();
-            await getFiles()
+            await getFiles();
             await getUsages();
-        }
+        };
 
-        init()
-
-
-    }, [])
+        init();
+    }, []);
 
     return (
         <Box sx={{ width: "100%", mt: "10px" }}>
-
             {/* show isLoanding */}
             <SimpleBackdrop open={isLoanding} />
 
@@ -184,28 +176,24 @@ const ReagentInfo = () => {
                         reagentId={reagentId}
                         success={() => {
                             setResponseAlert({
-                                message: "Se guardo correctamente, cantidad actualizada.",
-                                status: true
-                            })
-                            handleUsageSaved()
+                                message:
+                                    "Se guardo correctamente, cantidad actualizada.",
+                                status: true,
+                            });
+                            handleUsageSaved();
                         }}
                         dateOfExpiration={dataReagent.expirationDate}
                         stock={dataReagent.quantity}
                         unitOfMeasure={dataReagent.unitOfMeasure}
                         onClose={() => {
-                            setOpenModalUsage(false)
-
-                        }} />
-
+                            setOpenModalUsage(false);
+                        }}
+                    />
                 }
             />
 
             {/* show error fetch */}
-            {errorFetch.status && (
-                <Box>
-                    {errorFetch.message}
-                </Box>
-            )}
+            {errorFetch.status && <Box>{errorFetch.message}</Box>}
 
             {responseAlert.status && (
                 <Snackbar
@@ -214,21 +202,23 @@ const ReagentInfo = () => {
                     onClose={() => {
                         setResponseAlert({
                             ...responseAlert,
-                            "status": false
+                            status: false,
                         });
                         setResponseAlert({
-                            "status": false,
-                            "message": ""
-                        })
+                            status: false,
+                            message: "",
+                        });
                     }}
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
                     <Alert
                         severity="success"
-                        onClose={() => setResponseAlert({
-                            "status": false,
-                            "message": ""
-                        })}
+                        onClose={() =>
+                            setResponseAlert({
+                                status: false,
+                                message: "",
+                            })
+                        }
                         sx={{ width: "100%" }}
                     >
                         {responseAlert.message}
@@ -236,141 +226,278 @@ const ReagentInfo = () => {
                 </Snackbar>
             )}
 
-
-            <Box sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap:"wrap",
-                mt: "20px"
-            }}>
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    mt: "20px",
+                }}
+            >
                 <ButtonBack />
-                <Box>
-                    <Button
-                        endIcon={<Download />}
-                        onClick={() => alert("en desarrollo.")}
+            </Box>
+
+            <Box
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    mt: "50px",
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                    }}
+                >
+                    <Typography
+                        variant="h2"
+                        component={"h2"}
+                        sx={{ color: "primary.main" }}
                     >
-                        Descargar esta informacion.
+                        Reactivo /{" "}
+                    </Typography>
+                    <Typography
+                        variant="h2"
+                        component={"h2"}
+                        sx={{
+                            color: "text.primary",
+                            pl: "5px",
+                            opacity: "0.60",
+                        }}
+                    >
+                        {" "}
+                        {dataReagent.reagentName}
+                    </Typography>
+                </Box>
+
+                <Box
+                    sx={{
+                        mt: { xs: "20px" },
+                    }}
+                >
+                    <Tooltip title="Exportar Ficha Técnica">
+                        <Button
+                            variant="outlined"
+                            onClick={() =>
+                                downloaReagentdPdf(
+                                    dataReagent.reagentsId,
+                                    dataReagent.reagentName,
+                                    dataReagent.batch,
+                                    authObject.email,
+                                )
+                            }
+                            sx={{
+                                minWidth: "45px",
+                                width: "45px",
+                                height: "45px",
+                                borderRadius: "12px",
+                                borderColor: "divider",
+                                color: "text.secondary",
+                                mr: "20px",
+                            }}
+                        >
+                            <IosShare fontSize="small" />
+                        </Button>
+                    </Tooltip>
+                    <Button
+                        onClick={() => setOpenModalUsage(true)}
+                        variant="outlined"
+                        startIcon={<HandymanOutlined />}
+                    >
+                        Registrar uso
                     </Button>
                 </Box>
             </Box>
 
+            <Divider
+                sx={{
+                    mt: { xs: "50px" },
+                    mb: { xs: "50px" },
+                }}
+            >
+                Informacion del reactivo
+            </Divider>
 
-            <Box sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                mt: "50px"
-            }}>
-                <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
-                    <Typography variant='h2' component={"h2"} sx={{ color: "primary.main" }}>Reactivo /  </Typography>
-                    <Typography variant='h2' component={"h2"} sx={{ color: "text.primary", pl: "5px", opacity: "0.60" }}> {dataReagent.reagentName}</Typography>
-                </Box>
-
-                <Box sx={{
-                    mt: { xs: "20px" }
-                }}>
-                    <Button onClick={() => setOpenModalUsage(true)} variant='outlined' startIcon={<HandymanOutlined />}>Registrar uso</Button>
-                </Box>
-            </Box>
-
-            <Divider sx={{
-                mt: { xs: "50px" },
-                mb: { xs: "50px" },
-            }}>Informacion del reactivo</Divider>
-
-            <Box sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                gap: "20px",
-                mt: "20px"
-            }}>
-
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                    gap: "20px",
+                    mt: "20px",
+                }}
+            >
                 {/* main information */}
-                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "200px", p: "20px" }}>
+                <Card
+                    elevation={3}
+                    sx={{ minHeight: "400px", minWidth: "200px", p: "20px" }}
+                >
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Nombre : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.reagentName}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Nombre :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.reagentName}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Id (sistema): </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.reagentsId}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Id (sistema):{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.reagentsId}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Placa sena : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.senaInventoryTag}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Placa sena :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.senaInventoryTag}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Lote : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.batch}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Lote :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.batch}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Unidades : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.units}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Unidades :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.units}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Pureza : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.purity}%</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Pureza :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.purity}%
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Cantidad disponible : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.quantity} {dataReagent.unitOfMeasure}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Cantidad disponible :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.quantity} {dataReagent.unitOfMeasure}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Estado de cantidad: </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.state}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Estado de cantidad:{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.state}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Estado del reactivo : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.stateExpiration}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Estado del reactivo :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.stateExpiration}
+                        </Typography>
                     </Box>
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Fecha de vencimiento : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.expirationDate}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Fecha de vencimiento :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.expirationDate}
+                        </Typography>
                     </Box>
                 </Card>
 
                 {/* image and description */}
-                <Card elevation={3} sx={{ minHeight: "400px", minWidth: "200px", p: "20px" }}>
-
-                    <Box sx={{ display: "flex", mb: "30px", justifyContent: "center", width: "100%", }}>
+                <Card
+                    elevation={3}
+                    sx={{ minHeight: "400px", minWidth: "200px", p: "20px" }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            mb: "30px",
+                            justifyContent: "center",
+                            width: "100%",
+                        }}
+                    >
                         <Box sx={{ width: "50%" }}>
-                            {dataReagent.imageUrl !== null
-                                ? (<img src={dataReagent.imageUrl} width={"100%"} height={"100%"} alt="reagentImage" />)
-                                : (<img src={notImage} width={"100%"} height={"100%"} alt="reagentImage" />)}
+                            {dataReagent.imageUrl !== null ? (
+                                <img
+                                    src={dataReagent.imageUrl}
+                                    width={"100%"}
+                                    height={"100%"}
+                                    alt="reagentImage"
+                                />
+                            ) : (
+                                <img
+                                    src={notImage}
+                                    width={"100%"}
+                                    height={"100%"}
+                                    alt="reagentImage"
+                                />
+                            )}
                         </Box>
                         <Box sx={{ width: "50%", pl: "10px" }}>
-                            <Typography sx={{ fontWeight: "500", opacity: "0.90" }}>Descripción : </Typography>
-                            <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.reagentName}</Typography>
+                            <Typography
+                                sx={{ fontWeight: "500", opacity: "0.90" }}
+                            >
+                                Descripción :{" "}
+                            </Typography>
+                            <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                                {dataReagent.reagentName}
+                            </Typography>
                         </Box>
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Cuentadante : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.responsibleName}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Cuentadante :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.responsibleName}
+                        </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Ubicación : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.locationName}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Ubicación :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.locationName}
+                        </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Uso : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.usageName}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Uso :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.usageName}
+                        </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", mb: "10px" }}>
-                        <Typography variant="caption" sx={styleSubtitleInfo}>Registrado el : </Typography>
-                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>{dataReagent.createAt}</Typography>
+                        <Typography variant="caption" sx={styleSubtitleInfo}>
+                            Registrado el :{" "}
+                        </Typography>
+                        <Typography sx={{ opacity: "0.60", pl: "10px" }}>
+                            {dataReagent.createAt}
+                        </Typography>
                     </Box>
-
                 </Card>
-
-
 
                 <Card
                     elevation={3}
@@ -388,7 +515,15 @@ const ReagentInfo = () => {
 
                     {/* Imagen si no hay archivos */}
                     {uploadedFiles.length <= 0 && (
-                        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                flex: 1,
+                            }}
+                        >
                             <Typography>No hay archivos</Typography>
                             <img
                                 src={notFiles}
@@ -465,41 +600,41 @@ const ReagentInfo = () => {
                         )}
                     </Box>
                 </Card>
-
-
-
             </Box>
 
-
-            <Box sx={{
-                width: "100%",
-                mt: "40px"
-            }}>
+            <Box
+                sx={{
+                    width: "100%",
+                    mt: "40px",
+                }}
+            >
                 <StatusBoxExpirationDate date={dataReagent.expirationDate} />
             </Box>
 
-
             {usagesReagent.length <= 0 && (
                 <>
-                    <Box sx={{
-                        width: "100%",
-                        textAlign: "center",
-                        mt: "100px"
-                    }}>
+                    <Box
+                        sx={{
+                            width: "100%",
+                            textAlign: "center",
+                            mt: "100px",
+                        }}
+                    >
                         No hay usos registrados para este reactivo
                     </Box>
                 </>
             )}
 
-
-
-            <Divider sx={{ pt: "50px" }}>Informacion de usos de este reactivo</Divider>
+            <Divider sx={{ pt: "50px" }}>
+                Informacion de usos de este reactivo
+            </Divider>
 
             <Box
                 sx={{
                     width: "100%",
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+                    gridTemplateColumns:
+                        "repeat(auto-fill, minmax(280px, 1fr))",
                     gap: 3,
                     mt: 6,
                     mb: 10,
@@ -509,8 +644,6 @@ const ReagentInfo = () => {
                     <CardUsageReagent usage={usage} dataReagent={dataReagent} />
                 ))}
             </Box>
-
-
         </Box>
     );
 };

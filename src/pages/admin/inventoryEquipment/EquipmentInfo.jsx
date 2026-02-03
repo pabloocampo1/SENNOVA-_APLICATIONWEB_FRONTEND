@@ -2,8 +2,12 @@ import {
     ArrowBackOutlined,
     Assignment,
     Construction,
+    ConstructionOutlined,
     Download,
+    IosShare,
+    PhotoCamera,
     ReportProblem,
+    Update,
 } from "@mui/icons-material";
 import {
     Alert,
@@ -12,6 +16,7 @@ import {
     Divider,
     Paper,
     Snackbar,
+    Tooltip,
     Typography,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -26,6 +31,8 @@ import GenericModal from "../../../components/modals/GenericModal";
 import EquipmentLoadForm from "../../../components/forms/Equipment/EquipmentLoadForm";
 import EquipmentMaintanence from "../../../components/forms/Equipment/EquipmentMaintanence";
 import MaintenanceStatusBox from "./componentsEquipment/MaintenanceStatusBox";
+import { downloadPdf } from "../../../service/ExportDataExcel";
+import ButtonBack from "../../../components/ButtonBack";
 
 const InfoRow = ({ label, value }) => (
     <Box sx={{ display: "flex", mb: "5px" }}>
@@ -103,7 +110,7 @@ const EquipmentInfo = () => {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
-                }
+                },
             );
 
             if (res.status === 200) {
@@ -132,7 +139,7 @@ const EquipmentInfo = () => {
             const res = await api.post(
                 `/equipment/uploadFile/${idEquipment}`,
                 formData,
-                { headers: { "Content-Type": "multipart/form-data" } }
+                { headers: { "Content-Type": "multipart/form-data" } },
             );
 
             if (res.status === 200) {
@@ -177,7 +184,7 @@ const EquipmentInfo = () => {
 
         try {
             const res = await api.get(
-                `/loan/equipment/getByEquipmentId/${idEquipment}`
+                `/loan/equipment/getByEquipmentId/${idEquipment}`,
             );
             console.log(res);
             if (res.status == 200) {
@@ -192,7 +199,7 @@ const EquipmentInfo = () => {
 
     const deletedLoan = (id) => {
         const dataUpdated = dataLoan.filter(
-            (loan) => loan.equipmentLoanId !== id
+            (loan) => loan.equipmentLoanId !== id,
         );
         setDataLoan(dataUpdated);
         setResponseAlert({
@@ -221,7 +228,7 @@ const EquipmentInfo = () => {
         setIsLoanding(true);
         try {
             const res = await api.get(
-                `/maintenance/equipment/getAllByEquipmentId/${idEquipment}`
+                `/maintenance/equipment/getAllByEquipmentId/${idEquipment}`,
             );
             setDataMaintenance(res.data);
         } catch (error) {
@@ -324,106 +331,131 @@ const EquipmentInfo = () => {
                 </Snackbar>
             )}
 
-            {/** Header of the info page */}
             <Box
                 sx={{
                     display: "flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
+                    flexDirection: { xs: "column", sm: "row" }, // Columna en móvil, fila en desktop
                     justifyContent: "space-between",
+                    alignItems: { xs: "flex-start", sm: "center" },
+                    gap: 2,
+                    mb: 3,
                 }}
             >
-                <Box
-                    sx={{
-                        width: "100px",
-                        height: "40px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: "15px",
-                        border: "1px solid green",
-                    }}
-                    onClick={() => navigate(-1)}
-                >
-                    <ArrowBackOutlined sx={{ color: "primary.main" }} />{" "}
-                    <Typography sx={{ color: "primary.main" }}>
-                        {" "}
-                        Volver
-                    </Typography>
+                {/* Botón de volver ocupa todo el ancho en móvil si quieres, o se queda auto */}
+                <Box sx={{ width: { xs: "100%", sm: "auto" } }}>
+                    <ButtonBack />
                 </Box>
 
-                <Box sx={{ mt: { xs: "40px" } }}>
-                    <Button
-                        variant="outlined"
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        flexWrap: "wrap",
+                        width: { xs: "100%", sm: "auto" }, // Contenedor al 100% en móvil
+                        justifyContent: { xs: "space-between", sm: "flex-end" },
+                    }}
+                >
+                    {/* Botón de Exportar - Siempre pequeño */}
+                    <Tooltip title="Exportar Ficha Técnica">
+                        <Button
+                            variant="outlined"
+                            onClick={() =>
+                                downloadPdf(data.equipmentId, data.internalCode)
+                            }
+                            sx={{
+                                minWidth: "45px",
+                                width: "45px",
+                                height: "45px",
+                                borderRadius: "12px",
+                                borderColor: "divider",
+                                color: "text.secondary",
+                            }}
+                        >
+                            <IosShare fontSize="small" />
+                        </Button>
+                    </Tooltip>
+
+                    {/* Grupo de botones de acción rápida */}
+                    <Box
                         sx={{
-                            width: "auto",
-                            p: "20px",
-                            height: "40px",
                             display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            gap: 1.5,
+                            flexDirection: { xs: "column", md: "row" }, // Se apilan en pantallas muy pequeñas
+                            width: { xs: "calc(100% - 60px)", sm: "auto" }, // Ajuste para dejar espacio al botón export
                         }}
-                        onClick={() => alert("esta funcion esta en desarrollo")}
                     >
-                        <Download />{" "}
-                        <Typography sx={{ pl: "10px" }}>
-                            Descargar informacion de este equipo
-                        </Typography>
-                    </Button>
+                        <Button
+                            variant="contained"
+                            startIcon={<ConstructionOutlined />}
+                            onClick={() => setOpenMaintanence(true)}
+                            sx={{
+                                height: "45px",
+                                px: { xs: 2, sm: 3 },
+                                borderRadius: "10px",
+                                textTransform: "none",
+                                fontWeight: 600,
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" }, // Letra un poco más pequeña en móvil
+                                boxShadow: "none",
+                                width: "100%", // Ocupa el espacio disponible
+                            }}
+                        >
+                            Mantenimiento
+                        </Button>
+
+                        <Button
+                            variant="outlined"
+                            startIcon={<Assignment />}
+                            onClick={() => setOpenLoadForm(true)}
+                            sx={{
+                                height: "45px",
+                                px: { xs: 2, sm: 3 },
+                                borderRadius: "10px",
+                                textTransform: "none",
+                                fontWeight: 600,
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                                borderWidth: "1.5px",
+                                width: "100%",
+                            }}
+                        >
+                            Préstamo
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
 
             <Box
                 sx={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    flexDirection: "column",
+                    justifyContent: "center",
                     mt: "40px",
-                    flexWrap: "wrap",
                 }}
             >
                 <Box
                     sx={{
                         display: "flex",
                         alignItems: "center",
-                        flexDirection: { xs: "column" },
                     }}
                 >
-                    <Typography variant="h2" component={"h2"}>
-                        Informacion sobre /{" "}
+                    <Typography
+                        variant="h2"
+                        component={"h2"}
+                        sx={{ color: "primary.main" }}
+                    >
+                        Informacion sobre{"    "}
+                        {"  /  "}
                     </Typography>
                     <Typography
                         variant="h2"
                         component={"h2"}
-                        sx={{
-                            color: "text.primary",
-                            pl: "5px",
-                            pt: { xs: "20px" },
-                            opacity: "0.60",
-                        }}
+                        sx={{ color: "text.secondary" }}
                     >
-                        {" "}
                         {data.equipmentName}
                     </Typography>
                 </Box>
-                <Box>
-                    <Button
-                        sx={{ mr: "15px", mb: { xs: "20px" } }}
-                        variant="contained"
-                        onClick={() => setOpenMaintanence(true)}
-                    >
-                        {" "}
-                        <Construction /> Registrar mantenimiento
-                    </Button>
-                    <Button
-                        sx={{ color: "primary.main" }}
-                        variant="outlined"
-                        onClick={() => setOpenLoadForm(true)}
-                    >
-                        <Assignment /> Registrar prestamo
-                    </Button>
-                </Box>
             </Box>
-            <Divider sx={{ mb: "20px", mt: "50px" }}>Informacion</Divider>
+            <Divider sx={{ mb: "20px", mt: "10px" }}>Informacion</Divider>
 
             {/* message report equipment */}
             {data.markReport && (
@@ -453,100 +485,198 @@ const EquipmentInfo = () => {
             <Box
                 sx={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                    gap: "40px",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+                    gap: 4,
+                    mt: 3,
                 }}
             >
+                {/* PANEL 1: IDENTIFICACIÓN (Estilo PDF) */}
                 <Paper
-                    elevation={3}
+                    elevation={0}
                     sx={{
+                        border: "1px solid",
+                        borderColor: "divider",
+                        borderRadius: 4,
+                        overflow: "hidden", // Para que el header respete el border-radius
                         bgcolor: "background.paper",
-                        borderRadius: 3,
-                        p: 3,
-                        minHeight: "300px",
                         display: "flex",
                         flexDirection: "column",
-                        gap: 1,
                     }}
                 >
-                    <InfoRow label="Cuentadante" value={data.responsibleName} />
-                    <InfoRow label="Ubicación" value={data.locationName} />
-                    <InfoRow label="Placa" value={data.serialNumber} />
-                    <InfoRow label="Estado" value={data.state} />
-                    <InfoRow label="Costo" value={`$ ${data.equipmentCost}`} />
-                    <InfoRow
-                        label="Fecha de adquisición"
-                        value={data.acquisitionDate}
-                    />
-                    <InfoRow
-                        label="Fecha de mantenimiento"
-                        value={data.maintenanceDate}
-                    />
+                    <Box
+                        sx={{
+                            bgcolor: "background.default",
+                            p: 1.5,
+                            color: "text.secondary",
+                            fontWeight: "bold",
+                            textAlign: "center",
+                        }}
+                    >
+                        DATOS DE IDENTIFICACIÓN
+                    </Box>
+                    <Box
+                        sx={{
+                            p: 3,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1.5,
+                        }}
+                    >
+                        <InfoRow
+                            label="Código interno"
+                            value={data.internalCode}
+                        />
+                        <InfoRow
+                            label="Cuentadante"
+                            value={data.responsibleName}
+                        />
+                        <InfoRow label="Ubicación" value={data.locationName} />
+                        <InfoRow
+                            label="Placa Inventario"
+                            value={data.serialNumber}
+                        />
+                        <InfoRow label="Estado" value={data.state} isBadge />{" "}
+                        {/* Agregué prop para badge */}
+                        <InfoRow
+                            label="Costo"
+                            value={`$ ${data.equipmentCost?.toLocaleString()}`}
+                        />
+                        <Divider sx={{ my: 1 }} />
+                        <InfoRow
+                            label="Adquisición"
+                            value={data.acquisitionDate}
+                        />
+                        <InfoRow
+                            label="Mantenimiento"
+                            value={data.maintenanceDate}
+                        />
+                    </Box>
                 </Paper>
 
-                {/**tecnical info */}
+                {/*  ESPECIFICACIONES TÉCNICAS */}
                 <Paper
-                    elevation={3}
+                    elevation={0}
                     sx={{
+                        border: "1px solid",
+                        borderColor: "divider",
+                        borderRadius: 4,
+                        overflow: "hidden",
                         bgcolor: "background.paper",
-                        borderRadius: 3,
-                        p: 3,
-                        minHeight: "300px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
                     }}
                 >
-                    <InfoRow label="Nombre" value={data.equipmentName} />
-                    <InfoRow
-                        label="Numero de serie"
-                        value={data.serialNumber}
-                    />
-                    <InfoRow label="Marca" value={data.brand} />
-                    <InfoRow label="Modelo" value={data.model} />
-                    <InfoRow label="Voltaje" value={`${data.voltage}`} />
-                    <InfoRow label="Amperaje" value={`${data.amperage}`} />
-                    <InfoRow label="Uso" value={data.usageName} />
+                    <Box
+                        sx={{
+                            bgcolor: "background.default",
+                            p: 1.5,
+                            color: "text.secondary",
+                            fontWeight: "bold",
+                            textAlign: "center",
+                        }}
+                    >
+                        ESPECIFICACIONES TÉCNICAS
+                    </Box>
+                    <Box
+                        sx={{
+                            p: 3,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1.5,
+                        }}
+                    >
+                        <InfoRow label="Nombre" value={data.equipmentName} />
+                        <InfoRow
+                            label="Número de serie"
+                            value={data.serialNumber}
+                        />
+                        <InfoRow label="Marca" value={data.brand} />
+                        <InfoRow label="Modelo" value={data.model} />
+                        <InfoRow label="Voltaje" value={data.voltage} />
+                        <InfoRow label="Amperaje" value={data.amperage} />
+                        <InfoRow label="Uso destinado" value={data.usageName} />
+                    </Box>
                 </Paper>
 
+                {/* PANEL 3: MULTIMEDIA Y DESCRIPCIÓN */}
                 <Paper
-                    elevation={3}
+                    elevation={0}
                     sx={{
+                        border: "1px solid",
+                        borderColor: "divider",
+                        borderRadius: 4,
+                        overflow: "hidden",
                         bgcolor: "background.paper",
-                        borderRadius: 3,
-                        p: 3,
-                        minHeight: "300px",
-                        display: "flex",
-                        flexDirection: "column",
                         position: "relative",
-                        gap: 1,
                     }}
                 >
-                    {imageFile ? (
+                    <Box
+                        sx={{
+                            p: 0,
+                            position: "relative",
+                            height: "220px",
+                            bgcolor: "#f5f5f5",
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
                         <img
-                            src={imageFile}
-                            width={"100%"}
-                            alt="imagen del equipo"
+                            src={imageFile || notImage}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "contain",
+                                padding: imageFile ? 0 : "20px",
+                            }}
+                            alt="Equipo"
                         />
-                    ) : (
-                        <img
-                            src={notImage}
-                            width={"50%"}
-                            height={"200px"}
-                            alt="imagen del equipo"
-                        />
-                    )}
+                        <Button
+                            size="small"
+                            onClick={() => imageInputRef.current.click()}
+                            variant="contained"
+                            startIcon={<PhotoCamera />}
+                            sx={{
+                                position: "absolute",
+                                bottom: 10,
+                                right: 10,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "rgba(0,0,0,0.6)",
+                                "&:hover": { bgcolor: "rgba(0,0,0,0.8)" },
+                            }}
+                        >
+                            Cambiar
+                        </Button>
+                    </Box>
 
-                    <InfoRow
-                        label="Descripción"
-                        value={
-                            data.description === ""
-                                ? "No hay descripcion para este equipo"
-                                : data.description
-                        }
-                    />
+                    <Box sx={{ p: 3 }}>
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{
+                                fontWeight: "bold",
+                                textTransform: "uppercase",
+                            }}
+                        >
+                            Descripción y Notas
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                mt: 1,
+                                p: 2,
 
-                    {/* input oculto */}
+                                borderRadius: 2,
+                                border: "1px dashed #ccc",
+                                color: data.description
+                                    ? "text.primary"
+                                    : "text.disabled",
+                                minHeight: "80px",
+                            }}
+                        >
+                            {data.description ||
+                                "No hay descripción para este equipo"}
+                        </Typography>
+                    </Box>
+
                     <input
                         type="file"
                         accept="image/*"
@@ -554,20 +684,6 @@ const EquipmentInfo = () => {
                         ref={imageInputRef}
                         onChange={handleFileChange}
                     />
-
-                    <Button
-                        onClick={() => imageInputRef.current.click()}
-                        sx={{
-                            position: "absolute",
-                            bottom: "0%",
-                            right: "0",
-                            mb: "10px",
-                            mr: "10px",
-                        }}
-                        variant="contained"
-                    >
-                        Cambiar imagen
-                    </Button>
                 </Paper>
             </Box>
 

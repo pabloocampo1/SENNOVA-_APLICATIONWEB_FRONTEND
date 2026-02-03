@@ -325,7 +325,7 @@ const TestRequestInfo = () => {
                                     },
                                 }}
                             >
-                                Finalizar ensayo
+                                Finalizar solicitud servicio
                             </Button>
                         ) : (
                             <Button
