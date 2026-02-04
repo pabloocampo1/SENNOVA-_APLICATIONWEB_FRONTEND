@@ -5,7 +5,6 @@ import {
     MenuItem,
     TextField,
     Typography,
-    useTheme,
     Paper,
     Divider,
     IconButton,
@@ -17,14 +16,11 @@ import GenericModal from "../../../../components/modals/GenericModal";
 import SelectAnalisysByMatrixModal from "./SelectAnalisysByMatrixModal";
 
 const SelectAnalisysCompo = ({ saveSample }) => {
-    const theme = useTheme();
-
-    // --- ESTADOS ---
     const [matrices, setMatrices] = useState([]);
     const [analisysSelectedList, setAnalisysSelectedList] = useState([]);
     const [sampleData, setSampleData] = useState({
         matrixId: "",
-        matrixName: "", // Guardamos el ID, no el nombre
+        matrixName: "",
         analysis: [],
         description: "",
     });
@@ -40,18 +36,14 @@ const SelectAnalisysCompo = ({ saveSample }) => {
         }
     };
 
-    // --- EFECTOS ---
     useEffect(() => {
         fetchMatrices();
     }, []);
 
-    // --- MANEJADORES ---
     const handleMatrixChange = (e) => {
         const newMatrixId = e.target.value;
         const selectedMatrix = matrices.find((m) => m.matrixId == newMatrixId);
-        console.log(selectedMatrix);
 
-        // Si cambia la matriz, reseteamos los análisis seleccionados para evitar inconsistencias
         setSampleData({
             ...sampleData,
             matrixName: selectedMatrix.matrixName,
@@ -75,8 +67,6 @@ const SelectAnalisysCompo = ({ saveSample }) => {
     };
 
     const saveAnalysisFromModal = (newAnalysisList = []) => {
-        console.log(newAnalysisList);
-
         let updatedList = [...analisysSelectedList];
 
         newAnalysisList.forEach((newItem) => {

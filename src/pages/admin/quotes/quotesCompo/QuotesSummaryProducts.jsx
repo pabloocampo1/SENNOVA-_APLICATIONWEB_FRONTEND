@@ -36,11 +36,7 @@ const QuotesSummaryProducts = ({
         }).format(value);
 
     const totalGeneral = samples.reduce((accSample, sample) => {
-        console.log("sample en reduce: " + sample);
-
         const totalSample = sample.analysis.reduce((accAnalisis, item) => {
-            console.log(item);
-
             const price = Number(item.price) || 0;
             const qty = Number(item.quantity) || 0;
             return accAnalisis + price * qty;
@@ -356,11 +352,6 @@ const QuotesSummaryProducts = ({
 
                                     <TableBody>
                                         {sample.analysis.map((object) => {
-                                            console.log(
-                                                "En la lista de objec: " +
-                                                    object.price,
-                                            );
-
                                             const price =
                                                 Number(object.price) || 0;
                                             const qty =

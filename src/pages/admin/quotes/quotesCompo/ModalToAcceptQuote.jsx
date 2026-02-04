@@ -19,14 +19,30 @@ const ModalToAcceptQuote = ({
         testRequestId: testRequestId,
     });
     const [isLoanding, setIsLoanding] = useState(false);
+    const [file, setFile] = useState(null);
+
     const theme = useTheme();
 
     const handleSend = async () => {
         setIsLoanding(true);
         try {
+            const formData = new FormData();
+
+            formData.append(
+                "dto",
+                new Blob([JSON.stringify(objectToSend)], {
+                    type: "application/json",
+                }),
+            );
+
+            if (file) {
+                formData.append("file", file);
+            }
+
             const res = await api.put(
                 "/testRequest/accept-or-reject-test-request",
-                objectToSend
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } },
             );
 
             updateData(res.data);
@@ -103,15 +119,21 @@ const ModalToAcceptQuote = ({
                 {customerInfo.email}
             </Typography>
 
+            <Typography sx={{ mt: 2 }}>
+                Adjuntar informe técnico (PDF):
+            </Typography>
+            <input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setFile(e.target.files[0])}
+                style={{ marginBottom: "20px" }}
+            />
+
             <Button
-                onClick={() => handleSend()}
+                onClick={handleSend}
                 startIcon={<Send />}
                 variant="contained"
-                sx={{
-                    width: "100%",
-                    mt: "40px",
-                    mb: "30px",
-                }}
+                sx={{ width: "100%", mt: "20px", mb: "30px" }}
             >
                 Aceptar y enviar respuesta
             </Button>

@@ -22,7 +22,6 @@ const SelectAnalisysByMatrixModal = ({
 }) => {
     const theme = useTheme();
 
-    // --- ESTADOS ---
     const [listAnalisysSelected, setListAnalisysSelected] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -31,7 +30,6 @@ const SelectAnalisysByMatrixModal = ({
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            // Asumiendo que esta es tu ruta del back
             const res = await api.get(`/analysis/all-by-matrix/${matrixId}`);
             setProducts(res.data);
         } catch (error) {
@@ -48,9 +46,6 @@ const SelectAnalisysByMatrixModal = ({
         if (matrixId) fetchProducts();
     }, [matrixId]);
 
-    // --- LÓGICA DE SELECCIÓN ---
-
-    // Simplificado: buscamos directamente por analysisId en la raíz del objeto
     const isSelected = (id) =>
         listAnalisysSelected.some((item) => item.analysisId === id);
 
@@ -60,7 +55,6 @@ const SelectAnalisysByMatrixModal = ({
                 prev.filter((p) => p.analysisId !== product.analysisId),
             );
         } else {
-            // Guardamos el objeto plano + la cantidad inicial
             setListAnalisysSelected((prev) => [
                 ...prev,
                 { ...product, quantity: 1 },
@@ -69,7 +63,7 @@ const SelectAnalisysByMatrixModal = ({
     };
 
     const handleQuantityChange = (value, analysisId) => {
-        const val = Math.max(1, Number(value)); // Evita negativos o cero
+        const val = Math.max(1, Number(value));
         setListAnalisysSelected((prev) =>
             prev.map((item) =>
                 item.analysisId === analysisId
@@ -84,7 +78,7 @@ const SelectAnalisysByMatrixModal = ({
             setErrorMessage("Selecciona al menos un análisis.");
             return;
         }
-        // Enviamos la lista limpia al componente padre
+
         saveAnalysis(listAnalisysSelected);
     };
 

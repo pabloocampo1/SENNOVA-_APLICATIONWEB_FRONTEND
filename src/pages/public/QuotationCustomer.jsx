@@ -104,8 +104,6 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
             samples: testRequest,
         };
 
-        console.log(quoteRequetsDto);
-
         try {
             const res = await api.post(
                 "/testRequest/quotation",
@@ -131,8 +129,6 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
     };
 
     const saveSampleInfo = (sampleInfo) => {
-        console.log("Llego esto: ", sampleInfo);
-
         setSampleSelectByTheUser([...samplesSelectByTheUser, sampleInfo]);
 
         setOpenModalToSelectProduct(false);
@@ -178,8 +174,6 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                     compo={
                         <SelectAnalisysCompo
                             saveSample={(sampleInfo) => {
-                                console.log(sampleInfo);
-
                                 saveSampleInfo(sampleInfo);
                             }}
                         />
