@@ -11,13 +11,21 @@ import {
     Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import api from "../../service/axiosService";
-import { Add, Delete, Edit, Search } from "@mui/icons-material";
-import GenericModal from "../../components/modals/GenericModal";
-import CreateProductForm from "../../components/forms/Product/ProductForm";
-import ProductForm from "../../components/forms/Product/ProductForm";
-import SearchBar from "../../components/SearchBar";
-import { AuthContext } from "../../context/AuthContext";
+import api from "../../../service/axiosService";
+import {
+    Add,
+    Delete,
+    Details,
+    Edit,
+    Layers,
+    Search,
+} from "@mui/icons-material";
+import GenericModal from "../../../components/modals/GenericModal";
+import CreateProductForm from "../../../components/forms/Product/ProductForm";
+import ProductForm from "../../../components/forms/Product/ProductForm";
+import SearchBar from "../../../components/SearchBar";
+import { AuthContext } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ProductsCompo = () => {
     const [productData, setProductData] = useState([]);
@@ -39,6 +47,7 @@ const ProductsCompo = () => {
     const [productToEdit, setProductToEdit] = useState(null);
     const [search, setSearch] = useState("");
     const { authObject } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleChange = (event, value) => {
         setPage(value - 1);
@@ -46,7 +55,7 @@ const ProductsCompo = () => {
 
     const fetchData = async () => {
         try {
-            const response = await api.get(`/product/getAll?page=${page}`);
+            const response = await api.get(`/analysis/getAll?page=${page}`);
 
             if (response.status !== 200) {
                 setErrorFetch(true);
@@ -62,9 +71,9 @@ const ProductsCompo = () => {
         }
     };
 
-    const deleteProduct = async (id, productName) => {
+    const deleteProduct = async (id, analysisName) => {
         try {
-            const response = await api.delete(`/product/delete/${id}`);
+            const response = await api.delete(`/analysis/delete/${id}`);
             if (response.status == 200) {
                 fetchData();
                 setErrorDelete({
@@ -75,7 +84,7 @@ const ProductsCompo = () => {
                 setSuccess({
                     ...success,
                     message: "Se Elimino el producto existosamente.",
-                    product: productName,
+                    product: analysisName,
                     status: true,
                 });
                 setOpen(true);
@@ -83,7 +92,7 @@ const ProductsCompo = () => {
                 setErrorDelete({
                     ...errorDelete,
                     status: true,
-                    product: productName,
+                    product: analysisName,
                 });
                 setOpen(true);
             }
@@ -92,7 +101,7 @@ const ProductsCompo = () => {
             setErrorDelete({
                 ...errorDelete,
                 status: true,
-                product: productName,
+                product: analysisName,
             });
             setOpen(true);
         }
@@ -100,7 +109,7 @@ const ProductsCompo = () => {
 
     const saveProduct = async (product) => {
         try {
-            const response = await api.post("/product/save", product);
+            const response = await api.post("/analysis/save", product);
             console.log(response);
             if (response.status == 201) {
                 fetchData();
@@ -125,8 +134,8 @@ const ProductsCompo = () => {
 
     const editProduct = async (product, id) => {
         try {
-            const response = await api.put(`/product/update/${id}`, product);
-            console.log(response);
+            const response = await api.put(`/analysis/update/${id}`, product);
+
             if (response.status == 200) {
                 fetchData();
                 setSuccess({
@@ -140,7 +149,6 @@ const ProductsCompo = () => {
                 setOpen(true);
             }
         } catch (error) {
-            console.error(error);
             if (error.response && error.response.data) {
                 const backendError = error.response.data;
                 setErrorCreated(backendError.errors);
@@ -150,7 +158,7 @@ const ProductsCompo = () => {
 
     const searchProductsByName = async () => {
         try {
-            const response = await api.get(`/product/getByName/${search}`);
+            const response = await api.get(`/analysis/getByName/${search}`);
 
             if (response.status !== 200) {
                 setErrorFetch(true);
@@ -240,8 +248,20 @@ const ProductsCompo = () => {
                     flexWrap: "wrap",
                 }}
             >
-                <Box>
+                <Box
+                    sx={{
+                        display: "flex",
+                    }}
+                >
                     <SearchBar onSearch={(value) => setSearch(value)} />
+                    <Button
+                        variant="contained" // Puedes usar 'outlined' o 'text'
+                        startIcon={<Layers />}
+                        onClick={() => navigate("/system/products/matrices")} // Cambia la ruta por la tuya
+                        sx={{ textTransform: "none", ml: "20px" }} // Para que el texto no salga todo en mayúsculas
+                    >
+                        <Typography>Administrar matrices</Typography>
+                    </Button>
                 </Box>
                 <Box>
                     <Button
@@ -322,7 +342,7 @@ const ProductsCompo = () => {
                                 fontSize: "18px",
                             }}
                         >
-                            No hay productos para mostrar, agrega uno.
+                            No hay analisis para mostrar, agrega uno.
                         </Typography>
                     ) : (
                         <Box
@@ -338,7 +358,7 @@ const ProductsCompo = () => {
                         >
                             {productData.map((prod) => (
                                 <Card
-                                    key={prod.productId}
+                                    key={prod.analysisId}
                                     sx={{
                                         borderRadius: "12px",
                                         boxShadow: 2,
@@ -350,16 +370,9 @@ const ProductsCompo = () => {
                                             variant="h6"
                                             sx={{ fontWeight: "bold", mb: 1 }}
                                         >
-                                            {prod.analysis}
+                                            {prod.analysisName}
                                         </Typography>
 
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                        >
-                                            <strong>Matriz:</strong>{" "}
-                                            {prod.matrix}
-                                        </Typography>
                                         <Typography
                                             variant="body2"
                                             color="text.secondary"
@@ -421,6 +434,38 @@ const ProductsCompo = () => {
                                                 mt: 1,
                                             }}
                                         >
+                                            <IconButton
+                                                fontSize="small"
+                                                sx={{
+                                                    cursor: "pointer",
+                                                    color: "primary.main",
+                                                }}
+                                                onClick={() =>
+                                                    setProductToEdit(prod)
+                                                }
+                                            >
+                                                <Button
+                                                    sx={{
+                                                        textTransform: "none",
+                                                    }}
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/system/products/${prod.analysisId}/${prod.analysisName}`,
+                                                        )
+                                                    }
+                                                    startIcon={
+                                                        <Details
+                                                            sx={{
+                                                                color: "primary.main ",
+                                                            }}
+                                                            fontSize="small"
+                                                        />
+                                                    }
+                                                >
+                                                    Detalles
+                                                </Button>
+                                            </IconButton>
+
                                             <IconButton
                                                 fontSize="small"
                                                 sx={{

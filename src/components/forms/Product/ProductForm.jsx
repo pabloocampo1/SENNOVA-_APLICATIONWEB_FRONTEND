@@ -1,10 +1,10 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-const ProductForm = ({ method, errors, data={}, isEdit }) => {
+const ProductForm = ({ method, errors, data = {}, isEdit }) => {
     const [formData, setFormData] = useState({
-        productId: null,
-        analysis: "",
+        analysisId: null,
+        analysisName: "",
         equipment: "",
         matrix: "",
         method: "",
@@ -17,11 +17,11 @@ const ProductForm = ({ method, errors, data={}, isEdit }) => {
 
     const handleForm = (e) => {
         e.preventDefault();
-       if(!data){
-         method(formData);
-       }else{
-         method(formData, data.productId);
-       }
+        if (!data) {
+            method(formData);
+        } else {
+            method(formData, data.analysisId);
+        }
     };
 
     const handleChange = (e) => {
@@ -32,10 +32,10 @@ const ProductForm = ({ method, errors, data={}, isEdit }) => {
     };
 
     useEffect(() => {
-        if(data){
-            setFormData(data)
+        if (data) {
+            setFormData(data);
         }
-    }, [])
+    }, []);
 
     return (
         <Box
@@ -49,7 +49,12 @@ const ProductForm = ({ method, errors, data={}, isEdit }) => {
         >
             <Typography
                 component="h2"
-                sx={{ textAlign: "center", fontSize: "22px", fontWeight: "600", mb: 3 }}
+                sx={{
+                    textAlign: "center",
+                    fontSize: "22px",
+                    fontWeight: "600",
+                    mb: 3,
+                }}
             >
                 Agregar producto
             </Typography>
@@ -63,8 +68,8 @@ const ProductForm = ({ method, errors, data={}, isEdit }) => {
             >
                 <TextField
                     label="Análisis"
-                    name="analysis"
-                    value={formData.analysis}
+                    name="analysisName"
+                    value={formData.analysisName}
                     onChange={handleChange}
                     required
                     fullWidth

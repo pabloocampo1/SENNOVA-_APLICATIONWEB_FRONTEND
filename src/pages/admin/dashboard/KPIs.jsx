@@ -53,7 +53,7 @@ const KPICard = ({ label, value, trendData }) => {
                             alignItems: "center",
                             px: 1,
                             borderRadius: 1,
-                            bgcolor: alpha(statusColor, 0.1),
+                            bgcolor: statusColor,
                             color: statusColor,
                         }}
                     >
