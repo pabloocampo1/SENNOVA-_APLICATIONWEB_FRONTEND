@@ -48,7 +48,7 @@ export const ALL_MODULES = [
     },
     {
         url: "/system/products",
-        name: "Productos",
+        name: "Gestión de analysis",
         icon: <Category />,
         roles: ["ROLE_SUPERADMIN", "ROLE_ADMIN"],
     },

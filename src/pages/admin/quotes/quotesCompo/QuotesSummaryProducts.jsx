@@ -36,8 +36,12 @@ const QuotesSummaryProducts = ({
         }).format(value);
 
     const totalGeneral = samples.reduce((accSample, sample) => {
+        console.log("sample en reduce: " + sample);
+
         const totalSample = sample.analysis.reduce((accAnalisis, item) => {
-            const price = Number(item.product.price) || 0;
+            console.log(item);
+
+            const price = Number(item.price) || 0;
             const qty = Number(item.quantity) || 0;
             return accAnalisis + price * qty;
         }, 0);
@@ -262,7 +266,7 @@ const QuotesSummaryProducts = ({
                                         variant="body1"
                                         sx={{ fontWeight: 600 }}
                                     >
-                                        {sample.matrix}
+                                        {sample.matrixId}
                                     </Typography>
                                 </Box>
                                 <Chip
@@ -352,18 +356,20 @@ const QuotesSummaryProducts = ({
 
                                     <TableBody>
                                         {sample.analysis.map((object) => {
+                                            console.log(
+                                                "En la lista de objec: " +
+                                                    object.price,
+                                            );
+
                                             const price =
-                                                Number(object.product.price) ||
-                                                0;
+                                                Number(object.price) || 0;
                                             const qty =
                                                 Number(object.quantity) || 0;
                                             const total = price * qty;
 
                                             return (
                                                 <TableRow
-                                                    key={
-                                                        object.product.productId
-                                                    }
+                                                    key={object.analysisId}
                                                     hover
                                                     sx={{
                                                         "&:last-child td": {
@@ -379,8 +385,7 @@ const QuotesSummaryProducts = ({
                                                             }}
                                                         >
                                                             {
-                                                                object.product
-                                                                    .analysis
+                                                                object.analysisName
                                                             }
                                                         </Typography>
                                                     </TableCell>
@@ -458,7 +463,7 @@ const QuotesSummaryProducts = ({
                                                     sample.analysis.reduce(
                                                         (acc, item) =>
                                                             acc +
-                                                            item.product.price *
+                                                            item.price *
                                                                 item.quantity,
                                                         0,
                                                     ),

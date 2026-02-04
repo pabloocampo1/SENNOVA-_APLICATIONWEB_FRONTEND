@@ -6,7 +6,7 @@ const ProductForm = ({ method, errors, data = {}, isEdit }) => {
         analysisId: null,
         analysisName: "",
         equipment: "",
-        matrix: "",
+
         method: "",
         notes: "",
         price: 0,
@@ -70,15 +70,6 @@ const ProductForm = ({ method, errors, data = {}, isEdit }) => {
                     label="Análisis"
                     name="analysisName"
                     value={formData.analysisName}
-                    onChange={handleChange}
-                    required
-                    fullWidth
-                />
-
-                <TextField
-                    label="Matriz"
-                    name="matrix"
-                    value={formData.matrix}
                     onChange={handleChange}
                     required
                     fullWidth

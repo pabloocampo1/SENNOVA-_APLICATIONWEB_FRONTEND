@@ -1,4 +1,4 @@
-import { Add, ExitToApp, Remove } from "@mui/icons-material";
+import { Add, Remove, Science } from "@mui/icons-material";
 import {
     Box,
     Button,
@@ -6,6 +6,10 @@ import {
     TextField,
     Typography,
     useTheme,
+    Paper,
+    Divider,
+    IconButton,
+    Alert,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import api from "../../../../service/axiosService";
@@ -13,300 +17,282 @@ import GenericModal from "../../../../components/modals/GenericModal";
 import SelectAnalisysByMatrixModal from "./SelectAnalisysByMatrixModal";
 
 const SelectAnalisysCompo = ({ saveSample }) => {
+    const theme = useTheme();
+
+    // --- ESTADOS ---
+    const [matrices, setMatrices] = useState([]);
     const [analisysSelectedList, setAnalisysSelectedList] = useState([]);
-    const [products, setProducts] = useState([]);
     const [sampleData, setSampleData] = useState({
-        matrix: "",
+        matrixId: "",
+        matrixName: "", // Guardamos el ID, no el nombre
         analysis: [],
         description: "",
     });
-    const [errorObject, setErrorObject] = useState({
-        isError: false,
-        message: "",
-    });
-    const theme = useTheme();
+    const [error, setError] = useState("");
     const [openModalAnalisys, setOpenModalAnalisys] = useState(false);
 
-    const fetchProducts = async () => {
+    const fetchMatrices = async () => {
         try {
-            const res = await api.get("/product/all");
-            setProducts(res.data);
+            const res = await api.get("/analysis/matrix/get-all/available");
+            setMatrices(res.data);
         } catch (error) {
-            console.error(error);
+            console.error("Error fetching matrices:", error);
         }
     };
 
-    const handleChange = (e) => {
+    // --- EFECTOS ---
+    useEffect(() => {
+        fetchMatrices();
+    }, []);
+
+    // --- MANEJADORES ---
+    const handleMatrixChange = (e) => {
+        const newMatrixId = e.target.value;
+        const selectedMatrix = matrices.find((m) => m.matrixId == newMatrixId);
+        console.log(selectedMatrix);
+
+        // Si cambia la matriz, reseteamos los análisis seleccionados para evitar inconsistencias
         setSampleData({
             ...sampleData,
-            [e.target.name]: e.target.value,
+            matrixName: selectedMatrix.matrixName,
+            matrixId: newMatrixId,
+            analysis: [],
         });
+        setAnalisysSelectedList([]);
+        setError("");
     };
 
-    const deleteAnalysisToTheList = (productId) => {
-        setAnalisysSelectedList((prev) =>
-            prev.filter((object) => object.product.productId !== productId)
+    const handleDescriptionChange = (e) => {
+        setSampleData({ ...sampleData, description: e.target.value });
+    };
+
+    const deleteAnalysis = (analysisId) => {
+        const filtered = analisysSelectedList.filter(
+            (item) => item.analysisId !== analysisId,
         );
+        setAnalisysSelectedList(filtered);
+        setSampleData({ ...sampleData, analysis: filtered });
     };
 
-    const saveAnalysis = (listAnalysis = []) => {
+    const saveAnalysisFromModal = (newAnalysisList = []) => {
+        console.log(newAnalysisList);
+
         let updatedList = [...analisysSelectedList];
 
-        listAnalysis.forEach((newItem) => {
-            const newQuantity = Number(newItem.quantity);
-
+        newAnalysisList.forEach((newItem) => {
             const index = updatedList.findIndex(
-                (item) => item.product.productId === newItem.product.productId
+                (item) => item.analysisId === newItem.analysisId,
             );
 
             if (index !== -1) {
-                const currentQuantity = Number(updatedList[index].quantity);
-                updatedList[index] = {
-                    ...updatedList[index],
-                    quantity: currentQuantity + newQuantity,
-                };
+                // Si ya existe, sumamos cantidad
+                updatedList[index].quantity += Number(newItem.quantity);
             } else {
                 updatedList.push({
                     ...newItem,
-                    quantity: newQuantity,
+                    quantity: Number(newItem.quantity),
                 });
             }
         });
 
         setAnalisysSelectedList(updatedList);
-        setSampleData({
-            ...sampleData,
-            analysis: updatedList,
-        });
-
-        if (updatedList.length >= 1) {
-            setErrorObject({
-                isError: false,
-                message: "",
-            });
-        }
-
+        setSampleData({ ...sampleData, analysis: updatedList });
         setOpenModalAnalisys(false);
+        setError("");
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        if (sampleData.analysis.length < 1) {
-            setErrorObject({
-                isError: true,
-                message: "Debes de agregar un analisis a esta prueba.",
-            });
-        } else {
-            saveSample(sampleData);
+        if (analisysSelectedList.length === 0) {
+            setError("Debes agregar al menos un análisis a esta muestra.");
+            return;
         }
+        saveSample(sampleData);
     };
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
 
     return (
         <Box
-            component={"form"}
-            sx={{
-                width: { xs: "320px", md: "500px" },
-                height: "auto",
-            }}
+            component="form"
             onSubmit={handleSubmit}
+            sx={{ width: { xs: "100%", md: "500px" }, p: 2 }}
         >
-            {/* modal to analysys by matrix */}
-
+            {/* Modal para seleccionar análisis (Enviamos el matrixId) */}
             <GenericModal
                 open={openModalAnalisys}
                 onClose={() => setOpenModalAnalisys(false)}
                 compo={
                     <SelectAnalisysByMatrixModal
-                        products={products}
-                        saveAnalysis={(list) => saveAnalysis(list)}
+                        matrixId={sampleData.matrixId}
+                        matrixName={sampleData.matrixName}
+                        saveAnalysis={(analysis) =>
+                            saveAnalysisFromModal(analysis)
+                        }
                         onClose={() => setOpenModalAnalisys(false)}
-                        matrixSelected={sampleData.matrix}
                     />
                 }
             />
 
             <Typography
-                variant="body1"
-                sx={{ textAlign: "center", mt: "20px", fontWeight: "500" }}
+                variant="h6"
+                textAlign="center"
+                gutterBottom
+                fontWeight="600"
             >
-                Agregar muestra
+                Agregar Muestra
             </Typography>
-            <Typography variant="body2" sx={{ textAlign: "center" }}>
-                Selecciona una matriz y una descripcion para mas detalles
+            <Typography
+                variant="body2"
+                textAlign="center"
+                color="text.secondary"
+                mb={3}
+            >
+                Selecciona una matriz y los análisis correspondientes.
             </Typography>
 
             <Box
                 sx={{
-                    width: "100%",
-                    height: "100px",
-                    mt: "40px",
                     display: "flex",
-                    justifyContent: "space-around",
+                    gap: 2,
+                    mb: 3,
+                    flexDirection: { xs: "column", sm: "row" },
                 }}
             >
                 <TextField
                     select
-                    name="matrix"
+                    fullWidth
                     label="Matriz"
+                    value={sampleData.matrixId}
+                    onChange={handleMatrixChange}
                     required
-                    sx={{ width: "200px" }}
-                    value={sampleData.matrix || ""}
-                    onChange={(e) => handleChange(e)}
-                    placeholder="Selecciona la matriz"
                 >
-                    {products.length >= 1
-                        ? [
-                              ...new Map(
-                                  products.map((p) => [p.matrix, p])
-                              ).values(),
-                          ].map((product) => (
-                              <MenuItem
-                                  key={product.matrix}
-                                  value={product.matrix}
-                              >
-                                  {product.matrix}
-                              </MenuItem>
-                          ))
-                        : [
-                              <MenuItem key="no-products" disabled>
-                                  No hay productos para mostrar.
-                              </MenuItem>,
-                          ]}
+                    {matrices.length > 0 ? (
+                        matrices.map((m) => (
+                            <MenuItem key={m.matrixId} value={m.matrixId}>
+                                {m.matrixName}
+                            </MenuItem>
+                        ))
+                    ) : (
+                        <MenuItem disabled>
+                            No hay matrices disponibles
+                        </MenuItem>
+                    )}
                 </TextField>
 
                 <TextField
-                    name="description"
-                    value={sampleData.description || ""}
-                    onChange={(e) => handleChange(e)}
-                    label="description"
-                    placeholder="Agregar alguna descripcion de esta muestra"
+                    fullWidth
+                    label="Descripción"
+                    value={sampleData.description}
+                    onChange={handleDescriptionChange}
+                    placeholder="Ej: Toma en punto A"
                 />
             </Box>
 
             <Button
-                startIcon={<Add />}
-                onClick={() => setOpenModalAnalisys(true)}
-                sx={{ width: "100%" }}
+                fullWidth
                 variant="outlined"
+                startIcon={<Add />}
+                disabled={!sampleData.matrixId} // No abrir si no hay matriz
+                onClick={() => setOpenModalAnalisys(true)}
+                sx={{ mb: 3 }}
             >
-                Agregar analisis a la matriz - agua
+                {!sampleData.matrixId
+                    ? "Selecciona una matriz primero"
+                    : "Agregar análisis"}
             </Button>
 
-            <Box
-                sx={{
-                    width: "100%",
-                    minHeight: "200px",
-                    mt: "40px",
-                }}
+            {/* LISTA DE ANÁLISIS SELECCIONADOS */}
+            <Paper
+                variant="outlined"
+                sx={{ minHeight: "150px", mb: 2, bgcolor: "#fafafa" }}
             >
-                {/* show message no analisys selected */}
-                {analisysSelectedList.length <= 0 ? (
+                {analisysSelectedList.length === 0 ? (
                     <Box
                         sx={{
-                            width: "100%",
-                            minHeight: "200px",
                             display: "flex",
-                            justifyContent: "center",
+                            height: "150px",
                             alignItems: "center",
+                            justifyContent: "center",
                         }}
                     >
-                        <Typography>
-                            No hay analisis para esta muestra.
+                        <Typography color="text.disabled">
+                            Sin análisis seleccionados
                         </Typography>
                     </Box>
                 ) : (
-                    <Box>
+                    <Box sx={{ p: 1 }}>
                         <Box
                             sx={{
-                                width: "100%",
-                                bgcolor: "background.default",
-                                pt: "10px",
-                                pb: "10px",
                                 display: "flex",
                                 justifyContent: "space-between",
-                                alignItems: "center",
+                                px: 2,
+                                py: 1,
+                                opacity: 0.7,
                             }}
                         >
-                            <Typography>Quitar</Typography>
-                            <Typography>Analisis</Typography>
-                            <Typography>Canti.</Typography>
+                            <Typography variant="caption" sx={{ flex: 1 }}>
+                                Acción
+                            </Typography>
+                            <Typography variant="caption" sx={{ flex: 3 }}>
+                                Análisis
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                sx={{ flex: 1 }}
+                                textAlign="right"
+                            >
+                                Cant.
+                            </Typography>
                         </Box>
-                        {analisysSelectedList.map((object) => (
+                        <Divider />
+                        {analisysSelectedList.map((item) => (
                             <Box
-                                key={object.product.productId}
+                                key={item.analysisId}
                                 sx={{
-                                    width: "100%",
-                                    pt: "10px",
-                                    pb: "10px",
-                                    mb: "10px",
                                     display: "flex",
-                                    justifyContent: "space-between",
                                     alignItems: "center",
-                                    borderBottom: `1px solid ${theme.palette.border.primary}`,
+                                    justifyContent: "space-between",
+                                    py: 1,
+                                    px: 1,
+                                    borderBottom: "1px solid #eee",
                                 }}
                             >
-                                <Remove
-                                    onClick={() =>
-                                        deleteAnalysisToTheList(
-                                            object.product.productId
-                                        )
-                                    }
-                                    sx={{
-                                        ":hover": {
-                                            bgcolor:
-                                                theme.palette.border.primary,
-                                            borderRadius: "50px",
-                                            p: "2px",
-                                        },
-                                    }}
-                                />
-                                <Typography>
-                                    {" "}
-                                    {object.product.analysis}
+                                <Box sx={{ flex: 1 }}>
+                                    <IconButton
+                                        size="small"
+                                        color="error"
+                                        onClick={() =>
+                                            deleteAnalysis(item.analysisId)
+                                        }
+                                    >
+                                        <Remove fontSize="small" />
+                                    </IconButton>
+                                </Box>
+                                <Typography variant="body2" sx={{ flex: 3 }}>
+                                    {item.analysisName}
                                 </Typography>
-                                <Typography> {object.quantity}</Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ flex: 1 }}
+                                    textAlign="right"
+                                    fontWeight="bold"
+                                >
+                                    {item.quantity}
+                                </Typography>
                             </Box>
                         ))}
                     </Box>
                 )}
-            </Box>
-            {errorObject.isError && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Typography
-                        sx={{
-                            mt: "20px",
-                            textAlign: "center",
-                            mb: "30px",
-                            p: "10px",
-                            bgcolor: "#fe020230",
-                        }}
-                        color="error"
-                        variant="caption"
-                    >
-                        {errorObject.message}
-                    </Typography>
-                </Box>
+            </Paper>
+
+            {error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                    {error}
+                </Alert>
             )}
 
-            <Box
-                sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "end",
-                }}
-            >
-                <Button type="submit" variant="contained">
-                    Agregar muestra a la cotizacion
+            <Box sx={{ display: "flex", justifyContent: "end" }}>
+                <Button type="submit" variant="contained" size="large">
+                    Confirmar Muestra
                 </Button>
             </Box>
         </Box>

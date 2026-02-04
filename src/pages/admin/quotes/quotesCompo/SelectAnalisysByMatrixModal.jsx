@@ -1,287 +1,272 @@
-import { CheckBox } from "@mui/icons-material";
+import { Science } from "@mui/icons-material";
 import {
     Box,
     Button,
     Checkbox,
-    FormControlLabel,
-    Input,
     TextField,
-    Tooltip,
     Typography,
     useTheme,
-    Chip,
     Paper,
     Fade,
+    Alert,
+    CircularProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import api from "../../../../service/axiosService";
 
 const SelectAnalisysByMatrixModal = ({
-    products = [],
     onClose,
-    matrixSelected,
+    matrixId,
     saveAnalysis,
+    matrixName,
 }) => {
-    const [listAnalisysSelected, setListAnalisysSelected] = useState([]);
-    // const [quantity, setQuantity] = useState();
-
     const theme = useTheme();
 
-    useEffect(() => {}, []);
+    // --- ESTADOS ---
+    const [listAnalisysSelected, setListAnalisysSelected] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const containgInTheList = (productId) => {
-        return listAnalisysSelected.some(
-            (object) => object.product.productId === productId
+    const fetchProducts = async () => {
+        setLoading(true);
+        try {
+            // Asumiendo que esta es tu ruta del back
+            const res = await api.get(`/analysis/all-by-matrix/${matrixId}`);
+            setProducts(res.data);
+        } catch (error) {
+            console.error("Error fetching analysis:", error);
+            setErrorMessage(
+                "No se pudieron cargar los análisis para esta matriz.",
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (matrixId) fetchProducts();
+    }, [matrixId]);
+
+    // --- LÓGICA DE SELECCIÓN ---
+
+    // Simplificado: buscamos directamente por analysisId en la raíz del objeto
+    const isSelected = (id) =>
+        listAnalisysSelected.some((item) => item.analysisId === id);
+
+    const toggleProduct = (product) => {
+        if (isSelected(product.analysisId)) {
+            setListAnalisysSelected((prev) =>
+                prev.filter((p) => p.analysisId !== product.analysisId),
+            );
+        } else {
+            // Guardamos el objeto plano + la cantidad inicial
+            setListAnalisysSelected((prev) => [
+                ...prev,
+                { ...product, quantity: 1 },
+            ]);
+        }
+    };
+
+    const handleQuantityChange = (value, analysisId) => {
+        const val = Math.max(1, Number(value)); // Evita negativos o cero
+        setListAnalisysSelected((prev) =>
+            prev.map((item) =>
+                item.analysisId === analysisId
+                    ? { ...item, quantity: val }
+                    : item,
+            ),
         );
     };
 
-    const toggleProduct = (product) => {
-        if (containgInTheList(product.productId)) {
-            setListAnalisysSelected((prev) =>
-                prev.filter((p) => p.product.productId !== product.productId)
-            );
-        } else {
-            const objectToSave = {
-                product: product,
-                quantity: 0,
-            };
-
-            setListAnalisysSelected((prev) => [...prev, objectToSave]);
+    const handleSubmit = () => {
+        if (listAnalisysSelected.length === 0) {
+            setErrorMessage("Selecciona al menos un análisis.");
+            return;
         }
-    };
-
-    const handleSubmitChildForm = () => {
-        let counterObjectWithoutQuantity = 0;
-        listAnalisysSelected.forEach((object) => {
-            if (object.quantity <= 0) {
-                counterObjectWithoutQuantity++;
-            }
-        });
-
-        if (counterObjectWithoutQuantity >= 1) {
-            alert("Debes de agregar la cantidad en los analisys.");
-        } else {
-            saveAnalysis(listAnalisysSelected);
-        }
-    };
-
-    const addQuantity = (e, productId) => {
-        const quantityValue = e.target.value;
-
-        const listUpdate = listAnalisysSelected.map((item) => {
-            if (item.product.productId === productId) {
-                return {
-                    ...item,
-                    quantity: quantityValue,
-                };
-            }
-            return item;
-        });
-
-        setListAnalisysSelected(listUpdate);
+        // Enviamos la lista limpia al componente padre
+        saveAnalysis(listAnalisysSelected);
     };
 
     return (
         <Box
             sx={{
-                width: { xs: "340px", sm: "480px", md: "540px" },
+                width: { xs: "340px", sm: "480px" },
                 maxHeight: "85vh",
                 display: "flex",
                 flexDirection: "column",
             }}
         >
-            {/* Header Section */}
+            {/* Header */}
             <Box
                 sx={{
-                    px: 3,
-                    pt: 3,
-                    pb: 2,
+                    p: 3,
                     borderBottom: `1px solid ${theme.palette.divider}`,
                 }}
             >
-                <Typography
-                    variant="h6"
-                    sx={{
-                        fontWeight: 600,
-                        mb: 1,
-                        color: "text.primary",
-                    }}
-                >
+                <Typography variant="h6" fontWeight={600}>
                     Seleccionar Análisis
                 </Typography>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" color="text.secondary">
-                        Matriz:
-                    </Typography>
-                    <Chip
-                        label={matrixSelected}
-                        size="small"
-                        color="primary"
-                        sx={{ fontWeight: 500 }}
-                    />
-                </Box>
+                <Typography variant="caption" color="text.secondary">
+                    Matrix ID: <b>{matrixId}</b>
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                    Matrix NAME: <b>{matrixName}</b>
+                </Typography>
             </Box>
 
-            {/* Products List Section */}
+            {/* Content */}
             <Box
                 sx={{
                     flex: 1,
                     overflowY: "auto",
                     px: 3,
                     py: 2,
-                    "&::-webkit-scrollbar": {
-                        width: "8px",
-                    },
-                    "&::-webkit-scrollbar-track": {
-                        backgroundColor: "transparent",
-                    },
-                    "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: theme.palette.action.hover,
-                        borderRadius: "4px",
-                    },
+                    minHeight: "200px",
                 }}
             >
-                {products
-                    .filter((p) =>
-                        p.matrix
-                            .toLowerCase()
-                            .includes(matrixSelected.toLowerCase())
-                    )
-                    .map((product) => (
-                        <Fade in={true} key={product.productId}>
-                            <Paper
-                                elevation={
-                                    containgInTheList(product.productId) ? 3 : 0
-                                }
-                                sx={{
-                                    mb: 2,
-                                    p: 2.5,
-                                    cursor: "pointer",
-                                    transition: "all 0.3s ease",
-                                    border: `2px solid ${
-                                        containgInTheList(product.productId)
-                                            ? theme.palette.primary.main
-                                            : theme.palette.divider
-                                    }`,
-                                    borderRadius: "12px",
-                                    backgroundColor: containgInTheList(
-                                        product.productId
-                                    )
-                                        ? theme.palette.action.selected
-                                        : "background.paper",
-                                    "&:hover": {
-                                        borderColor: theme.palette.primary.main,
-                                        transform: "translateY(-2px)",
-                                        boxShadow: theme.shadows[4],
-                                    },
-                                }}
-                                onClick={() => toggleProduct(product)}
-                            >
-                                <Box
+                {loading ? (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            mt: 4,
+                        }}
+                    >
+                        <CircularProgress size={40} />
+                    </Box>
+                ) : products.length === 0 ? (
+                    <Typography
+                        align="center"
+                        sx={{ mt: 4 }}
+                        color="text.secondary"
+                    >
+                        No hay análisis disponibles.
+                    </Typography>
+                ) : (
+                    products.map((product) => {
+                        const selected = isSelected(product.analysisId);
+                        const currentItem = listAnalisysSelected.find(
+                            (i) => i.analysisId === product.analysisId,
+                        );
+
+                        return (
+                            <Fade in key={product.analysisId}>
+                                <Paper
+                                    onClick={() => toggleProduct(product)}
                                     sx={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "flex-start",
-                                        mb: containgInTheList(product.productId)
-                                            ? 2
-                                            : 0,
+                                        mb: 2,
+                                        p: 2,
+                                        cursor: "pointer",
+                                        borderRadius: "12px",
+                                        transition: "all 0.2s ease",
+                                        border: `2px solid ${selected ? theme.palette.primary.main : theme.palette.divider}`,
+                                        backgroundColor: selected
+                                            ? theme.palette.action.hover
+                                            : "background.paper",
                                     }}
                                 >
-                                    <Typography
-                                        variant="subtitle1"
+                                    <Box
                                         sx={{
-                                            fontWeight: 600,
-                                            color: "text.primary",
-                                            flex: 1,
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        {product.analysis}
-                                    </Typography>
-
-                                    <Checkbox
-                                        checked={containgInTheList(
-                                            product.productId
-                                        )}
-                                        onChange={() => toggleProduct(product)}
-                                        onClick={(e) => e.stopPropagation()}
-                                        sx={{
-                                            p: 0,
-                                            ml: 1,
-                                        }}
-                                    />
-                                </Box>
-
-                                {containgInTheList(product.productId) && (
-                                    <Fade in={true}>
                                         <Box
                                             sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: 1.5,
+                                            }}
+                                        >
+                                            <Science
+                                                color={
+                                                    selected
+                                                        ? "primary"
+                                                        : "disabled"
+                                                }
+                                            />
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle2"
+                                                    fontWeight={600}
+                                                >
+                                                    {product.analysisName}
+                                                </Typography>
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                >
+                                                    {product.method} |{" "}
+                                                    {product.units}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                        <Checkbox
+                                            checked={selected}
+                                            color="primary"
+                                        />
+                                    </Box>
+
+                                    {selected && (
+                                        <Box
+                                            sx={{
+                                                mt: 2,
                                                 pt: 2,
                                                 borderTop: `1px solid ${theme.palette.divider}`,
                                             }}
+                                            onClick={(e) => e.stopPropagation()}
                                         >
                                             <TextField
                                                 type="number"
-                                                required
-                                                label="Cantidad de analisis"
+                                                label="Cantidad de muestras"
                                                 size="small"
                                                 fullWidth
+                                                value={
+                                                    currentItem?.quantity || 1
+                                                }
                                                 onChange={(e) =>
-                                                    addQuantity(
-                                                        e,
-                                                        product.productId
+                                                    handleQuantityChange(
+                                                        e.target.value,
+                                                        product.analysisId,
                                                     )
                                                 }
-                                                onClick={(e) =>
-                                                    e.stopPropagation()
-                                                }
-                                                sx={{
-                                                    "& .MuiOutlinedInput-root":
-                                                        {
-                                                            borderRadius: "8px",
-                                                        },
-                                                }}
+                                                inputProps={{ min: 1 }}
                                             />
                                         </Box>
-                                    </Fade>
-                                )}
-                            </Paper>
-                        </Fade>
-                    ))}
+                                    )}
+                                </Paper>
+                            </Fade>
+                        );
+                    })
+                )}
             </Box>
 
-            {/* Footer Actions */}
+            {/* Error & Footer */}
+            {errorMessage && (
+                <Alert severity="error" variant="filled" sx={{ mx: 3, mb: 1 }}>
+                    {errorMessage}
+                </Alert>
+            )}
+
             <Box
                 sx={{
                     display: "flex",
                     gap: 2,
-                    px: 3,
-                    py: 2.5,
+                    p: 3,
                     borderTop: `1px solid ${theme.palette.divider}`,
-                    backgroundColor: "background.paper",
                 }}
             >
-                <Button
-                    variant="outlined"
-                    color="inherit"
-                    fullWidth
-                    onClick={() => onClose()}
-                    sx={{
-                        borderRadius: "8px",
-                        textTransform: "none",
-                        fontWeight: 500,
-                    }}
-                >
+                <Button variant="outlined" fullWidth onClick={onClose}>
                     Cancelar
                 </Button>
                 <Button
                     variant="contained"
-                    onClick={() => handleSubmitChildForm()}
                     fullWidth
-                    sx={{
-                        borderRadius: "8px",
-                        textTransform: "none",
-                        fontWeight: 500,
-                        boxShadow: theme.shadows[2],
-                    }}
+                    onClick={handleSubmit}
+                    disabled={loading}
                 >
                     Guardar
                 </Button>

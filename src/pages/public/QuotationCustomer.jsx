@@ -89,7 +89,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
             const products = [...currentSample.analysis];
             const listAnalysisModify = products.map((analysis) => {
                 return {
-                    productId: analysis.product.productId,
+                    analysisId: analysis.analysisId,
                     quantity: analysis.quantity,
                 };
             });
@@ -103,6 +103,8 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
             customer: customerInfo,
             samples: testRequest,
         };
+
+        console.log(quoteRequetsDto);
 
         try {
             const res = await api.post(
@@ -129,6 +131,8 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
     };
 
     const saveSampleInfo = (sampleInfo) => {
+        console.log("Llego esto: ", sampleInfo);
+
         setSampleSelectByTheUser([...samplesSelectByTheUser, sampleInfo]);
 
         setOpenModalToSelectProduct(false);
@@ -173,9 +177,11 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                     onClose={() => setOpenModalToSelectProduct(false)}
                     compo={
                         <SelectAnalisysCompo
-                            saveSample={(sampleInfo) =>
-                                saveSampleInfo(sampleInfo)
-                            }
+                            saveSample={(sampleInfo) => {
+                                console.log(sampleInfo);
+
+                                saveSampleInfo(sampleInfo);
+                            }}
                         />
                     }
                 />
