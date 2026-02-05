@@ -217,7 +217,7 @@ const SampleAnalysisResultCard = ({
             >
                 <Box>
                     <Typography variant="body1" sx={{ color: "primary.main" }}>
-                        {dataToUse.product.analysis}
+                        {dataToUse.product.analysisName}
                     </Typography>
 
                     <Typography variant="body2">{dataToUse.code}</Typography>

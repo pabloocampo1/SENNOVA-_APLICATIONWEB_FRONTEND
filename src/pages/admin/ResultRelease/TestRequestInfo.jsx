@@ -586,6 +586,7 @@ const TestRequestInfo = () => {
                     }}
                     requestCode={testRequest.requestCode}
                     testRequestId={testRequest.testRequestId}
+                    samples={testRequest.samples}
                 />
             </Drawer>
         </Box>

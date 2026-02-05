@@ -165,7 +165,7 @@ const ResultExecutionSamplesAvailable = () => {
             case "low": {
                 const updateList = originalData.filter((s) => {
                     const days = getDays(s.dueDate);
-                    return days >= 11 && days <= 15;
+                    return days >= 11;
                 });
 
                 setData(updateList);

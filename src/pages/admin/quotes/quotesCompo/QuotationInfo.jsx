@@ -157,6 +157,7 @@ const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
                     <AssignMemberWhenAccept
                         testRequestId={dataTestRequest.testRequestId}
                         requestCode={dataTestRequest.requestCode}
+                        samples={dataTestRequest.samples}
                         onClose={() => setOpenModalAssignUsers(false)}
                     />
                 }

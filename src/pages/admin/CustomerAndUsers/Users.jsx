@@ -100,7 +100,7 @@ const Users = ({ users = [], updateList, refresh }) => {
                 compo={
                     <ModalMessage
                         message={
-                            "No se puede eliminar el usuario ya que contiene equipos asigandos, desactiva su cuenta o cambia de cuentadante los equipos que tiene asigandos."
+                            "Este usuario tiene historial asociado (solicitudes de ensayo o inventario) y no puede ser eliminado. Le recomendamos desactivar la cuenta para mantener la integridad de los datos o remover sus responsabilidades antes de intentar borrarlo."
                         }
                         onClose={() => setOpenModalMessage(false)}
                     />
@@ -150,10 +150,15 @@ const Users = ({ users = [], updateList, refresh }) => {
                                 sx={{
                                     minHeight: "200px",
                                     p: "10px",
-
+                                    opacity: !user.available && "0.50",
                                     borderRadius: "15px",
-                                    bgcolor: "background.paper",
+                                    bgcolor: !user.available
+                                        ? "background.default"
+                                        : "background.paper",
                                     position: "relative",
+                                    border:
+                                        !user.available &&
+                                        `1px solid ${theme.palette.primary.main}`,
                                 }}
                             >
                                 <Box

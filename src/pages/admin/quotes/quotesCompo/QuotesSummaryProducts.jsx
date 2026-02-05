@@ -262,7 +262,7 @@ const QuotesSummaryProducts = ({
                                         variant="body1"
                                         sx={{ fontWeight: 600 }}
                                     >
-                                        {sample.matrixId}
+                                        {sample.matrixName}
                                     </Typography>
                                 </Box>
                                 <Chip

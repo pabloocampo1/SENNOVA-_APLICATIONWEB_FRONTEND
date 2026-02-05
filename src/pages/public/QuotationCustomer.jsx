@@ -151,6 +151,9 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                 flexDirection: "column",
             }}
         >
+            <Box sx={{ mt: "20px" }}>
+                <ButtonBack />
+            </Box>
             <SimpleBackdrop
                 open={isLoanding}
                 text="Enviando y guardando cotizacion..."
@@ -306,10 +309,12 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
                     <Typography
                         sx={{
                             mb: "20px",
+                            textAlign: "center",
                         }}
                         variant="body2"
                     >
-                        Se enviara tu respuesta al correo registrado como:{" "}
+                        Tu cotizacion de servicio fue enviada al sistema, se
+                        enviara tu respuesta al correo registrado como:{" "}
                         {customerInfo.email}
                     </Typography>
                     <Button

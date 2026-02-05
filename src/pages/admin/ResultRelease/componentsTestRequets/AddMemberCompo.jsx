@@ -2,7 +2,12 @@ import { Box } from "@mui/material";
 
 import AssignMemberWhenAccept from "../../quotes/quotesCompo/assignMemberWhenAccept";
 
-const AddMemberCompo = ({ testRequestId, requestCode, onClose }) => {
+const AddMemberCompo = ({
+    testRequestId,
+    requestCode,
+    onClose,
+    samples = [],
+}) => {
     return (
         <Box
             sx={{
@@ -20,6 +25,7 @@ const AddMemberCompo = ({ testRequestId, requestCode, onClose }) => {
                 testRequestId={testRequestId}
                 requestCode={requestCode}
                 isAddAnotherMember={true}
+                samples={samples}
             />
         </Box>
     );

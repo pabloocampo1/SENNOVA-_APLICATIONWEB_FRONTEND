@@ -38,7 +38,7 @@ export const getPriority = (dueDate) => {
                 Pri. Intermedia
             </Box>
         );
-    } else if (days >= 11 && days <= 15) {
+    } else if (days >= 11) {
         return (
             <Box
                 sx={{

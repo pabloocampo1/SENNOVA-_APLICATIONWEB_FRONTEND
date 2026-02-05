@@ -191,10 +191,7 @@ const SelectAnalisysCompo = ({ saveSample }) => {
             </Button>
 
             {/* LISTA DE ANÁLISIS SELECCIONADOS */}
-            <Paper
-                variant="outlined"
-                sx={{ minHeight: "150px", mb: 2, bgcolor: "#fafafa" }}
-            >
+            <Paper variant="outlined" sx={{ minHeight: "150px", mb: 2 }}>
                 {analisysSelectedList.length === 0 ? (
                     <Box
                         sx={{

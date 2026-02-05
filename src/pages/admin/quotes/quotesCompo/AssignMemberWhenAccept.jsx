@@ -20,15 +20,26 @@ const AssignMemberWhenAccept = ({
     requestCode,
     onClose,
     testRequestId,
+    samples = [],
     isAddAnotherMember = false,
 }) => {
     const [users, setUsers] = useState([]);
     const [usersSelected, setUsersSelected] = useState([]);
     const theme = useTheme();
 
+    const isUserQualifiedForSamples = (userAnalyses = [], samples = []) => {
+        return samples.every((sample) =>
+            sample.analysisEntities?.every((entity) =>
+                userAnalyses.some(
+                    (ua) => ua.analysisId === entity.product?.analysisId,
+                ),
+            ),
+        );
+    };
+
     const fetchUsers = async () => {
         try {
-            const res = await api.get("/users/getAllAvailable");
+            const res = await api.get("/users/available-with-competencies");
             setUsers(res.data);
         } catch (error) {
             console.log(error);
@@ -43,7 +54,7 @@ const AssignMemberWhenAccept = ({
         try {
             const res = await api.post(
                 "/testRequest/assign-members",
-                objectToSend
+                objectToSend,
             );
             if (res.status == 200) {
                 onClose();
@@ -199,100 +210,150 @@ const AssignMemberWhenAccept = ({
                     mb: "70px",
                 }}
             >
-                {users.map((user, index) => (
-                    <Tooltip
-                        key={index}
-                        title={
-                            [...usersSelected].includes(user.userId)
-                                ? `quitar a ${user.name}`
-                                : `Seleccionar a ${user.name}`
-                        }
-                    >
-                        <Box
+                {users.map((user, index) => {
+                    const isQualified = isUserQualifiedForSamples(
+                        user.qualifiedAnalyses,
+                        samples,
+                    );
+                    return (
+                        <Tooltip
                             key={index}
-                            sx={{
-                                height: "100px",
-                                position: "relative",
-                                bgcolor: [...usersSelected].includes(
-                                    user.userId
-                                )
-                                    ? `#42664050`
-                                    : `#42664010`,
-                                display: "flex",
-                                alignItems: "center",
-                                border: [...usersSelected].includes(user.userId)
-                                    ? `1px solid ${theme.palette.primary.main}`
-                                    : `1px solid ${theme.palette.border.primary}`,
-                                p: "10px",
-                                pt: "10px",
-
-                                borderRadius: "20px",
-                            }}
-                            onClick={() => {
-                                if (usersSelected.includes(user.userId)) {
-                                    setUsersSelected(
-                                        usersSelected.filter(
-                                            (id) => id !== user.userId
-                                        )
-                                    );
-                                } else {
-                                    setUsersSelected([
-                                        ...usersSelected,
-                                        user.userId,
-                                    ]);
-                                }
-                            }}
+                            title={
+                                !isQualified
+                                    ? `No capacitado `
+                                    : usersSelected.includes(user.userId)
+                                      ? `Quitar a ${user.name}`
+                                      : `Seleccionar a ${user.name}`
+                            }
                         >
-                            <Avatar src={user.imageProfile} alt={user.name} />
-
                             <Box
+                                key={user.userId}
                                 sx={{
+                                    height: "140px",
                                     display: "flex",
-                                    flexDirection: "column",
-                                    ml: "20px",
+                                    alignItems: "center",
+                                    gap: 2,
+                                    p: 2,
+                                    borderRadius: "16px",
+                                    position: "relative",
+
+                                    bgcolor: isQualified
+                                        ? usersSelected.includes(user.userId)
+                                            ? "primary.main"
+                                            : "background.paper"
+                                        : "#ffebee",
+
+                                    color:
+                                        isQualified &&
+                                        usersSelected.includes(user.userId)
+                                            ? "primary.contrastText"
+                                            : "text.primary",
+
+                                    border: isQualified
+                                        ? `1px solid ${
+                                              usersSelected.includes(
+                                                  user.userId,
+                                              )
+                                                  ? theme.palette.primary.main
+                                                  : theme.palette.divider
+                                          }`
+                                        : `1px solid ${theme.palette.error.main}`,
+
+                                    boxShadow: isQualified
+                                        ? usersSelected.includes(user.userId)
+                                            ? "0 8px 24px rgba(66,102,64,0.35)"
+                                            : "0 4px 14px rgba(0,0,0,0.08)"
+                                        : "none",
+
+                                    cursor: isQualified
+                                        ? "pointer"
+                                        : "not-allowed",
+                                    opacity: isQualified ? 1 : 0.65,
+
+                                    transition: "all .25s ease",
+
+                                    "&:hover": isQualified
+                                        ? {
+                                              transform: "translateY(-2px)",
+                                              boxShadow:
+                                                  "0 10px 28px rgba(0,0,0,0.18)",
+                                          }
+                                        : {},
+                                }}
+                                onClick={() => {
+                                    if (!isQualified) return;
+
+                                    setUsersSelected((prev) =>
+                                        prev.includes(user.userId)
+                                            ? prev.filter(
+                                                  (id) => id !== user.userId,
+                                              )
+                                            : [...prev, user.userId],
+                                    );
                                 }}
                             >
-                                <Typography variant="body1">
-                                    {" "}
-                                    {user.name}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ opacity: "0.50" }}
+                                <Avatar
+                                    src={user.imageProfile}
+                                    alt={user.name}
+                                />
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        ml: "20px",
+                                        flex: 1,
+                                    }}
                                 >
-                                    {" "}
-                                    {user.position}
-                                </Typography>
-                            </Box>
-                            <Typography>
-                                {[...usersSelected].includes(user.userId) ? (
-                                    <Box
+                                    <Typography
+                                        variant="body1"
+                                        sx={{ fontWeight: 600 }}
+                                    >
+                                        {user.name}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ opacity: 0.6 }}
+                                    >
+                                        {user.position}
+                                    </Typography>
+
+                                    <Typography
+                                        variant="caption"
                                         sx={{
-                                            position: "absolute",
-                                            top: 5,
-                                            right: 10,
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
+                                            fontWeight: "bold",
+                                            color: isQualified
+                                                ? "success.main"
+                                                : "error.main",
                                         }}
                                     >
-                                        <Typography
-                                            sx={{
-                                                fontWeight: "bold",
-                                            }}
-                                            color="success"
-                                        >
-                                            Agregado
-                                        </Typography>
+                                        {isQualified
+                                            ? "Capacitado"
+                                            : "No capacitado"}
+                                    </Typography>
+                                </Box>
+
+                                {/* Iconos de estado (Check o Error) */}
+                                <Box
+                                    sx={{
+                                        position: "absolute",
+                                        top: 5,
+                                        right: 10,
+                                    }}
+                                >
+                                    {usersSelected.includes(user.userId) && (
                                         <CheckCircleOutline color="success" />
-                                    </Box>
-                                ) : (
-                                    ""
-                                )}
-                            </Typography>
-                        </Box>
-                    </Tooltip>
-                ))}
+                                    )}
+                                    {!isQualified && (
+                                        <Tooltip title="Faltan competencias técnicas">
+                                            <CloseOutlined color="error" />
+                                        </Tooltip>
+                                    )}
+                                </Box>
+                            </Box>
+                        </Tooltip>
+                    );
+                })}
             </Box>
 
             <Button
