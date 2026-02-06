@@ -30,7 +30,7 @@ const SampleReceptionPage = () => {
         setIsLoanding(true);
         try {
             const res = await api.get(
-                `/testRequest/get-by-id/${testRequestId}`
+                `/testRequest/get-by-id/${testRequestId}`,
             );
             if (res.status == 200) {
                 setSamples(res.data.samples);
@@ -260,6 +260,16 @@ const SampleReceptionPage = () => {
                                     alt="imagenSample"
                                 />
                             </Box>
+                            <Typography
+                                variant="body1"
+                                sx={{ color: "text.secondary" }}
+                            >
+                                Descripcion de la muestra que realizo el
+                                cliente:{" "}
+                            </Typography>
+                            <Typography variant="body2">
+                                {sampleSelected.description}
+                            </Typography>
                         </Box>
 
                         {/* FORM TO SAVE RECEPTION */}

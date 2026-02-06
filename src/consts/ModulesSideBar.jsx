@@ -36,7 +36,7 @@ export const ALL_MODULES = [
     },
     {
         url: "/system/results",
-        name: "Gestión de ensayos",
+        name: "Gestión de cotizaciones",
         icon: <DocumentScanner />,
         roles: ["ROLE_SUPERADMIN", "ROLE_ADMIN", "ROLE_ANALYST"],
     },
@@ -48,7 +48,7 @@ export const ALL_MODULES = [
     },
     {
         url: "/system/products",
-        name: "Gestión de analysis",
+        name: "Gestión de análisis",
         icon: <Category />,
         roles: ["ROLE_SUPERADMIN", "ROLE_ADMIN"],
     },

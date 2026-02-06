@@ -156,14 +156,14 @@ const QuotesSummaryProducts = ({
                                 variant="h6"
                                 sx={{ fontWeight: "600", mb: 1 }}
                             >
-                                No hay análisis agregados
+                                No hay muestras agregadas
                             </Typography>
                             <Typography
                                 variant="body2"
                                 color="text.secondary"
                                 sx={{ mb: 3, textAlign: "center", px: 2 }}
                             >
-                                Comienza agregando productos y análisis para
+                                Comienza agregando muestras y sus análisis para
                                 generar tu cotización
                             </Typography>
                             <Button
@@ -180,7 +180,7 @@ const QuotesSummaryProducts = ({
                                     fontWeight: 600,
                                 }}
                             >
-                                Agregar Análisis
+                                Agregar muestra
                             </Button>
                         </Box>
                     </Fade>
@@ -498,7 +498,7 @@ const QuotesSummaryProducts = ({
                             px: 3,
                         }}
                     >
-                        Agregar Análisis
+                        Agregar otra muestra
                     </Button>
 
                     <Box
@@ -521,7 +521,7 @@ const QuotesSummaryProducts = ({
                                 mb: 0.5,
                             }}
                         >
-                            Total General
+                            Total
                         </Typography>
                         <Typography
                             variant="h5"

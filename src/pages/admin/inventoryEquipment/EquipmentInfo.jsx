@@ -334,14 +334,13 @@ const EquipmentInfo = () => {
             <Box
                 sx={{
                     display: "flex",
-                    flexDirection: { xs: "column", sm: "row" }, // Columna en móvil, fila en desktop
+                    flexDirection: { xs: "column", sm: "row" },
                     justifyContent: "space-between",
                     alignItems: { xs: "flex-start", sm: "center" },
                     gap: 2,
                     mb: 3,
                 }}
             >
-                {/* Botón de volver ocupa todo el ancho en móvil si quieres, o se queda auto */}
                 <Box sx={{ width: { xs: "100%", sm: "auto" } }}>
                     <ButtonBack />
                 </Box>
@@ -352,11 +351,10 @@ const EquipmentInfo = () => {
                         alignItems: "center",
                         gap: 1.5,
                         flexWrap: "wrap",
-                        width: { xs: "100%", sm: "auto" }, // Contenedor al 100% en móvil
+                        width: { xs: "100%", sm: "auto" },
                         justifyContent: { xs: "space-between", sm: "flex-end" },
                     }}
                 >
-                    {/* Botón de Exportar - Siempre pequeño */}
                     <Tooltip title="Exportar Ficha Técnica">
                         <Button
                             variant="outlined"
@@ -376,13 +374,12 @@ const EquipmentInfo = () => {
                         </Button>
                     </Tooltip>
 
-                    {/* Grupo de botones de acción rápida */}
                     <Box
                         sx={{
                             display: "flex",
                             gap: 1.5,
-                            flexDirection: { xs: "column", md: "row" }, // Se apilan en pantallas muy pequeñas
-                            width: { xs: "calc(100% - 60px)", sm: "auto" }, // Ajuste para dejar espacio al botón export
+                            flexDirection: { xs: "column", md: "row" },
+                            width: { xs: "calc(100% - 60px)", sm: "auto" },
                         }}
                     >
                         <Button
@@ -395,9 +392,9 @@ const EquipmentInfo = () => {
                                 borderRadius: "10px",
                                 textTransform: "none",
                                 fontWeight: 600,
-                                fontSize: { xs: "0.8rem", sm: "0.875rem" }, // Letra un poco más pequeña en móvil
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" },
                                 boxShadow: "none",
-                                width: "100%", // Ocupa el espacio disponible
+                                width: "100%",
                             }}
                         >
                             Mantenimiento
@@ -526,10 +523,7 @@ const EquipmentInfo = () => {
                             label="Código interno"
                             value={data.internalCode}
                         />
-                        <InfoRow
-                            label="Cuentadante"
-                            value={data.responsibleName}
-                        />
+                        <InfoRow label="Cuentadante" value={data.responsible} />
                         <InfoRow label="Ubicación" value={data.locationName} />
                         <InfoRow
                             label="Placa Inventario"
@@ -613,7 +607,7 @@ const EquipmentInfo = () => {
                             p: 0,
                             position: "relative",
                             height: "220px",
-                            bgcolor: "#f5f5f5",
+                            bgcolor: "",
                             display: "flex",
                             justifyContent: "center",
                         }}

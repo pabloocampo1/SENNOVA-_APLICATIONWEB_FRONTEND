@@ -1,9 +1,10 @@
 import { Close, CloseOutlined, Info, Send } from "@mui/icons-material";
 import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import CustomerInfoQuote from "./CustomerInfoQuote";
 import api from "../../../../service/axiosService";
 import SimpleBackdrop from "../../../../components/SimpleBackDrop";
+import { AuthContext } from "../../../../context/AuthContext";
 
 const ModalToAcceptQuote = ({
     onClose,
@@ -20,6 +21,7 @@ const ModalToAcceptQuote = ({
     });
     const [isLoanding, setIsLoanding] = useState(false);
     const [file, setFile] = useState(null);
+    const { authObject } = useContext(AuthContext);
 
     const theme = useTheme();
 
@@ -38,6 +40,8 @@ const ModalToAcceptQuote = ({
             if (file) {
                 formData.append("file", file);
             }
+
+            formData.append("reviewedBy", authObject.name);
 
             const res = await api.put(
                 "/testRequest/accept-or-reject-test-request",

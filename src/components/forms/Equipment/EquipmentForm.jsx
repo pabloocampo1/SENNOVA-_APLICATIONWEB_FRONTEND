@@ -1,4 +1,11 @@
-import { Box, Button, TextField, Typography, MenuItem, Switch } from "@mui/material";
+import {
+    Box,
+    Button,
+    TextField,
+    Typography,
+    MenuItem,
+    Switch,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import api from "../../../service/axiosService";
 import { Label } from "@mui/icons-material";
@@ -17,17 +24,15 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
         voltage: "",
         equipmentCost: "",
         state: "",
-        responsibleId: "",
+        responsible: "",
         locationId: "",
         markReport: false,
         description: "",
         usageId: "",
         imageUrl: "",
-        senaInventoryTag: ""
+        senaInventoryTag: "",
     });
 
-
-    const [users, setUsers] = useState([]);
     const [locations, setLocations] = useState([]);
     const [usages, setUsages] = useState([]);
 
@@ -37,17 +42,12 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
         setImageFile(e.target.files[0]);
     };
 
-
     const handleForm = (e) => {
         e.preventDefault();
 
-
         if (!data) {
-
             method(formData, imageFile);
         } else {
-
-
             const equipmentRequestDto = {
                 equipmentId: formData.equipmentId,
                 internalCode: formData.internalCode,
@@ -61,13 +61,13 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 voltage: formData.voltage,
                 equipmentCost: Number(formData.equipmentCost),
                 state: formData.state,
-                responsibleId: Number(formData.responsibleId),
+                responsible: formData.responsible,
                 description: formData.description,
                 locationId: Number(formData.locationId),
                 usageId: Number(formData.usageId),
                 imageUrl: formData.imageUrl,
                 senaInventoryTag: formData.senaInventoryTag,
-                markReport: formData.markReport
+                markReport: formData.markReport,
             };
             method(equipmentRequestDto, imageFile);
         }
@@ -85,35 +85,23 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
     const fetchUsages = async () => {
         try {
             const res = await api.get("/usage/getAll");
-            setUsages(res.data)
+            setUsages(res.data);
         } catch (error) {
             console.log(error);
-
         }
-    }
-    const fetchUsers = async () => {
-        try {
-            const res = await api.get("/users/getAllAvailable");
-            setUsers(res.data)
-        } catch (error) {
-            console.log(error);
+    };
 
-        }
-    }
     const fetchLocations = async () => {
         try {
             const res = await api.get("/location/getAll");
-            setLocations(res.data)
+            setLocations(res.data);
         } catch (error) {
             console.log(error);
-
         }
-    }
+    };
 
     useEffect(() => {
-
         if (data) {
-            console.log(data);
             setFormData({
                 ...data,
                 acquisitionDate: data.acquisitionDate?.split("T")[0] || "",
@@ -123,15 +111,12 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 usageName: data.usageName || "",
                 usageId: data.usageId || "",
                 description: data.description || "",
-                responsibleId: data.responsibleId || "",
-                responsibleName: data.responsibleName || ""
+                responsible: data.responsible || "",
             });
         }
 
-
-        fetchUsers()
-        fetchLocations()
-        fetchUsages()
+        fetchLocations();
+        fetchUsages();
     }, [data]);
 
     return (
@@ -275,7 +260,6 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                     name="equipmentCost"
                     value={formData.equipmentCost}
                     onChange={handleChange}
-                    required
                     error={!!errors?.equipmentCost}
                     helperText={errors?.equipmentCost}
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
@@ -294,26 +278,18 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                 >
                     <MenuItem value="Activo">Activo</MenuItem>
                     <MenuItem value="Dado de baja">Dado de baja</MenuItem>
-                    <MenuItem value="Fuera de servicio">Fuera de servicio</MenuItem>
+                    <MenuItem value="Fuera de servicio">
+                        Fuera de servicio
+                    </MenuItem>
                 </TextField>
 
                 <TextField
-                    select
-                    label="Responsable"
-                    name="responsibleId"
-                    value={formData.responsibleId || ""}
+                    label="responsible"
+                    name="responsible"
+                    value={formData.responsible}
                     onChange={handleChange}
-                    required
-                    error={!!errors?.state}
-                    helperText={errors?.state}
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
-                >
-
-                    {users.length < 1 && (<Typography>No hay usuarios</Typography>)}
-                    {users.map(user => {
-                        return <MenuItem key={user.userId} value={user.userId}>{user.name}</MenuItem>
-                    })}
-                </TextField>
+                />
 
                 <TextField
                     select
@@ -326,12 +302,20 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                     helperText={errors?.state}
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 >
-                    {locations.length < 1 && (<Typography>No hay ubicaciones</Typography>)}
-                    {locations.map(location => {
-                        return <MenuItem key={location.equipmentLocationId} value={location.equipmentLocationId}>{location.locationName}</MenuItem>
+                    {locations.length < 1 && (
+                        <Typography>No hay ubicaciones</Typography>
+                    )}
+                    {locations.map((location) => {
+                        return (
+                            <MenuItem
+                                key={location.equipmentLocationId}
+                                value={location.equipmentLocationId}
+                            >
+                                {location.locationName}
+                            </MenuItem>
+                        );
                     })}
                 </TextField>
-
 
                 <TextField
                     select
@@ -344,15 +328,26 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                     helperText={errors?.state}
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 >
-                    {usages.length < 1 && (<Typography>No hay usos.</Typography>)}
-                    {usages.map(usages => {
-                        return <MenuItem key={usages.equipmentUsageId} value={usages.equipmentUsageId}>{usages.usageName}</MenuItem>
+                    {usages.length < 1 && <Typography>No hay usos.</Typography>}
+                    {usages.map((usages) => {
+                        return (
+                            <MenuItem
+                                key={usages.equipmentUsageId}
+                                value={usages.equipmentUsageId}
+                            >
+                                {usages.usageName}
+                            </MenuItem>
+                        );
                     })}
                 </TextField>
                 <Box>
                     {formData.imageUrl && (
                         <Box>
-                            <img src={formData.imageUrl} alt="image of equipment" width={"100px"} />
+                            <img
+                                src={formData.imageUrl}
+                                alt="image of equipment"
+                                width={"100px"}
+                            />
                         </Box>
                     )}
                 </Box>
@@ -364,7 +359,6 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                     error={!!errors?.description}
                     helperText={errors?.description}
                     multiline
-
                     sx={{ flex: "1 1 calc(50% - 8px)" }}
                 />
                 {isEdit && (
@@ -395,8 +389,9 @@ const EquipmentForm = ({ method, errors = {}, data = null, isEdit }) => {
                                 color="text.secondary"
                                 sx={{ maxWidth: "320px" }}
                             >
-                                Activa esta opción si el equipo ya no se encuentra disponible o no fue
-                                localizado durante la verificación.
+                                Activa esta opción si el equipo ya no se
+                                encuentra disponible o no fue localizado durante
+                                la verificación.
                             </Typography>
                         </Box>
 

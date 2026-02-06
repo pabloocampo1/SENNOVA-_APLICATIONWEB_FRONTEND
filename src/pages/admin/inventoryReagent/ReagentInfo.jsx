@@ -56,8 +56,6 @@ const ReagentInfo = () => {
         setFiles(event.target.files);
     };
 
-    console.log(authObject);
-
     const getFiles = async () => {
         setIsLoanding(true);
         try {
@@ -467,7 +465,7 @@ const ReagentInfo = () => {
                             Cuentadante :{" "}
                         </Typography>
                         <Typography sx={{ opacity: "0.60", pl: "10px" }}>
-                            {dataReagent.responsibleName}
+                            {dataReagent.responsible}
                         </Typography>
                     </Box>
 

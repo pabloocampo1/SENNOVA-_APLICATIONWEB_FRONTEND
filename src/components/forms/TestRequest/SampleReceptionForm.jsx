@@ -23,6 +23,7 @@ const SampleReceptionForm = ({ data, onClose }) => {
             packageDescription: sampleSelected?.packageDescription ?? null,
             identificationSample: sampleSelected?.identificationSample ?? null,
             storageConditions: sampleSelected?.storageConditions ?? null,
+            samplingLocation: sampleSelected?.samplingLocation ?? null,
             observations: sampleSelected?.observations ?? null,
         };
 
@@ -30,7 +31,7 @@ const SampleReceptionForm = ({ data, onClose }) => {
             "dto",
             new Blob([JSON.stringify(objectToSend)], {
                 type: "application/json",
-            })
+            }),
         );
 
         formData.append("sampleId", data.sampleId);
@@ -83,7 +84,7 @@ const SampleReceptionForm = ({ data, onClose }) => {
                 }}
             >
                 <TextField
-                    label="Identificación de la muestra"
+                    label="Identificación de la muestra (para uso interno)"
                     value={sampleSelected?.identificationSample ?? ""}
                     multiline
                     required
@@ -166,6 +167,21 @@ const SampleReceptionForm = ({ data, onClose }) => {
                         setSampleSelected({
                             ...sampleSelected,
                             packageDescription: e.target.value,
+                        })
+                    }
+                />
+
+                <TextField
+                    label="Lugar de Recolección  "
+                    multiline
+                    minRows={4}
+                    fullWidth
+                    required
+                    value={sampleSelected?.samplingLocation ?? ""}
+                    onChange={(e) =>
+                        setSampleSelected({
+                            ...sampleSelected,
+                            samplingLocation: e.target.value,
                         })
                     }
                 />

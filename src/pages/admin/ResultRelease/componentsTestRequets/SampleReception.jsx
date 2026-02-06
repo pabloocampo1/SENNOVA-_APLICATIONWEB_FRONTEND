@@ -103,6 +103,13 @@ const SampleReception = ({ data }) => {
                         />
                     </Grid>
 
+                    <Grid item xs={12} sm={6}>
+                        <InfoItem
+                            label="Lugar de Recolección"
+                            value={checkValue(data.samplingLocation)}
+                        />
+                    </Grid>
+
                     {/* IMAGE */}
                     <Grid item xs={12}>
                         <Typography

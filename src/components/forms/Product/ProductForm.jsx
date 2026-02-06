@@ -1,12 +1,28 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import {
+    Box,
+    Button,
+    IconButton,
+    Stack,
+    Switch,
+    TextField,
+    Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-const ProductForm = ({ method, errors, data = {}, isEdit }) => {
+const ProductForm = ({
+    method,
+    errors,
+    data = {},
+    isEdit,
+    authObject = {},
+    deleteAnalysis,
+}) => {
     const [formData, setFormData] = useState({
         analysisId: null,
         analysisName: "",
         equipment: "",
-
+        available: null,
         method: "",
         notes: "",
         price: 0,
@@ -37,6 +53,8 @@ const ProductForm = ({ method, errors, data = {}, isEdit }) => {
         }
     }, []);
 
+    console.log(authObject);
+
     return (
         <Box
             component="form"
@@ -47,6 +65,32 @@ const ProductForm = ({ method, errors, data = {}, isEdit }) => {
                 borderRadius: 2,
             }}
         >
+            <Box sx={{ display: "flex", justifyContent: "end" }}>
+                <IconButton
+                    size="small"
+                    color="primary"
+                    disabled={authObject.role !== "ROLE_SUPERADMIN" || !isEdit}
+                    fontSize="small"
+                    sx={{
+                        cursor: "pointer",
+                        color: "primary.main",
+                    }}
+                    onClick={() =>
+                        deleteAnalysis(
+                            formData.analysisId,
+                            formData.analysisName,
+                        )
+                    }
+                >
+                    <Delete
+                        sx={{
+                            color: "primary.main ",
+                        }}
+                        fontSize="small"
+                    />{" "}
+                    Eliminar
+                </IconButton>
+            </Box>
             <Typography
                 component="h2"
                 sx={{
@@ -123,6 +167,22 @@ const ProductForm = ({ method, errors, data = {}, isEdit }) => {
                     fullWidth
                     sx={{ gridColumn: "1 / -1" }}
                 />
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
+                    <Typography>¿Está disponible actualmente?</Typography>
+                    <Switch
+                        checked={formData.available}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                available: e.target.checked,
+                            })
+                        }
+                    />
+                </Stack>
 
                 <Button
                     type="submit"

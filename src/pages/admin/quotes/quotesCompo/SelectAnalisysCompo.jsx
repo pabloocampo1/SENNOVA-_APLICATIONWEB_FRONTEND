@@ -75,7 +75,6 @@ const SelectAnalisysCompo = ({ saveSample }) => {
             );
 
             if (index !== -1) {
-                // Si ya existe, sumamos cantidad
                 updatedList[index].quantity += Number(newItem.quantity);
             } else {
                 updatedList.push({
@@ -106,7 +105,6 @@ const SelectAnalisysCompo = ({ saveSample }) => {
             onSubmit={handleSubmit}
             sx={{ width: { xs: "100%", md: "500px" }, p: 2 }}
         >
-            {/* Modal para seleccionar análisis (Enviamos el matrixId) */}
             <GenericModal
                 open={openModalAnalisys}
                 onClose={() => setOpenModalAnalisys(false)}
@@ -136,17 +134,20 @@ const SelectAnalisysCompo = ({ saveSample }) => {
                 color="text.secondary"
                 mb={3}
             >
-                Selecciona una matriz y los análisis correspondientes.
+                Selecciona una matriz, escribe la descripción/detalles de tu
+                muestra seleccionada y elije los análisis para la muestra.
             </Typography>
 
             <Box
                 sx={{
                     display: "flex",
-                    gap: 2,
-                    mb: 3,
+                    gap: 3, // Un poco más de espacio para respirar
+                    mb: 4,
                     flexDirection: { xs: "column", sm: "row" },
+                    alignItems: "flex-start", // Alinea los items arriba por si uno es más alto
                 }}
             >
+                {/* Select de Matriz */}
                 <TextField
                     select
                     fullWidth
@@ -154,6 +155,7 @@ const SelectAnalisysCompo = ({ saveSample }) => {
                     value={sampleData.matrixId}
                     onChange={handleMatrixChange}
                     required
+                    variant="outlined" // O "filled" según tu estilo
                 >
                     {matrices.length > 0 ? (
                         matrices.map((m) => (
@@ -170,10 +172,22 @@ const SelectAnalisysCompo = ({ saveSample }) => {
 
                 <TextField
                     fullWidth
-                    label="Descripción"
+                    required
+                    label="Descripción de la muestra"
                     value={sampleData.description}
                     onChange={handleDescriptionChange}
-                    placeholder="Ej: Toma en punto A"
+                    placeholder="Ej: Muestra de agua de pozo profundo..."
+                    multiline
+                    rows={3}
+                    helperText="Proporcione detalles específicos como el estado físico, condiciones de recolección o cualquier observación técnica relevante."
+                    FormHelperTextProps={{
+                        sx: {
+                            fontSize: "0.75rem",
+                            color: "#666",
+                            lineHeight: "1.2",
+                            mt: 1,
+                        },
+                    }}
                 />
             </Box>
 
@@ -181,16 +195,15 @@ const SelectAnalisysCompo = ({ saveSample }) => {
                 fullWidth
                 variant="outlined"
                 startIcon={<Add />}
-                disabled={!sampleData.matrixId} // No abrir si no hay matriz
+                disabled={!sampleData.matrixId}
                 onClick={() => setOpenModalAnalisys(true)}
                 sx={{ mb: 3 }}
             >
                 {!sampleData.matrixId
                     ? "Selecciona una matriz primero"
-                    : "Agregar análisis"}
+                    : "Agregar el tipo de análisis para tu muestra"}
             </Button>
 
-            {/* LISTA DE ANÁLISIS SELECCIONADOS */}
             <Paper variant="outlined" sx={{ minHeight: "150px", mb: 2 }}>
                 {analisysSelectedList.length === 0 ? (
                     <Box

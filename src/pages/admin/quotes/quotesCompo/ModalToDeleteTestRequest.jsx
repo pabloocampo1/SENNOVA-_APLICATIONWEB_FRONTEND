@@ -25,12 +25,11 @@ const ModalToDeleteTestRequest = ({
         setLoading(true);
         try {
             const res = await api.delete(
-                `/testRequest/delete-by-id/${testRequestId}`
+                `/testRequest/delete-by-id/${testRequestId}`,
             );
             if (res.status == 200) {
                 onCloseDeleted();
             }
-            console.log(res);
         } catch (error) {
             console.error(error);
         } finally {

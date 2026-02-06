@@ -95,6 +95,7 @@ const QuotationCustomer = ({ isAdmin = false, backSectionQuotation }) => {
             });
 
             currentSample.analysis = listAnalysisModify;
+            console.log("m d: ", currentSample.description);
 
             return currentSample;
         });

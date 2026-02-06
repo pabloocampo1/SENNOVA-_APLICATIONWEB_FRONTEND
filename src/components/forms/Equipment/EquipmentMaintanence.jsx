@@ -1,75 +1,87 @@
-import React, { useState } from 'react';
-import api from '../../../service/axiosService';
-import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
-import { Close, Delete } from '@mui/icons-material';
+import React, { useState } from "react";
+import api from "../../../service/axiosService";
+import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
+import { Close, Delete } from "@mui/icons-material";
 
-const EquipmentMaintanence = ({ equipmentId, send, nameOfTheEquipment, onClose }) => {
+const EquipmentMaintanence = ({
+    equipmentId,
+    send,
+    nameOfTheEquipment,
+    onClose,
+}) => {
     const [data, setData] = useState({
         performedBy: "",
         notes: "",
         dateMaintenance: null,
         maintenanceType: "",
-        equipmentId: equipmentId
-    })
-    const [errors, setErrors] = useState()
-
+        equipmentId: equipmentId,
+    });
+    const [errors, setErrors] = useState();
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         const sendData = async () => {
             try {
                 const res = await api.post("/maintenance/equipment/save", data);
-                console.log(res);
 
                 if (res.status == 201) {
-                    send()
+                    send();
                 }
-
-
             } catch (error) {
                 console.log(error);
-
             }
-        }
-        sendData()
-
-    }
+        };
+        sendData();
+    };
 
     const handleChange = (e) => {
         setData({
             ...data,
             [e.target.name]: e.target.value,
-        })
-    }
+        });
+    };
 
     return (
-        <Box sx={{
-            width: { xs: "280px", sm: "500px" },
-            mx: "auto",
-
-        }}>
-            <Typography sx={{ pb: "40px", pt: "40px", fontSize: "1.5rem", textAlign: "center" }}>Registro para: {nameOfTheEquipment}</Typography>
-            <Box component={"form"} onSubmit={handleSubmit}
+        <Box
+            sx={{
+                width: { xs: "280px", sm: "500px" },
+                mx: "auto",
+            }}
+        >
+            <Typography
+                sx={{
+                    pb: "40px",
+                    pt: "40px",
+                    fontSize: "1.5rem",
+                    textAlign: "center",
+                }}
+            >
+                Registro para: {nameOfTheEquipment}
+            </Typography>
+            <Box
+                component={"form"}
+                onSubmit={handleSubmit}
                 sx={{
                     width: "100%",
                     minWidth: "320px",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    flexDirection: "column"
-                }}>
+                    flexDirection: "column",
+                }}
+            >
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "grid",
+                        gridTemplateColumns: {
+                            xs: "200px",
+                            sm: "200px 200px",
+                        },
 
-                <Box sx={{
-                    width: "100%",
-                    display: "grid",
-                    gridTemplateColumns: {
-                        xs: "200px",
-                        sm: "200px 200px",
-                    },
-
-                    gap: "20px"
-                }}>
-
+                        gap: "20px",
+                    }}
+                >
                     <TextField
                         label="Nombre del encargado del mantenimiento"
                         name="performedBy"
@@ -118,16 +130,16 @@ const EquipmentMaintanence = ({ equipmentId, send, nameOfTheEquipment, onClose }
                         error={!!errors?.dateMaintenance}
                         helperText={errors?.dateMaintenance}
                     />
-
-
-
                 </Box>
 
+                <Button
+                    sx={{ width: "100%", mt: "20px" }}
+                    variant="contained"
+                    type="submit"
+                >
+                    Guardar registro
+                </Button>
 
-
-
-                <Button sx={{ width: "100%", mt: "20px" }} variant='contained' type='submit'>Guardar registro</Button>
-            
                 <Button
                     variant="contained"
                     color="error"
@@ -136,10 +148,10 @@ const EquipmentMaintanence = ({ equipmentId, send, nameOfTheEquipment, onClose }
                     sx={{
                         display: { xs: "flex", sm: "none" },
                         boxShadow: 2,
-                        mt:"20px",
-                        '&:hover': {
-                            boxShadow: 4
-                        }
+                        mt: "20px",
+                        "&:hover": {
+                            boxShadow: 4,
+                        },
                     }}
                 >
                     Cancelar

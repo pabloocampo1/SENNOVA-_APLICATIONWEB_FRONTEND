@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Chip,
     Divider,
     Drawer,
     IconButton,
@@ -480,6 +481,28 @@ const TestRequestInfo = () => {
                                   )} dias para la entrega de la muestra`}
                         </Typography>
                     )}
+
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Chip
+                            label={testRequest.state}
+                            color={
+                                testRequest.state === "ACEPTADA"
+                                    ? "success"
+                                    : "error"
+                            }
+                        />
+                        <Typography
+                            variant="caption"
+                            sx={{ color: "text.secondary" }}
+                        >
+                            {testRequest.state === "ACEPTADA"
+                                ? "Aceptada por:"
+                                : "Rechazada por:"}
+                            <strong>
+                                {testRequest.reviewedBy || "Pendiente"}
+                            </strong>
+                        </Typography>
+                    </Box>
                 </Box>
             </Box>
             {/* INFO BASIC */}

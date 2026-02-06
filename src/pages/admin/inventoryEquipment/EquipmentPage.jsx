@@ -36,7 +36,7 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CardsSummaryEquipment from "./componentsEquipment/CardsSummaryEquipment";
 import api from "../../../service/axiosService";
 import SearchBar from "../../../components/SearchBar";
@@ -48,6 +48,7 @@ import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import TableEquipments from "./componentsEquipment/TableEquipments";
 import OptionCheckInvAndReportEquipments from "./componentsEquipment/OptionCheckInvAndReportEquipments";
 import downloadExcel from "../../../service/ExportDataExcel";
+import { AuthContext } from "../../../context/AuthContext";
 
 const EquipmentPage = () => {
     const [dataEquipments, setDataEquipments] = useState([]);
@@ -70,6 +71,7 @@ const EquipmentPage = () => {
     const [refreshSummary, setRefreshSummary] = useState(0);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+    const { authObject } = useContext(AuthContext);
 
     const handleChangeSelect = (event) => {
         setSearchBy(event.target.value);
@@ -114,6 +116,7 @@ const EquipmentPage = () => {
                     }),
                 );
                 formData.append("image", image);
+                formData.append("userAction", authObject.name);
 
                 const res = await api.put(
                     `/equipment/update/${equipment.equipmentId}`,
@@ -227,6 +230,8 @@ const EquipmentPage = () => {
                 if (imageFile != null) {
                     formData.append("image", imageFile);
                 }
+
+                formData.append("userAction", authObject.name);
 
                 const res = await api.post("/equipment/save", formData, {
                     headers: {

@@ -22,9 +22,17 @@ const ModalToRejectTestRequest = ({
     const handleSend = async () => {
         setIsLoanding(true);
         try {
+            const formData = new FormData();
+            formData.append(
+                "dto",
+                new Blob([JSON.stringify(objectToSend)], {
+                    type: "application/json",
+                }),
+            );
             const res = await api.put(
                 "/testRequest/accept-or-reject-test-request",
-                objectToSend
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } },
             );
 
             if (res.status === 200) {

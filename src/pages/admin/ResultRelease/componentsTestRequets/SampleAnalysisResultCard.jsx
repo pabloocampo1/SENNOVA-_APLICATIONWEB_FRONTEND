@@ -17,7 +17,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../../context/AuthContext";
 import api from "../../../../service/axiosService";
 import SimpleBackdrop from "../../../../components/SimpleBackDrop";
@@ -43,6 +43,8 @@ const SampleAnalysisResultCard = ({
     const handleFiles = (e) => {
         setListFiles((prev) => [...prev, ...Array.from(e.target.files)]);
     };
+
+    console.log(dataToUse);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -108,10 +110,7 @@ const SampleAnalysisResultCard = ({
                 setListFiles([]);
                 setDataToUse((prev) => ({
                     ...prev,
-                    sampleProductDocumentResult: [
-                        ...prev.sampleProductDocumentResult,
-                        ...res.data,
-                    ],
+                    sampleProductDocumentResult: [...res.data],
                 }));
             }
         } catch (error) {
@@ -158,6 +157,15 @@ const SampleAnalysisResultCard = ({
 
     const isFieldDisabled =
         !canEmitResult || (dataToUse.stateResult && !isAdminEdit);
+
+    useEffect(() => {
+        if (dataToUse.unit === null && dataToUse.product?.units) {
+            setDataToUse((prev) => ({
+                ...prev,
+                unit: dataToUse.product.units,
+            }));
+        }
+    }, [dataToUse.unit, dataToUse.product]);
 
     return (
         <Box
@@ -341,6 +349,26 @@ const SampleAnalysisResultCard = ({
                             onChange={(e) => handleChangeInput(e)}
                             type="text"
                             placeholder="Normatividad"
+                        />
+                        <TextField
+                            label={"Incert."}
+                            required
+                            disabled={isFieldDisabled}
+                            value={dataToUse.incert || ""}
+                            name="incert"
+                            onChange={(e) => handleChangeInput(e)}
+                            type="text"
+                            placeholder="Incert."
+                        />
+                        <TextField
+                            label={"Valor ref.*"}
+                            required
+                            disabled={isFieldDisabled}
+                            value={dataToUse.valueRef || ""}
+                            name="valueRef"
+                            onChange={(e) => handleChangeInput(e)}
+                            type="text"
+                            placeholder="Valor ref.*"
                         />
                     </Box>
 

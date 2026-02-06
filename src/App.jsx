@@ -32,7 +32,6 @@ import QuotationCustomer from "./pages/public/QuotationCustomer";
 import TestRequestInfo from "./pages/admin/ResultRelease/TestRequestInfo";
 import SampleReceptionPage from "./pages/admin/ResultRelease/componentsTestRequets/SampleReceptionPage";
 import ResultExecution from "./pages/admin/ResultRelease/ResultExecution";
-import ProductsCompo from "./pages/admin/analysis/ProductsPage";
 import SampleReleaseResult from "./pages/admin/ResultRelease/componentsTestRequets/SampleReleaseResult";
 import SamplesWithoutReception from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/SamplesWithoutReception";
 import ResultExecutionSamplesAvailable from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/ResultExecutionSamplesAvailable";
@@ -47,6 +46,7 @@ import Home from "./pages/public/Home";
 import NoAccessPage from "./pages/public/NoAccessPage";
 import ProductsInfoPage from "./pages/admin/analysis/ProductsInfoPage";
 import MatrixAdminPage from "./pages/admin/analysis/MatrixPage";
+import AnalysisPage from "./pages/admin/analysis/AnalysisPage";
 
 function App() {
     return (
@@ -190,7 +190,7 @@ function App() {
                                         />
                                         <Route
                                             path="products"
-                                            element={<ProductsCompo />}
+                                            element={<AnalysisPage />}
                                         />
                                         <Route
                                             path="products/:analysisId/:analysisName"

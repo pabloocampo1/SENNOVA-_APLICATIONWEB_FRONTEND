@@ -58,6 +58,12 @@ const Users = ({ users = [], updateList, refresh }) => {
                 setOpenModalDelete(false);
             }
         } catch (error) {
+            console.log(error);
+
+            if (error.response.data.status == 400) {
+                alert(error.response.data.errors.general);
+            }
+
             if (error.status == 409) {
                 setOpenModalMessage(true);
                 setOpenModalDelete(false);
@@ -264,7 +270,7 @@ const Users = ({ users = [], updateList, refresh }) => {
                                         mb: "10px",
                                     }}
                                 >
-                                    {authObject.email == user.email ? (
+                                    {!authObject.email == user.email ? (
                                         ""
                                     ) : (
                                         <Tooltip title="Eliminar usuario">

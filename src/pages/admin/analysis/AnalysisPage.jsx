@@ -4,6 +4,7 @@ import {
     Button,
     Card,
     CardContent,
+    Divider,
     IconButton,
     Pagination,
     Snackbar,
@@ -14,6 +15,7 @@ import React, { useContext, useEffect, useState } from "react";
 import api from "../../../service/axiosService";
 import {
     Add,
+    AssessmentOutlined,
     Delete,
     Details,
     Edit,
@@ -27,7 +29,7 @@ import SearchBar from "../../../components/SearchBar";
 import { AuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const ProductsCompo = () => {
+const AnalysisPage = () => {
     const [productData, setProductData] = useState([]);
     const [errorFetch, setErrorFetch] = useState(false);
     const [errorDelete, setErrorDelete] = useState({
@@ -71,7 +73,7 @@ const ProductsCompo = () => {
         }
     };
 
-    const deleteProduct = async (id, analysisName) => {
+    const deleteAnalysis = async (id, analysisName) => {
         try {
             const response = await api.delete(`/analysis/delete/${id}`);
             if (response.status == 200) {
@@ -201,16 +203,52 @@ const ProductsCompo = () => {
                 width: "100%",
                 height: "auto",
                 mb: "100px",
+                p: "20px",
+                borderRadius: "20px",
+                bgcolor: "background.default",
             }}
         >
-            <Typography
-                component={"h3"}
-                variant="h3"
-                sx={{ pt: "40px", pb: "20px", fontSize: "24px" }}
-            >
-                Elementos del sistema -{" "}
-                <span style={{ color: "#39A900" }}>Productos</span>
-            </Typography>
+            <Box sx={{ pt: "40px", pb: "30px" }}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                    <AssessmentOutlined
+                        sx={{ color: "#39A900", mr: 2, fontSize: "32px" }}
+                    />
+
+                    <Typography
+                        component="h1"
+                        sx={{
+                            fontSize: "28px",
+                            fontWeight: "bold",
+
+                            lineHeight: 1.2,
+                        }}
+                    >
+                        Gestión de{" "}
+                        <span style={{ color: "#39A900" }}>Análisis</span>
+                    </Typography>
+                </Box>
+
+                <Typography
+                    variant="body1"
+                    sx={{
+                        color: "#666",
+                        maxWidth: "800px",
+                        fontSize: "16px",
+                        lineHeight: 1.6,
+                    }}
+                >
+                    Panel central de control del sistema. Aquí puedes{" "}
+                    <strong>administrar análisis</strong>, gestionar{" "}
+                    <strong>matrices</strong> y configurar la relación entre
+                    ellas. Además, permite la asignación de{" "}
+                    <strong>personal capacitado</strong> para garantizar la
+                    trazabilidad y calidad de cada proceso.
+                </Typography>
+
+                <Divider
+                    sx={{ mt: 3, borderColor: "#e0e0e0", width: "100%" }}
+                />
+            </Box>
 
             {/* modal to create one product*/}
             <GenericModal
@@ -231,6 +269,8 @@ const ProductsCompo = () => {
                 open={productToEdit}
                 compo={
                     <ProductForm
+                        authObject={authObject}
+                        deleteAnalysis={(id, name) => deleteAnalysis(id, name)}
                         isEdit={true}
                         data={productToEdit}
                         errors={errorsCreate}
@@ -370,8 +410,19 @@ const ProductsCompo = () => {
                                             variant="h6"
                                             sx={{ fontWeight: "bold", mb: 1 }}
                                         >
-                                            {prod.analysisName}
+                                            {prod.analysisName} -{" "}
                                         </Typography>
+                                        {prod.available ? (
+                                            <Typography
+                                                sx={{ color: "primary.main" }}
+                                            >
+                                                Activo
+                                            </Typography>
+                                        ) : (
+                                            <Typography color="error">
+                                                Inactivo
+                                            </Typography>
+                                        )}
 
                                         <Typography
                                             variant="body2"
@@ -483,32 +534,6 @@ const ProductsCompo = () => {
                                                     fontSize="small"
                                                 />
                                             </IconButton>
-                                            <IconButton
-                                                size="small"
-                                                color="primary"
-                                                disabled={
-                                                    authObject.role !==
-                                                    "ROLE_SUPERADMIN"
-                                                }
-                                                fontSize="small"
-                                                sx={{
-                                                    cursor: "pointer",
-                                                    color: "primary.main",
-                                                }}
-                                                onClick={() =>
-                                                    deleteProduct(
-                                                        prod.productId,
-                                                        prod.analysis,
-                                                    )
-                                                }
-                                            >
-                                                <Delete
-                                                    sx={{
-                                                        color: "primary.main ",
-                                                    }}
-                                                    fontSize="small"
-                                                />
-                                            </IconButton>
                                         </Box>
                                     </CardContent>
                                 </Card>
@@ -539,4 +564,4 @@ const ProductsCompo = () => {
     );
 };
 
-export default ProductsCompo;
+export default AnalysisPage;

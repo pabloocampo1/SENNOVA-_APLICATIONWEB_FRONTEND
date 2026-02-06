@@ -32,7 +32,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
     const { authObject } = useAuth();
     const [usages, setUsages] = useState([]);
     const [location, setLocations] = useState([]);
-    const [users, setUsers] = useState([]);
+
     const [dataForm, setDataForm] = useState({
         reagentsId: null,
         reagentName: "",
@@ -44,7 +44,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
         batch: "",
         expirationDate: "",
         senaInventoryTag: "",
-        responsibleId: "",
+        responsible: "",
         locationId: "",
         usageId: "",
         description: "",
@@ -156,18 +156,7 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
             setErrorFetch(true);
         }
     };
-    const fetchUsers = async () => {
-        try {
-            const res = await api.get("/users/getAllAvailable");
-            setUsers(res.data);
-        } catch (error) {
-            setErrorFetchMessage(
-                "Ocurrio un error al traer los usuarios disponibles: " +
-                    error.data.message,
-            );
-            setErrorFetch(true);
-        }
-    };
+
     const fetchLocations = async () => {
         try {
             const res = await api.get("/location/getAll");
@@ -197,7 +186,6 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
         const init = async () => {
             await fetchLocations();
             await fetchUsages();
-            await fetchUsers();
         };
 
         init();
@@ -361,26 +349,12 @@ const ReagentForm = ({ refreshData, onClose, data = {}, isEdit = false }) => {
                 </TextField>
 
                 <TextField
-                    select
-                    name="responsibleId"
-                    label="Cuentadante del reactivo"
-                    value={dataForm.responsibleId}
+                    label="Cuentadante"
+                    name="responsible"
+                    placeholder="Cuentadante"
                     onChange={handleInput}
-                    required
-                >
-                    {users.length < 1 && (
-                        <Typography>
-                            No hay usuarios agregadas, agrega un0.
-                        </Typography>
-                    )}
-                    {users.map((user) => {
-                        return (
-                            <MenuItem key={user.userId} value={user.userId}>
-                                {user.name}
-                            </MenuItem>
-                        );
-                    })}
-                </TextField>
+                    value={dataForm.responsible || ""}
+                />
 
                 <TextField
                     name="batch"

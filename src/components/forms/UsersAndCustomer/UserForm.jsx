@@ -30,7 +30,7 @@ const UserForm = ({
         email: "",
         position: "",
         available: true,
-        role: "",
+        roleName: "",
     });
     const [isLoanding, setIsLoanding] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
@@ -273,8 +273,8 @@ const UserForm = ({
                 <TextField
                     select
                     label="Rol en el sistema"
-                    name="role"
-                    value={formData.role || ""}
+                    name="roleName"
+                    value={formData.roleName || ""}
                     onChange={handleChange}
                     required
                     InputProps={{
