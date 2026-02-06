@@ -36,7 +36,14 @@ const SamplesExpired = ({
 
     return (
         <Box>
-            <Typography variant="h6">Muestras vencidas</Typography>
+            <Typography variant="h6">Muestras atrasadas</Typography>
+            <Typography
+                variant="body2"
+                sx={{ color: "text.secondary", mb: "40px" }}
+            >
+                Estas son las muestras que ha registrado recepcion e inicio su
+                proceso de análisis y entrega, pero su fecha de entrega ya paso
+            </Typography>
             <Typography
                 sx={{
                     textAlign: "center",
@@ -45,7 +52,7 @@ const SamplesExpired = ({
                 }}
             >
                 {data.length <= 0 &&
-                    "No hay muestras vencidas disponibles para mostrar"}
+                    "No hay muestras atrasadas disponibles para mostrar"}
             </Typography>
 
             <TableContainer>

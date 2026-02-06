@@ -140,7 +140,7 @@ const ResultExecutionSamplesAvailable = () => {
     const getDataSamplesExpired = async () => {
         setIsLoandingState({
             state: true,
-            text: "Cargando muestraas vencidas",
+            text: "Cargando muestras vencidas",
         });
 
         try {
@@ -420,8 +420,11 @@ const ResultExecutionSamplesAvailable = () => {
                     <Button
                         variant="contained"
                         onClick={() => handleSubmitResult()}
+                        sx={{
+                            textTransform: "none",
+                        }}
                     >
-                        Ejecutar finalizacion
+                        Envíar muestras
                     </Button>
                 </Box>
             </Box>
@@ -432,7 +435,16 @@ const ResultExecutionSamplesAvailable = () => {
                     mb: "30px",
                 }}
             >
-                <Typography variant="h6">Muestras para ejecucion</Typography>
+                <Typography variant="h6">
+                    Muestras para análisis y envío
+                </Typography>
+                <Typography
+                    variant="body2"
+                    sx={{ color: "text.secondary", mb: "20px" }}
+                >
+                    Estas son las muestras que ha registrado recepcion e inicio
+                    su proceso de análisis y entrega
+                </Typography>
 
                 <TableContainer>
                     <Table
@@ -585,7 +597,11 @@ const ResultExecutionSamplesAvailable = () => {
 
             {/* THIS DRAWER IS FOR SHOW THE RESULTS OF ONE SAMPLE */}
             <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-                <InfoSamplesResultExecution data={sampleSelected} />
+                <InfoSamplesResultExecution
+                    data={sampleSelected}
+                    updateList={true}
+                    getData={() => getData()}
+                />
             </Drawer>
 
             {/* THIS DRAWER IS FOR SHOW ALL SAMPLES SELECTED TO RESULT EXECUTION */}

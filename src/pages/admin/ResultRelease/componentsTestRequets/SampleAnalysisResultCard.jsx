@@ -28,6 +28,9 @@ const SampleAnalysisResultCard = ({
     requestCode,
     isAdminEdit = false,
     stateSampleReception = true,
+
+    updateList,
+    getData,
 }) => {
     const theme = useTheme();
     const [listFiles, setListFiles] = useState([]);
@@ -43,8 +46,6 @@ const SampleAnalysisResultCard = ({
     const handleFiles = (e) => {
         setListFiles((prev) => [...prev, ...Array.from(e.target.files)]);
     };
-
-    console.log(dataToUse);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,6 +86,9 @@ const SampleAnalysisResultCard = ({
 
             if (res.status === 200) {
                 setDataToUse(res.data);
+                if (updateList) {
+                    getData();
+                }
             }
         } catch (error) {
             console.log(error);

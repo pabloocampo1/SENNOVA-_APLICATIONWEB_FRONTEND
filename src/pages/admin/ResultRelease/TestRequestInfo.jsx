@@ -496,7 +496,7 @@ const TestRequestInfo = () => {
                             sx={{ color: "text.secondary" }}
                         >
                             {testRequest.state === "ACEPTADA"
-                                ? "Aceptada por:"
+                                ? "Aceptada por:    "
                                 : "Rechazada por:"}
                             <strong>
                                 {testRequest.reviewedBy || "Pendiente"}

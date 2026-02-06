@@ -43,7 +43,7 @@ const ResultsRelease = () => {
         setIsLoanding(true);
         try {
             const res = await api.get(
-                `/testRequest/get-all-info-summary?page=${page}`,
+                `/testRequest/get-all-info-summary/${authObject.email}?page=${page}`,
             );
             setTestRequest(res.data.content);
             setTotalPages(res.data.totalPages);

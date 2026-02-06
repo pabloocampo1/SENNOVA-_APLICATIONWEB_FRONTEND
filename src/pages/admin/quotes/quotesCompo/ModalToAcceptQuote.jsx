@@ -123,9 +123,7 @@ const ModalToAcceptQuote = ({
                 {customerInfo.email}
             </Typography>
 
-            <Typography sx={{ mt: 2 }}>
-                Adjuntar informe técnico (PDF):
-            </Typography>
+            <Typography sx={{ mt: 2 }}>Adjuntar (PDF):</Typography>
             <input
                 type="file"
                 accept="application/pdf"

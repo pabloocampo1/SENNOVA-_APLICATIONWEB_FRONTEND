@@ -4,7 +4,11 @@ import SampleAnalysisResultCard from "./SampleAnalysisResultCard";
 
 // this module show all results of analysis of one sample into result execution
 
-const InfoSamplesResultExecution = ({ data = {} }) => {
+const InfoSamplesResultExecution = ({
+    data = {},
+    updateList = false,
+    getData,
+}) => {
     return (
         <Box
             sx={{
@@ -50,7 +54,12 @@ const InfoSamplesResultExecution = ({ data = {} }) => {
             {data.analysisEntities.map((a, index) => {
                 return (
                     <Box key={index}>
-                        <SampleAnalysisResultCard data={a} isAdminEdit={true} />
+                        <SampleAnalysisResultCard
+                            updateList={updateList}
+                            getData={() => getData()}
+                            data={a}
+                            isAdminEdit={true}
+                        />
                     </Box>
                 );
             })}
