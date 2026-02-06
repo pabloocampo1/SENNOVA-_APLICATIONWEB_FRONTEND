@@ -28,7 +28,7 @@ import LocationsCompo from "../../components/SettingComponents/LocationsCompo";
 import { AuthContext } from "../../context/AuthContext";
 import api from "../../service/axiosService";
 import GenericModal from "../../components/modals/GenericModal";
-import ChangeEmailCompo from "../../components/forms/Auth/changeEmailCompo";
+import ChangeEmailCompo from "../../components/forms/Auth/ChangeEmailCompo";
 import ChangePasswordCompo from "../../components/forms/Auth/ChangePasswordCompo";
 import DeactivateAccountConfirmation from "../../components/SettingComponents/DeactivateAccountConfirmation";
 import ButtonBack from "../../components/ButtonBack";
@@ -37,7 +37,7 @@ import PersonalInformation from "../../components/SettingComponents/PersonalInfo
 const SettingPage = () => {
     const { authObject, setAuthObject } = useContext(AuthContext);
     const [preferences, setPreferences] = useState(
-        authObject.preferencesNotification
+        authObject.preferencesNotification,
     );
     const [openChangeEmail, setOpenChangeEmail] = useState(false);
     const [openChangePassword, setOpenChangePassword] = useState(false);
@@ -58,7 +58,7 @@ const SettingPage = () => {
         try {
             const response = await api.post(
                 `/users/changePreferences/${authObject.username}`,
-                updatedPreferences
+                updatedPreferences,
             );
 
             setPreferences(response.data);

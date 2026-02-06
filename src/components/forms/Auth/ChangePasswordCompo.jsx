@@ -1,10 +1,10 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
-import api from '../../../service/axiosService';
-import SimpleBackdrop from '../../SimpleBackDrop';
-import { AuthContext, useAuth } from '../../../context/AuthContext';
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import api from "../../../service/axiosService";
+import SimpleBackdrop from "../../SimpleBackDrop";
+import { AuthContext, useAuth } from "../../../context/AuthContext";
 
-const ChangePasswordCompo = () => {
+const ChangePasswordCompo = ({ onClose }) => {
     const [isLoanding, setIsLoanding] = useState(false);
     const [dataRequest, setDataRequest] = useState({
         password: "",
@@ -13,7 +13,7 @@ const ChangePasswordCompo = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [success, setSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const {logout} = useAuth(AuthContext);
+    const { logout } = useAuth(AuthContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -27,12 +27,12 @@ const ChangePasswordCompo = () => {
 
         const fetchChangePassword = async () => {
             try {
-                const res = await api.post("/auth/change-password", dataRequest);
+                const res = await api.post("/auth/password", dataRequest);
                 if (res.data) {
                     setSuccess(true);
                     setErrorMessage("");
-                    logout()
                 }
+                onClose();
             } catch (error) {
                 console.error(error);
                 setErrorMessage("Error cambiando la contraseña.");
@@ -52,16 +52,30 @@ const ChangePasswordCompo = () => {
     };
 
     return (
-        <Box sx={{ width: "400px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <Typography sx={{ textAlign: "center", mb: 2 }}>Cambiar contraseña</Typography>
+        <Box
+            sx={{
+                width: "400px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+            }}
+        >
+            <Typography sx={{ textAlign: "center", mb: 2 }}>
+                Cambiar contraseña
+            </Typography>
             <SimpleBackdrop open={isLoanding} />
 
             {success ? (
                 <Typography sx={{ textAlign: "center", color: "green" }}>
-                    ✅ Contraseña cambiada correctamente. Serás redirigido al login.
+                    ✅ Contraseña cambiada correctamente. Serás redirigido al
+                    login.
                 </Typography>
             ) : (
-                <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <Box
+                    component={"form"}
+                    onSubmit={handleSubmit}
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                >
                     <TextField
                         type="password"
                         name="password"
@@ -100,7 +114,10 @@ const ChangePasswordCompo = () => {
                     <Button
                         type="submit"
                         variant="contained"
-                        disabled={!dataRequest.newPassword || dataRequest.newPassword !== confirmPassword}
+                        disabled={
+                            !dataRequest.newPassword ||
+                            dataRequest.newPassword !== confirmPassword
+                        }
                     >
                         Cambiar contraseña
                     </Button>
@@ -108,8 +125,16 @@ const ChangePasswordCompo = () => {
             )}
 
             {!success && (
-                <Typography sx={{ mt: 2, fontSize: "0.9rem", textAlign: "center", color: "gray" }}>
-                    Una vez la contraseña sea actualizada, tu sesión actual va a cerrar.
+                <Typography
+                    sx={{
+                        mt: 2,
+                        fontSize: "0.9rem",
+                        textAlign: "center",
+                        color: "gray",
+                    }}
+                >
+                    Una vez la contraseña sea actualizada, tu sesión actual va a
+                    cerrar.
                 </Typography>
             )}
         </Box>
