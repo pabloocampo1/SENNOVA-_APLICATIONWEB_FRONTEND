@@ -26,7 +26,7 @@ import GenericModal from "../../../../components/modals/GenericModal";
 import ModalToAcceptQuote from "./ModalToAcceptQuote";
 import ModalToDeleteTestRequest from "./ModalToDeleteTestRequest";
 import ModalToRejectTestRequest from "./ModalToRejectTestRequest";
-import AssignMemberWhenAccept from "./assignMemberWhenAccept";
+import AssignMemberWhenAccept from "./AssignMemberWhenAccept";
 
 const QuotationInfo = ({ data = {}, refreshData, onClose }) => {
     const [isLoanding, setIsLoanding] = useState(false);
