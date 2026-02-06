@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-import AssignMemberWhenAccept from "../../quotes/quotesCompo/assignMemberWhenAccept";
+import AssignMemberWhenAccept from "../../quotes/quotesCompo/AssignMemberWhenAccept";
 
 const AddMemberCompo = ({
     testRequestId,
