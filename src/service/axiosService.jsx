@@ -12,12 +12,12 @@ export const injectTokenSetter = (fn) => {
 };
 
 const api = axios.create({
-    baseURL: "http://localhost:8080/api/v1",
+    baseURL: "http://sennovaback.duckdns.org/api/v1",
     withCredentials: true,
 });
 
 export const publicApi = axios.create({
-    baseURL: "http://localhost:8080/api/v1",
+    baseURL: "http://sennovaback.duckdns.org/api/v1",
     withCredentials: false,
 });
 
