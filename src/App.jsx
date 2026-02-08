@@ -37,7 +37,7 @@ import SamplesWithoutReception from "./pages/admin/ResultRelease/componentsTestR
 import ResultExecutionSamplesAvailable from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/ResultExecutionSamplesAvailable";
 import SamplesDelivered from "./pages/admin/ResultRelease/componentsTestRequets/ResultExecution/SamplesDelivered";
 import ForgotPasswordCompo from "./pages/auth/ForgotPasswordCompo";
-import ChangePasswordCompo from "./pages/auth/ChangePasswordPage";
+
 import ChangePasswordPage from "./pages/auth/ChangePasswordPage";
 import TokenExpiredPage from "./pages/auth/TokenExpiredPage";
 import AboutSystem from "./pages/admin/AboutSystemPage";

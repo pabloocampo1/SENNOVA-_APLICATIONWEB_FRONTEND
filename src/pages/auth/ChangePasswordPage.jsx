@@ -25,7 +25,7 @@ const ChangePasswordPage = () => {
         try {
             const res = await publicApi.post(
                 "/auth/password/reset",
-                dataAuthRequest
+                dataAuthRequest,
             );
             if (res.status == 204) {
                 setChangePasswordState(true);
@@ -41,7 +41,7 @@ const ChangePasswordPage = () => {
     const validateToken = async () => {
         try {
             const res = await publicApi.get(
-                `/auth/password/reset-token/${token}`
+                `/auth/password/reset-token/${token}`,
             );
             if (res.status !== 200) {
                 navigate("/signIn/token-expired");
