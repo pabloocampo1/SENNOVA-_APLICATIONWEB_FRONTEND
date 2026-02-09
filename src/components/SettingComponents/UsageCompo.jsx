@@ -52,6 +52,7 @@ const UsageCompo = ({ isMobile }) => {
         try {
             const response = await api.get(`/usage/getAllPage?page=${page}`);
             console.log(response);
+            console.log("respuesta de la paginacion");
 
             if (response.status !== 200) {
                 setErrorFetch(true);
