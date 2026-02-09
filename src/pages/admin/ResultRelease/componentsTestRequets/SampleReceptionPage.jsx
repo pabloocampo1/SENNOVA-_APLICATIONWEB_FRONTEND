@@ -191,7 +191,7 @@ const SampleReceptionPage = () => {
                                     >
                                         {sample.statusReception
                                             ? "Ya registro recepcion"
-                                            : "No ah registrado recepcion"}
+                                            : "No ha registrado recepcion"}
                                     </Typography>
                                 </Box>
                             </Tooltip>

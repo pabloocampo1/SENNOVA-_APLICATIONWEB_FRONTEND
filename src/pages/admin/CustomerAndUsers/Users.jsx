@@ -279,6 +279,10 @@ const Users = ({ users = [], updateList, refresh }) => {
                                                 onClick={() =>
                                                     handleDelete(user)
                                                 }
+                                                disabled={
+                                                    user.email ==
+                                                    "softwaresennovaInfo@gmail.com"
+                                                }
                                                 fullWidth
                                             >
                                                 <Delete
@@ -291,6 +295,10 @@ const Users = ({ users = [], updateList, refresh }) => {
                                     )}
                                     <Tooltip title="Editar usuario">
                                         <Button
+                                            disabled={
+                                                user.email ==
+                                                "softwaresennovaInfo@gmail.com"
+                                            }
                                             variant="outlined"
                                             onClick={() => handleUpdate(user)}
                                             fullWidth

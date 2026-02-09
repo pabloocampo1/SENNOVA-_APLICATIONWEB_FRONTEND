@@ -28,6 +28,7 @@ import ProductForm from "../../../components/forms/Product/ProductForm";
 import SearchBar from "../../../components/SearchBar";
 import { AuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import SimpleBackdrop from "../../../components/SimpleBackDrop";
 
 const AnalysisPage = () => {
     const [productData, setProductData] = useState([]);
@@ -50,12 +51,14 @@ const AnalysisPage = () => {
     const [search, setSearch] = useState("");
     const { authObject } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event, value) => {
         setPage(value - 1);
     };
 
     const fetchData = async () => {
+        setLoading(true);
         try {
             const response = await api.get(`/analysis/getAll?page=${page}`);
 
@@ -70,10 +73,13 @@ const AnalysisPage = () => {
             console.error(error);
 
             setErrorFetch(true);
+        } finally {
+            setLoading(false);
         }
     };
 
     const deleteAnalysis = async (id, analysisName) => {
+        setLoading(true);
         try {
             const response = await api.delete(`/analysis/delete/${id}`);
             if (response.status == 200) {
@@ -106,10 +112,13 @@ const AnalysisPage = () => {
                 product: analysisName,
             });
             setOpen(true);
+        } finally {
+            setLoading(false);
         }
     };
 
     const saveProduct = async (product) => {
+        setLoading(true);
         try {
             const response = await api.post("/analysis/save", product);
             console.log(response);
@@ -131,10 +140,13 @@ const AnalysisPage = () => {
                 const backendError = error.response.data;
                 setErrorCreated(backendError.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
     const editProduct = async (product, id) => {
+        setLoading(true);
         try {
             const response = await api.put(`/analysis/update/${id}`, product);
 
@@ -155,6 +167,8 @@ const AnalysisPage = () => {
                 const backendError = error.response.data;
                 setErrorCreated(backendError.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -208,6 +222,10 @@ const AnalysisPage = () => {
                 bgcolor: "background.default",
             }}
         >
+            <SimpleBackdrop
+                open={loading}
+                text="Cargando, recargar pagina si se demora mucho tiempo."
+            />
             <Box sx={{ pt: "40px", pb: "30px" }}>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                     <AssessmentOutlined

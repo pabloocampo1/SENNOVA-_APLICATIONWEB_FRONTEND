@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import SimpleBackdrop from "../../../components/SimpleBackDrop";
 import api from "../../../service/axiosService";
 import { Typography } from "@mui/material";
-import { SupervisedUserCircleOutlined } from "@mui/icons-material";
+import { FlashAuto, SupervisedUserCircleOutlined } from "@mui/icons-material";
 import Customers from "./Customers";
 import Users from "./Users";
 
@@ -49,22 +49,23 @@ const CustomersAndUsersPage = () => {
     };
 
     const getUsers = async () => {
+        setIsLoanding(true);
         try {
             const res = await api.get("/users/getAll");
             setUsersData(res.data);
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoanding(false);
         }
     };
 
     useEffect(() => {
-        setIsLoanding(true);
         const init = async () => {
             await getUsers();
         };
 
         init();
-        setIsLoanding(false);
     }, []);
 
     useEffect(() => {}, [usersData]);
@@ -78,7 +79,7 @@ const CustomersAndUsersPage = () => {
                 borderRadius: "20px",
             }}
         >
-            <SimpleBackdrop open={isLoanding} />
+            <SimpleBackdrop open={isLoanding} text="Cargando" />
 
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs
