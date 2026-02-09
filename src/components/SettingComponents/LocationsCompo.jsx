@@ -55,7 +55,7 @@ const LocationsCompo = ({ isMobile }) => {
             if (response.status !== 200) {
                 setErrorFetch(true);
             } else {
-                let totalPagesResponse = response.data.totalPages;
+                let totalPagesResponse = response.data.page.totalPages;
                 setLocationData(response.data.content);
                 setTotalPages(totalPagesResponse);
             }

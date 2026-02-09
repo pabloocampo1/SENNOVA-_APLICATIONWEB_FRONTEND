@@ -55,7 +55,7 @@ const UsageCompo = ({ isMobile }) => {
             if (response.status !== 200) {
                 setErrorFetch(true);
             } else {
-                let totalPagesResponse = response.data.totalPages;
+                let totalPagesResponse = response.data.page.totalPages;
                 setUsageData(response.data.content);
                 setTotalPages(totalPagesResponse);
             }

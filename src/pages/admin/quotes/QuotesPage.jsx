@@ -46,7 +46,7 @@ const QuotesPage = () => {
             const res = await api.get(
                 `/testRequest/get-all/quotation?page=${page}`,
             );
-            setTotalPages(res.data.totalPages);
+            setTotalPages(res.data.page.totalPages);
             setQuotationData(res.data.content);
         } catch (error) {
             console.error(error);

@@ -46,7 +46,7 @@ const ResultsRelease = () => {
                 `/testRequest/get-all-info-summary/${authObject.email}?page=${page}`,
             );
             setTestRequest(res.data.content);
-            setTotalPages(res.data.totalPages);
+            setTotalPages(res.data.page.totalPages);
         } catch (error) {
             console.error(error);
         } finally {
