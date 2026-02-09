@@ -274,7 +274,7 @@ const UserForm = ({
                     select
                     label="Rol en el sistema"
                     name="roleName"
-                    value={formData.role || ""}
+                    value={formData.roleName || ""}
                     onChange={handleChange}
                     required
                     InputProps={{
