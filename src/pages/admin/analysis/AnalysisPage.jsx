@@ -65,7 +65,7 @@ const AnalysisPage = () => {
             if (response.status !== 200) {
                 setErrorFetch(true);
             } else {
-                let totalPagesResponse = response.data.totalPages;
+                let totalPagesResponse = response.data.page.totalPages;
                 setProductData(response.data.content);
                 setTotalPages(totalPagesResponse);
             }
