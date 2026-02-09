@@ -30,13 +30,13 @@ export const ALL_MODULES = [
     },
     {
         url: "/system/quotes",
-        name: "Cotizaciones de ensayo",
+        name: "Cotizaciones",
         icon: <RequestPageOutlined />,
         roles: ["ROLE_SUPERADMIN", "ROLE_ADMIN"],
     },
     {
         url: "/system/results",
-        name: "Gestión de cotizaciones",
+        name: "Gestión de solicitudes",
         icon: <DocumentScanner />,
         roles: ["ROLE_SUPERADMIN", "ROLE_ADMIN", "ROLE_ANALYST"],
     },

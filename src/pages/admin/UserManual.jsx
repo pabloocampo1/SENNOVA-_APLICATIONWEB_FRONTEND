@@ -48,6 +48,9 @@ const UserManual = () => {
                 elevation={0}
                 sx={{
                     width: 280,
+                    minWidth: 280,
+                    maxWidth: 280,
+                    flexShrink: 0,
                     borderRadius: 3,
                     border: "1px solid",
                     borderColor: "divider",
@@ -178,9 +181,10 @@ const UserManual = () => {
                                 alt={helpContent[activeTab].title}
                                 src={helpContent[activeTab].image}
                                 style={{
-                                    width: "auto",
+                                    width: "100%",
                                     height: "100%",
                                     objectFit: "contain",
+                                    display: "block",
                                 }}
                             />
                         </Box>

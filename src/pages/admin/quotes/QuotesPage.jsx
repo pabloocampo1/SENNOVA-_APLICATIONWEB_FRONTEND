@@ -228,7 +228,7 @@ const QuotesPage = () => {
                             }}
                             onClick={() => setShowQuotation(true)}
                         >
-                            Crear ensayo
+                            Crear nueva cotizacion vacia
                         </Button>
                     </Box>
 
