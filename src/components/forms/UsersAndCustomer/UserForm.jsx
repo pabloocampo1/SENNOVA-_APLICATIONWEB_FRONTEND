@@ -30,7 +30,7 @@ const UserForm = ({
         email: "",
         position: "",
         available: true,
-        role: "",
+        roleName: "",
     });
     const [isLoanding, setIsLoanding] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
@@ -101,9 +101,15 @@ const UserForm = ({
         setIsLoanding(true);
         try {
             const formData = new FormData();
+            const dtoUpdate = {
+                ...dto,
+                role: dto.roleName,
+            };
             formData.append(
                 "dto",
-                new Blob([JSON.stringify(dto)], { type: "application/json" }),
+                new Blob([JSON.stringify(dtoUpdate)], {
+                    type: "application/json",
+                }),
             );
             if (imageFile != null) {
                 formData.append("image", imageFile);
@@ -270,8 +276,8 @@ const UserForm = ({
                 <TextField
                     select
                     label="Rol en el sistema"
-                    name="role"
-                    value={formData.role || ""}
+                    name="roleName"
+                    value={formData.roleName || ""}
                     onChange={handleChange}
                     required
                     InputProps={{
