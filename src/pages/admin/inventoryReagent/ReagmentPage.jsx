@@ -78,7 +78,7 @@ const ReagentPage = () => {
             const res = await api.get(`/reagent/getAll/page?page=${page}`);
             if (res.status === 200) {
                 setReagents(res.data.content);
-                setTotalPages(res.data.totalPages);
+                setTotalPages(res.data.page.totalPages);
             }
         } catch (error) {
             console.error("Error al traer los reactivos:", error);

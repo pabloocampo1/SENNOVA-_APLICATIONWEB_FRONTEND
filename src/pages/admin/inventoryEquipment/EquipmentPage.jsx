@@ -274,7 +274,7 @@ const EquipmentPage = () => {
             const res = await api.get(`/equipment/page?page=${page}`);
             if (res.status == 200) {
                 setDataEquipments(res.data.content);
-                setTotalPages(res.data.totalPages);
+                setTotalPages(res.data.page.totalPages);
             }
         } catch (error) {
             console.error(error);
