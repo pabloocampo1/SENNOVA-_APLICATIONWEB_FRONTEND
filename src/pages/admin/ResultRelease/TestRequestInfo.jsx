@@ -596,7 +596,7 @@ const TestRequestInfo = () => {
             </Box>
 
             <HistoryReportDeliveredSampleCompo
-                requestCode={testRequest.requestCode}
+                testRequestId={testRequest.testRequestId}
             />
 
             {/* ASSIGN MEMBER MODAl*/}

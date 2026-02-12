@@ -15,6 +15,7 @@ import {
     PersonAddAlt1,
     Science,
 } from "@mui/icons-material";
+import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 
 const AssignMemberWhenAccept = ({
     requestCode,
@@ -26,6 +27,7 @@ const AssignMemberWhenAccept = ({
     const [users, setUsers] = useState([]);
     const [usersSelected, setUsersSelected] = useState([]);
     const theme = useTheme();
+    const [loading, setLoading] = useState(false);
 
     const isUserQualifiedForSamples = (userAnalyses = [], samples = []) => {
         return samples.every((sample) =>
@@ -38,15 +40,19 @@ const AssignMemberWhenAccept = ({
     };
 
     const fetchUsers = async () => {
+        setLoading(true);
         try {
             const res = await api.get("/users/available-with-competencies");
             setUsers(res.data);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const sendUserRelationAndClose = async () => {
+        setLoading(true);
         const objectToSend = {
             testRequestId: testRequestId,
             users: usersSelected,
@@ -57,6 +63,7 @@ const AssignMemberWhenAccept = ({
                 objectToSend,
             );
             if (res.status == 200) {
+                setLoading(false);
                 onClose();
             }
         } catch (error) {
@@ -74,6 +81,8 @@ const AssignMemberWhenAccept = ({
                 width: { xs: "300px", md: "700px" },
             }}
         >
+            <SimpleBackdrop open={loading} />
+
             <Box
                 sx={{
                     display: "grid",

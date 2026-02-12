@@ -666,8 +666,8 @@ const AboutSystem = () => {
                                     Construido con <strong>Java 21</strong> y{" "}
                                     <strong>Spring Boot</strong>. Gestión de
                                     datos con <strong>JPA</strong>, caché
-                                    optimizada con <strong>Spring Cache</strong>{" "}
-                                    y contenedores <strong>Docker</strong>.
+                                    optimizada con <strong>Spring Cache</strong>
+                                    .
                                 </Typography>
                             </Box>
 
@@ -731,7 +731,7 @@ const AboutSystem = () => {
                                     "Java 21",
                                     "Spring Boot",
                                     "Hexagonal",
-                                    "Docker",
+
                                     "Apache POI",
                                     "MapStruct",
                                     "Mysql",

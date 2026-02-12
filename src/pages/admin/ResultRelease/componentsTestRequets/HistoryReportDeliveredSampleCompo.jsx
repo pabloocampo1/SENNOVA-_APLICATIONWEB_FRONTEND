@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../../../service/axiosService";
 import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 
-const HistoryReportDeliveredSampleCompo = ({ requestCode }) => {
+const HistoryReportDeliveredSampleCompo = ({ testRequestId }) => {
     const theme = useTheme();
     const [deliveryHistory, setDeliveryHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,7 @@ const HistoryReportDeliveredSampleCompo = ({ requestCode }) => {
         setIsLoading(true);
         try {
             const res = await api.get(
-                `/testRequest/delivery-history/${requestCode}`
+                `/testRequest/delivery-history/${testRequestId}`,
             );
             setDeliveryHistory(res.data);
         } catch (error) {
@@ -41,7 +41,7 @@ const HistoryReportDeliveredSampleCompo = ({ requestCode }) => {
 
     useEffect(() => {
         fetchHistoryDelivery();
-    }, [requestCode]);
+    }, [testRequestId]);
 
     const formatDate = (date) => (date ? new Date(date).toLocaleString() : "—");
 

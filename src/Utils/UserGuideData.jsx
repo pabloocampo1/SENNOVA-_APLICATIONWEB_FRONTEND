@@ -5,7 +5,7 @@ export const helpContent = [
         icon: "info",
         content:
             "Bienvenido al LIMS. Este sistema gestiona el flujo completo de su laboratorio...",
-        image: "https://res.cloudinary.com/dqezow954/image/upload/v1768835427/zkkvt7b4qhzboywgxnpe.jpg",
+        image: "https://res.cloudinary.com/dqezow954/image/upload/v1770921881/120f2273-bdd5-4b60-850b-29fd6a4f6175.png",
         steps: [
             "Inicie sesión con sus credenciales o Google.",
             "Revise el dashboard para ver tareas pendientes.",

@@ -45,7 +45,7 @@ const SamplesDelivered = () => {
             // this requets return one page
 
             setData(res.data.content);
-            setTotalPagesSamplesDelivered(res.data.totalPages);
+            setTotalPagesSamplesDelivered(res.data.page.totalPages);
             setTotalElements(res.data.totalElements);
         } catch (error) {
             error;

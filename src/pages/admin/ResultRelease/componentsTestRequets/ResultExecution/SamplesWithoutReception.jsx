@@ -38,11 +38,11 @@ const SamplesWithoutReception = () => {
         setIsLoanding(true);
         try {
             const res = await api.get(
-                `/sample/get-all-without-reception?page=${page}`
+                `/sample/get-all-without-reception?page=${page}`,
             );
 
             setData(res.data.content);
-            setTotalPagesSamplesDelivered(res.data.totalPages);
+            setTotalPagesSamplesDelivered(res.data.page.totalPages);
             setTotalElements(res.data.totalElements);
         } catch (error) {
             error;
@@ -108,7 +108,7 @@ const SamplesWithoutReception = () => {
                                     title={`Click para ver registrar recepcion de la muestra ${sample.sampleCode} ${sample.matrix}`}
                                     onClick={() =>
                                         navigate(
-                                            `/system/result/test-request/${sample.testRequestId}/recepcion-muestras`
+                                            `/system/result/test-request/${sample.testRequestId}/recepcion-muestras`,
                                         )
                                     }
                                 >

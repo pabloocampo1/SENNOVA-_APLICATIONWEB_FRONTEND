@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import api from "../../../../service/axiosService";
 import GenericModal from "../../../../components/modals/GenericModal";
 import SelectAnalisysByMatrixModal from "./SelectAnalisysByMatrixModal";
+import SimpleBackdrop from "../../../../components/SimpleBackDrop";
 
 const SelectAnalisysCompo = ({ saveSample }) => {
     const [matrices, setMatrices] = useState([]);
@@ -26,13 +27,17 @@ const SelectAnalisysCompo = ({ saveSample }) => {
     });
     const [error, setError] = useState("");
     const [openModalAnalisys, setOpenModalAnalisys] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const fetchMatrices = async () => {
+        setLoading(true);
         try {
             const res = await api.get("/analysis/matrix/get-all/available");
             setMatrices(res.data);
         } catch (error) {
             console.error("Error fetching matrices:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -105,6 +110,7 @@ const SelectAnalisysCompo = ({ saveSample }) => {
             onSubmit={handleSubmit}
             sx={{ width: { xs: "100%", md: "500px" }, p: 2 }}
         >
+            <SimpleBackdrop open={loading} />
             <GenericModal
                 open={openModalAnalisys}
                 onClose={() => setOpenModalAnalisys(false)}

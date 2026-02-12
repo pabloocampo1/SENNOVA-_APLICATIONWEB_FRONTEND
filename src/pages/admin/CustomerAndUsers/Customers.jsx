@@ -57,7 +57,7 @@ const Customers = () => {
             const res = await api.delete(`/customers/delete/${customerId}`);
             if (res.status == 200) {
                 const newList = [...customersData].filter(
-                    (c) => c.customerId !== customerId
+                    (c) => c.customerId !== customerId,
                 );
                 setCustomerData(newList);
             }
@@ -73,7 +73,7 @@ const Customers = () => {
         try {
             const res = await api.get(`/customers/getAll?page=${page}`);
             setCustomerData(res.data.content);
-            setTotalPages(res.data.totalPages);
+            setTotalPages(res.data.page.totalPages);
         } catch (error) {
             error;
         } finally {
@@ -156,7 +156,7 @@ const Customers = () => {
                                                 }}
                                             >
                                                 {getInitials(
-                                                    customer.customerName
+                                                    customer.customerName,
                                                 )}
                                             </Typography>
                                         </Box>
@@ -179,7 +179,7 @@ const Customers = () => {
                                             }}
                                         >
                                             {capitalizeFirst(
-                                                customer.customerName
+                                                customer.customerName,
                                             )}
                                         </Typography>
                                         <Box sx={{ display: "flex" }}>
@@ -262,7 +262,7 @@ const Customers = () => {
                                                     }}
                                                     onClick={() =>
                                                         deleteCustomer(
-                                                            customer.customerId
+                                                            customer.customerId,
                                                         )
                                                     }
                                                 />
@@ -381,13 +381,13 @@ const Customers = () => {
                                                     null
                                                 ) {
                                                     alert(
-                                                        "El ensayo del usuario fue eliminado"
+                                                        "El ensayo del usuario fue eliminado",
                                                     );
                                                     return;
                                                 }
 
                                                 navigate(
-                                                    `/system/result/test-request/${customer.testRequestId}`
+                                                    `/system/result/test-request/${customer.testRequestId}`,
                                                 );
                                             }}
                                         >
